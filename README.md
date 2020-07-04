@@ -18,7 +18,7 @@ pip install openpredict
 
 # Run the API 🌐
 
-### Run from Python script 
+### Run from Python script 🐍
 
 ```python
 from openpredict import openpredict_api
@@ -32,7 +32,7 @@ openpredict_api.start_api(port, debug)
 
 > Run by default in production, set `debug = True` to run in development mode. 
 
-### Run from the command line
+### Run from the command line ⌨️
 
 Run in production with [Tornado Web Server 🌪️](https://www.tornadoweb.org/en/stable/)
 
@@ -54,7 +54,7 @@ Show help:
 openpredict --help
 ```
 
-### Run with docker-compose
+### Run with docker-compose 🐳
 
 Clone the repository:
 
@@ -77,11 +77,11 @@ docker-compose down
 
 ---
 
-# Compute the model ⚙️
+# Compute the model 🤖
 
 Run the pipeline to compute the model used by the API.
 
-### From a Python script
+### From a Python script 🐍
 
 ```python
 from openpredict.compute_similarities import get_drug_disease_similarities
@@ -89,7 +89,7 @@ from openpredict.compute_similarities import get_drug_disease_similarities
 get_drug_disease_similarities()
 ```
 
-### From the command line
+### From the command line ⌨️
 
 ```bash
 openpredict compute-similarities
@@ -99,5 +99,5 @@ openpredict compute-similarities
 
 # See also 👀
 
-* Browse the [automatically generated Python documentation](docs/package) in **[docs/package 📦](docs/package)** 
+* Browse the [automatically generated Python documentation](docs/package) in **[docs/ 📖](docs)** 
 * Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 

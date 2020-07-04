@@ -21,7 +21,7 @@ pip install -e .
 
 ### Start API for development
 
-Run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
+Use the CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
 
 ```bash
 openpredict start-api --debug
@@ -71,7 +71,7 @@ Because **we want you to read this**, we are going to keep it simple and clean:
 * Be nice, please.
 * Don't make jokes related to the ethnicity, origins, or community a user belongs to or identifies as, unless it is about windows users, or emacs/vim aliens.
 * Critics are encouraged, but please be considerate of other people work and difference of background.
-* Accept and answer relevant critics and questions about your approach, it shows interest in your ideas 🤝
+* Accept and answer relevant critics and questions about your approach, it usually comes from a genuine interest in your ideas 🤝
 * Be careful with confidential informations, including your and others personal informations 🔒
 * Respect intellectual property, as much as possible 🧻
 
