@@ -1,8 +1,10 @@
 [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22)
 
-**Translator OpenPredict** 🔮🐍 is API to compute and serve predicted biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). This services has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
+**Translator OpenPredict** 🔮🐍 is API to compute and serve predicted biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 
-## Install package
+This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
+
+# Install package
 
 ```bash
 pip install openpredict
@@ -10,7 +12,7 @@ pip install openpredict
 
 > PyPI link : [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
 
-## Run the API
+# Run the API
 
 ### Run in Python script 
 
@@ -69,7 +71,7 @@ Stop the container:
 docker-compose down
 ```
 
-## Compute the model
+# Compute the model
 
 Run the pipeline to compute the model used by the API.
 
@@ -87,7 +89,7 @@ get_drug_disease_similarities()
 openpredict compute-similarities
 ```
 
-## Instructions for development
+# Instructions for development
 
 Contributions and pull requests are welcome! Follow those instructions if you want to make changes to the OpenPredict source code:
 
