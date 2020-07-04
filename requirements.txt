@@ -1,0 +1,6 @@
+click
+connexion[swagger-ui]
+tornado
+scikit-learn
+pandas
+numpy
