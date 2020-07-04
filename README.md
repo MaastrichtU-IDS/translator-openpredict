@@ -1,10 +1,11 @@
-[![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22)
+[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22)
 
-**Translator OpenPredict** 🔮🐍 is API to compute and serve predicted biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
+**Translator OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
-See [automatically generated documentation](docs/) from Python docstrings in [docs/ 📖](docs/) 
+* Browse the [automatically generated documentation](docs/) in **[docs/package 📦](docs/package)** 
+* Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 
 
 # Install the package
 
@@ -94,63 +95,3 @@ get_drug_disease_similarities()
 ```bash
 openpredict compute-similarities
 ```
-
----
-
-# Instructions for development
-
-Contributions and pull requests are welcome! Follow those instructions if you want to make changes to the OpenPredict source code:
-
-### Clone
-
-```bash
-git clone https://github.com/MaastrichtU-IDS/openpredict.git
-cd openpredict
-```
-
-### Install
-
-This will install `openpredict` and update the package automatically when the files changes locally 🔃
-
-```bash
-pip install -e .
-```
-
-### Start API for development
-
-Run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
-
-```bash
-openpredict start-api --debug
-```
-
-### Test
-
-Run the OpenPredict API tests locally:
-
-```bash
-pytest tests
-```
-
-### Generate documentation
-
-Documentation in [docs/ 📖](docs/)  generated using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/)
-
-```bash
-pip install pydoc-markdown
-```
-
-Generate markdown documentation page for the `openpredict` package in `docs/`
-
-```bash
-pydoc-markdown --render-toc -p openpredict > docs/README.md
-```
-
-> This can also be done using Sphinx, see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
->
-> ```bash
-> pip install sphinx
-> sphinx-quickstart docs/ --project 'openpredict' --author 'Vincent Emonet'
-> cd docs/
-> make html
-> ```
