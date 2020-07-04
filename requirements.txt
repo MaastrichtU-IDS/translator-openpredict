@@ -4,3 +4,4 @@ tornado
 scikit-learn
 pandas
 numpy
+rdflib
