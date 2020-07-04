@@ -1,14 +1,14 @@
-import random
-import numpy as np
-from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
-from sklearn.model_selection import GroupKFold, StratifiedKFold
-import pandas as pd
+import os
+import time
+from datetime import datetime
 import numbers
 import math
-import time
-import os
+import random
+import numpy as np
+import pandas as pd
+from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
+from sklearn.model_selection import GroupKFold, StratifiedKFold
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
-
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -19,9 +19,10 @@ def adjcencydict2matrix(df, name1, name2):
     """
     df1 = df.copy()
     df1= df1.rename(index=str, columns={name1: name2, name2: name1})
-    print (len(df))
+    print('📏 Dataframe size')
+    print(len(df))
     df =df.append(df1)
-    print (len(df))
+    print(len(df))
     return df.pivot(index=name1, columns=name2)
 
 def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
@@ -30,8 +31,9 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     :param drugfeatfiles: Drug features files list
     :param diseasefeatfiles: Disease features files list
     """
+    print('Load and merge features files 📂')
     for i,featureFilename in enumerate(drugfeatfiles):
-        print (featureFilename)
+        print(featureFilename)
         df = pd.read_csv(featureFilename, delimiter=',')
         cond = df.Drug1 > df.Drug2
         df.loc[cond, ['Drug1', 'Drug2']] = df.loc[cond, ['Drug2', 'Drug1']].values
@@ -47,7 +49,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
 
     
     for i,featureFilename in enumerate(diseasefeatfiles):
-        print (featureFilename)
+        print(featureFilename)
         df=pd.read_csv(featureFilename, delimiter=',')
         cond = df.Disease1 > df.Disease2
         df.loc[cond, ['Disease1','Disease2']] = df.loc[cond, ['Disease2','Disease1']].values
@@ -80,16 +82,16 @@ def generatePairs(drug_df, disease_df, drugDiseaseKnown):
 
     commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
     commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
-    print ("commonDrugs: %d commonDiseases : %d"%(len(commonDrugs),len(commonDiseases)))
+    print("💊 commonDrugs: %d 🦠  commonDiseases: %d"%(len(commonDrugs),len(commonDiseases)))
 
     #abridged_drug_disease = [(dr,di)  for  (dr,di)  in drugDiseaseDict if dr in drugwithfeatures and di in diseaseswithfeatures ]
 
     #commonDrugs = set( [ dr  for dr,di in  abridged_drug_disease])
     #commonDiseases  =set([ di  for dr,di in  abridged_drug_disease])
 
-    print ("Gold standard, associations: %d drugs: %d diseases: %d"%(len(drugDiseaseKnown),len(drugDiseaseKnown.Drug.unique()),len(drugDiseaseKnown.Disease.unique())))
-    print ("Drugs with features: %d Diseases with features: %d"%(len(drugwithfeatures),len(diseaseswithfeatures)))
-    print ("commonDrugs: %d commonDiseases : %d"%(len(commonDrugs),len(commonDiseases)))
+    print("\n🥇 Gold standard, associations: %d drugs: %d diseases: %d"%(len(drugDiseaseKnown),len(drugDiseaseKnown.Drug.unique()),len(drugDiseaseKnown.Disease.unique())))
+    print("\n🏷️  Drugs with features  : %d Diseases with features: %d"%(len(drugwithfeatures),len(diseaseswithfeatures)))
+    print("\n♻️  commonDrugs : %d commonDiseases : %d"%(len(commonDrugs),len(commonDiseases)))
 
     pairs=[]
     classes=[]
@@ -117,11 +119,10 @@ def balance_data(pairs, classes, n_proportion):
 
     np.random.shuffle(indices_false)
     indices = indices_false[:(n_proportion*indices_true.shape[0])]
-    print ("+/-:", len(indices_true), len(indices), len(indices_false))
+    print("➕/➖ :", len(indices_true), len(indices), len(indices_false))
     pairs = np.concatenate((pairs[indices_true], pairs[indices]), axis=0)
     classes = np.concatenate((classes[indices_true], classes[indices]), axis=0) 
     
- 
     return pairs, classes
 
 
@@ -134,10 +135,9 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     :param drugDF: Drug dataframe
     :param diseaseDF: Disease dataframe
     """
-    print (drug, disease)
     a  = drugDF.loc[knownDrugDisease[:,0]][drug].values
     b  = diseaseDF.loc[knownDrugDisease[:,1]][disease].values
-    #print (a,b)
+    #print(a,b)
     c = np.sqrt( np.multiply(a,b) )
     ix2 = (knownDrugDisease == [drug, disease])
     c[ix2[:,1]& ix2[:,0]]=0.0
@@ -183,16 +183,27 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
 
 
 def trainModel(train_df, clf):
-    """Train model"""
+    """Train model
+    
+    :param train_df: Train dataframe
+    :param clf: clf
+    """
     features = list(train_df.columns.difference(['Drug','Disease','Class']))
     X = train_df[features]
     y = train_df['Class']
-    print ('fiting classifier...')
+    print('📦 Fitting classifier...')
     clf.fit(X, y)
     return clf
 
 def multimetric_score(estimator, X_test, y_test, scorers):
-    """Return a dict of score for multimetric scoring"""
+    """Return a dict of score for multimetric scoring
+    
+    :param estimator: Estimator
+    :param X_test: X test
+    :param y_test: Y test
+    :param scorers: Dict of scorers
+    :return: Multimetric scores
+    """
     scores = {}
     for name, scorer in scorers.items():
         if y_test is None:
@@ -216,7 +227,13 @@ def multimetric_score(estimator, X_test, y_test, scorers):
     return scores
 
 def evaluate(train_df, test_df, clf):
-    """Evaluate"""
+    """Evaluate
+    
+    :param train_df: Train dataframe
+    :param test_df: Test dataframe
+    :param clf: clf
+    :return: Scores
+    """
     features = list(train_df.columns.difference(['Drug','Disease','Class']))
     X_test =  test_df[features]
     y_test = test_df['Class']
@@ -224,6 +241,7 @@ def evaluate(train_df, test_df, clf):
     # https://scikit-learn.org/stable/modules/model_evaluation.html#using-multiple-metric-evaluation
     scoring = ['precision', 'recall', 'accuracy', 'roc_auc', 'f1', 'average_precision']
     
+    # TODO: check changes here
     # scorers, multimetric = metrics.scorer._check_multimetric_scoring(clf, scoring=scoring)
     # AttributeError: module 'sklearn.metrics' has no attribute 'scorer'
     # scorers, multimetric = metrics.get_scorer._check_multimetric_scoring(clf, scoring=scoring)
@@ -238,10 +256,10 @@ def evaluate(train_df, test_df, clf):
 
 def get_drug_disease_similarities():
     """The main function to run the drug-disease similarity pipeline
-
-    :param pairs_train: Port of the OpenPredict API, defaults to 8808
-    :param pairs_test: Print debug logs, defaults to False
+    
+    :return: Scores of the predicted similarities
     """
+    time_start = datetime.now()
     features_folder = "data/features/"
     resources_folder = "data/resources/"
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
@@ -263,8 +281,9 @@ def get_drug_disease_similarities():
     # Generate positive and negative pairs
     pairs, classes = generatePairs(drug_df, disease_df, drugDiseaseKnown)
 
-    # Balance negative samples/postives
+    # Balance negative/positive samples
     n_proportion = 2
+    print("🍱 n_proportion: " + str(n_proportion))
     pairs, classes= balance_data(pairs, classes, n_proportion)
 
     # Train-Test Splitting
@@ -272,20 +291,31 @@ def get_drug_disease_similarities():
     # print(len(pairs_train), len(pairs_test))
 
     # Feature extraction (Best Combined similarity)
-    print('Feature extraction...')
-    knownDrugDisease= pairs_train[classes_train==1]
+    print('\nFeature extraction ⛏️')
+    knownDrugDisease = pairs_train[classes_train==1]
+    time_pairs_train = datetime.now()
+    print('🕓 Pairs train runtime ' + str(time_pairs_train - time_start))
     train_df, test_df = calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
+    time_calculate_similarity = datetime.now()
+    print('🕓 CalculateCombinedSimilarity runtime ' + str(time_calculate_similarity - time_pairs_train))
+
 
     # Model Training
-    print('Model training...')
+    print('\nModel training 🏃')
     n_seed = 100
     clf = linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, random_state=n_seed) 
     clf = trainModel(train_df, clf)
+    time_training = datetime.now()
+    print('🕕 Model training runtime: ' + str(time_training - time_calculate_similarity))
 
     # Evaluation
-    print('Evaluation...')
+    print('\nRunning evaluation 📝')
     scores = evaluate(train_df, test_df, clf)
+    time_evaluate = datetime.now()
+    print('🕗 Evaluation runtime: ' + str(time_evaluate - time_training))
 
-    # 23min to run on my laptop
-    print ("Test results: ", scores)
+    # About 3min to run on a laptop
+    print("\nTest results 🏆")
+    print(scores)
+    print('🕛 Complete runtime: ' + str(datetime.now() - time_start))
     return scores
