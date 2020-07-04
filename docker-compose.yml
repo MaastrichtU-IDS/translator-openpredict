@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  openpredict-api:
+    container_name: openpredict-api
+    # image: umids/openpredict-api:latest
+    build: .
+    restart: unless-stopped
+    ports: 
+      - 8808:8808
+    environment: 
+      VIRTUAL_HOST: openpredict.137.120.31.102.nip.io
+      # LETSENCRYPT_HOST: openpredict.137.120.31.102.nip.io
+    # volumes:
+    #   - data:/data
