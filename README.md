@@ -4,7 +4,7 @@
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
-* Browse the [automatically generated documentation](docs/) in **[docs/package 📦](docs/package)** 
+* Browse the [automatically generated Python documentation](docs/package) in **[docs/package 📦](docs/package)** 
 * Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 
 
 # Install the package
@@ -14,6 +14,8 @@ pip install openpredict
 ```
 
 > PyPI link : [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
+
+> You might want to use a `virtualenv` if you are use to it, but this should not be necessary.
 
 ---
 

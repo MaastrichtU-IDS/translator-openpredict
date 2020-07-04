@@ -1,7 +1,7 @@
 Documentation to run OpenPredict in development and contribute to the project 📝
 
-* Go back to the [documentation index](../package) at **[ maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
-* Browse the [automatically generated documentation](../../) at **[docs/package 📦](../../)** 
+* Go back to the [documentation main page](https://maastrichtu-ids.github.io/translator-openpredict) at **[ maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
+* Browse the [automatically generated Python documentation](https://maastrichtu-ids.github.io/translator-openpredict/docs/package) at **[docs/package 📦](https://maastrichtu-ids.github.io/translator-openpredict/docs/package)** 
 
 # Instructions for development
 
@@ -63,14 +63,14 @@ pydoc-markdown --render-toc -p openpredict > docs/README.md
 
 # Code of Conduct
 
-Absolutely everyone is welcome to join our project! 🌍🌏🌎🌜
+Absolutely everyone is welcome to join our project! 🌍 🌏 🌎 🌜
 
 Except from people with harmful intentions towards other human beings, or algorithms.
 
 Because **we want you to read this**, we are going to keep it simple and clean:
 
 * Be nice, please.
-* Don't make jokes related to the ethnicity, origins, or community a user belongs to or identifies as, unless it is about `windows` users, or `emac`/`vim` aliens.
+* Don't make jokes related to the ethnicity, origins, or community a user belongs to or identifies as, unless it is about windows users, or emacs/vim aliens.
 * Be honest and considerate when you criticize someone works, we are here for that.
 * Accept and answer relevant critics and questions about your approach 🤝
 * Be careful with confidential informations, including your and others personal informations 🔒
