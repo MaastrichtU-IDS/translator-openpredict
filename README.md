@@ -24,7 +24,7 @@ debug = False
 openpredict_api.start_api(port, debug)
 ```
 
-> Access Swagger UI on http://localhost:8808/ui
+> Access the Swagger UI at http://localhost:8808/ui
 
 > Run by default in production, set `debug = True` to run in development mode. 
 
@@ -36,7 +36,7 @@ Run in production with [Tornado Web Server 🌪️](https://www.tornadoweb.org/e
 openpredict start-api
 ```
 
-> Access Swagger UI on http://localhost:8808/ui
+> Access the Swagger UI at http://localhost:8808/ui
 
 Provide the port as arguments:
 
