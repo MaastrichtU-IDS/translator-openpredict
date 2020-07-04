@@ -39,7 +39,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
             drug_df=drug_df.merge(df,on=['Drug1','Drug2'],how='inner')
             #drug_df=drug_df.merge(temp,how='outer',on='Drug')
         else:
-            drug_df =df
+            drug_df=df
     drug_df.fillna(0, inplace=True)
     
     drug_df = adjcencydict2matrix(drug_df, 'Drug1', 'Drug2')

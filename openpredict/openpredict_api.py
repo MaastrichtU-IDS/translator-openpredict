@@ -28,7 +28,7 @@ def start_api(port=8808, debug=False):
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
-    print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "/ui\033[1m 🖥️")
+    print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "/ui\033[1m 🔗")
     api.run(port=port, debug=debug, server=deployment_server)
 
 
