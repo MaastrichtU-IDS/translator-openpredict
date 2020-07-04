@@ -1,0 +1,71 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: vincent.emonet@maastrichtuniversity.nl
+    name: Institute of Data Science at Maastricht University
+    url: https://maastrichtuniversity.nl/ids
+  description: "Translator OpenPredict is an API to compute and serve predictions of biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). This services has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project."
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://opensource.org/licenses/MIT
+  title: Translator OpenPredict API 🔮🐍 
+  version: '1.0'
+# servers:
+# - description: Maastricht University server
+#   url: http://openpredict.semanticscience.org
+tags:
+- description: Predict new biomedical associations with the Translator OpenPredict API
+  name: translator
+paths:
+  /v1/predict/drug-disease:
+    get:
+      operationId: openpredict.openpredict_api.get_predict_drug_disease
+      summary: Get predictions for Drug-Disease associations.
+      description: Return the OpenPredict prediction score for the disease and drug provided
+      tags:
+      - translator
+      parameters:
+      - in: query
+        name: disease
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: drug
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+            # application/json: 
+            #   schema:
+            #     x-body-name: PredictionResult
+            #     $ref: '#/components/schemas/PredictionResult'
+            # application/xml: {}
+            # text/csv: {}
+            # text/tab-separated-values: {}
+          description: Successful Operation
+components:
+  schemas:
+    PredictionResult:
+      description: Prediction results
+      properties:
+        drug:
+          description: Drug of the predicted association 
+          example: drug1
+          type: string
+        disease:
+          description: Disease of the predicted association 
+          example: bad_disease
+          type: string
+        score:
+          description: Score of the prediction
+          example: 0.8
+          type: number
+      required:
+      - drug
+      - disease
+      type: object
