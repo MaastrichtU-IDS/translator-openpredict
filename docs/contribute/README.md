@@ -1,7 +1,4 @@
-Documentation to run OpenPredict in development and contribute to the project 📝
-
-* Go back to the [documentation main page](https://maastrichtu-ids.github.io/translator-openpredict) at **[maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
-* Browse the [automatically generated Python documentation](https://maastrichtu-ids.github.io/translator-openpredict/docs/package) at **[docs 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)** 
+Documentation to run the **Translator OpenPredict API 🔮🐍**  in development and contribute to the project.
 
 # Instructions for development 📝
 
@@ -61,6 +58,8 @@ pydoc-markdown --render-toc -p openpredict > docs/README.md
 > make html
 > ```
 
+---
+
 # Code of Conduct 🤼
 
 Absolutely everyone is welcome to join our project! 🌍 🌏 🌎 🌜
@@ -78,3 +77,9 @@ Because **we want you to read this**, we are going to keep it simple and clean:
 
 > If you are feeling threatened or harassed within this project, **please speak up and contact our team at [ids-contact-l@maastrichtuniversity.nl](mailto:ids-contact-l@maastrichtuniversity.nl)** 🗣️
 
+---
+
+# See also 👀
+
+* The [documentation main page](https://maastrichtu-ids.github.io/translator-openpredict) at **[maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
+* Browse the [automatically generated Python documentation](https://maastrichtu-ids.github.io/translator-openpredict/docs/package) at **[docs 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)** 

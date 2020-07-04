@@ -4,9 +4,6 @@
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
-* Browse the [automatically generated Python documentation](docs/package) in **[docs/package 📦](docs/package)** 
-* Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 
-
 # Install the package 📦
 
 ```bash
@@ -97,3 +94,10 @@ get_drug_disease_similarities()
 ```bash
 openpredict compute-similarities
 ```
+
+---
+
+# See also 👀
+
+* Browse the [automatically generated Python documentation](docs/package) in **[docs/package 📦](docs/package)** 
+* Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 
