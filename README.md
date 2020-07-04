@@ -7,7 +7,7 @@ This service has been built from the [fair-workflows/openpredict](https://github
 * Browse the [automatically generated Python documentation](docs/package) in **[docs/package 📦](docs/package)** 
 * Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 
 
-# Install the package
+# Install the package 📦
 
 ```bash
 pip install openpredict
@@ -19,7 +19,7 @@ pip install openpredict
 
 ---
 
-# Run the API
+# Run the API 🌐
 
 ### Run from Python script 
 
@@ -80,7 +80,7 @@ docker-compose down
 
 ---
 
-# Compute the model
+# Compute the model ⚙️
 
 Run the pipeline to compute the model used by the API.
 

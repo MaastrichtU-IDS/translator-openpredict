@@ -1,9 +1,9 @@
 Documentation to run OpenPredict in development and contribute to the project 📝
 
-* Go back to the [documentation main page](https://maastrichtu-ids.github.io/translator-openpredict) at **[ maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
-* Browse the [automatically generated Python documentation](https://maastrichtu-ids.github.io/translator-openpredict/docs/package) at **[docs/package 📦](https://maastrichtu-ids.github.io/translator-openpredict/docs/package)** 
+* Go back to the [documentation main page](https://maastrichtu-ids.github.io/translator-openpredict) at **[maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
+* Browse the [automatically generated Python documentation](https://maastrichtu-ids.github.io/translator-openpredict/docs/package) at **[docs 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)** 
 
-# Instructions for development
+# Instructions for development 📝
 
 Contributions, critics and pull requests are welcomed from anybody 🌍! Follow those instructions if you want to make changes to the OpenPredict source code:
 
@@ -61,7 +61,7 @@ pydoc-markdown --render-toc -p openpredict > docs/README.md
 > make html
 > ```
 
-# Code of Conduct
+# Code of Conduct 🤼
 
 Absolutely everyone is welcome to join our project! 🌍 🌏 🌎 🌜
 
@@ -71,8 +71,8 @@ Because **we want you to read this**, we are going to keep it simple and clean:
 
 * Be nice, please.
 * Don't make jokes related to the ethnicity, origins, or community a user belongs to or identifies as, unless it is about windows users, or emacs/vim aliens.
-* Be honest and considerate when you criticize someone works, we are here for that.
-* Accept and answer relevant critics and questions about your approach 🤝
+* Critics are encouraged, but please be considerate of other people work and difference of background.
+* Accept and answer relevant critics and questions about your approach, it shows interest in your ideas 🤝
 * Be careful with confidential informations, including your and others personal informations 🔒
 * Respect intellectual property, as much as possible 🧻
 
