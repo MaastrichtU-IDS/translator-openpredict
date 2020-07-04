@@ -1,4 +1,4 @@
-# Table of Contents
+# OpenPredict Package documentation 🔮🐍
 
 * [openpredict](#.openpredict)
 * [openpredict.compute\_similarities](#.openpredict.compute_similarities)
@@ -26,7 +26,7 @@
 # openpredict.compute\_similarities
 
 <a name=".openpredict.compute_similarities.adjcencydict2matrix"></a>
-#### adjcencydict2matrix
+### adjcencydict2matrix
 
 ```python
 adjcencydict2matrix(df, name1, name2)
@@ -41,7 +41,7 @@ Convert dict to matrix
 - `name2`: columns name
 
 <a name=".openpredict.compute_similarities.mergeFeatureMatrix"></a>
-#### mergeFeatureMatrix
+### mergeFeatureMatrix
 
 ```python
 mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
@@ -55,7 +55,7 @@ Merge the drug and disease feature matrix
 - `diseasefeatfiles`: Disease features files list
 
 <a name=".openpredict.compute_similarities.generatePairs"></a>
-#### generatePairs
+### generatePairs
 
 ```python
 generatePairs(drug_df, disease_df, drugDiseaseKnown)
@@ -70,7 +70,7 @@ Generate positive and negative pairs using the Drug dataframe, the Disease dataf
 - `drugDiseaseKnown`: Known drug-disease association dataframe
 
 <a name=".openpredict.compute_similarities.balance_data"></a>
-#### balance\_data
+### balance\_data
 
 ```python
 balance_data(pairs, classes, n_proportion)
@@ -85,7 +85,7 @@ Balance negative and positives samples
 - `n_proportion`: Proportion number, e.g. 2
 
 <a name=".openpredict.compute_similarities.geometricMean"></a>
-#### geometricMean
+### geometricMean
 
 ```python
 geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF)
@@ -102,7 +102,7 @@ Compute the geometric means of a drug-disease association using previously gener
 - `diseaseDF`: Disease dataframe
 
 <a name=".openpredict.compute_similarities.createFeatureDF"></a>
-#### createFeatureDF
+### createFeatureDF
 
 ```python
 createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
@@ -123,7 +123,7 @@ Create the features dataframes
 The features dataframe
 
 <a name=".openpredict.compute_similarities.calculateCombinedSimilarity"></a>
-#### calculateCombinedSimilarity
+### calculateCombinedSimilarity
 
 ```python
 calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
@@ -142,7 +142,7 @@ Compute combined similarities
 - `knownDrugDisease`: Known drug-disease associations
 
 <a name=".openpredict.compute_similarities.trainModel"></a>
-#### trainModel
+### trainModel
 
 ```python
 trainModel(train_df, clf)
@@ -151,7 +151,7 @@ trainModel(train_df, clf)
 Train model
 
 <a name=".openpredict.compute_similarities.multimetric_score"></a>
-#### multimetric\_score
+### multimetric\_score
 
 ```python
 multimetric_score(estimator, X_test, y_test, scorers)
@@ -160,7 +160,7 @@ multimetric_score(estimator, X_test, y_test, scorers)
 Return a dict of score for multimetric scoring
 
 <a name=".openpredict.compute_similarities.evaluate"></a>
-#### evaluate
+### evaluate
 
 ```python
 evaluate(train_df, test_df, clf)
@@ -169,7 +169,7 @@ evaluate(train_df, test_df, clf)
 Evaluate
 
 <a name=".openpredict.compute_similarities.get_drug_disease_similarities"></a>
-#### get\_drug\_disease\_similarities
+### get\_drug\_disease\_similarities
 
 ```python
 get_drug_disease_similarities()
@@ -186,7 +186,7 @@ The main function to run the drug-disease similarity pipeline
 # openpredict.openpredict\_api
 
 <a name=".openpredict.openpredict_api.start_api"></a>
-#### start\_api
+### start\_api
 
 ```python
 start_api(port=8808, debug=False)
@@ -200,7 +200,7 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 - `debug`: Print debug logs, defaults to False
 
 <a name=".openpredict.openpredict_api.get_predict_drug_disease"></a>
-#### get\_predict\_drug\_disease
+### get\_predict\_drug\_disease
 
 ```python
 get_predict_drug_disease(drug, disease)
@@ -221,7 +221,7 @@ Prediction result object with score
 # openpredict.\_\_main\_\_
 
 <a name=".openpredict.__main__.main"></a>
-#### main
+### main
 
 ```python
 @click.group()

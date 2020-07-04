@@ -58,6 +58,7 @@ jobs:
     - name: Hotfix generated docs
       run: |
         find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Package documentation 🔮🐍/g" {} +
+        find docs/README.md -type f -exec sed -i "s/#### /### /g" {} +
 
     - name: Commit and push
       run: |

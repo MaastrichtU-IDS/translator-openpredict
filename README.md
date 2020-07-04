@@ -4,7 +4,9 @@
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
-# Install package
+See [automatically generated documentation](docs/) from Python docstrings in [docs/ 📖](docs/) 
+
+# Install the package
 
 ```bash
 pip install openpredict
@@ -12,9 +14,11 @@ pip install openpredict
 
 > PyPI link : [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
 
+---
+
 # Run the API
 
-### Run in Python script 
+### Run from Python script 
 
 ```python
 from openpredict import openpredict_api
@@ -28,7 +32,7 @@ openpredict_api.start_api(port, debug)
 
 > Run by default in production, set `debug = True` to run in development mode. 
 
-### Run with the command line
+### Run from the command line
 
 Run in production with [Tornado Web Server 🌪️](https://www.tornadoweb.org/en/stable/)
 
@@ -71,6 +75,8 @@ Stop the container:
 docker-compose down
 ```
 
+---
+
 # Compute the model
 
 Run the pipeline to compute the model used by the API.
@@ -83,11 +89,13 @@ from openpredict.compute_similarities import get_drug_disease_similarities
 get_drug_disease_similarities()
 ```
 
-### From the commandline
+### From the command line
 
 ```bash
 openpredict compute-similarities
 ```
+
+---
 
 # Instructions for development
 
@@ -108,7 +116,7 @@ This will install `openpredict` and update the package automatically when the fi
 pip install -e .
 ```
 
-### Start for development
+### Start API for development
 
 Run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
 
@@ -126,15 +134,13 @@ pytest tests
 
 ### Generate documentation
 
-See automatically generated documentation in [docs/ 📖](docs/) 
-
-Documentation generated Using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/)
+Documentation in [docs/ 📖](docs/)  generated using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/)
 
 ```bash
 pip install pydoc-markdown
 ```
 
-Generate markdown documentation page for the OpenPredict package in `docs/`
+Generate markdown documentation page for the `openpredict` package in `docs/`
 
 ```bash
 pydoc-markdown --render-toc -p openpredict > docs/README.md
