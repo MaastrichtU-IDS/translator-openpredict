@@ -99,5 +99,5 @@ openpredict compute-similarities
 
 # See also 👀
 
-* Browse the [automatically generated Python documentation](docs/package) in **[docs/ 📖](docs)** 
-* Read the [documentation to run in development and contribute](docs/contribute) in **[docs/contribute 📝](docs/contribute)** 
+* **[Automatically generated Python Package documentation 📖](docs)**
+* **[Documentation to run in development and contribute 📝](docs/contribute)**

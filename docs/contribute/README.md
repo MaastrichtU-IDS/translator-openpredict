@@ -81,5 +81,5 @@ Because **we want you to read this**, we are going to keep it simple and clean:
 
 # See also 👀
 
-* The [documentation main page](https://maastrichtu-ids.github.io/translator-openpredict) at **[maastrichtu-ids.github.io/translator-openpredict 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)** 
-* Browse the [automatically generated Python documentation](https://maastrichtu-ids.github.io/translator-openpredict/docs/package) at **[docs 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)** 
+* **[Documentation main page 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)**
+* **[Automatically generated Python Package documentation 📖](docs)**
