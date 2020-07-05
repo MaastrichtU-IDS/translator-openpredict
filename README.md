@@ -79,7 +79,7 @@ docker-compose down
 
 # Compute the model 🤖
 
-Run the pipeline to compute the model used by the API.
+Run the pipeline to compute the model used by the OpenPredict API.
 
 ### From a Python script
 
@@ -99,5 +99,5 @@ openpredict compute-similarities
 
 # See also 👀
 
-* **[Automatically generated Python Package documentation 📖](docs)**
 * **[Documentation to run in development and contribute 📝](docs/contribute)**
+* **[Automatically generated Python Package documentation 📖](docs)**

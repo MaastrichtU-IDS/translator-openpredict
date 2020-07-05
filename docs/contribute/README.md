@@ -1,14 +1,14 @@
-Documentation to run the **Translator OpenPredict API 🔮🐍**  in development and contribute to the project.
+Documentation to run the **Translator OpenPredict API 🔮🐍**  in development, and contribute to the project.
 
 # Instructions for development 📝
 
-Contributions, critics and pull requests are welcomed from anybody 🌍! Follow those instructions if you want to make changes to the OpenPredict source code:
+Contributions, critics and pull requests are welcomed from anybody 🌍! Follow those instructions if you want to make changes to the **OpenPredict** source code:
 
 ### Clone
 
 ```bash
-git clone https://github.com/MaastrichtU-IDS/openpredict.git
-cd openpredict
+git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+cd translator-openpredict
 ```
 
 ### Install
@@ -68,7 +68,7 @@ Except from people with harmful intentions towards other human beings, or algori
 
 Because **we want you to read this**, we are going to keep it simple and clean:
 
-* Be nice, please.
+* **Be nice, please.**
 * Don't make jokes related to the ethnicity, origins, or community a user belongs to or identifies as, unless it is about windows users, or emacs/vim aliens.
 * Critics are encouraged, but please be considerate of other people work and difference of background.
 * Accept and answer relevant critics and questions about your approach, it usually comes from a genuine interest in your ideas 🤝
@@ -82,4 +82,4 @@ Because **we want you to read this**, we are going to keep it simple and clean:
 # See also 👀
 
 * **[Documentation main page 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)**
-* **[Automatically generated Python Package documentation 📖](docs)**
+* **[Automatically generated Python Package documentation 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)**
