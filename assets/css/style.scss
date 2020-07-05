@@ -4,5 +4,16 @@
 @import "{{ site.theme }}";
 
 #banner {
-    background: #388e3c;
+    background: #81c784;
+    border: 1px solid #81c784;
+}
+
+// GitHub Button background
+#banner .fork {
+    background-color: #a5d6a7;
+}
+
+// GitHub Button border
+#banner .button {
+    border: 1px solid #66bb6a
 }
