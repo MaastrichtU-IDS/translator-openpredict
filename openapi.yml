@@ -11,7 +11,7 @@ info:
   termsOfService: https://opensource.org/licenses/MIT
   title: Translator OpenPredict API 🔮🐍 
   version: '1.0'
-servers:
+# servers:
 # - description: Maastricht University server
 #   url: https://openpredict.137.120.31.102.nip.io
 #   url: http://openpredict.semanticscience.org
