@@ -3,10 +3,13 @@
 
 @import "{{ site.theme }}";
 
-// Dark green
+// Dark green for bold and URLs hover
 strong {
     color: #1b5e20;
 }
+a:hover {
+    color: #1b5e20;
+} 
 
 // Change banner color to mat green, and position to top
 #banner {
