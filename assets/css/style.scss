@@ -3,13 +3,17 @@
 
 @import "{{ site.theme }}";
 
-// Dark green for bold and URLs hover
+// Make LeapDay blue/green
+// Improve margins to take advantage of as much space as possible
+// Try to use percents as much as possible to keep it responsive 
+
+// Dark green for bold text and URLs hover
 strong {
     color: #1b5e20;
 }
-a:hover {
-    color: #1b5e20;
-} 
+// a:hover {
+//     color: #1b5e20;
+// } 
 
 // Change banner color to mat green, and position to top
 #banner {
