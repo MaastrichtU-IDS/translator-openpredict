@@ -2,7 +2,7 @@ Documentation to run the **Translator OpenPredict API** in development.
 
 Contributions, feedbacks and pull requests are welcomed from anyone!
 
-# Install for development 📥
+# Install for dev 📥
 
 Follow those instructions if you want to run **OpenPredict** in development, and more easily make changes to the source code:
 
@@ -39,7 +39,7 @@ echo 'eval "$(_OPENPREDICT_COMPLETE=source_zsh openpredict)"' >> ~/.zshrc
 
   > Bash autocomplete needs to be tested.
 
-# Development 🚧
+# Run in dev 🚧
 
 ### Start API
 
