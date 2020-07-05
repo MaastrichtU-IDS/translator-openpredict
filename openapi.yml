@@ -4,7 +4,7 @@ info:
     email: vincent.emonet@maastrichtuniversity.nl
     name: Institute of Data Science at Maastricht University
     url: https://maastrichtuniversity.nl/ids
-  description: "Translator OpenPredict is an API to compute and serve predictions of biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). This services has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project."
+  description: "Translator OpenPredict is an API to compute and serve predictions of biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). This services has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.\n\n[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22)"
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
