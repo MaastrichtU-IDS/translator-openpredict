@@ -22,8 +22,10 @@ strong {
 #banner ul li a.button {
     background-color: #a5d6a7;
 }
+// Change "Downloads:" text color
 #banner .downloads span {
-    color: #2e7d32;
+    // color: #2e7d32; lighter green
+    color: #1b5e20;
 }
 
 // View on GitHub Button border
@@ -44,6 +46,7 @@ header {
 header h1 {
     font-size: 30px 
 }
+// Change margin top of main section, and set width to 100% of the parent
 section {
     margin-top: 140px;
     width: 100%;
@@ -55,11 +58,12 @@ nav {
     left: 20px;
     margin-left: 0px;
 }
+// Remove padding from the navbar
 nav ul {
     padding: 0px;
 }
 
-// Change body width
+// Change body width (goes with section 100% width)
 .wrapper {
-    width: 60%;
+    width: 65%;
 }
