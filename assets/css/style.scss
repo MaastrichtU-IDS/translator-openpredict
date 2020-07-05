@@ -3,6 +3,11 @@
 
 @import "{{ site.theme }}";
 
+// Dark green
+strong {
+    color: #1b5e20;
+}
+
 // Change banner color to mat green, and position to top
 #banner {
     background: #81c784;
@@ -10,14 +15,21 @@
     top: 72px;
 }
 
-// View on GitHub Button background
+// Change Buttons background
 #banner .fork {
     background-color: #a5d6a7;
+}
+#banner ul li a.button {
+    background-color: #a5d6a7;
+}
+#banner .downloads span {
+    color: #2e7d32;
 }
 
 // View on GitHub Button border
 #banner .button {
     border: 1px solid #66bb6a
+    color: #1b5e20;
 }
 
 // View on GitHub Button background when hover
