@@ -299,7 +299,6 @@ def get_drug_disease_similarities():
     time_calculate_similarity = datetime.now()
     print('🕓 CalculateCombinedSimilarity runtime ' + str(time_calculate_similarity - time_pairs_train))
 
-
     # Model Training
     print('\nModel training 🏃')
     n_seed = 100

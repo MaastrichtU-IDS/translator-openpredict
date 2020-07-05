@@ -1,2 +1,4 @@
 theme: jekyll-theme-leap-day
 title: Translator OpenPredict 🔮🐍
+description: Translator API to compute and serve predictions of biomedical concepts associations using the PREDICT method
+show_downloads: false
