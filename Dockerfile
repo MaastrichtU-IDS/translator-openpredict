@@ -4,6 +4,7 @@ FROM python:3.7
 
 COPY . .
 
+# Install from source code
 RUN pip install -e .
 
 EXPOSE 8808

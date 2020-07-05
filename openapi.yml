@@ -12,9 +12,8 @@ info:
   title: Translator OpenPredict API 🔮🐍 
   version: '1.0'
 # servers:
-# - description: Maastricht University server
-#   url: https://openpredict.137.120.31.102.nip.io
-#   url: http://openpredict.semanticscience.org
+# - description: Maastricht University IDS
+#   url: https://openpredict.137.120.31.102.nip.io/v1
 tags:
 - description: Predict new biomedical associations with the Translator OpenPredict API
   name: translator

@@ -1,7 +1,7 @@
 import pytest
 import connexion
 
-# Create Flask OpenAPI before running tests
+# Create and start Flask OpenAPI before running tests
 flask_app = connexion.FlaskApp(__name__)
 flask_app.add_api('../openapi.yml')
 @pytest.fixture(scope='module')

@@ -2,7 +2,7 @@ import pytest
 from openpredict.compute_similarities import get_drug_disease_similarities
 
 def test_get_drug_disease_similarities():
-    """Test model to get drug-disease similarities"""
+    """Test the model to get drug-disease similarities"""
     similiraties_json = get_drug_disease_similarities()
 
     assert 0.80 < similiraties_json['precision'] < 0.95
