@@ -10,9 +10,7 @@ def start_api(port=8808, debug=False):
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
     
-    api = connexion.App(__name__)
-    # app = connexion.FlaskApp(__name__, server='gevent')
-    # app = connexion.App(__name__, server='tornado')
+    api = connexion.App(__name__, options={"swagger_url": ""})
 
     api.add_api('../openapi.yml', validate_responses=True)
 
@@ -28,7 +26,7 @@ def start_api(port=8808, debug=False):
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
-    print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "/ui\033[1m 🔗")
+    print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(port=port, debug=debug, server=deployment_server)
 
 

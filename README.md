@@ -40,7 +40,7 @@ debug = False
 openpredict_api.start_api(port, debug)
 ```
 
-> Access the Swagger UI at [http://localhost:8808/ui](http://localhost:8808/ui)
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
 > Run by default in production, set `debug = True` to run in development mode. 
 
@@ -52,7 +52,7 @@ Run in production with [Tornado Web Server 🌪️](https://www.tornadoweb.org/e
 openpredict start-api
 ```
 
-> Access the Swagger UI at [http://localhost:8808/ui](http://localhost:8808/ui)
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
 Provide the port as arguments:
 
@@ -66,22 +66,26 @@ Show help:
 openpredict --help
 ```
 
-### Run with docker-compose
+### Run with Docker
 
-If you just want to run the API without installing the package. 
+Running using Docker can be convenient of you just want to run the API without installing the package, or to run in production, alongside other services.
 
-Clone the repository:
+Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
 
 ```bash
 git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Start the `openpredict-api` container 🐳
+Start the `openpredict-api` container with [docker-compose 🐳](https://docs.docker.com/compose/)
 
 ```bash
 docker-compose up
 ```
+
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
+
+> We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST`.
 
 Stop the container:
 
