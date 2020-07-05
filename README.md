@@ -59,8 +59,8 @@ openpredict --help
 Clone the repository:
 
 ```bash
-git clone https://github.com/MaastrichtU-IDS/openpredict.git
-cd openpredict
+git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+cd translator-openpredict
 ```
 
 Start the `openpredict-api` container 🐳
