@@ -3,23 +3,38 @@
 
 @import "{{ site.theme }}";
 
-// Banner background and border
+// Change banner color to mat green, and position to top
 #banner {
     background: #81c784;
     border: 1px solid #81c784;
+    top: 72px;
 }
 
-// GitHub Button background
+// View on GitHub Button background
 #banner .fork {
     background-color: #a5d6a7;
 }
 
-// GitHub Button border
+// View on GitHub Button border
 #banner .button {
     border: 1px solid #66bb6a
 }
 
-// GitHub Button background when hover
+// View on GitHub Button background when hover
 #banner .button:hover {
     background-color: #66bb6a;
+}
+
+// Change header size
+header {
+    padding: 10px 0px 0px 0px;
+}
+header h1 {
+    font-size: 30px 
+}
+section {
+    margin-top: 150px;
+}
+nav {
+    top: 150px;
 }

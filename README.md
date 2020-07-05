@@ -60,6 +60,12 @@ Provide the port as arguments:
 openpredict start-api --port 8808
 ```
 
+Run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
+
+```bash
+openpredict start-api --debug
+```
+
 Show help:
 
 ```bash
@@ -117,5 +123,6 @@ openpredict compute-similarities
 
 # See also 👀
 
-* **[Documentation to run in development and contribute 📝](docs/contribute)**
+* **[Documentation to run in development 📝](docs/dev)**
 * **[Documentation generated from the source code 📖](docs)**
+* **[Code of Conduct 🤼](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/CODE_OF_CONDUCT.md)**
