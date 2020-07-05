@@ -6,17 +6,29 @@ This service has been built from the [fair-workflows/openpredict](https://github
 
 # Install the package 📦
 
+You might want to use a `virtualenv` if you are used to it, but this should not be necessary.
+
+### From PyPI
+
 ```bash
 pip install openpredict
 ```
 
 > PyPI link : [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
 
-> You might want to use a `virtualenv` if you are use to it, but this should not be necessary.
+### From GitHub
+
+You can also install from the latest version of the source code on GitHub:
+
+```bash
+pip install git+https://github.com/MaastrichtU-IDS/translator-openpredict
+```
 
 ---
 
 # Run the API 🌐
+
+After installing the `openpredict` package (except for docker).
 
 ### Run from Python script
 
@@ -55,6 +67,8 @@ openpredict --help
 ```
 
 ### Run with docker-compose
+
+If you just want to run the API without installing the package. 
 
 Clone the repository:
 
@@ -100,4 +114,4 @@ openpredict compute-similarities
 # See also 👀
 
 * **[Documentation to run in development and contribute 📝](docs/contribute)**
-* **[Automatically generated Python Package documentation 📖](docs)**
+* **[Documentation generated from the source code 📖](docs)**

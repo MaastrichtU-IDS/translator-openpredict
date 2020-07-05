@@ -6,6 +6,7 @@ services:
     # image: umids/openpredict-api:latest
     build: .
     restart: unless-stopped
+    # command: compute-similarities
     ports: 
       - 8808:8808
     environment: 

@@ -8,4 +8,5 @@ RUN pip install -e .
 
 EXPOSE 8808
 
-ENTRYPOINT [ "openpredict", "start-api" ]
+ENTRYPOINT [ "openpredict" ]
+CMD [ "start-api" ]

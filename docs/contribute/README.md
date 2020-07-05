@@ -1,8 +1,8 @@
-Documentation to run the **Translator OpenPredict API 🔮🐍**  in development, and contribute to the project.
+Documentation to run the **Translator OpenPredict API**  in development, and contribute to the project.
 
 # Instructions for development 📝
 
-Contributions, critics and pull requests are welcomed from anybody 🌍! Follow those instructions if you want to make changes to the **OpenPredict** source code:
+Contributions, critics and pull requests are welcomed from anybody! Follow those instructions if you want to make changes to the **OpenPredict** source code:
 
 ### Clone
 
@@ -18,6 +18,24 @@ This will install `openpredict` and update the package automatically when the fi
 ```bash
 pip install -e .
 ```
+
+### Enable autocomplete
+
+Enabling command line autocomplete in the terminal provides a better experience using the CLI ⌨️ 
+
+* If you use `ZSH`: add a line to the `~/.zshrc` file.
+
+```bash
+echo 'eval "$(_OPENPREDICT_COMPLETE=source_zsh openpredict)"' >> ~/.zshrc
+```
+
+* If you use `Bash`: add a line to the `~/.bashrc` file. 
+
+  ```bash
+  echo 'eval "$(_OPENPREDICT_COMPLETE=source openpredict)"' >> ~/.bashrc
+  ```
+
+  > Bash autocomplete needs to be tested.
 
 ### Start API for development
 
@@ -75,11 +93,11 @@ Because **we want you to read this**, we are going to keep it simple and clean:
 * Be careful with confidential informations, including your and others personal informations 🔒
 * Respect intellectual property, as much as possible 🧻
 
-> If you are feeling threatened or harassed within this project, **please speak up and contact our team at [ids-contact-l@maastrichtuniversity.nl](mailto:ids-contact-l@maastrichtuniversity.nl)** 🗣️
+> If you are feeling threatened or harassed within this project, **please speak up and contact our team at [ids-contact-l@maastrichtuniversity.nl 📬](mailto:ids-contact-l@maastrichtuniversity.nl)**
 
 ---
 
 # See also 👀
 
 * **[Documentation main page 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)**
-* **[Automatically generated Python Package documentation 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)**
+* **[Documentation generated from the source code 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)**
