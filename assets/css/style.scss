@@ -34,7 +34,14 @@ header h1 {
 }
 section {
     margin-top: 140px;
+    width: 100%;
 }
 nav {
     top: 140px;
+    width: 14%;
+}
+
+// Change body width
+.wrapper {
+    width: 60%;
 }
