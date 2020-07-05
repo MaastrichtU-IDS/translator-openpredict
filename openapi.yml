@@ -48,6 +48,57 @@ paths:
             # text/csv: {}
             # text/tab-separated-values: {}
           description: Successful Operation
+  /v1/predict/drug:
+    get:
+      operationId: openpredict.openpredict_api.get_predict_drug
+      summary: Get predicted Drugs for a given Disease.
+      description: Return the Drugs predicted to be associated with the given Disease, with scores
+      tags:
+      - translator
+      parameters:
+      - in: query
+        name: disease
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+            # application/json: 
+            #   schema:
+            #     x-body-name: PredictionResult
+            #     $ref: '#/components/schemas/PredictionResult'
+            # application/xml: {}
+            # text/csv: {}
+            # text/tab-separated-values: {}
+          description: Successful Operation
+  
+  /v1/predict/disease:
+    get:
+      operationId: openpredict.openpredict_api.get_predict_disease
+      summary: Get predicted associated Diseases for a given Drug.
+      description: Return the Diseases predicted to be associated with the given Drug, with scores
+      tags:
+      - translator
+      parameters:
+      - in: query
+        name: drug
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json: {}
+            # application/json: 
+            #   schema:
+            #     x-body-name: PredictionResult
+            #     $ref: '#/components/schemas/PredictionResult'
+            # application/xml: {}
+            # text/csv: {}
+            # text/tab-separated-values: {}
+          description: Successful Operation
 components:
   schemas:
     PredictionResult:

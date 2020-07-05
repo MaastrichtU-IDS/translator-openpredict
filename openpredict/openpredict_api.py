@@ -37,8 +37,31 @@ def get_predict_drug_disease(drug, disease):
     
     :param drug: Drug of the predicted association 
     :param disease: Disease of the predicted association 
-    :return: Prediction result object with score
+    :return: Prediction results object with score
     """
     # similarity_scores = get_drug_disease_similarities()
     prediction_result = {'drug' : drug, 'disease': disease, 'score': 0.8}
+    return prediction_result or ('Not found', 404)
+
+def get_predict_disease(drug):
+    """Get predicted associated Diseases for a given Drug.
+    
+    :param drug: Search for predicted Diseases for this Drug
+    :return: Prediction results object with score
+    """
+    # similarity_scores = get_drug_disease_similarities()
+    prediction_result = {
+        'results': [{'drug' : drug, 'disease': 'associated disease1', 'score': 0.8}],
+        'count': 1
+    }
+    return prediction_result or ('Not found', 404)
+
+def get_predict_drug(disease):
+    """Get predicted Drugs for a given Disease
+    
+    :param disease: Search for predicted Drugs for this Disease
+    :return: Prediction results object with score
+    """
+    # similarity_scores = get_drug_disease_similarities()
+    prediction_result = {'drug' : 'associated drug1', 'disease': disease, 'score': 0.8}
     return prediction_result or ('Not found', 404)
