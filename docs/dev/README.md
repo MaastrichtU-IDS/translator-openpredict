@@ -25,13 +25,13 @@ pip install -e .
 
 Enabling command line autocomplete in the terminal provides a better experience using the CLI ⌨️ 
 
-* If you use `ZSH`: add a line to the `~/.zshrc` file.
+* If you use `ZSH` (recommended): add this line to the `~/.zshrc` file:
 
-```bash
-echo 'eval "$(_OPENPREDICT_COMPLETE=source_zsh openpredict)"' >> ~/.zshrc
-```
+  ```bash
+  echo 'eval "$(_OPENPREDICT_COMPLETE=source_zsh openpredict)"' >> ~/.zshrc
+  ```
 
-* If you use `Bash`: add a line to the `~/.bashrc` file. 
+* If you use `Bash`: add this line to the `~/.bashrc` file:
 
   ```bash
   echo 'eval "$(_OPENPREDICT_COMPLETE=source openpredict)"' >> ~/.bashrc
@@ -59,7 +59,7 @@ pytest tests
 
 ### Generate documentation
 
-Documentation in [docs/ 📖](docs/)  generated using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/)
+Documentation in [docs/ 📖](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
 ```bash
 pip install pydoc-markdown
@@ -75,8 +75,8 @@ pydoc-markdown --render-toc -p openpredict > docs/README.md
 >
 > ```bash
 > pip install sphinx
-> sphinx-quickstart docs/ --project 'openpredict' --author 'Vincent Emonet'
-> cd docs/
+> sphinx-quickstart sphinx-docs/ --project 'openpredict' --author 'Vincent Emonet'
+> cd sphinx-docs/
 > make html
 > ```
 

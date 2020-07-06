@@ -1,4 +1,4 @@
-# OpenPredict Package documentation 🔮🐍
+# Table of Contents
 
 * [openpredict](#.openpredict)
 * [openpredict.compute\_similarities](#.openpredict.compute_similarities)
@@ -12,10 +12,11 @@
   * [trainModel](#.openpredict.compute_similarities.trainModel)
   * [multimetric\_score](#.openpredict.compute_similarities.multimetric_score)
   * [evaluate](#.openpredict.compute_similarities.evaluate)
-  * [get\_drug\_disease\_similarities](#.openpredict.compute_similarities.get_drug_disease_similarities)
+  * [get\_drug\_disease\_classifier](#.openpredict.compute_similarities.get_drug_disease_classifier)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_api](#.openpredict.openpredict_api.start_api)
-  * [get\_predict\_drug\_disease](#.openpredict.openpredict_api.get_predict_drug_disease)
+  * [get\_predict](#.openpredict.openpredict_api.get_predict)
+  * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
 * [openpredict.\_\_main\_\_](#.openpredict.__main__)
   * [main](#.openpredict.__main__.main)
 
@@ -26,7 +27,7 @@
 # openpredict.compute\_similarities
 
 <a name=".openpredict.compute_similarities.adjcencydict2matrix"></a>
-### adjcencydict2matrix
+#### adjcencydict2matrix
 
 ```python
 adjcencydict2matrix(df, name1, name2)
@@ -41,7 +42,7 @@ Convert dict to matrix
 - `name2`: columns name
 
 <a name=".openpredict.compute_similarities.mergeFeatureMatrix"></a>
-### mergeFeatureMatrix
+#### mergeFeatureMatrix
 
 ```python
 mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
@@ -55,7 +56,7 @@ Merge the drug and disease feature matrix
 - `diseasefeatfiles`: Disease features files list
 
 <a name=".openpredict.compute_similarities.generatePairs"></a>
-### generatePairs
+#### generatePairs
 
 ```python
 generatePairs(drug_df, disease_df, drugDiseaseKnown)
@@ -70,7 +71,7 @@ Generate positive and negative pairs using the Drug dataframe, the Disease dataf
 - `drugDiseaseKnown`: Known drug-disease association dataframe
 
 <a name=".openpredict.compute_similarities.balance_data"></a>
-### balance\_data
+#### balance\_data
 
 ```python
 balance_data(pairs, classes, n_proportion)
@@ -85,7 +86,7 @@ Balance negative and positives samples
 - `n_proportion`: Proportion number, e.g. 2
 
 <a name=".openpredict.compute_similarities.geometricMean"></a>
-### geometricMean
+#### geometricMean
 
 ```python
 geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF)
@@ -102,7 +103,7 @@ Compute the geometric means of a drug-disease association using previously gener
 - `diseaseDF`: Disease dataframe
 
 <a name=".openpredict.compute_similarities.createFeatureDF"></a>
-### createFeatureDF
+#### createFeatureDF
 
 ```python
 createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
@@ -123,7 +124,7 @@ Create the features dataframes
 The features dataframe
 
 <a name=".openpredict.compute_similarities.calculateCombinedSimilarity"></a>
-### calculateCombinedSimilarity
+#### calculateCombinedSimilarity
 
 ```python
 calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
@@ -142,7 +143,7 @@ Compute combined similarities
 - `knownDrugDisease`: Known drug-disease associations
 
 <a name=".openpredict.compute_similarities.trainModel"></a>
-### trainModel
+#### trainModel
 
 ```python
 trainModel(train_df, clf)
@@ -150,8 +151,13 @@ trainModel(train_df, clf)
 
 Train model
 
+**Arguments**:
+
+- `train_df`: Train dataframe
+- `clf`: Classifier
+
 <a name=".openpredict.compute_similarities.multimetric_score"></a>
-### multimetric\_score
+#### multimetric\_score
 
 ```python
 multimetric_score(estimator, X_test, y_test, scorers)
@@ -159,34 +165,57 @@ multimetric_score(estimator, X_test, y_test, scorers)
 
 Return a dict of score for multimetric scoring
 
+**Arguments**:
+
+- `estimator`: Estimator
+- `X_test`: X test
+- `y_test`: Y test
+- `scorers`: Dict of scorers
+
+**Returns**:
+
+Multimetric scores
+
 <a name=".openpredict.compute_similarities.evaluate"></a>
-### evaluate
+#### evaluate
 
 ```python
 evaluate(train_df, test_df, clf)
 ```
 
-Evaluate
-
-<a name=".openpredict.compute_similarities.get_drug_disease_similarities"></a>
-### get\_drug\_disease\_similarities
-
-```python
-get_drug_disease_similarities()
-```
-
-The main function to run the drug-disease similarity pipeline
+Evaluate the trained classifier
 
 **Arguments**:
 
-- `pairs_train`: Port of the OpenPredict API, defaults to 8808
-- `pairs_test`: Print debug logs, defaults to False
+- `train_df`: Train dataframe
+- `test_df`: Test dataframe
+- `clf`: Classifier
+
+**Returns**:
+
+Scores
+
+<a name=".openpredict.compute_similarities.get_drug_disease_classifier"></a>
+#### get\_drug\_disease\_classifier
+
+```python
+get_drug_disease_classifier()
+```
+
+The main function to run the drug-disease similarities pipeline,
+and build the drug-disease classifier.
+It returns, and stores the generated classifier as a `.joblib` file
+in the `data/models` folder,
+
+**Returns**:
+
+Classifier of predicted similarities
 
 <a name=".openpredict.openpredict_api"></a>
 # openpredict.openpredict\_api
 
 <a name=".openpredict.openpredict_api.start_api"></a>
-### start\_api
+#### start\_api
 
 ```python
 start_api(port=8808, debug=False)
@@ -197,31 +226,49 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 **Arguments**:
 
 - `port`: Port of the OpenPredict API, defaults to 8808
-- `debug`: Print debug logs, defaults to False
+- `debug`: Run in debug mode, defaults to False
 
-<a name=".openpredict.openpredict_api.get_predict_drug_disease"></a>
-### get\_predict\_drug\_disease
+<a name=".openpredict.openpredict_api.get_predict"></a>
+#### get\_predict
 
 ```python
-get_predict_drug_disease(drug, disease)
+get_predict(entity, input_type, predict_type)
 ```
 
-Get associations predictions for drug-disease pairs
+Get predicted associations for a given entity.
 
 **Arguments**:
 
-- `drug`: Drug of the predicted association
-- `disease`: Disease of the predicted association
+- `entity`: Search for predicted associations for this entity
+- `input_type`: Type of the entity in the input (e.g. drug, disease)
+- `predict_type`: Type of the predicted entity in the output (e.g. drug, disease)
 
 **Returns**:
 
-Prediction result object with score
+Prediction results object with score
+
+<a name=".openpredict.openpredict_api.post_reasoner_predict"></a>
+#### post\_reasoner\_predict
+
+```python
+post_reasoner_predict(request_body)
+```
+
+Get predicted associations for a given ReasonerAPI query.
+
+**Arguments**:
+
+- `request_body`: The ReasonerStdAPI query in JSON
+
+**Returns**:
+
+Predictions as a ReasonerStdAPI Message
 
 <a name=".openpredict.__main__"></a>
 # openpredict.\_\_main\_\_
 
 <a name=".openpredict.__main__.main"></a>
-### main
+#### main
 
 ```python
 @click.group()
