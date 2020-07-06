@@ -10,6 +10,8 @@ You might want to use a `virtualenv` if you are used to it, but this should not 
 
 ### From PyPI
 
+Install the latest release published on [PyPI](https://pypi.org/project/openpredict) 🏷️
+
 ```bash
 pip install openpredict
 ```
