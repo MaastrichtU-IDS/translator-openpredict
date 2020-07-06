@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
 from sklearn.model_selection import GroupKFold, StratifiedKFold
+from joblib import dump
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
 
 def adjcencydict2matrix(df, name1, name2):
@@ -119,7 +120,7 @@ def balance_data(pairs, classes, n_proportion):
 
     np.random.shuffle(indices_false)
     indices = indices_false[:(n_proportion*indices_true.shape[0])]
-    print("➕/➖ :", len(indices_true), len(indices), len(indices_false))
+    print("\n⚖️  ➕/➖ :", len(indices_true), len(indices), len(indices_false))
     pairs = np.concatenate((pairs[indices_true], pairs[indices]), axis=0)
     classes = np.concatenate((classes[indices_true], classes[indices]), axis=0) 
     
@@ -186,10 +187,12 @@ def trainModel(train_df, clf):
     """Train model
     
     :param train_df: Train dataframe
-    :param clf: clf
+    :param clf: Classifier
     """
     features = list(train_df.columns.difference(['Drug','Disease','Class']))
     X = train_df[features]
+    print("Dataframe sample of training X (trainModel features):")
+    print(X.head())
     y = train_df['Class']
     print('📦 Fitting classifier...')
     clf.fit(X, y)
@@ -227,11 +230,11 @@ def multimetric_score(estimator, X_test, y_test, scorers):
     return scores
 
 def evaluate(train_df, test_df, clf):
-    """Evaluate
+    """Evaluate the trained classifier
     
     :param train_df: Train dataframe
     :param test_df: Test dataframe
-    :param clf: clf
+    :param clf: Classifier
     :return: Scores
     """
     features = list(train_df.columns.difference(['Drug','Disease','Class']))
@@ -254,10 +257,13 @@ def evaluate(train_df, test_df, clf):
     return scores
 
 
-def get_drug_disease_similarities():
-    """The main function to run the drug-disease similarity pipeline
+def get_drug_disease_classifier():
+    """The main function to run the drug-disease similarities pipeline, 
+    and build the drug-disease classifier.
+    It returns, and stores the generated classifier as a `.joblib` file 
+    in the `data/models` folder,
     
-    :return: Scores of the predicted similarities
+    :return: Classifier of predicted similarities
     """
     time_start = datetime.now()
     features_folder = "data/features/"
@@ -283,7 +289,7 @@ def get_drug_disease_similarities():
 
     # Balance negative/positive samples
     n_proportion = 2
-    print("🍱 n_proportion: " + str(n_proportion))
+    print("\n🍱 n_proportion: " + str(n_proportion))
     pairs, classes= balance_data(pairs, classes, n_proportion)
 
     # Train-Test Splitting
@@ -294,27 +300,33 @@ def get_drug_disease_similarities():
     print('\nFeature extraction ⛏️')
     knownDrugDisease = pairs_train[classes_train==1]
     time_pairs_train = datetime.now()
-    print('🕓 Pairs train runtime ' + str(time_pairs_train - time_start))
+    print('Pairs train runtime 🕓  ' + str(time_pairs_train - time_start))
+    print('\nCalculate the combined similarity of the training pairs 🏳️‍🌈')
     train_df, test_df = calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
     time_calculate_similarity = datetime.now()
-    print('🕓 CalculateCombinedSimilarity runtime ' + str(time_calculate_similarity - time_pairs_train))
+    print('CalculateCombinedSimilarity runtime 🕓  ' + str(time_calculate_similarity - time_pairs_train))
 
-    # Model Training
-    print('\nModel training 🏃')
+    # Model Training, get classifier (clf)
+    print('\nModel training, getting the classifier 🏃')
     n_seed = 100
     clf = linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, random_state=n_seed) 
     clf = trainModel(train_df, clf)
     time_training = datetime.now()
-    print('🕕 Model training runtime: ' + str(time_training - time_calculate_similarity))
+    print('Model training runtime 🕕  ' + str(time_training - time_calculate_similarity))
 
-    # Evaluation
-    print('\nRunning evaluation 📝')
+    # Evaluation of the trained model
+    print('\nRunning evaluation of the model 📝')
     scores = evaluate(train_df, test_df, clf)
     time_evaluate = datetime.now()
-    print('🕗 Evaluation runtime: ' + str(time_evaluate - time_training))
+    print('Evaluation runtime 🕗  ' + str(time_evaluate - time_training))
 
     # About 3min to run on a laptop
     print("\nTest results 🏆")
     print(scores)
-    print('🕛 Complete runtime: ' + str(datetime.now() - time_start))
-    return scores
+
+    print('\nStore the model in a .joblib file 💾')
+    dump(clf, 'data/models/drug_disease_model.joblib')
+    # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
+
+    print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
+    return clf

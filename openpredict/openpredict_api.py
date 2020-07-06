@@ -1,12 +1,13 @@
 import connexion
 import logging
-from openpredict.compute_similarities import get_drug_disease_similarities
+from joblib import load
+from openpredict.compute_similarities import get_drug_disease_classifier
 
 def start_api(port=8808, debug=False):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
     :param port: Port of the OpenPredict API, defaults to 8808
-    :param debug: Print debug logs, defaults to False
+    :param debug: Run in debug mode, defaults to False
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
     
@@ -30,38 +31,57 @@ def start_api(port=8808, debug=False):
     api.run(port=port, debug=debug, server=deployment_server)
 
 
+
 ## TODO: put the code for the different calls of your application here! 
 
-def get_predict_drug_disease(drug, disease):
-    """Get associations predictions for drug-disease pairs
+def get_predict(entity, input_type, predict_type):
+    """Get predicted associations for a given entity.
     
-    :param drug: Drug of the predicted association 
-    :param disease: Disease of the predicted association 
+    :param entity: Search for predicted associations for this entity
+    :param input_type: Type of the entity in the input (e.g. drug, disease)
+    :param predict_type: Type of the predicted entity in the output (e.g. drug, disease)
     :return: Prediction results object with score
     """
-    # similarity_scores = get_drug_disease_similarities()
-    prediction_result = {'drug' : drug, 'disease': disease, 'score': 0.8}
-    return prediction_result or ('Not found', 404)
+    clf = load('data/models/drug_disease_model.joblib') 
 
-def get_predict_disease(drug):
-    """Get predicted associated Diseases for a given Drug.
-    
-    :param drug: Search for predicted Diseases for this Drug
-    :return: Prediction results object with score
-    """
-    # similarity_scores = get_drug_disease_similarities()
+    # prediction_result = clf.predict([[entity]]).reshape(1, 1)
+    # print(prediction_result)
+
     prediction_result = {
-        'results': [{'drug' : drug, 'disease': 'associated disease1', 'score': 0.8}],
+        'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
         'count': 1
     }
     return prediction_result or ('Not found', 404)
 
-def get_predict_drug(disease):
-    """Get predicted Drugs for a given Disease
+def post_reasoner_predict(request_body):
+    """Get predicted associations for a given ReasonerAPI query.
     
-    :param disease: Search for predicted Drugs for this Disease
-    :return: Prediction results object with score
+    :param request_body: The ReasonerStdAPI query in JSON
+    :return: Predictions as a ReasonerStdAPI Message
     """
-    # similarity_scores = get_drug_disease_similarities()
-    prediction_result = {'drug' : 'associated drug1', 'disease': disease, 'score': 0.8}
+    prediction_result = {
+        "query_graph": {
+            "nodes": [
+                {
+                    "id": "n00",
+                    "type": "Drug"
+                },
+                {
+                    "id": "n01",
+                    "type": "Disease"
+                }
+            ],
+            "edges": [
+                {
+                    "id": "e00",
+                    "type": "Association",
+                    "source_id": "n00",
+                    "target_id": "n01"
+                }
+            ]
+        },
+        "query_options": {
+            "https://w3id.org/openpredict/prediction/score": "0.7"
+        }
+    }
     return prediction_result or ('Not found', 404)

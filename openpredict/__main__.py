@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.compute_similarities import get_drug_disease_similarities
+from openpredict.compute_similarities import get_drug_disease_classifier
 
 @click.command()
 @click.option(
@@ -16,7 +16,7 @@ def start_api(port, debug):
 
 @click.command()
 def compute_similarities():
-    get_drug_disease_similarities()
+    get_drug_disease_classifier()
 
 
 @click.group()
