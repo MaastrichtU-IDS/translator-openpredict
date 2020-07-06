@@ -9,10 +9,13 @@ def client():
     with flask_app.app.test_client() as c:
         yield c
 
-def test_get_predict_drug_disease(client):
-    """Test prediction call for drug-disease"""
-    url = "/v1/predict/drug-disease?disease=test_disease&drug=testdrug1"
-    expected_json = {"drug": "testdrug1", "disease": "test_disease", "score": 0.8}
+def test_get_predict(client):
+    """Test predict API call"""
+    url = "/v1/predict?entity=test_disease&input_type=disease&predict_type=drug"
+    expected_json = {
+        'results': [{'source' : 'test_disease', 'target': 'associated drug 1', 'score': 0.8}],
+        'count': 1
+    }
     response = client.get(url)
 
     assert response.json == expected_json
