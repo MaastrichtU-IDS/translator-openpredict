@@ -263,7 +263,7 @@ def get_drug_disease_classifier():
     It returns, and stores the generated classifier as a `.joblib` file 
     in the `data/models` folder,
     
-    :return: Classifier of predicted similarities
+    :return: Classifier of predicted similarities and scores
     """
     time_start = datetime.now()
     features_folder = "data/features/"
@@ -329,4 +329,4 @@ def get_drug_disease_classifier():
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
-    return clf
+    return clf, scores
