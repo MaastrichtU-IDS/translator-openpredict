@@ -5,8 +5,8 @@ on:
   push:
     branches: [ master ]
     paths:
-    - 'openpredict'
-    - 'tests'
+    - 'openpredict/**'
+    - 'tests/**'
 
 jobs:
 
