@@ -91,7 +91,7 @@ docker-compose up
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
-> We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST`.
+> We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
 
 Stop the container:
 
@@ -108,9 +108,9 @@ Run the pipeline to compute the model used by the OpenPredict API.
 ### From a Python script
 
 ```python
-from openpredict.compute_similarities import get_drug_disease_similarities
+from openpredict.compute_similarities import get_drug_disease_classifier
 
-get_drug_disease_similarities()
+get_drug_disease_classifier()
 ```
 
 ### From the command line
