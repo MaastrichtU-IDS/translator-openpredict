@@ -1,5 +1,5 @@
 import pytest
-from openpredict.compute_similarities import get_drug_disease_classifier
+from openpredict.build_models import get_drug_disease_classifier
 
 def test_get_drug_disease_classifier():
     """Test the model to get drug-disease similarities"""

@@ -1,18 +1,18 @@
 # Table of Contents
 
 * [openpredict](#.openpredict)
-* [openpredict.compute\_similarities](#.openpredict.compute_similarities)
-  * [adjcencydict2matrix](#.openpredict.compute_similarities.adjcencydict2matrix)
-  * [mergeFeatureMatrix](#.openpredict.compute_similarities.mergeFeatureMatrix)
-  * [generatePairs](#.openpredict.compute_similarities.generatePairs)
-  * [balance\_data](#.openpredict.compute_similarities.balance_data)
-  * [geometricMean](#.openpredict.compute_similarities.geometricMean)
-  * [createFeatureDF](#.openpredict.compute_similarities.createFeatureDF)
-  * [calculateCombinedSimilarity](#.openpredict.compute_similarities.calculateCombinedSimilarity)
-  * [trainModel](#.openpredict.compute_similarities.trainModel)
-  * [multimetric\_score](#.openpredict.compute_similarities.multimetric_score)
-  * [evaluate](#.openpredict.compute_similarities.evaluate)
-  * [get\_drug\_disease\_classifier](#.openpredict.compute_similarities.get_drug_disease_classifier)
+* [openpredict.compute\_similarities](#.openpredict.build_models)
+  * [adjcencydict2matrix](#.openpredict.build_models.adjcencydict2matrix)
+  * [mergeFeatureMatrix](#.openpredict.build_models.mergeFeatureMatrix)
+  * [generatePairs](#.openpredict.build_models.generatePairs)
+  * [balance\_data](#.openpredict.build_models.balance_data)
+  * [geometricMean](#.openpredict.build_models.geometricMean)
+  * [createFeatureDF](#.openpredict.build_models.createFeatureDF)
+  * [calculateCombinedSimilarity](#.openpredict.build_models.calculateCombinedSimilarity)
+  * [trainModel](#.openpredict.build_models.trainModel)
+  * [multimetric\_score](#.openpredict.build_models.multimetric_score)
+  * [evaluate](#.openpredict.build_models.evaluate)
+  * [get\_drug\_disease\_classifier](#.openpredict.build_models.get_drug_disease_classifier)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_api](#.openpredict.openpredict_api.start_api)
   * [get\_predict](#.openpredict.openpredict_api.get_predict)
@@ -23,10 +23,10 @@
 <a name=".openpredict"></a>
 # openpredict
 
-<a name=".openpredict.compute_similarities"></a>
+<a name=".openpredict.build_models"></a>
 # openpredict.compute\_similarities
 
-<a name=".openpredict.compute_similarities.adjcencydict2matrix"></a>
+<a name=".openpredict.build_models.adjcencydict2matrix"></a>
 #### adjcencydict2matrix
 
 ```python
@@ -41,7 +41,7 @@ Convert dict to matrix
 - `name1`: index name
 - `name2`: columns name
 
-<a name=".openpredict.compute_similarities.mergeFeatureMatrix"></a>
+<a name=".openpredict.build_models.mergeFeatureMatrix"></a>
 #### mergeFeatureMatrix
 
 ```python
@@ -55,7 +55,7 @@ Merge the drug and disease feature matrix
 - `drugfeatfiles`: Drug features files list
 - `diseasefeatfiles`: Disease features files list
 
-<a name=".openpredict.compute_similarities.generatePairs"></a>
+<a name=".openpredict.build_models.generatePairs"></a>
 #### generatePairs
 
 ```python
@@ -70,7 +70,7 @@ Generate positive and negative pairs using the Drug dataframe, the Disease dataf
 - `disease_df`: Disease dataframe
 - `drugDiseaseKnown`: Known drug-disease association dataframe
 
-<a name=".openpredict.compute_similarities.balance_data"></a>
+<a name=".openpredict.build_models.balance_data"></a>
 #### balance\_data
 
 ```python
@@ -85,7 +85,7 @@ Balance negative and positives samples
 - `classes`: Classes corresponding to the pairs
 - `n_proportion`: Proportion number, e.g. 2
 
-<a name=".openpredict.compute_similarities.geometricMean"></a>
+<a name=".openpredict.build_models.geometricMean"></a>
 #### geometricMean
 
 ```python
@@ -102,7 +102,7 @@ Compute the geometric means of a drug-disease association using previously gener
 - `drugDF`: Drug dataframe
 - `diseaseDF`: Disease dataframe
 
-<a name=".openpredict.compute_similarities.createFeatureDF"></a>
+<a name=".openpredict.build_models.createFeatureDF"></a>
 #### createFeatureDF
 
 ```python
@@ -123,7 +123,7 @@ Create the features dataframes
 
 The features dataframe
 
-<a name=".openpredict.compute_similarities.calculateCombinedSimilarity"></a>
+<a name=".openpredict.build_models.calculateCombinedSimilarity"></a>
 #### calculateCombinedSimilarity
 
 ```python
@@ -142,7 +142,7 @@ Compute combined similarities
 - `disease_df`: Disease dataframe
 - `knownDrugDisease`: Known drug-disease associations
 
-<a name=".openpredict.compute_similarities.trainModel"></a>
+<a name=".openpredict.build_models.trainModel"></a>
 #### trainModel
 
 ```python
@@ -156,7 +156,7 @@ Train model
 - `train_df`: Train dataframe
 - `clf`: Classifier
 
-<a name=".openpredict.compute_similarities.multimetric_score"></a>
+<a name=".openpredict.build_models.multimetric_score"></a>
 #### multimetric\_score
 
 ```python
@@ -176,7 +176,7 @@ Return a dict of score for multimetric scoring
 
 Multimetric scores
 
-<a name=".openpredict.compute_similarities.evaluate"></a>
+<a name=".openpredict.build_models.evaluate"></a>
 #### evaluate
 
 ```python
@@ -195,7 +195,7 @@ Evaluate the trained classifier
 
 Scores
 
-<a name=".openpredict.compute_similarities.get_drug_disease_classifier"></a>
+<a name=".openpredict.build_models.get_drug_disease_classifier"></a>
 #### get\_drug\_disease\_classifier
 
 ```python

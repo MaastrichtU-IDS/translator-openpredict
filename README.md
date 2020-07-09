@@ -110,7 +110,7 @@ Run the pipeline to compute the model used by the OpenPredict API.
 ### From a Python script
 
 ```python
-from openpredict.compute_similarities import get_drug_disease_classifier
+from openpredict.build_models import get_drug_disease_classifier
 
 get_drug_disease_classifier()
 ```

@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.compute_similarities import get_drug_disease_classifier
+from openpredict.build_models import get_drug_disease_classifier
 
 @click.command()
 @click.option(
@@ -15,7 +15,7 @@ def start_api(port, debug):
 
 
 @click.command()
-def compute_similarities():
+def build_models():
     get_drug_disease_classifier()
 
 
@@ -25,7 +25,7 @@ def main(args=None):
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 main.add_command(start_api)
-main.add_command(compute_similarities)
+main.add_command(build_models)
 
 
 if __name__ == "__main__":

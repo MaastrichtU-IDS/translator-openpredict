@@ -1,7 +1,7 @@
 import connexion
 import logging
 from joblib import load
-from openpredict.compute_similarities import get_drug_disease_classifier
+from openpredict.build_models import get_drug_disease_classifier
 
 def start_api(port=8808, debug=False):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
