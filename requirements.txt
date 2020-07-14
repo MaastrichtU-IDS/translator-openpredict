@@ -6,3 +6,6 @@ pandas
 numpy
 joblib
 rdflib
+networkx==1.11
+oddt
+# kgx
