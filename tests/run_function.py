@@ -1,18 +1,19 @@
 from joblib import load
 from openpredict.feature_generation import generate_feature
+from openpredict.openpredict_api import get_predict
 
 ## Run it:
 # python3 tests/run_function.py
 
 ## Get prediction for Drug
 
-# entity = 'DB00570'
+entity = 'DB00570'
 
-# clf = load('data/models/drug_disease_model.joblib') 
+# Call get predict from API for a DRUG
+prediction_result = get_predict('DB00570', 'drug', 'disease')
 
-# prediction_result = clf.predict([[entity]]).reshape(1, 1)
-# print(prediction_result)
+print(prediction_result)
 
 
 ## Feature generation
-generate_feature()
+# generate_feature()

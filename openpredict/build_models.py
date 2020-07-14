@@ -300,6 +300,10 @@ def get_drug_disease_classifier():
     print('\nFeature extraction ⛏️')
     knownDrugDisease = pairs_train[classes_train==1]
     time_pairs_train = datetime.now()
+
+    print('Store Drug and Disease DF')
+    drug_df, disease_df, knownDrugDisease
+
     print('Pairs train runtime 🕓  ' + str(time_pairs_train - time_start))
     print('\nCalculate the combined similarity of the training pairs 🏳️‍🌈')
     train_df, test_df = calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)

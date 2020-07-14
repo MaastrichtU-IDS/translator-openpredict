@@ -1,7 +1,11 @@
+import os
+import pandas as pd
 import connexion
 import logging
 from joblib import load
 from openpredict.build_models import get_drug_disease_classifier
+from openpredict.build_models import mergeFeatureMatrix
+from openpredict.build_models import createFeatureDF
 
 def start_api(port=8808, debug=False):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -31,7 +35,6 @@ def start_api(port=8808, debug=False):
     api.run(port=port, debug=debug, server=deployment_server)
 
 
-
 ## TODO: put the code for the different calls of your application here! 
 
 def get_predict(entity, input_type, predict_type):
@@ -42,10 +45,51 @@ def get_predict(entity, input_type, predict_type):
     :param predict_type: Type of the predicted entity in the output (e.g. drug, disease)
     :return: Prediction results object with score
     """
+
+    resources_folder = "data/resources/"
+    features_folder = "data/features/"
+    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
+                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
+    diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
+    drugfeatfiles = [ os.path.join(features_folder, fn) for fn in drugfeatfiles]
+    diseasefeatfiles = [ os.path.join(features_folder, fn) for fn in diseasefeatfiles]
+
+    ## Get all DFs
+    # Merge feature matrix
+    drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+    drugDiseaseKnown = pd.read_csv(resources_folder + 'openpredict-omim-drug.csv',delimiter=',') 
+    drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
+    drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+
+    # Load classifier
     clf = load('data/models/drug_disease_model.joblib') 
 
-    # prediction_result = clf.predict([[entity]]).reshape(1, 1)
-    # print(prediction_result)
+    # pairs_test: numpy array of drug disease pair
+    test_df = createFeatureDF(pairs_test, None, drugDiseaseKnown, drug_df, disease_df)
+
+    pairs=[]
+    classes=[]
+    if input_type == "drug":
+        # Input is a drug, we only iterate on disease
+        for di in commonDiseases:
+            cls = (1 if (dr,di) in drugDiseaseDict else 0)
+            pairs.append((dr,di))
+            classes.append(cls)
+    else: 
+        # Input is a disease
+        for dr in commonDrugs:
+            cls = (1 if (dr,di) in drugDiseaseDict else 0)
+            pairs.append((dr,di))
+            classes.append(cls)
+
+    # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
+    # Another API: given the type, what kind of entities exists?
+    # Getting list of Drugs and Diseases:
+    # commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
+    # commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
+
+    prediction_result = clf.predict([[entity]]).reshape(1, 1)
+    print(prediction_result)
 
     prediction_result = {
         'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
