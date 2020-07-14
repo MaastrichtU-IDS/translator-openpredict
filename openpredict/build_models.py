@@ -142,7 +142,7 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     c = np.sqrt( np.multiply(a,b) )
     ix2 = (knownDrugDisease == [drug, disease])
     c[ix2[:,1]& ix2[:,0]]=0.0
-    return float(np.max(c))
+    return float(max(c))
 
 
 def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
@@ -163,7 +163,9 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
         for j,disease_col in enumerate(diseaseDFs.columns.levels[0]):
             drugDF = drugDFs[drug_col]
             diseaseDF = diseaseDFs[disease_col]
-            df["Feature_"+str(drug_col)+'_'+str(disease_col)] = df.apply(lambda row: geometricMean( row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
+            feature_series = df.apply(lambda row: geometricMean( row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
+            #print (feature_series) 
+            df["Feature_"+str(drug_col)+'_'+str(disease_col)] = feature_series
     return df
 
 

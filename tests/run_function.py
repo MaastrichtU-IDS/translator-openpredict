@@ -7,10 +7,10 @@ from openpredict.openpredict_api import get_predict
 
 ## Get prediction for Drug
 
-entity = 'DB00570'
+entity = 'DB00394'
 
 # Call get predict from API for a DRUG
-prediction_result = get_predict('DB00570', 'drug', 'disease')
+prediction_result = get_predict('DB00394', 'drug', 'disease')
 
 print(prediction_result)
 

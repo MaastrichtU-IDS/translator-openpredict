@@ -1,11 +1,13 @@
 import os
 import pandas as pd
+import numpy as np
 import connexion
 import logging
 from joblib import load
 from openpredict.build_models import get_drug_disease_classifier
 from openpredict.build_models import mergeFeatureMatrix
 from openpredict.build_models import createFeatureDF
+from sklearn.linear_model import LogisticRegression
 
 def start_api(port=8808, debug=False):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -61,40 +63,52 @@ def get_predict(entity, input_type, predict_type):
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
+    drugDiseaseDict  = set([tuple(x) for x in  drugDiseaseKnown[['Drug','Disease']].values])
+
+    drugwithfeatures = set(drug_df.columns.levels[1].tolist())
+    diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
+    commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
+    commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
+
     # Load classifier
     clf = load('data/models/drug_disease_model.joblib') 
 
-    # pairs_test: numpy array of drug disease pair
-    test_df = createFeatureDF(pairs_test, None, drugDiseaseKnown, drug_df, disease_df)
 
     pairs=[]
     classes=[]
     if input_type == "drug":
         # Input is a drug, we only iterate on disease
+        dr = entity
         for di in commonDiseases:
             cls = (1 if (dr,di) in drugDiseaseDict else 0)
             pairs.append((dr,di))
             classes.append(cls)
     else: 
         # Input is a disease
+        di = entity
         for dr in commonDrugs:
             cls = (1 if (dr,di) in drugDiseaseDict else 0)
             pairs.append((dr,di))
             classes.append(cls)
+    classes = np.array(classes)
+    pairs = np.array(pairs)
+    test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
 
     # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
     # Another API: given the type, what kind of entities exists?
     # Getting list of Drugs and Diseases:
     # commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
     # commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
+    features = list(test_df.columns.difference(['Drug','Disease','Class']))
+    y_proba = clf.predict_proba(test_df[features])
+    prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['Drug','Disease','score'])
+    print(prediction_df.to_json(orient='records'))
+    prediction_result=prediction_df.to_json(orient='records')
 
-    prediction_result = clf.predict([[entity]]).reshape(1, 1)
-    print(prediction_result)
-
-    prediction_result = {
-        'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
-        'count': 1
-    }
+    #prediction_result = {
+    #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
+    #    'count': 1
+    #}
     return prediction_result or ('Not found', 404)
 
 def post_reasoner_predict(request_body):
