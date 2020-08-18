@@ -9,8 +9,8 @@ import math
 import numpy as np
 import pandas as pd
 import networkx as nx
-from oddt import toolkit
-from oddt import fingerprints
+# from oddt import toolkit
+# from oddt import fingerprints
 
 # import numbers
 # import random
