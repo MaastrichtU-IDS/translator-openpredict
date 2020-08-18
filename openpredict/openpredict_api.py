@@ -5,9 +5,7 @@ import connexion
 import logging
 import json
 from joblib import load
-from openpredict.build_models import get_drug_disease_classifier
-from openpredict.build_models import mergeFeatureMatrix
-from openpredict.build_models import createFeatureDF
+from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 from sklearn.linear_model import LogisticRegression
 
 def start_api(port=8808, debug=False):
@@ -50,75 +48,14 @@ def get_predict(entity, input_type, predict_type):
     :return: Prediction results object with score
     """
 
-    resources_folder = "data/resources/"
-    features_folder = "data/features/"
-    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
-                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
-    diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
-    drugfeatfiles = [ os.path.join(features_folder, fn) for fn in drugfeatfiles]
-    diseasefeatfiles = [ os.path.join(features_folder, fn) for fn in diseasefeatfiles]
-
-    ## Get all DFs
-    # Merge feature matrix
-    drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-    drugDiseaseKnown = pd.read_csv(resources_folder + 'openpredict-omim-drug.csv',delimiter=',') 
-    drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
-    drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
-
-    # TODO: save
-    drugDiseaseDict  = set([tuple(x) for x in  drugDiseaseKnown[['Drug','Disease']].values])
-
-    drugwithfeatures = set(drug_df.columns.levels[1].tolist())
-    diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
-
-    # TODO: save
-    commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
-    commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
-
-    # Load classifier
-    clf = load('data/models/drug_disease_model.joblib') 
-
-
-    pairs=[]
-    classes=[]
-    if input_type == "drug":
-        # Input is a drug, we only iterate on disease
-        dr = entity
-        for di in commonDiseases:
-            cls = (1 if (dr,di) in drugDiseaseDict else 0)
-            pairs.append((dr,di))
-            classes.append(cls)
-    else: 
-        # Input is a disease
-        di = entity
-        for dr in commonDrugs:
-            cls = (1 if (dr,di) in drugDiseaseDict else 0)
-            pairs.append((dr,di))
-            classes.append(cls)
-    classes = np.array(classes)
-    pairs = np.array(pairs)
-    test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
-
-    # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
-    # Another API: given the type, what kind of entities exists?
-    # Getting list of Drugs and Diseases:
-    # commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
-    # commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
-    features = list(test_df.columns.difference(['Drug','Disease','Class']))
-    y_proba = clf.predict_proba(test_df[features])
-    prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['Drug','Disease','score'])
-
-    prediction_results=prediction_df.to_json(orient='records')
-    prediction_json=json.loads(prediction_results)
+    prediction_json=json.loads(query_omim_drugbank_classifier(entity, input_type))
     # print('Prediction RESULTS')
     # print(prediction_results)
     #prediction_results = {
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
-    ## Currently returns:
-    # "[{\"Drug\":\"DB00394\",\"Disease\":\"132300\",\"score\":0.0692499628},{\"Drug\":\"DB00394\",\"Disease\":\"145200\",\"score\":0.2462079817},{\"Drug\":\"DB00394\",\"Disease\":\"606798\",\"score\":0.0394063656}
-    return {'results': prediction_json, 'count': len(prediction_results)} or ('Not found', 404)
+    return {'results': prediction_json, 'count': len(prediction_json)} or ('Not found', 404)
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):

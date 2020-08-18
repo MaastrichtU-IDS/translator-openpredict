@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
 from sklearn.model_selection import GroupKFold, StratifiedKFold
-from joblib import dump
+from joblib import dump, load
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
 
 def adjcencydict2matrix(df, name1, name2):
@@ -336,3 +336,71 @@ def get_drug_disease_classifier():
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
+
+def query_omim_drugbank_classifier(entity, input_type):
+    """The main function to query the drug-disease OpenPredict classifier, 
+    It queries the previously generated classifier a `.joblib` file 
+    in the `data/models` folder
+    
+    :return: Predictions and scores
+    """
+    
+    resources_folder = "data/resources/"
+    features_folder = "data/features/"
+    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
+                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
+    diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
+    drugfeatfiles = [ os.path.join(features_folder, fn) for fn in drugfeatfiles]
+    diseasefeatfiles = [ os.path.join(features_folder, fn) for fn in diseasefeatfiles]
+
+    ## Get all DFs
+    # Merge feature matrix
+    drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+    drugDiseaseKnown = pd.read_csv(resources_folder + 'openpredict-omim-drug.csv',delimiter=',') 
+    drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
+    drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+
+    # TODO: save
+    drugDiseaseDict  = set([tuple(x) for x in  drugDiseaseKnown[['Drug','Disease']].values])
+
+    drugwithfeatures = set(drug_df.columns.levels[1].tolist())
+    diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
+
+    # TODO: save
+    commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
+    commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
+
+    # Load classifier
+    clf = load('data/models/drug_disease_model.joblib') 
+
+    pairs=[]
+    classes=[]
+    if input_type == "drug":
+        # Input is a drug, we only iterate on disease
+        dr = entity
+        for di in commonDiseases:
+            cls = (1 if (dr,di) in drugDiseaseDict else 0)
+            pairs.append((dr,di))
+            classes.append(cls)
+    else: 
+        # Input is a disease
+        di = entity
+        for dr in commonDrugs:
+            cls = (1 if (dr,di) in drugDiseaseDict else 0)
+            pairs.append((dr,di))
+            classes.append(cls)
+    classes = np.array(classes)
+    pairs = np.array(pairs)
+    test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
+
+    # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
+    # Another API: given the type, what kind of entities exists?
+    # Getting list of Drugs and Diseases:
+    # commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
+    # commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
+    features = list(test_df.columns.difference(['Drug','Disease','Class']))
+    y_proba = clf.predict_proba(test_df[features])
+    prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['Drug','Disease','score'])
+
+    prediction_results=prediction_df.to_json(orient='records')
+    return prediction_results
