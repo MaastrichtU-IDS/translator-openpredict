@@ -6,7 +6,14 @@ This service has been built from the [fair-workflows/openpredict](https://github
 
 # Install the package 📦
 
-You might want to use a `virtualenv` if you are used to it, but this should not be necessary.
+You might want to use a virtual environment for Python.
+
+```bash
+# Create the virtual environment
+python3 -m venv .venv
+# Activate it
+source .venv/bin/activate
+```
 
 ### From PyPI
 

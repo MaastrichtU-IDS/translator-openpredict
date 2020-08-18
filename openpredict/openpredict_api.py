@@ -37,7 +37,8 @@ def start_api(port=8808, debug=False):
     api.run(port=port, debug=debug, server=deployment_server)
 
 
-## TODO: put the code for the different calls of your application here! 
+
+### Code for the different calls of the app
 
 def get_predict(entity, input_type, predict_type):
     """Get predicted associations for a given entity.

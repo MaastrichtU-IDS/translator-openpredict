@@ -20,6 +20,8 @@ from oddt import fingerprints
 # from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
 
 
+### TODO: Do not need to be implemented, TO REMOVE
+
 def evaluate(train_df, test_df, clf):
     """Evaluate the trained classifier
     
