@@ -6,7 +6,7 @@ This service has been built from the [fair-workflows/openpredict](https://github
 
 # Install the package 📦
 
-You might want to use a virtual environment for Python.
+You might want to use a virtual environment for Python 3.7
 
 ```bash
 # Create the virtual environment
