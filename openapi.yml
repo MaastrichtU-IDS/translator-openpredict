@@ -29,7 +29,7 @@ paths:
     get:
       operationId: openpredict.openpredict_api.get_predict
       summary: Get predicted associations for a given entity
-      description: Return the predicted associations for a given entity (drug, disease, etc), with confidence scores
+      description: "Return the predicted associations for a given entity (drug, disease, etc), with confidence scores."
       tags:
       - translator
       parameters:
@@ -88,6 +88,7 @@ components:
       name: entity
       in: query
       description: Entity to process (e.g. drug, disease, etc)
+      example: DB00394
       required: true
       schema:
         type: string
