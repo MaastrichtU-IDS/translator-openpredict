@@ -1,5 +1,4 @@
 from joblib import load
-from openpredict.feature_generation import generate_feature
 from openpredict.openpredict_api import get_predict
 
 ## Run it:
@@ -14,7 +13,3 @@ prediction_result = get_predict('DB00394', 'drug', 'disease')
 
 print('Results:')
 print(prediction_result)
-
-
-## Feature generation
-# generate_feature()
