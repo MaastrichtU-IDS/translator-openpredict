@@ -12,6 +12,7 @@ entity = 'DB00394'
 # Call get predict from API for a DRUG
 prediction_result = get_predict('DB00394', 'drug', 'disease')
 
+print('Results:')
 print(prediction_result)
 
 

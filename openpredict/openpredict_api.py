@@ -112,6 +112,7 @@ def get_predict(entity, input_type, predict_type):
     #}
     return prediction_result or ('Not found', 404)
 
+# TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):
     """Get predicted associations for a given ReasonerAPI query.
     
