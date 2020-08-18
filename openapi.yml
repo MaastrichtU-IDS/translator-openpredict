@@ -29,7 +29,7 @@ paths:
     get:
       operationId: openpredict.openpredict_api.get_predict
       summary: Get predicted associations for a given entity
-      description: "Return the predicted associations for a given entity (drug, disease, etc), with confidence scores."
+      description: "Return the predicted associations for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores."
       tags:
       - translator
       parameters:

@@ -64,15 +64,20 @@ def get_predict(entity, input_type, predict_type):
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
+    # TODO: save
     drugDiseaseDict  = set([tuple(x) for x in  drugDiseaseKnown[['Drug','Disease']].values])
 
     drugwithfeatures = set(drug_df.columns.levels[1].tolist())
     diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
+
+    # TODO: save
     commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
     commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
 
     # Load classifier
     clf = load('data/models/drug_disease_model.joblib') 
+    # clf2 = load('data/models/drug_disease_model2.joblib') 
+
 
 
     pairs=[]
@@ -110,6 +115,8 @@ def get_predict(entity, input_type, predict_type):
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
+    ## Currently returns:
+    # "[{\"Drug\":\"DB00394\",\"Disease\":\"132300\",\"score\":0.0692499628},{\"Drug\":\"DB00394\",\"Disease\":\"145200\",\"score\":0.2462079817},{\"Drug\":\"DB00394\",\"Disease\":\"606798\",\"score\":0.0394063656}
     return prediction_result or ('Not found', 404)
 
 # TODO: get_predict wrapped in ReasonerStdApi
