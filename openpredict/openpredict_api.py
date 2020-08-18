@@ -50,8 +50,8 @@ def get_predict(entity, input_type, predict_type):
 
     prediction_json=json.loads(query_omim_drugbank_classifier(entity, input_type))
     # print('Prediction RESULTS')
-    # print(prediction_results)
-    #prediction_results = {
+    # print(prediction_json)
+    # Expected? prediction_json = {
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
