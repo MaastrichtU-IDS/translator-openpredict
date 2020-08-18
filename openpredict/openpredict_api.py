@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import connexion
 import logging
+import json
 from joblib import load
 from openpredict.build_models import get_drug_disease_classifier
 from openpredict.build_models import mergeFeatureMatrix
@@ -76,8 +77,6 @@ def get_predict(entity, input_type, predict_type):
 
     # Load classifier
     clf = load('data/models/drug_disease_model.joblib') 
-    # clf2 = load('data/models/drug_disease_model2.joblib') 
-
 
 
     pairs=[]
@@ -108,16 +107,18 @@ def get_predict(entity, input_type, predict_type):
     features = list(test_df.columns.difference(['Drug','Disease','Class']))
     y_proba = clf.predict_proba(test_df[features])
     prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['Drug','Disease','score'])
-    print(prediction_df.to_json(orient='records'))
-    prediction_result=prediction_df.to_json(orient='records')
 
-    #prediction_result = {
+    prediction_results=prediction_df.to_json(orient='records')
+    prediction_json=json.loads(prediction_results)
+    # print('Prediction RESULTS')
+    # print(prediction_results)
+    #prediction_results = {
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
     ## Currently returns:
     # "[{\"Drug\":\"DB00394\",\"Disease\":\"132300\",\"score\":0.0692499628},{\"Drug\":\"DB00394\",\"Disease\":\"145200\",\"score\":0.2462079817},{\"Drug\":\"DB00394\",\"Disease\":\"606798\",\"score\":0.0394063656}
-    return prediction_result or ('Not found', 404)
+    return {'results': prediction_json, 'count': len(prediction_results)} or ('Not found', 404)
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):
