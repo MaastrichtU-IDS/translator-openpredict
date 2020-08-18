@@ -136,10 +136,8 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     :param drugDF: Drug dataframe
     :param diseaseDF: Disease dataframe
     """
-    # a  = drugDF.loc[knownDrugDisease[:,0]][drug].values
-    # b  = diseaseDF.loc[knownDrugDisease[:,1]][disease].values
-    a  = drugDF.reindex([knownDrugDisease[:,0]][drug].values)
-    b  = diseaseDF.reindex([knownDrugDisease[:,1]][disease].values)
+    a  = drugDF.loc[knownDrugDisease[:,0]][drug].values
+    b  = diseaseDF.loc[knownDrugDisease[:,1]][disease].values
     #print(a,b)
     c = np.sqrt( np.multiply(a,b) )
     ix2 = (knownDrugDisease == [drug, disease])
