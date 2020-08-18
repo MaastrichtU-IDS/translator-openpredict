@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.build_models import get_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import get_drug_disease_classifier
 from openpredict.feature_generation import generate_feature
 
 @click.command()
