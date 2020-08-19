@@ -1,14 +1,14 @@
 [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22)
 
-**Translator OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
+**Translator OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical concepts associations, for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
 ## Use the API
 
-The Translator OpenPredict API Swagger UI is publicly available at https://openpredict.137.120.31.102.nip.io
+The Translator OpenPredict API Swagger UI is publicly available at [openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)
 
-You can find a Jupyter Notebook with examples to query the API at https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb
+You can find a Jupyter Notebook with [examples to query the API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
 # Install the package 📦
 
@@ -45,20 +45,6 @@ pip install git+https://github.com/MaastrichtU-IDS/translator-openpredict
 
 After installing the `openpredict` package (except for docker).
 
-### Run from Python script
-
-```python
-from openpredict import openpredict_api
-
-port = 8808
-debug = False
-openpredict_api.start_api(port, debug)
-```
-
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-> Run by default in production, set `debug = True` to run in development mode. 
-
 ### Run from the command line
 
 Run in production with [Tornado Web Server 🌪️](https://www.tornadoweb.org/en/stable/)
@@ -86,6 +72,20 @@ Show help:
 ```bash
 openpredict --help
 ```
+
+### Run from Python script
+
+```python
+from openpredict import openpredict_api
+
+port = 8808
+debug = False
+openpredict_api.start_api(port, debug)
+```
+
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
+
+> Run by default in production, set `debug = True` to run in development mode. 
 
 ### Run with Docker
 
