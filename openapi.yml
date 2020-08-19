@@ -34,6 +34,7 @@ paths:
       - translator
       parameters:
       - $ref: '#/components/parameters/entity'
+      - $ref: '#/components/parameters/classifier'
       responses:
         '200':
           description: Successful Operation
@@ -90,22 +91,15 @@ components:
       required: true
       schema:
         type: string
-    input_type:
-      name: input_type
+    classifier:
+      name: classifier
       in: query
-      description: Type of the entity to process
+      description: Classifier to use to predict associations
       required: true
       schema:
         type: string
-        enum: [drug, disease]
-    predict_type:
-      name: predict_type
-      in: query
-      description: Type of the entity to predict
-      required: true
-      schema:
-        type: string
-        enum: [drug, disease]
+        enum: ["OpenPredict OMIM-DrugBank"]
+        # enum: [openpredict_omim_drugbank]
         # type: integer
         # format: int32
         # minimum: 0

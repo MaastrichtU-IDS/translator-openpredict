@@ -367,9 +367,6 @@ def query_omim_drugbank_classifier(input_curie):
 
     # TODO: save json?
     drugDiseaseDict  = set([tuple(x) for x in  drugDiseaseKnown[['Drug','Disease']].values])
-    print("drugDiseaseDict")
-    print("#####################################")
-    print(drugDiseaseDict)
 
     drugwithfeatures = set(drug_df.columns.levels[1].tolist())
     diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
@@ -377,9 +374,6 @@ def query_omim_drugbank_classifier(input_curie):
     # TODO: save json?
     commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
     commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
-    print("commonDrugs")
-    print("#####################################")
-    print(commonDrugs)
 
     # Load classifier
     clf = load('data/models/drug_disease_model.joblib') 
