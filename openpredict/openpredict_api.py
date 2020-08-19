@@ -34,7 +34,7 @@ def start_api(port=8808, debug=False):
 
 ### Code for the different calls of the app
 
-def get_predict(entity, classifier):
+def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
