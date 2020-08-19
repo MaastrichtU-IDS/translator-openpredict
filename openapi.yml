@@ -45,6 +45,7 @@ paths:
             #     x-body-name: PredictionResults
             #     $ref: '#/components/schemas/PredictionResults'
             # application/xml: {}
+            # application/ld+json: {}
             # text/csv: {}
             # text/tab-separated-values: {}
 
@@ -79,6 +80,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Message"
+            # application/ld+json: {}
 
 components:
 

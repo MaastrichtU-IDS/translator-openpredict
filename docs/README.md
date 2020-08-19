@@ -1,18 +1,19 @@
 # Table of Contents
 
 * [openpredict](#.openpredict)
-* [openpredict.compute\_similarities](#.openpredict.build_models)
-  * [adjcencydict2matrix](#.openpredict.build_models.adjcencydict2matrix)
-  * [mergeFeatureMatrix](#.openpredict.build_models.mergeFeatureMatrix)
-  * [generatePairs](#.openpredict.build_models.generatePairs)
-  * [balance\_data](#.openpredict.build_models.balance_data)
-  * [geometricMean](#.openpredict.build_models.geometricMean)
-  * [createFeatureDF](#.openpredict.build_models.createFeatureDF)
-  * [calculateCombinedSimilarity](#.openpredict.build_models.calculateCombinedSimilarity)
-  * [trainModel](#.openpredict.build_models.trainModel)
-  * [multimetric\_score](#.openpredict.build_models.multimetric_score)
-  * [evaluate](#.openpredict.build_models.evaluate)
-  * [get\_drug\_disease\_classifier](#.openpredict.build_models.get_drug_disease_classifier)
+* [openpredict.openpredict\_omim\_drugbank](#.openpredict.openpredict_omim_drugbank)
+  * [adjcencydict2matrix](#.openpredict.openpredict_omim_drugbank.adjcencydict2matrix)
+  * [mergeFeatureMatrix](#.openpredict.openpredict_omim_drugbank.mergeFeatureMatrix)
+  * [generatePairs](#.openpredict.openpredict_omim_drugbank.generatePairs)
+  * [balance\_data](#.openpredict.openpredict_omim_drugbank.balance_data)
+  * [geometricMean](#.openpredict.openpredict_omim_drugbank.geometricMean)
+  * [createFeatureDF](#.openpredict.openpredict_omim_drugbank.createFeatureDF)
+  * [calculateCombinedSimilarity](#.openpredict.openpredict_omim_drugbank.calculateCombinedSimilarity)
+  * [trainModel](#.openpredict.openpredict_omim_drugbank.trainModel)
+  * [multimetric\_score](#.openpredict.openpredict_omim_drugbank.multimetric_score)
+  * [evaluate](#.openpredict.openpredict_omim_drugbank.evaluate)
+  * [get\_drug\_disease\_classifier](#.openpredict.openpredict_omim_drugbank.get_drug_disease_classifier)
+  * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_omim_drugbank.query_omim_drugbank_classifier)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_api](#.openpredict.openpredict_api.start_api)
   * [get\_predict](#.openpredict.openpredict_api.get_predict)
@@ -23,10 +24,10 @@
 <a name=".openpredict"></a>
 # openpredict
 
-<a name=".openpredict.build_models"></a>
-# openpredict.compute\_similarities
+<a name=".openpredict.openpredict_omim_drugbank"></a>
+# openpredict.openpredict\_omim\_drugbank
 
-<a name=".openpredict.build_models.adjcencydict2matrix"></a>
+<a name=".openpredict.openpredict_omim_drugbank.adjcencydict2matrix"></a>
 #### adjcencydict2matrix
 
 ```python
@@ -41,7 +42,7 @@ Convert dict to matrix
 - `name1`: index name
 - `name2`: columns name
 
-<a name=".openpredict.build_models.mergeFeatureMatrix"></a>
+<a name=".openpredict.openpredict_omim_drugbank.mergeFeatureMatrix"></a>
 #### mergeFeatureMatrix
 
 ```python
@@ -55,7 +56,7 @@ Merge the drug and disease feature matrix
 - `drugfeatfiles`: Drug features files list
 - `diseasefeatfiles`: Disease features files list
 
-<a name=".openpredict.build_models.generatePairs"></a>
+<a name=".openpredict.openpredict_omim_drugbank.generatePairs"></a>
 #### generatePairs
 
 ```python
@@ -70,7 +71,7 @@ Generate positive and negative pairs using the Drug dataframe, the Disease dataf
 - `disease_df`: Disease dataframe
 - `drugDiseaseKnown`: Known drug-disease association dataframe
 
-<a name=".openpredict.build_models.balance_data"></a>
+<a name=".openpredict.openpredict_omim_drugbank.balance_data"></a>
 #### balance\_data
 
 ```python
@@ -85,7 +86,7 @@ Balance negative and positives samples
 - `classes`: Classes corresponding to the pairs
 - `n_proportion`: Proportion number, e.g. 2
 
-<a name=".openpredict.build_models.geometricMean"></a>
+<a name=".openpredict.openpredict_omim_drugbank.geometricMean"></a>
 #### geometricMean
 
 ```python
@@ -102,7 +103,7 @@ Compute the geometric means of a drug-disease association using previously gener
 - `drugDF`: Drug dataframe
 - `diseaseDF`: Disease dataframe
 
-<a name=".openpredict.build_models.createFeatureDF"></a>
+<a name=".openpredict.openpredict_omim_drugbank.createFeatureDF"></a>
 #### createFeatureDF
 
 ```python
@@ -123,7 +124,7 @@ Create the features dataframes
 
 The features dataframe
 
-<a name=".openpredict.build_models.calculateCombinedSimilarity"></a>
+<a name=".openpredict.openpredict_omim_drugbank.calculateCombinedSimilarity"></a>
 #### calculateCombinedSimilarity
 
 ```python
@@ -142,7 +143,7 @@ Compute combined similarities
 - `disease_df`: Disease dataframe
 - `knownDrugDisease`: Known drug-disease associations
 
-<a name=".openpredict.build_models.trainModel"></a>
+<a name=".openpredict.openpredict_omim_drugbank.trainModel"></a>
 #### trainModel
 
 ```python
@@ -156,7 +157,7 @@ Train model
 - `train_df`: Train dataframe
 - `clf`: Classifier
 
-<a name=".openpredict.build_models.multimetric_score"></a>
+<a name=".openpredict.openpredict_omim_drugbank.multimetric_score"></a>
 #### multimetric\_score
 
 ```python
@@ -176,7 +177,7 @@ Return a dict of score for multimetric scoring
 
 Multimetric scores
 
-<a name=".openpredict.build_models.evaluate"></a>
+<a name=".openpredict.openpredict_omim_drugbank.evaluate"></a>
 #### evaluate
 
 ```python
@@ -195,7 +196,7 @@ Evaluate the trained classifier
 
 Scores
 
-<a name=".openpredict.build_models.get_drug_disease_classifier"></a>
+<a name=".openpredict.openpredict_omim_drugbank.get_drug_disease_classifier"></a>
 #### get\_drug\_disease\_classifier
 
 ```python
@@ -209,7 +210,22 @@ in the `data/models` folder,
 
 **Returns**:
 
-Classifier of predicted similarities
+Classifier of predicted similarities and scores
+
+<a name=".openpredict.openpredict_omim_drugbank.query_omim_drugbank_classifier"></a>
+#### query\_omim\_drugbank\_classifier
+
+```python
+query_omim_drugbank_classifier(input_curie)
+```
+
+The main function to query the drug-disease OpenPredict classifier,
+It queries the previously generated classifier a `.joblib` file
+in the `data/models` folder
+
+**Returns**:
+
+Predictions and scores
 
 <a name=".openpredict.openpredict_api"></a>
 # openpredict.openpredict\_api
@@ -232,16 +248,14 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 #### get\_predict
 
 ```python
-get_predict(entity, input_type, predict_type)
+get_predict(entity, classifier="OpenPredict OMIM-DrugBank")
 ```
 
-Get predicted associations for a given entity.
+Get predicted associations for a given entity CURIE.
 
 **Arguments**:
 
-- `entity`: Search for predicted associations for this entity
-- `input_type`: Type of the entity in the input (e.g. drug, disease)
-- `predict_type`: Type of the predicted entity in the output (e.g. drug, disease)
+- `entity`: Search for predicted associations for this entity CURIE
 
 **Returns**:
 
