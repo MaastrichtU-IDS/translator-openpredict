@@ -4,6 +4,12 @@
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
+## Use the API
+
+The Translator OpenPredict API Swagger UI is publicly available at https://openpredict.137.120.31.102.nip.io
+
+You can find a Jupyter Notebook with examples to query the API at https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb
+
 # Install the package 📦
 
 You might want to use a virtual environment for Python 3.7
