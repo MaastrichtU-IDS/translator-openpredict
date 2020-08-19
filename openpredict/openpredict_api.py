@@ -1,12 +1,7 @@
-import os
-import pandas as pd
-import numpy as np
 import connexion
 import logging
 import json
-from joblib import load
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
-from sklearn.linear_model import LogisticRegression
 
 def start_api(port=8808, debug=False):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -39,23 +34,21 @@ def start_api(port=8808, debug=False):
 
 ### Code for the different calls of the app
 
-def get_predict(entity, input_type, predict_type):
-    """Get predicted associations for a given entity.
+def get_predict(entity):
+    """Get predicted associations for a given entity CURIE.
     
-    :param entity: Search for predicted associations for this entity
-    :param input_type: Type of the entity in the input (e.g. drug, disease)
-    :param predict_type: Type of the predicted entity in the output (e.g. drug, disease)
+    :param entity: Search for predicted associations for this entity CURIE
     :return: Prediction results object with score
     """
 
-    prediction_json=json.loads(query_omim_drugbank_classifier(entity, input_type))
-    # print('Prediction RESULTS')
-    # print(prediction_json)
+    prediction_json=json.loads(query_omim_drugbank_classifier(entity))
+    
     # Expected? prediction_json = {
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
     return {'results': prediction_json, 'count': len(prediction_json)} or ('Not found', 404)
+
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):

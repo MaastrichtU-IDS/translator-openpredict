@@ -2,6 +2,7 @@ import os
 import time
 from datetime import datetime
 import numbers
+import re
 import math
 import random
 import numpy as np
@@ -337,7 +338,7 @@ def get_drug_disease_classifier():
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
 
-def query_omim_drugbank_classifier(entity, input_type):
+def query_omim_drugbank_classifier(input_curie):
     """The main function to query the drug-disease OpenPredict classifier, 
     It queries the previously generated classifier a `.joblib` file 
     in the `data/models` folder
@@ -345,6 +346,10 @@ def query_omim_drugbank_classifier(entity, input_type):
     :return: Predictions and scores
     """
     
+    parsed_curie = re.search('(.*?):(.*)', input_curie)
+    input_namespace = parsed_curie.group(1)
+    input_id = parsed_curie.group(2)
+
     resources_folder = "data/resources/"
     features_folder = "data/features/"
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
@@ -381,20 +386,25 @@ def query_omim_drugbank_classifier(entity, input_type):
 
     pairs=[]
     classes=[]
-    if input_type == "drug":
+    if input_namespace.lower() == "drugbank":
         # Input is a drug, we only iterate on disease
-        dr = entity
+        dr = input_id
+        # drug_column_label = "source"
+        # disease_column_label = "target"
         for di in commonDiseases:
             cls = (1 if (dr,di) in drugDiseaseDict else 0)
             pairs.append((dr,di))
             classes.append(cls)
     else: 
         # Input is a disease
-        di = entity
+        di = input_id
+        # drug_column_label = "target"
+        # disease_column_label = "source"
         for dr in commonDrugs:
             cls = (1 if (dr,di) in drugDiseaseDict else 0)
             pairs.append((dr,di))
             classes.append(cls)
+
     classes = np.array(classes)
     pairs = np.array(pairs)
     test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
@@ -406,7 +416,13 @@ def query_omim_drugbank_classifier(entity, input_type):
     # commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
     features = list(test_df.columns.difference(['Drug','Disease','Class']))
     y_proba = clf.predict_proba(test_df[features])
-    prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['Drug','Disease','score'])
+
+    prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['drug','disease','score'])
+    # prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =[drug_column_label,disease_column_label,'score'])
+
+    for i in prediction_df.index:
+        prediction_df.at[i, "drug"] = "DRUGBANK:" + prediction_df.at[i, "drug"]
+        prediction_df.at[i, "disease"] = "OMIM:" + prediction_df.at[i, "disease"]
 
     prediction_results=prediction_df.to_json(orient='records')
     return prediction_results

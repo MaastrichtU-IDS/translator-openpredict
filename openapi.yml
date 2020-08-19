@@ -34,8 +34,6 @@ paths:
       - translator
       parameters:
       - $ref: '#/components/parameters/entity'
-      - $ref: '#/components/parameters/input_type'
-      - $ref: '#/components/parameters/predict_type'
       responses:
         '200':
           description: Successful Operation
@@ -87,8 +85,8 @@ components:
     entity:
       name: entity
       in: query
-      description: Entity to process (e.g. drug, disease, etc)
-      example: DB00394
+      description: CURIE of the entity to process (e.g. drug, disease, etc)
+      example: DRUGBANK:DB00394
       required: true
       schema:
         type: string
