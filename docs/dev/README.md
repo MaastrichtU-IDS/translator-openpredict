@@ -57,6 +57,12 @@ Run the **OpenPredict API** tests locally:
 pytest tests
 ```
 
+Run a specific test file and display `print`:
+
+```bash
+pytest tests/test_openpredict_api.py -s
+```
+
 ### Generate documentation
 
 Documentation in [docs/ 📖](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).

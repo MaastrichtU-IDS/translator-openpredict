@@ -17,6 +17,6 @@ def test_get_predict(client):
     #     'count': 1
     # }
     response = client.get(url)
-
-    assert len(response.json) > 1
+    assert len(response.json["results"]) == 300
+    assert response.json["count"] == 300
     # assert response.json == expected_json
