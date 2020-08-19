@@ -11,7 +11,7 @@ def client():
 
 def test_get_predict(client):
     """Test predict API call"""
-    url = "/v1/predict?entity=DB00394&input_type=drug&predict_type=disease"
+    url = "/v1/predict?entity=DRUGBANK:DB00394"
     # expected_json = {
     #     'results': [{'source' : 'test_disease', 'target': 'associated drug 1', 'score': 0.8}],
     #     'count': 1
