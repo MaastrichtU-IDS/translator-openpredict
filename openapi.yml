@@ -95,7 +95,7 @@ components:
       name: classifier
       in: query
       description: Classifier to use to predict associations
-      required: true
+      required: false
       schema:
         type: string
         enum: ["OpenPredict OMIM-DrugBank"]
