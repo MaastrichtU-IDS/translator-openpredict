@@ -13,11 +13,6 @@ from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
 
-import pyspark
-from pyspark.sql.types import *
-from pyspark.sql.functions import udf,col
-from pyspark.sql.functions import struct
-
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
 
@@ -407,7 +402,6 @@ def query_omim_drugbank_classifier(input_curie):
 
     classes = np.array(classes)
     pairs = np.array(pairs)
-    # TODO: add spark
     test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
 
     # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
