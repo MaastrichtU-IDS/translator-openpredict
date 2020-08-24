@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 from datetime import datetime
@@ -11,6 +12,11 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
+
+import pyspark
+from pyspark.sql.types import *
+from pyspark.sql.functions import udf,col
+from pyspark.sql.functions import struct
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -147,7 +153,7 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
 
 
 def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
-    """Create the features dataframes
+    """Create the features dataframes. Use Spark when available to speed up the process
 
     :param pairs: Generated pairs
     :param classes: Classes corresponding to the pairs
@@ -156,17 +162,26 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
     :param diseaseDFs: Disease dataframes
     :return: The features dataframe 
     """
-    totalNumFeatures = len(drugDFs)*len(diseaseDFs)
-    #featureMatri x= np.empty((len(classes),totalNumFeatures), float)
-    df =pd.DataFrame(list(zip(pairs[:,0], pairs[:,1], classes)), columns =['Drug','Disease','Class'])
-    index = 0
-    for i,drug_col in enumerate(drugDFs.columns.levels[0]):
-        for j,disease_col in enumerate(diseaseDFs.columns.levels[0]):
-            drugDF = drugDFs[drug_col]
-            diseaseDF = diseaseDFs[disease_col]
-            feature_series = df.apply(lambda row: geometricMean( row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
-            #print (feature_series) 
-            df["Feature_"+str(drug_col)+'_'+str(disease_col)] = feature_series
+    try:
+        # sc = pyspark.SparkContext(appName="Pi", master="spark://my-spark-spark-master:7077")
+        logging.info("Trying to find a Spark cluster...")
+        import findspark
+        findspark.init()
+        sc = pyspark.SparkContext(appName="Pi")
+        df = sc.createDataFrame(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
+    except:
+        logging.info("No Spark cluster found, using Pandas")
+        totalNumFeatures = len(drugDFs)*len(diseaseDFs)
+        #featureMatri x= np.empty((len(classes),totalNumFeatures), float)
+        df =pd.DataFrame(list(zip(pairs[:,0], pairs[:,1], classes)), columns =['Drug','Disease','Class'])
+        index = 0
+        for i,drug_col in enumerate(drugDFs.columns.levels[0]):
+            for j,disease_col in enumerate(diseaseDFs.columns.levels[0]):
+                drugDF = drugDFs[drug_col]
+                diseaseDF = diseaseDFs[disease_col]
+                feature_series = df.apply(lambda row: geometricMean( row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
+                #print (feature_series) 
+                df["Feature_"+str(drug_col)+'_'+str(disease_col)] = feature_series
     return df
 
 
@@ -401,6 +416,7 @@ def query_omim_drugbank_classifier(input_curie):
 
     classes = np.array(classes)
     pairs = np.array(pairs)
+    # TODO: add spark
     test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
 
     # Get list of drug-disease pairs (should be saved somewhere from previous computer?)

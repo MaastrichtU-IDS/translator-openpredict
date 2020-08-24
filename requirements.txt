@@ -5,6 +5,8 @@ joblib
 numpy==1.15.4
 pandas==0.24.2
 scikit-learn
+pyspark
+findspark
 rdflib==4.2.2
 networkx==1.11
 # kgx
