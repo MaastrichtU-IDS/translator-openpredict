@@ -1,6 +1,7 @@
 import connexion
-import logging
 import json
+import logging
+from datetime import datetime
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 
 def start_api(port=8808, debug=False):
@@ -40,6 +41,7 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     :param entity: Search for predicted associations for this entity CURIE
     :return: Prediction results object with score
     """
+    time_start = datetime.now()
     # classifier: OpenPredict OMIM-DrugBank
     print("Using classifier: " + classifier)
     prediction_json=json.loads(query_omim_drugbank_classifier(entity))
@@ -48,6 +50,7 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
+    logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'results': prediction_json, 'count': len(prediction_json)} or ('Not found', 404)
 
 
