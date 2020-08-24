@@ -49,12 +49,12 @@ paths:
             # text/csv: {}
             # text/tab-separated-values: {}
 
-  /v1/predict/reasoner:
+  /v1/predict/query:
     post:
       tags:
       - translator
       summary: Retrieve predicted associations from a Reasoner API query
-      description: "Retrieve predicted associations from a Translator [Reasoner API](https://github.com/NCATS-Tangerine/NCATS-ReasonerStdAPI/tree/master/API) query, using entities and associations from the [BioLink model](https://biolink.github.io/biolink-model)
+      description: "Retrieve predicted associations from a Translator [Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI/tree/master/API) query, using entities and associations from the [BioLink model](https://biolink.github.io/biolink-model)
         \n\nTry with this example query:\n```json \n{\n  \"max_results\": 50,\n  \"message\":
         {\n    \"query_graph\": {\n      \"nodes\": [\n        { \"id\": \"n00\", \"curie\": \"DRUGBANK:DB00394\", 
         \"type\": \"Drug\" },\n        { \"id\": \"n01\", \"type\": \"Disease\"
