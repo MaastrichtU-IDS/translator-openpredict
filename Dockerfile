@@ -1,4 +1,5 @@
-FROM python:3.7
+FROM jupyter/all-spark-notebook
+# FROM python:3.7
 
 # RUN pip install --upgrade pip
 
