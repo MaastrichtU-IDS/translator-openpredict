@@ -28,7 +28,8 @@ def start_api(port=8808, debug=False):
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
 
-    start_spark()
+    # TODO: manage exception
+    # start_spark()
     
     api = connexion.App(__name__, options={"swagger_url": ""})
 
