@@ -4,6 +4,22 @@ import logging
 from datetime import datetime
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 
+def start_spark():
+
+    logging.info("Trying to find a Spark cluster...")
+    import findspark
+    from pyspark import SparkConf, SparkContext
+    findspark.init()
+
+    config = SparkConf()
+    config.setMaster("local[*]")
+    config.set("spark.executor.memory", "5g")
+    config.set('spark.driver.memory', '5g')
+    config.set("spark.memory.offHeap.enabled",True)
+    config.set("spark.memory.offHeap.size","5g") 
+    sc = SparkContext(conf=config, appName="OpenPredict")
+    print (sc)
+
 def start_api(port=8808, debug=False):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
@@ -11,6 +27,8 @@ def start_api(port=8808, debug=False):
     :param debug: Run in debug mode, defaults to False
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
+
+    start_spark()
     
     api = connexion.App(__name__, options={"swagger_url": ""})
 

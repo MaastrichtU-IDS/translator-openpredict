@@ -1,3 +1,4 @@
+
 import logging
 import os
 import time
@@ -26,6 +27,7 @@ def adjcencydict2matrix(df, name1, name2):
     print(len(df))
     df =df.append(df1)
     print(len(df))
+    print(len(df))
     return df.pivot(index=name1, columns=name2)
 
 def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
@@ -38,6 +40,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     for i,featureFilename in enumerate(drugfeatfiles):
         print(featureFilename)
         df = pd.read_csv(featureFilename, delimiter=',')
+        print (df.columns)
         cond = df.Drug1 > df.Drug2
         df.loc[cond, ['Drug1', 'Drug2']] = df.loc[cond, ['Drug2', 'Drug1']].values
         if i != 0:
@@ -140,11 +143,49 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     """
     a  = drugDF.loc[knownDrugDisease[:,0]][drug].values
     b  = diseaseDF.loc[knownDrugDisease[:,1]][disease].values
-    #print(a,b)
     c = np.sqrt( np.multiply(a,b) )
     ix2 = (knownDrugDisease == [drug, disease])
     c[ix2[:,1]& ix2[:,0]]=0.0
     return float(max(c))
+
+
+def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
+    """Create the features dataframes.
+
+    :param drug: Drug
+    :param disease: Disease
+    :param knownDrugDisease: Known drug-disease associations
+    :param drugDFs: Drug dataframes
+    :param diseaseDFs: Disease dataframes
+    :return: The features dataframe 
+    """
+    #featureMatri x= np.empty((len(classes),totalNumFeatures), float)
+    feature_array =[]
+    for i,drug_col in enumerate(drugDFs.columns.levels[0]):
+        for j,disease_col in enumerate(diseaseDFs.columns.levels[0]):
+            drugDF = drugDFs[drug_col]
+            diseaseDF = diseaseDFs[disease_col]
+            feature_array.append( geometricMean( drug, disease, knownDrugDisease, drugDF, diseaseDF))
+            #print (feature_series) 
+    return feature_array
+
+
+def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
+    rdd = sc.parallelize(list(zip(pairs[:,0], pairs[:,1], classes))).map(lambda x: (x[0],x[1],x[2], createFeatureArray( x[0], x[1], knownDrugDis,  drug_df, disease_df)))
+    all_scores = rdd.collect()
+    drug_col = drug_df.columns.levels[0]
+    disease_col = disease_df.columns.levels[0]
+    combined_features = ['Feature_'+dr_col+'_'+di_col for dr_col in drug_col  for di_col in disease_col]
+    a = [ e[0] for e in all_scores]
+    b = [ e[1] for e in all_scores]
+    c = [ e[2] for e in all_scores]
+    scores = [ e[3] for e in all_scores]
+    df = pd.DataFrame(scores, columns=combined_features)
+    df['Drug'] = a
+    df['Disease' ] = b 
+    df['Class' ] = c 
+    return df
+
 
 
 def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
@@ -182,8 +223,22 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
     :param disease_df: Disease dataframe
     :param knownDrugDisease: Known drug-disease associations
     """
-    train_df  = createFeatureDF(pairs_train, classes_train, knownDrugDisease, drug_df, disease_df)
-    test_df = createFeatureDF(pairs_test, classes_test, knownDrugDisease, drug_df, disease_df)
+    try:
+        # sc = pyspark.SparkContext(appName="Pi", master="spark://my-spark-spark-master:7077")
+        from pyspark import SparkConf, SparkContext
+        sc = SparkContext.getOrCreate()
+        drug_df_bc= sc.broadcast(drug_df)
+        disease_df_bc = sc.broadcast(disease_df)
+        knownDrugDis_bc = sc.broadcast(knownDrugDisease)
+        print ('Running Spark...')
+       
+        train_df= sparkBuildFeatures(sc, pairs_train, classes_train, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        test_df= sparkBuildFeatures(sc, pairs_test, classes_test, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        logging.info("Finishing Spark jobs...")
+    except:
+        logging.info("Spark cluster not found ...")
+        train_df  = createFeatureDF(pairs_train, classes_train, knownDrugDisease, drug_df, disease_df)
+        test_df = createFeatureDF(pairs_test, classes_test, knownDrugDisease, drug_df, disease_df)
     return train_df, test_df
 
 
@@ -198,6 +253,7 @@ def trainModel(train_df, clf):
     print("Dataframe sample of training X (trainModel features):")
     print(X.head())
     y = train_df['Class']
+    print(y.head())
     print('📦 Fitting classifier...')
     clf.fit(X, y)
     return clf
@@ -233,15 +289,13 @@ def multimetric_score(estimator, X_test, y_test, scorers):
                              % (str(score), type(score), name))
     return scores
 
-def evaluate(train_df, test_df, clf):
+def evaluate(test_df, clf):
     """Evaluate the trained classifier
-    
-    :param train_df: Train dataframe
     :param test_df: Test dataframe
     :param clf: Classifier
     :return: Scores
     """
-    features = list(train_df.columns.difference(['Drug','Disease','Class']))
+    features = list(test_df.columns.difference(['Drug','Disease','Class']))
     X_test =  test_df[features]
     y_test = test_df['Class']
 
@@ -324,7 +378,7 @@ def get_drug_disease_classifier():
 
     # Evaluation of the trained model
     print('\nRunning evaluation of the model 📝')
-    scores = evaluate(train_df, test_df, clf)
+    scores = evaluate(test_df, clf)
     time_evaluate = datetime.now()
     print('Evaluation runtime 🕗  ' + str(time_evaluate - time_training))
 
@@ -402,7 +456,21 @@ def query_omim_drugbank_classifier(input_curie):
 
     classes = np.array(classes)
     pairs = np.array(pairs)
-    test_df = createFeatureDF(pairs, classes, drugDiseaseKnown.values, drug_df, disease_df)
+
+    
+    try:
+        print ('Running Spark...')
+        from pyspark import SparkConf, SparkContext
+        sc = SparkContext.getOrCreate()
+        drug_df_bc= sc.broadcast(drug_df)
+        disease_df_bc = sc.broadcast(disease_df)
+        knownDrugDis_bc = sc.broadcast(pairs[classes==1])
+        test_df= sparkBuildFeatures(sc, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+
+    except:
+        print ("Spark cluster not found ...")
+        test_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
+    
 
     # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
     # Another API: given the type, what kind of entities exists?
@@ -413,11 +481,11 @@ def query_omim_drugbank_classifier(input_curie):
     y_proba = clf.predict_proba(test_df[features])
 
     prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['drug','disease','score'])
+    prediction_df.sort_values(by='score', inplace=True, ascending=False)
     # prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =[drug_column_label,disease_column_label,'score'])
+    prediction_df["drug"]= "DRUGBANK:" + prediction_df["drug"]
+    prediction_df["disease"] ="OMIM:" + prediction_df["disease"]
 
-    for i in prediction_df.index:
-        prediction_df.at[i, "drug"] = "DRUGBANK:" + prediction_df.at[i, "drug"]
-        prediction_df.at[i, "disease"] = "OMIM:" + prediction_df.at[i, "disease"]
 
     prediction_results=prediction_df.to_json(orient='records')
     return prediction_results
