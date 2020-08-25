@@ -150,7 +150,7 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
 
 
 def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
-    """Create the features dataframes.
+    """Create the features dataframes for Spark.
 
     :param drug: Drug
     :param disease: Disease
