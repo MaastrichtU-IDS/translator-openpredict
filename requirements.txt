@@ -4,6 +4,8 @@ tornado
 joblib
 numpy==1.15.4
 pandas==0.24.2
+pyspark
+findspark
 scikit-learn
 rdflib==4.2.2
 networkx==1.11
