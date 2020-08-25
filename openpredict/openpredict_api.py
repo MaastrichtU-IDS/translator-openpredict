@@ -20,16 +20,21 @@ def start_spark():
     sc = SparkContext(conf=config, appName="OpenPredict")
     print (sc)
 
-def start_api(port=8808, debug=False):
+def start_api(port=8808, debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
     :param port: Port of the OpenPredict API, defaults to 8808
     :param debug: Run in debug mode, defaults to False
+    :param start_spark: Start a local Spark cluster, default to true
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
 
-    # TODO: manage exception
-    # start_spark()
+    if start_spark:
+        try:
+            start_spark()
+            print('Started Spark locally')
+        except:
+            print("Could not start Spark locally")
     
     api = connexion.App(__name__, options={"swagger_url": ""})
 
