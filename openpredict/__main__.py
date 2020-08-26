@@ -1,4 +1,3 @@
-from translator.translator-openpredict.openpredict.openpredict_api import start_spark
 import click
 import logging
 import sys
