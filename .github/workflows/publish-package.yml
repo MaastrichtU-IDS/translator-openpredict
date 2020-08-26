@@ -63,7 +63,7 @@ jobs:
       run: |
         git config --global user.name 'Vincent Emonet'
         git config --global user.email 'vincent.emonet@maastrichtuniversity.nl'
-        git commit -am "Automatically generate documentation for OpenPredict Python package 📖"
+        git add -A && git commit -m "Automatically generate documentation for OpenPredict Python package 📖"
         git push
 
   publish:
