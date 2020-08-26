@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
+# import openpredict.utils
 
 def start_spark():
 
@@ -28,13 +29,6 @@ def start_api(port=8808, debug=False, start_spark=True):
     :param start_spark: Start a local Spark cluster, default to true
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
-
-    if start_spark:
-        try:
-            start_spark()
-            print('Started Spark locally')
-        except:
-            print("Could not start Spark locally")
     
     api = connexion.App(__name__, options={"swagger_url": ""})
 
@@ -52,6 +46,13 @@ def start_api(port=8808, debug=False, start_spark=True):
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
+    if start_spark:
+        try:
+            start_spark()
+            logging.info('Started Spark locally')
+        except:
+            logging.info("Could not start Spark locally")
+
     print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(port=port, debug=debug, server=deployment_server)
 

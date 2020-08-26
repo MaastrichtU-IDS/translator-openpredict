@@ -459,7 +459,7 @@ def query_omim_drugbank_classifier(input_curie):
 
     
     try:
-        print ('Running Spark...')
+        logging.info ('Running Spark...')
         from pyspark import SparkConf, SparkContext
         sc = SparkContext.getOrCreate()
         drug_df_bc= sc.broadcast(drug_df)
@@ -468,7 +468,7 @@ def query_omim_drugbank_classifier(input_curie):
         test_df= sparkBuildFeatures(sc, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
 
     except:
-        print ("Spark cluster not found ...")
+        logging.info("Spark cluster not found. Using pandas to create feature dataframes")
         test_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
     
 
