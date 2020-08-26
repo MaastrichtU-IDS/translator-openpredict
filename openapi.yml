@@ -377,7 +377,7 @@ components:
         relation:
           type: string
           description: 'Lower-level relationship type of this edge (e.g.: upregulates)'
-          example: related_to
+          example: biolink:treated_by
         source_id:
           type: string
           description: Corresponds to the id of the source node of this edge

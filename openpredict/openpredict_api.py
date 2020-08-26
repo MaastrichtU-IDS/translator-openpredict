@@ -75,8 +75,9 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
     #}
+    relation = "biolink:treated_by"
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
-    return {'results': prediction_json, 'count': len(prediction_json)} or ('Not found', 404)
+    return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
 
 # TODO: get_predict wrapped in ReasonerStdApi
