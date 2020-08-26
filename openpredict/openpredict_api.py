@@ -6,7 +6,6 @@ from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 # import openpredict.utils
 
 def start_spark():
-
     logging.info("Trying to find a Spark cluster...")
     import findspark
     from pyspark import SparkConf, SparkContext
@@ -46,6 +45,7 @@ def start_api(port=8808, debug=False, start_spark=True):
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
+    logging.info('Start spark:' + str(start_spark))
     if start_spark:
         try:
             start_spark()
