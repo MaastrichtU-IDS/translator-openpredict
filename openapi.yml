@@ -59,7 +59,7 @@ paths:
         {\n    \"query_graph\": {\n      \"nodes\": [\n        { \"id\": \"n00\", \"curie\": \"DRUGBANK:DB00394\", 
         \"type\": \"Drug\" },\n        { \"id\": \"n01\", \"type\": \"Disease\"
         }\n      ],\n      \"edges\": [\n        { \"id\": \"e00\", \"type\": \"Association\",\n
-        \         \"source_id\": \"n00\", \"target_id\": \"n01\" }\n      ]\n    },\n
+        \         \"source_id\": \"n00\", \"target_id\": \"n01\" }\n         \"relation\": \"biolink:treated_by\",\n      ]\n    },\n
         \   \"query_options\": {\n\t   \"https://w3id.org/biolink/vocab/has_confidence_level\":
         \"0.5\",\n    }\n  }\n}\n```"
       operationId: openpredict.openpredict_api.post_reasoner_predict
