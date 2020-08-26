@@ -7,6 +7,7 @@
   * [generatePairs](#.openpredict.openpredict_omim_drugbank.generatePairs)
   * [balance\_data](#.openpredict.openpredict_omim_drugbank.balance_data)
   * [geometricMean](#.openpredict.openpredict_omim_drugbank.geometricMean)
+  * [createFeatureArray](#.openpredict.openpredict_omim_drugbank.createFeatureArray)
   * [createFeatureDF](#.openpredict.openpredict_omim_drugbank.createFeatureDF)
   * [calculateCombinedSimilarity](#.openpredict.openpredict_omim_drugbank.calculateCombinedSimilarity)
   * [trainModel](#.openpredict.openpredict_omim_drugbank.trainModel)
@@ -18,6 +19,7 @@
   * [start\_api](#.openpredict.openpredict_api.start_api)
   * [get\_predict](#.openpredict.openpredict_api.get_predict)
   * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
+* [openpredict.utils](#.openpredict.utils)
 * [openpredict.\_\_main\_\_](#.openpredict.__main__)
   * [main](#.openpredict.__main__.main)
 
@@ -103,6 +105,27 @@ Compute the geometric means of a drug-disease association using previously gener
 - `drugDF`: Drug dataframe
 - `diseaseDF`: Disease dataframe
 
+<a name=".openpredict.openpredict_omim_drugbank.createFeatureArray"></a>
+#### createFeatureArray
+
+```python
+createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs)
+```
+
+Create the features dataframes for Spark.
+
+**Arguments**:
+
+- `drug`: Drug
+- `disease`: Disease
+- `knownDrugDisease`: Known drug-disease associations
+- `drugDFs`: Drug dataframes
+- `diseaseDFs`: Disease dataframes
+
+**Returns**:
+
+The features dataframe
+
 <a name=".openpredict.openpredict_omim_drugbank.createFeatureDF"></a>
 #### createFeatureDF
 
@@ -110,7 +133,7 @@ Compute the geometric means of a drug-disease association using previously gener
 createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
 ```
 
-Create the features dataframes
+Create the features dataframes.
 
 **Arguments**:
 
@@ -181,14 +204,13 @@ Multimetric scores
 #### evaluate
 
 ```python
-evaluate(train_df, test_df, clf)
+evaluate(test_df, clf)
 ```
 
 Evaluate the trained classifier
 
 **Arguments**:
 
-- `train_df`: Train dataframe
 - `test_df`: Test dataframe
 - `clf`: Classifier
 
@@ -234,7 +256,7 @@ Predictions and scores
 #### start\_api
 
 ```python
-start_api(port=8808, debug=False)
+start_api(port=8808, debug=False, start_spark=True)
 ```
 
 Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -243,6 +265,7 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 
 - `port`: Port of the OpenPredict API, defaults to 8808
 - `debug`: Run in debug mode, defaults to False
+- `start_spark`: Start a local Spark cluster, default to true
 
 <a name=".openpredict.openpredict_api.get_predict"></a>
 #### get\_predict
@@ -277,6 +300,9 @@ Get predicted associations for a given ReasonerAPI query.
 **Returns**:
 
 Predictions as a ReasonerStdAPI Message
+
+<a name=".openpredict.utils"></a>
+# openpredict.utils
 
 <a name=".openpredict.__main__"></a>
 # openpredict.\_\_main\_\_
