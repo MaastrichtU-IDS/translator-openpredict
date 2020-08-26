@@ -6,6 +6,7 @@ on:
   push:
     branches: [ master ]
     paths:
+    - 'requirements.txt'
     - 'openpredict/**'
     - 'tests/**'
     - '.github/workflows/*'
