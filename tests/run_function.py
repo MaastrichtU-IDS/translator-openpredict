@@ -6,17 +6,30 @@ from datetime import datetime
 ## Run it:
 # python3 tests/run_function.py
 
-time_start = datetime.now()
-clf, scores = get_drug_disease_classifier()
+# time_start = datetime.now()
+# clf, scores = get_drug_disease_classifier()
 
-time_build = datetime.now()
+# time_build = datetime.now()
 
-# Call get predict from API for a DRUG
-prediction_result = get_predict('DRUGBANK:DB00394')
+# # Call get predict from API for a DRUG
+# prediction_result = get_predict('DRUGBANK:DB00394')
 
-print('Build runtime: ' + str(time_build - time_start))
-print('Predict runtime: ' + str(datetime.now() - time_build))
-print('Total runtime: ' + str(datetime.now() - time_start))
+# print('Build runtime: ' + str(time_build - time_start))
+# print('Predict runtime: ' + str(datetime.now() - time_build))
+# print('Total runtime: ' + str(datetime.now() - time_start))
 
 # print('Results:')
 # print(prediction_result)
+
+import findspark
+from pyspark import SparkConf, SparkContext
+findspark.init()
+
+config = SparkConf()
+config.setMaster("local[*]")
+config.set("spark.executor.memory", "5g")
+config.set('spark.driver.memory', '5g')
+config.set("spark.memory.offHeap.enabled",True)
+config.set("spark.memory.offHeap.size","5g") 
+sc = SparkContext(conf=config, appName="OpenPredict")
+print (sc)
