@@ -23,7 +23,7 @@ source .venv/bin/activate
 
 ### From PyPI
 
-Install the latest release published on [PyPI](https://pypi.org/project/openpredict) 🏷️
+Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict)
 
 ```bash
 pip install openpredict
