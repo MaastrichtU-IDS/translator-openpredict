@@ -71,8 +71,11 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     time_start = datetime.now()
     # classifier: OpenPredict OMIM-DrugBank
     print("Using classifier: " + classifier)
-    prediction_json=json.loads(query_omim_drugbank_classifier(entity))
-    
+
+    try:
+        prediction_json=json.loads(query_omim_drugbank_classifier(entity))
+    except:
+        return "Not found", 404
     # Expected? prediction_json = {
     #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
     #    'count': 1
