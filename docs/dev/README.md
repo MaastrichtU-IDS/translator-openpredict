@@ -77,6 +77,12 @@ Generate markdown documentation page for the `openpredict` package in `docs/`
 pydoc-markdown --render-toc -p openpredict > docs/README.md
 ```
 
+Modify the generated page title:
+
+```bash
+find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Package documentation 🔮🐍/g" {} +
+```
+
 > This can also be done using Sphinx, see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
 >
 > ```bash

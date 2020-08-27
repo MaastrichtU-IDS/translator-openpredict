@@ -4,7 +4,7 @@
 
 This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 
-## Use the API
+# Use the API 🌐
 
 The Translator OpenPredict API Swagger UI is publicly available at [openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)
 
@@ -41,7 +41,7 @@ pip install git+https://github.com/MaastrichtU-IDS/translator-openpredict
 
 ---
 
-# Run the API 🌐
+# Run the API ⚙️
 
 After installing the `openpredict` package (except for docker).
 
@@ -78,9 +78,8 @@ openpredict --help
 ```python
 from openpredict import openpredict_api
 
-port = 8808
 debug = False
-openpredict_api.start_api(port, debug)
+openpredict_api.start_api(8808, debug)
 ```
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
@@ -89,7 +88,7 @@ openpredict_api.start_api(port, debug)
 
 ### Run with Docker
 
-Running using Docker can be convenient of you just want to run the API without installing the package, or to run in production, alongside other services.
+Running using Docker can be convenient if you just want to run the API without installing the packages locally, or run in production alongside other services.
 
 Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
 
