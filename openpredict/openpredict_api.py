@@ -6,6 +6,8 @@ from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 # import openpredict.utils
 
 def start_spark():
+    """Start local Spark cluster when possible to improve performance
+    """
     logging.info("Trying to find a Spark cluster...")
     import findspark
     from pyspark import SparkConf, SparkContext
