@@ -459,9 +459,10 @@ def query_omim_drugbank_classifier(input_curie):
 
     
     try:
-        logging.info ('Running Spark...')
+        logging.info('Running Spark...')
         from pyspark import SparkConf, SparkContext
         sc = SparkContext.getOrCreate()
+        logging.info(sc)
         drug_df_bc= sc.broadcast(drug_df)
         disease_df_bc = sc.broadcast(disease_df)
         knownDrugDis_bc = sc.broadcast(pairs[classes==1])
