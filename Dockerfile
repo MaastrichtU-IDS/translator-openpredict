@@ -5,7 +5,7 @@ FROM python:3.7
 # RUN pip install --upgrade pip
 
 ## Install Spark 
-From https://github.com/jupyter/docker-stacks/blob/master/pyspark-notebook/Dockerfile
+# From https://github.com/jupyter/docker-stacks/blob/master/pyspark-notebook/Dockerfile
 ARG spark_version="3.0.0"
 ARG hadoop_version="3.2"
 ARG spark_checksum="BFE45406C67CC4AE00411AD18CC438F51E7D4B6F14EB61E7BF6B5450897C2E8D3AB020152657C0239F253735C263512FFABF538AC5B9FFFA38B8295736A9C387"
