@@ -1,6 +1,6 @@
 FROM jupyter/all-spark-notebook
-# FROM jupyter/pyspark-notebook
 # FROM python:3.7
+# FROM jupyter/pyspark-notebook
 
 # RUN pip install --upgrade pip
 
@@ -47,7 +47,7 @@ COPY . .
 # Install from source code
 RUN pip install -e .
 
-# EXPOSE 8808
+EXPOSE 8808
 
-# ENTRYPOINT [ "openpredict" ]
-# CMD [ "start-api" ]
+ENTRYPOINT [ "openpredict" ]
+CMD [ "start-api" ]
