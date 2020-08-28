@@ -132,7 +132,7 @@ paths:
                 $ref: '#/components/schemas/Message'
         '400':
           description: Invalid status value
-      x-swagger-router-controller: swagger_server.controllers.query_controller
+      # x-swagger-router-controller: swagger_server.controllers.query_controller
 components:
   schemas:
     Query:
