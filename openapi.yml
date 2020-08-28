@@ -33,8 +33,27 @@ paths:
       tags:
       - translator
       parameters:
-      - $ref: '#/components/parameters/entity'
-      - $ref: '#/components/parameters/classifier'
+      - name: entity
+        in: query
+        description: CURIE of the entity to process (e.g. drug, disease, etc)
+        example: DRUGBANK:DB00394
+        required: true
+        schema:
+          type: string
+      - name: classifier
+        in: query
+        description: Classifier to use to predict associations
+        required: false
+        schema:
+          type: string
+          enum: ["OpenPredict OMIM-DrugBank"]
+          default: "OpenPredict OMIM-DrugBank"
+          # enum: [openpredict_omim_drugbank]
+          # type: integer
+          # format: int32
+          # minimum: 0
+          # maximum: 10
+          # default: 0
       responses:
         '200':
           description: Successful Operation
@@ -82,31 +101,6 @@ paths:
             # application/ld+json: {}
 
 components:
-
-  parameters:
-    entity:
-      name: entity
-      in: query
-      description: CURIE of the entity to process (e.g. drug, disease, etc)
-      example: DRUGBANK:DB00394
-      required: true
-      schema:
-        type: string
-    classifier:
-      name: classifier
-      in: query
-      description: Classifier to use to predict associations
-      required: false
-      schema:
-        type: string
-        enum: ["OpenPredict OMIM-DrugBank"]
-        default: "OpenPredict OMIM-DrugBank"
-        # enum: [openpredict_omim_drugbank]
-        # type: integer
-        # format: int32
-        # minimum: 0
-        # maximum: 10
-        # default: 0
 
   schemas:
     PredictionResults:
