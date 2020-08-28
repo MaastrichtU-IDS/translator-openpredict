@@ -9,7 +9,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    version='0.0.3',
+    version='0.0.4',
     name='openpredict',
     license='MIT License',
     description='An API to compute and serve predictions of biomedical concepts associations via OpenAPI, using the PREDICT method, for the NCATS Translator project',
