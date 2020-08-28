@@ -3,7 +3,7 @@ info:
   description: "Translator OpenPredict is an API to compute and serve predictions of biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
     \n* This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
     \n* This API can be queried using Translator [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) queries.
-    \n\n[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22)"
+    \n\n[![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)"
   version: 0.9.2
   title: Translator OpenPredict API 🔮🐍 
   contact:
@@ -11,8 +11,8 @@ info:
     name: Institute of Data Science at Maastricht University
     url: https://maastrichtuniversity.nl/ids
   license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
   termsOfService: "{{url}}"
 externalDocs:
   description: Documentation for the NCATS Biomedical Translator Reasoners web services
