@@ -14,7 +14,7 @@ info:
     url: https://opensource.org/licenses/MIT
   termsOfService: https://opensource.org/licenses/MIT
   title: Translator OpenPredict API 🔮🐍 
-  version: '1.0'
+  version: 0.9.1
 servers:
 - description: Local
   url: http://localhost:8808
