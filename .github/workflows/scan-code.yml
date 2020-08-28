@@ -1,11 +1,11 @@
 name: Scan docker image
 on:
   workflow_dispatch:
-  push:
-    branches: [ master ]
-    paths:
-    - 'requirements.txt'
-    - 'Dockerfile'
+  # push:
+  #   branches: [ master ]
+  #   paths:
+  #   - 'requirements.txt'
+  #   - 'Dockerfile'
 jobs:
   build:
     runs-on: ubuntu-latest
