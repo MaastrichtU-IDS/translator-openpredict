@@ -84,6 +84,8 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
+def predicates_get():
+    return {"predicates": "todo"}
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):
