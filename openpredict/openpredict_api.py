@@ -3,6 +3,8 @@ import json
 import logging
 from datetime import datetime
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
+from openpredict.reasonerapi_utils import typed_results_to_reasonerapi
+
 # import openpredict.utils
 
 def start_spark():
@@ -33,7 +35,8 @@ def start_api(port=8808, debug=False, start_spark=True):
     
     api = connexion.App(__name__, options={"swagger_url": ""})
 
-    api.add_api('../openapi.yml', validate_responses=True)
+    # api.add_api('../openapi.yml', validate_responses=True)
+    api.add_api('../openapi.yml')
 
     if debug:
         # Run in development mode
@@ -73,7 +76,7 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     print("Using classifier: " + classifier)
 
     try:
-        prediction_json=json.loads(query_omim_drugbank_classifier(entity))
+        prediction_json = json.loads(query_omim_drugbank_classifier(entity))
     except:
         return "Not found", 404
     # Expected? prediction_json = {
@@ -105,29 +108,26 @@ def post_reasoner_predict(request_body):
     :param request_body: The ReasonerStdAPI query in JSON
     :return: Predictions as a ReasonerStdAPI Message
     """
-    prediction_result = {
-        "query_graph": {
-            "nodes": [
-                {
-                    "id": "n00",
-                    "type": "Drug"
-                },
-                {
-                    "id": "n01",
-                    "type": "Disease"
-                }
-            ],
-            "edges": [
-                {
-                    "id": "e00",
-                    "type": "Association",
-                    "source_id": "n00",
-                    "target_id": "n01"
-                }
-            ]
-        },
-        "query_options": {
-            "https://w3id.org/openpredict/prediction/score": "0.7"
-        }
-    }
-    return prediction_result or ('Not found', 404)
+    query_graph = request_body["message"]["query_graph"]
+    print(query_graph)
+    if len(query_graph["edges"]) == 0:
+        return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
+    if len(query_graph["edges"]) > 1:
+        return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
+
+    reasonerapi_response = typed_results_to_reasonerapi(request_body)
+
+    # TODO: populate edges/nodes with association predictions    
+    #  Edge: {
+    #     "id": "e50",
+    #     "source_id": "MONDO:0021668",
+    #     "target_id": "ChEMBL:CHEMBL560511",
+    #     "type": "treated_by"
+    #   }
+    # Node: {
+    #     "id": "ChEMBL:CHEMBL2106966",
+    #     "name": "Piketoprofen",
+    #     "type": "chemical_substance"
+    #   },
+
+    return reasonerapi_response or ('Not found', 404)
