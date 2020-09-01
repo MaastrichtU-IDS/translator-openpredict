@@ -171,6 +171,17 @@ def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
 
 
 def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
+    """Create the feature matrix for Spark.
+
+    :param sc: Spark context
+    :param pairs: Generated pairs
+    :param classes: Classes corresponding to the pairs
+    :param knownDrugDisease: Known drug-disease associations
+    :param drugDFs: Drug dataframes
+    :param diseaseDFs: Disease dataframes
+    :return: The features dataframe 
+    """
+
     rdd = sc.parallelize(list(zip(pairs[:,0], pairs[:,1], classes))).map(lambda x: (x[0],x[1],x[2], createFeatureArray( x[0], x[1], knownDrugDis,  drug_df, disease_df)))
     all_scores = rdd.collect()
     drug_col = drug_df.columns.levels[0]
@@ -340,6 +351,7 @@ def get_drug_disease_classifier():
 
     # Merge feature matrix
     drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+    dump((drug_df, disease_df), 'data/features/drug_disease_dataframes.joblib')
     # print(drug_df.head())
 
     # Generate positive and negative pairs
@@ -386,12 +398,38 @@ def get_drug_disease_classifier():
     print("\nTest results 🏆")
     print(scores)
 
+    print("\n Train the final model using all dataset")
+    final_training = datetime.now()
+    train_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
+    clf = linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, random_state=n_seed) 
+    clf = trainModel(train_df, clf)
+    print('Final model training runtime 🕕  ' + str(datetime.now() - final_training))
+
     print('\nStore the model in a .joblib file 💾')
     dump(clf, 'data/models/drug_disease_model.joblib')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
+
+
+def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
+
+    try:
+        logging.info('Running Spark...')
+        from pyspark import SparkConf, SparkContext
+        sc = SparkContext.getOrCreate()
+        logging.info(sc)
+        drug_df_bc= sc.broadcast(drug_df)
+        disease_df_bc = sc.broadcast(disease_df)
+        knownDrugDis_bc = sc.broadcast(pairs[classes==1])
+        feature_df= sparkBuildFeatures(sc, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+
+    except:
+        logging.info("Spark cluster not found. Using pandas to create feature dataframes")
+        feature_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
+
+    return feature_df
 
 def query_omim_drugbank_classifier(input_curie):
     """The main function to query the drug-disease OpenPredict classifier, 
@@ -406,16 +444,17 @@ def query_omim_drugbank_classifier(input_curie):
     input_id = parsed_curie.group(2)
 
     resources_folder = "data/resources/"
-    features_folder = "data/features/"
-    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
-                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
-    diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
-    drugfeatfiles = [ os.path.join(features_folder, fn) for fn in drugfeatfiles]
-    diseasefeatfiles = [ os.path.join(features_folder, fn) for fn in diseasefeatfiles]
+    #features_folder = "data/features/"
+    #drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
+    #                 'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
+    #diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
+    #drugfeatfiles = [ os.path.join(features_folder, fn) for fn in drugfeatfiles]
+    #diseasefeatfiles = [ os.path.join(features_folder, fn) for fn in diseasefeatfiles]
 
     ## Get all DFs
     # Merge feature matrix
-    drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+    #drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+    (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
     drugDiseaseKnown = pd.read_csv(resources_folder + 'openpredict-omim-drug.csv',delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
@@ -457,20 +496,7 @@ def query_omim_drugbank_classifier(input_curie):
     classes = np.array(classes)
     pairs = np.array(pairs)
 
-    
-    try:
-        logging.info('Running Spark...')
-        from pyspark import SparkConf, SparkContext
-        sc = SparkContext.getOrCreate()
-        logging.info(sc)
-        drug_df_bc= sc.broadcast(drug_df)
-        disease_df_bc = sc.broadcast(disease_df)
-        knownDrugDis_bc = sc.broadcast(pairs[classes==1])
-        test_df= sparkBuildFeatures(sc, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-
-    except:
-        logging.info("Spark cluster not found. Using pandas to create feature dataframes")
-        test_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
+    test_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
     
 
     # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
