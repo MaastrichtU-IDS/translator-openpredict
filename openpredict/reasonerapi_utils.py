@@ -28,11 +28,11 @@ def typed_results_to_reasonerapi(reasoner_query):
                     # The node with curie is the association's "from"
                     query_plan[edge['id']]['from_kg_id'] = node['curie']
                     query_plan[edge['id']]['from_qg_id'] = node['id']
-                    query_plan[edge['id']]['from_type'] = node['type']
+                    query_plan[edge['id']]['from_type'] = node['type'].lower()
                 else:
                     # The node without curie is the association's "to"
                     query_plan[edge['id']]['to_qg_id'] = node['id']
-                    query_plan[edge['id']]['to_type'] = node['type']
+                    query_plan[edge['id']]['to_type'] = node['type'].lower()
 
         # TODO: edge type should be required
 

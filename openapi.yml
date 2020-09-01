@@ -109,10 +109,10 @@ paths:
       description: "Retrieve predicted associations from a Translator [Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI/tree/master/API) query, using entities and associations from the [BioLink model](https://biolink.github.io/biolink-model)
         \n\nTry with this example query:\n```json \n{\n  \"max_results\": 50,\n  \"message\":
         {\n    \"query_graph\": {\n      \"nodes\": [\n        { \"id\": \"n00\", \"curie\": \"DRUGBANK:DB00394\", 
-        \"type\": \"Drug\" },\n        { \"id\": \"n01\", \"type\": \"Disease\"
-        }\n      ],\n      \"edges\": [\n        { \"id\": \"e00\", \"type\": \"Association\",\n
-        \         \"source_id\": \"n00\", \"target_id\": \"n01\", \n         \"relation\": \"biolink:treated_by\" } \n      ]\n    },\n
-        \   \"query_options\": {\n\t   \"https://w3id.org/biolink/vocab/has_confidence_level\":
+        \"type\": \"drug\" },\n        { \"id\": \"n01\", \"type\": \"disease\"
+        }\n      ],\n      \"edges\": [\n        { \"id\": \"e00\", \"type\": \"treated_by\",\n
+        \         \"source_id\": \"n00\", \"target_id\": \"n01\" } \n      ]\n    },\n
+        \   \"query_options\": {\n\t   \"has_confidence_level\":
         \"0.5\"\n    }\n  }\n}\n```"
       operationId: openpredict.openpredict_api.post_reasoner_predict
       # operationId: query
