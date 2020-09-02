@@ -50,6 +50,7 @@ def typed_results_to_reasonerapi(reasoner_query):
         # prediction_json = json.loads(query_omim_drugbank_classifier(query_plan[edge_qg_id]['from_kg_id']))
         
         # TODO: pass score and limit from Reasoner query
+        # TODO: add try catch
         prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'])
 
         for association in prediction_json:
