@@ -510,9 +510,11 @@ def query_omim_drugbank_classifier(input_curie):
     prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =['drug','disease','score'])
     prediction_df.sort_values(by='score', inplace=True, ascending=False)
     # prediction_df = pd.DataFrame( list(zip(pairs[:,0], pairs[:,1], y_proba[:,1])), columns =[drug_column_label,disease_column_label,'score'])
+    
+    # Add namespace to get CURIEs from IDs
     prediction_df["drug"]= "DRUGBANK:" + prediction_df["drug"]
     prediction_df["disease"] ="OMIM:" + prediction_df["disease"]
 
-
-    prediction_results=prediction_df.to_json(orient='records')
+    # prediction_results=prediction_df.to_json(orient='records')
+    prediction_results=prediction_df.to_dict(orient='records')
     return prediction_results

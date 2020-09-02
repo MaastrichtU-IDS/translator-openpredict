@@ -54,12 +54,23 @@ paths:
           type: string
           enum: ["OpenPredict OMIM-DrugBank"]
           default: "OpenPredict OMIM-DrugBank"
-          # enum: [openpredict_omim_drugbank]
-          # type: integer
-          # format: int32
-          # minimum: 0
-          # maximum: 10
-          # default: 0
+      - name: score
+        in: query
+        description: Minimum score of predictions to return
+        required: false
+        schema:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+      - name: limit
+        in: query
+        description: Limit number of predictions to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
       responses:
         '200':
           description: Successful Operation
@@ -112,8 +123,9 @@ paths:
         \"type\": \"drug\" },\n        { \"id\": \"n01\", \"type\": \"disease\"
         }\n      ],\n      \"edges\": [\n        { \"id\": \"e00\", \"type\": \"treated_by\",\n
         \         \"source_id\": \"n00\", \"target_id\": \"n01\" } \n      ]\n    },\n
-        \   \"query_options\": {\n\t   \"has_confidence_level\":
-        \"0.5\"\n    }\n  }\n}\n```"
+        \   \"n_results\": 10, \n 
+        \   \"query_options\": {\n     \"has_confidence_level\":
+        \"0.5\",\n    }\n  }\n}\n```"
       operationId: openpredict.openpredict_api.post_reasoner_predict
       # operationId: query
       requestBody:
