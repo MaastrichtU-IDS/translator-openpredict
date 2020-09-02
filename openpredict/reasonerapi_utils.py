@@ -6,7 +6,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
 
     :param: reasoner_query Query from Reasoner API
-    :return Results as ReasonerAPI object
+    :return: Results as ReasonerAPI object
     """
     query_graph = reasoner_query["message"]["query_graph"]
     query_plan = {}

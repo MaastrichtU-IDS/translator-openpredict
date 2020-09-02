@@ -48,7 +48,10 @@ Run the get_predict to get the QueryGraph edges and nodes
 {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
 
 :param: reasoner_query Query from Reasoner API
-:return Results as ReasonerAPI object
+
+**Returns**:
+
+Results as ReasonerAPI object
 
 <a name=".openpredict.openpredict_omim_drugbank"></a>
 # openpredict.openpredict\_omim\_drugbank
