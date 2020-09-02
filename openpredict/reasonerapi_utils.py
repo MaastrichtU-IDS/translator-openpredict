@@ -45,10 +45,8 @@ def typed_results_to_reasonerapi(reasoner_query):
 
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
-        # Run get_predict!
-        # TODO: change query_omim_drugbank_classifier to get_predictions()
-        # prediction_json = json.loads(query_omim_drugbank_classifier(query_plan[edge_qg_id]['from_kg_id']))
         
+        # Run get_predict!
         # TODO: pass score and limit from Reasoner query
         # TODO: add try catch
         prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'])
