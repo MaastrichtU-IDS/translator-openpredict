@@ -1,6 +1,8 @@
 # Table of Contents
 
 * [openpredict](#.openpredict)
+* [openpredict.reasonerapi\_utils](#.openpredict.reasonerapi_utils)
+  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_utils.typed_results_to_reasonerapi)
 * [openpredict.openpredict\_omim\_drugbank](#.openpredict.openpredict_omim_drugbank)
   * [adjcencydict2matrix](#.openpredict.openpredict_omim_drugbank.adjcencydict2matrix)
   * [mergeFeatureMatrix](#.openpredict.openpredict_omim_drugbank.mergeFeatureMatrix)
@@ -8,6 +10,7 @@
   * [balance\_data](#.openpredict.openpredict_omim_drugbank.balance_data)
   * [geometricMean](#.openpredict.openpredict_omim_drugbank.geometricMean)
   * [createFeatureArray](#.openpredict.openpredict_omim_drugbank.createFeatureArray)
+  * [sparkBuildFeatures](#.openpredict.openpredict_omim_drugbank.sparkBuildFeatures)
   * [createFeatureDF](#.openpredict.openpredict_omim_drugbank.createFeatureDF)
   * [calculateCombinedSimilarity](#.openpredict.openpredict_omim_drugbank.calculateCombinedSimilarity)
   * [trainModel](#.openpredict.openpredict_omim_drugbank.trainModel)
@@ -16,15 +19,35 @@
   * [get\_drug\_disease\_classifier](#.openpredict.openpredict_omim_drugbank.get_drug_disease_classifier)
   * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_omim_drugbank.query_omim_drugbank_classifier)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
+  * [start\_spark](#.openpredict.openpredict_api.start_spark)
   * [start\_api](#.openpredict.openpredict_api.start_api)
   * [get\_predict](#.openpredict.openpredict_api.get_predict)
+  * [predicates\_get](#.openpredict.openpredict_api.predicates_get)
   * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
 * [openpredict.utils](#.openpredict.utils)
+  * [get\_predictions](#.openpredict.utils.get_predictions)
+  * [get\_labels](#.openpredict.utils.get_labels)
 * [openpredict.\_\_main\_\_](#.openpredict.__main__)
   * [main](#.openpredict.__main__.main)
 
 <a name=".openpredict"></a>
 # openpredict
+
+<a name=".openpredict.reasonerapi_utils"></a>
+# openpredict.reasonerapi\_utils
+
+<a name=".openpredict.reasonerapi_utils.typed_results_to_reasonerapi"></a>
+#### typed\_results\_to\_reasonerapi
+
+```python
+typed_results_to_reasonerapi(reasoner_query)
+```
+
+Convert an array of predictions objects to ReasonerAPI format
+Run the get_predict to get the QueryGraph edges and nodes
+{disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
+
+:reasoner_query Query from Reasoner API
 
 <a name=".openpredict.openpredict_omim_drugbank"></a>
 # openpredict.openpredict\_omim\_drugbank
@@ -118,6 +141,28 @@ Create the features dataframes for Spark.
 
 - `drug`: Drug
 - `disease`: Disease
+- `knownDrugDisease`: Known drug-disease associations
+- `drugDFs`: Drug dataframes
+- `diseaseDFs`: Disease dataframes
+
+**Returns**:
+
+The features dataframe
+
+<a name=".openpredict.openpredict_omim_drugbank.sparkBuildFeatures"></a>
+#### sparkBuildFeatures
+
+```python
+sparkBuildFeatures(sc, pairs, classes, knownDrugDis, drug_df, disease_df)
+```
+
+Create the feature matrix for Spark.
+
+**Arguments**:
+
+- `sc`: Spark context
+- `pairs`: Generated pairs
+- `classes`: Classes corresponding to the pairs
 - `knownDrugDisease`: Known drug-disease associations
 - `drugDFs`: Drug dataframes
 - `diseaseDFs`: Disease dataframes
@@ -252,6 +297,15 @@ Predictions and scores
 <a name=".openpredict.openpredict_api"></a>
 # openpredict.openpredict\_api
 
+<a name=".openpredict.openpredict_api.start_spark"></a>
+#### start\_spark
+
+```python
+start_spark()
+```
+
+Start local Spark cluster when possible to improve performance
+
 <a name=".openpredict.openpredict_api.start_api"></a>
 #### start\_api
 
@@ -271,7 +325,7 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 #### get\_predict
 
 ```python
-get_predict(entity, classifier="OpenPredict OMIM-DrugBank")
+get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, limit=None)
 ```
 
 Get predicted associations for a given entity CURIE.
@@ -283,6 +337,19 @@ Get predicted associations for a given entity CURIE.
 **Returns**:
 
 Prediction results object with score
+
+<a name=".openpredict.openpredict_api.predicates_get"></a>
+#### predicates\_get
+
+```python
+predicates_get()
+```
+
+Get predicates and entities provided by the API
+
+**Returns**:
+
+JSON with biolink entities
 
 <a name=".openpredict.openpredict_api.post_reasoner_predict"></a>
 #### post\_reasoner\_predict
@@ -303,6 +370,37 @@ Predictions as a ReasonerStdAPI Message
 
 <a name=".openpredict.utils"></a>
 # openpredict.utils
+
+<a name=".openpredict.utils.get_predictions"></a>
+#### get\_predictions
+
+```python
+get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, limit=None)
+```
+
+Run classifiers to get predictions
+
+**Arguments**:
+
+- `id_to_predict`: Id of the entity to get prediction from
+- `classifier`: classifier used to get the predictions
+- `score`: score minimum of predictions
+- `limit`: limit number of predictions to return
+
+**Returns**:
+
+predictions in array of JSON object
+
+<a name=".openpredict.utils.get_labels"></a>
+#### get\_labels
+
+```python
+get_labels(entity_list)
+```
+
+Send the list of node IDs to Translator Normalization API to get labels
+See API: https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
+and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
 
 <a name=".openpredict.__main__"></a>
 # openpredict.\_\_main\_\_
