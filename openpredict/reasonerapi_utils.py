@@ -1,16 +1,12 @@
-import requests
-import json
-import logging
-
 from openpredict.utils import get_predictions
-from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 
 def typed_results_to_reasonerapi(reasoner_query):
     """Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
 
-    :reasoner_query Query from Reasoner API
+    :param: reasoner_query Query from Reasoner API
+    :return Results as ReasonerAPI object
     """
     query_graph = reasoner_query["message"]["query_graph"]
     query_plan = {}
@@ -108,19 +104,6 @@ def typed_results_to_reasonerapi(reasoner_query):
                 })
             query_results.append(result)
             kg_edge_count += 1
-
-
-    # Send the list of node IDs to Translator API to get labels
-    # https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
-    # https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
-    # TODO: add the preferred identifier to our answer?
-    # get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
-    #                     params={'curie': node_dict.keys()})
-    # get_label_result = get_label_result.json()
-    # Response is a JSON:
-    # { "HP:0007354": {
-    #     "id": { "identifier": "MONDO:0004976",
-    #       "label": "amyotrophic lateral sclerosis" },
 
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
     for node_id, properties in node_dict.items():
