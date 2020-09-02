@@ -2,10 +2,12 @@ import requests
 import json
 import logging
 
+from openpredict.utils import get_predictions
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 
 def typed_results_to_reasonerapi(reasoner_query):
-    """Convert an array of results of type
+    """Convert an array of predictions objects to ReasonerAPI format
+    Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
 
     :reasoner_query Query from Reasoner API
@@ -13,26 +15,26 @@ def typed_results_to_reasonerapi(reasoner_query):
     query_graph = reasoner_query["message"]["query_graph"]
     query_plan = {}
     # Parse the query_graph to build the query plan
-    for edge in query_graph["edges"]:
+    for qg_edge in query_graph["edges"]:
         # Build dict with all infos of associations to predict 
-        query_plan[edge['id']] = {
-            'association_type': edge['type'],
-            'qg_source_id': edge['source_id'],
-            'qg_target_id': edge['target_id']
+        query_plan[qg_edge['id']] = {
+            'association_type': qg_edge['type'],
+            'qg_source_id': qg_edge['source_id'],
+            'qg_target_id': qg_edge['target_id']
         }
 
         # Get the nodes infos in the query plan object
         for node in query_graph['nodes']:
-            if node['id'] == edge['source_id'] or node['id'] == edge['target_id']:
+            if node['id'] == qg_edge['source_id'] or node['id'] == qg_edge['target_id']:
                 if 'curie' in node:
                     # The node with curie is the association's "from"
-                    query_plan[edge['id']]['from_kg_id'] = node['curie']
-                    query_plan[edge['id']]['from_qg_id'] = node['id']
-                    query_plan[edge['id']]['from_type'] = node['type'].lower()
+                    query_plan[qg_edge['id']]['from_kg_id'] = node['curie']
+                    query_plan[qg_edge['id']]['from_qg_id'] = node['id']
+                    query_plan[qg_edge['id']]['from_type'] = node['type'].lower()
                 else:
                     # The node without curie is the association's "to"
-                    query_plan[edge['id']]['to_qg_id'] = node['id']
-                    query_plan[edge['id']]['to_type'] = node['type'].lower()
+                    query_plan[qg_edge['id']]['to_qg_id'] = node['id']
+                    query_plan[qg_edge['id']]['to_type'] = node['type'].lower()
 
         # TODO: edge type should be required
 
@@ -42,29 +44,50 @@ def typed_results_to_reasonerapi(reasoner_query):
     kg_edge_count = 0
 
     # Now iterates the query plan to execute each query
-    # TODO: enable passing results to enable n-hop queries
     for edge_qg_id in query_plan.keys():
         # Run get_predict!
-        prediction_json = json.loads(query_omim_drugbank_classifier(query_plan[edge_qg_id]['from_kg_id']))
-        # print(prediction_json)
-
-        # Entities/type are registered in a dict to avoid duplicate in knowledge_graph.nodes
-        node_dict[query_plan[edge_qg_id]['from_kg_id']] = query_plan[edge_qg_id]['from_type']
+        # TODO: change query_omim_drugbank_classifier to get_predictions()
+        # prediction_json = json.loads(query_omim_drugbank_classifier(query_plan[edge_qg_id]['from_kg_id']))
         
+        # TODO: pass score and limit from Reasoner query
+        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'])
+
         for association in prediction_json:
             edge_kg_id = 'e' + str(kg_edge_count)
             # Get the ID of the predicted entity in result association
             # based on the type expected for the association "to" node
-            node_dict[association[query_plan[edge_qg_id]['to_type']]] = query_plan[edge_qg_id]['to_type']
+            # node_dict[query_plan[edge_qg_id]['from_kg_id']] = query_plan[edge_qg_id]['from_type']
+            # node_dict[association[query_plan[edge_qg_id]['to_type']]] = query_plan[edge_qg_id]['to_type']
+            
+            # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
+            # Build dict of node ID : label
+            node_dict[association['source']['id']] = {
+                'type': association['source']['type']
+            }
+            if 'label' in association['source'] and association['source']['label']:
+                node_dict[association['source']['id']]['label'] = association['source']['label']
+
+            node_dict[association['target']['id']] = {
+                'type': association['target']['type']
+            }
+            if 'label' in association['target'] and association['target']['label']:
+                node_dict[association['target']['id']]['label'] = association['target']['label']
+
+            edge_dict = {
+                'id': edge_kg_id,
+                'type': query_plan[edge_qg_id]['association_type'] }
+
+            # Map the source/target of query_graph to source/target of association
+            if association['source']['type'] == query_plan[edge_qg_id]['from_type']:
+                edge_dict['source_id'] = association['source']['id']
+                edge_dict['target_id'] = association['target']['id']    
+            else: 
+                edge_dict['source_id'] = association['target']['id']
+                edge_dict['target_id'] = association['source']['id']    
 
             # Add the association in the knowledge_graph as edge
             # Use the type as key in the result association dict (for IDs)
-            knowledge_graph['edges'].append({
-                'id': edge_kg_id,
-                'source_id': association[query_plan[edge_qg_id]['from_type']],
-                'target_id': association[query_plan[edge_qg_id]['to_type']],
-                'type': query_plan[edge_qg_id]['association_type']
-                })
+            knowledge_graph['edges'].append(edge_dict)
 
             # Add the bindings to the results object
             result = {'edge_bindings': [], 'node_bindings': []}
@@ -76,12 +99,12 @@ def typed_results_to_reasonerapi(reasoner_query):
             )
             result['node_bindings'].append(
                 {
-                    "kg_id": association[query_plan[edge_qg_id]['from_type']],
+                    "kg_id": association['source']['id'],
                     'qg_id': query_plan[edge_qg_id]['from_qg_id']
                 })
             result['node_bindings'].append(
                 {
-                    "kg_id": association[query_plan[edge_qg_id]['to_type']],
+                    "kg_id": association['target']['id'],
                     'qg_id': query_plan[edge_qg_id]['to_qg_id']
                 })
             query_results.append(result)
@@ -92,22 +115,22 @@ def typed_results_to_reasonerapi(reasoner_query):
     # https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
     # https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
     # TODO: add the preferred identifier to our answer?
-    get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
-                        params={'curie': node_dict.keys()})
-    get_label_result = get_label_result.json()
+    # get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
+    #                     params={'curie': node_dict.keys()})
+    # get_label_result = get_label_result.json()
     # Response is a JSON:
     # { "HP:0007354": {
     #     "id": { "identifier": "MONDO:0004976",
     #       "label": "amyotrophic lateral sclerosis" },
 
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
-    for node_id in node_dict.keys():
+    for node_id, properties in node_dict.items():
         node_to_add = {
             'id': node_id,
-            'type': node_dict[node_id],
+            'type': properties['type'],
             }
-        if node_id in get_label_result and get_label_result[node_id]:
-            node_to_add['name'] = get_label_result[node_id]['id']['label']
+        if 'label' in properties and properties['label']:
+            node_to_add['name'] = properties['label']
 
         knowledge_graph['nodes'].append(node_to_add)
     return {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}

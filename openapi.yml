@@ -124,8 +124,7 @@ paths:
         }\n      ],\n      \"edges\": [\n        { \"id\": \"e00\", \"type\": \"treated_by\",\n
         \         \"source_id\": \"n00\", \"target_id\": \"n01\" } \n      ]\n    },\n
         \   \"n_results\": 10, \n 
-        \   \"query_options\": {\n     \"has_confidence_level\":
-        \"0.5\",\n    }\n  }\n}\n```"
+        \   \"query_options\": {\n     \"has_confidence_level\": \"0.5\"\n    }\n  }\n}\n```"
       operationId: openpredict.openpredict_api.post_reasoner_predict
       # operationId: query
       requestBody:

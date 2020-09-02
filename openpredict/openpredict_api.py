@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
+from openpredict.utils import get_predictions
 from openpredict.reasonerapi_utils import typed_results_to_reasonerapi
 
 # import openpredict.utils
@@ -65,7 +66,7 @@ def start_api(port=8808, debug=False, start_spark=True):
 
 ### Code for the different calls of the app
 
-def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
+def get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, limit=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
@@ -75,14 +76,12 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank"):
     # classifier: OpenPredict OMIM-DrugBank
     print("Using classifier: " + classifier)
 
-    try:
-        prediction_json = json.loads(query_omim_drugbank_classifier(entity))
-    except:
-        return "Not found", 404
-    # Expected? prediction_json = {
-    #    'results': [{'source' : entity, 'target': 'associated drug 1', 'score': 0.8}],
-    #    'count': 1
-    #}
+    # try:
+        # prediction_json = json.loads(query_omim_drugbank_classifier(entity))
+    prediction_json = get_predictions(entity, classifier, score, limit)
+    # except:
+    #     return "Not found", 404
+
     relation = "biolink:treated_by"
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
