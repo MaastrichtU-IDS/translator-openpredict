@@ -18,6 +18,8 @@ setup(
     url='https://github.com/MaastrichtU-IDS/translator-openpredict',
     packages=find_packages(include=['openpredict']),
     package_dir={'openpredict': 'openpredict'},
+    package_data={'': ['openapi.yaml']},
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'openpredict=openpredict.__main__:main',
