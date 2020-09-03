@@ -18,8 +18,8 @@ setup(
     url='https://github.com/MaastrichtU-IDS/translator-openpredict',
     packages=find_packages(include=['openpredict']),
     package_dir={'openpredict': 'openpredict'},
-    package_data={'': ['openapi.yaml']},
     include_package_data=True,
+    package_data={'': ['openapi.yaml']},
     entry_points={
         'console_scripts': [
             'openpredict=openpredict.__main__:main',
@@ -29,7 +29,6 @@ setup(
     python_requires='>=3.6.0',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    include_package_data=True,
     install_requires=open("requirements.txt", "r").readlines(),
     tests_require=['pytest==5.2.0'],
     setup_requires=['pytest-runner'],
