@@ -76,7 +76,8 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
 
 
 def generatePairs(drug_df, disease_df, drugDiseaseKnown):
-    """Generate positive and negative pairs using the Drug dataframe, the Disease dataframe and known drug-disease associations dataframe 
+    """Generate positive and negative pairs using the Drug dataframe, 
+    the Disease dataframe and known drug-disease associations dataframe 
 
     :param drug_df: Drug dataframe
     :param disease_df: Disease dataframe
@@ -350,10 +351,8 @@ def get_drug_disease_classifier():
     # print(drugDiseaseKnown.head())
 
     # Merge feature matrix
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
-    # print(drug_df.head())
 
     # Generate positive and negative pairs
     pairs, classes = generatePairs(drug_df, disease_df, drugDiseaseKnown)
