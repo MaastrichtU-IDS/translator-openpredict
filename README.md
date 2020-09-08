@@ -122,9 +122,9 @@ Run the pipeline to compute the model used by the OpenPredict API.
 ### From a Python script
 
 ```python
-from openpredict.openpredict_omim_drugbank import get_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
 
-get_drug_disease_classifier()
+build_drug_disease_classifier()
 ```
 
 ### From the command line

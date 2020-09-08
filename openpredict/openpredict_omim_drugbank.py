@@ -328,7 +328,7 @@ def evaluate(test_df, clf):
     return scores
 
 
-def get_drug_disease_classifier():
+def build_drug_disease_classifier():
     """The main function to run the drug-disease similarities pipeline, 
     and build the drug-disease classifier.
     It returns, and stores the generated classifier as a `.joblib` file 

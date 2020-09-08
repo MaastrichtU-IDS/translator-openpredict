@@ -1,13 +1,13 @@
 from joblib import load
 from openpredict.openpredict_api import get_predict
-from openpredict.openpredict_omim_drugbank import get_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
 from datetime import datetime
 
 ## Run it:
 # python3 tests/run_function.py
 
 # time_start = datetime.now()
-# clf, scores = get_drug_disease_classifier()
+# clf, scores = build_drug_disease_classifier()
 
 # time_build = datetime.now()
 
