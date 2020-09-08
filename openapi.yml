@@ -21,7 +21,7 @@ externalDocs:
   description: Documentation for the NCATS Biomedical Translator Reasoners web services
   url: 'https://github.com/NCATSTranslator/ReasonerAPI'
 servers:
-- url: https://openpredict.137.120.31.102.nip.io
+- url: "{{server_url}}"
 tags:
   - name: predicates
     description: Get relationships supported by this API

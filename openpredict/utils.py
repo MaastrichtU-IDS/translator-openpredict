@@ -1,3 +1,4 @@
+import logging
 import requests
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 
@@ -66,10 +67,15 @@ def get_labels(entity_list):
     See API: https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
     and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
     """
-    # TODO: add the preferred identifier to our answer?
-    get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
-                        params={'curie': entity_list})
-    get_label_result = get_label_result.json()
+    # TODO: add the preferred identifier CURIE to our answer also?
+    try:
+        get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
+                            params={'curie': entity_list})
+        get_label_result = get_label_result.json()
+    except:
+        # Catch if the call to the API fails (API not available)
+        logging.info("Translator API down: https://nodenormalization-sri.renci.org/apidocs")
+        get_label_result = {}
     # Response is a JSON:
     # { "HP:0007354": {
     #     "id": { "identifier": "MONDO:0004976",

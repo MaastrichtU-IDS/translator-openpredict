@@ -33,24 +33,26 @@ def start_api(port=8808, debug=False, start_spark=True):
     :param start_spark: Start a local Spark cluster, default to true
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
-    
-    api = connexion.App(__name__, options={"swagger_url": ""})
-
-    # api.add_api('../openapi.yml', validate_responses=True)
-    api.add_api('../openapi.yml')
 
     if debug:
         # Run in development mode
+        server_url = "/"
         deployment_server='flask'
         logging.basicConfig(level=logging.DEBUG)
         print("Development deployment using \033[1mFlask\033[0m 🧪")
         print("Debug enabled 🐞 - The API will reload automatically at each change 🔃")
     else:
         # Run in productiom with tornado (also available: gevent)
+        server_url = "https://openpredict.137.120.31.102.nip.io"
         deployment_server='tornado'
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
+    api = connexion.App(__name__, options={"swagger_url": ""})
+
+    api.add_api('../openapi.yml', arguments={'server_url': server_url})
+    # api.add_api('../openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
+
     logging.info('Start spark:' + str(start_spark))
     if start_spark:
         try:
@@ -75,7 +77,6 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, limi
     time_start = datetime.now()
     # classifier: OpenPredict OMIM-DrugBank
     print("Using classifier: " + classifier)
-
     try:
         prediction_json = get_predictions(entity, classifier, score, limit)
     except:
