@@ -20,7 +20,7 @@ setup(
     # packages=find_packages(include=['openpredict']),
     # package_dir={'openpredict': 'openpredict'},
     package_data={'': ['openapi.yml', 'data/models/*', 'data/ontology/*', 'data/models/*', 
-        'data/features/*', 'data/input/*', 'data/sparql/*', 'data/resources/*']},
+        'data/features/*', 'data/input/*', 'data/sparql/*', 'data/resources/*', 'data/*.ttl']},
     include_package_data=True,
     entry_points={
         'console_scripts': [

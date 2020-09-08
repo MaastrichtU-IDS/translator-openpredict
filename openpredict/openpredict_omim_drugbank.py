@@ -14,6 +14,7 @@ from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
 import pkg_resources
+from openpredict.build_utils import generate_classifier_metadata
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -409,6 +410,7 @@ def build_drug_disease_classifier():
     dump(clf, 'openpredict/data/models/drug_disease_model.joblib')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
+    generate_classifier_metadata('openpredict-omim-drugbank-0', scores, "Original OpenPredict classifier based on OMIM and DrugBank")
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
 

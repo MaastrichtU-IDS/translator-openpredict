@@ -1,0 +1,42 @@
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix mls: <http://www.w3.org/ns/mls#> .
+@prefix ns1: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0> a mls:ModelEvaluation ;
+    rdfs:label "Original OpenPredict classifier based on OMIM and DrugBank" ;
+    mls:specifiedBy <https://w3id.org/openpredict/openpredict-omim-drugbank-0/accuracy>,
+        <https://w3id.org/openpredict/openpredict-omim-drugbank-0/average_precision>,
+        <https://w3id.org/openpredict/openpredict-omim-drugbank-0/f1>,
+        <https://w3id.org/openpredict/openpredict-omim-drugbank-0/precision>,
+        <https://w3id.org/openpredict/openpredict-omim-drugbank-0/recall>,
+        <https://w3id.org/openpredict/openpredict-omim-drugbank-0/roc_auc> ;
+    ns1:generatedAtTime "2020-09-08T19:55:50.423260"^^xsd:dateTime .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0/accuracy> a mls:EvaluationMeasure ;
+    rdfs:label "accuracy" ;
+    mls:hasValue 8.683417e-01 .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0/average_precision> a mls:EvaluationMeasure ;
+    rdfs:label "average_precision" ;
+    mls:hasValue 8.733632e-01 .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0/f1> a mls:EvaluationMeasure ;
+    rdfs:label "f1" ;
+    mls:hasValue 7.855974e-01 .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0/precision> a mls:EvaluationMeasure ;
+    rdfs:label "precision" ;
+    mls:hasValue 8.602151e-01 .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0/recall> a mls:EvaluationMeasure ;
+    rdfs:label "recall" ;
+    mls:hasValue 7.228916e-01 .
+
+<https://w3id.org/openpredict/openpredict-omim-drugbank-0/roc_auc> a mls:EvaluationMeasure ;
+    rdfs:label "roc_auc" ;
+    mls:hasValue 8.98817e-01 .
+
