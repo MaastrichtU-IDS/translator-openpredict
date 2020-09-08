@@ -12,9 +12,9 @@ The Translator OpenPredict API serves predictions of biomedical concepts associa
 
 ### How to use it
 
-The user provides a drug or a disease ID, and choose a prediction model (only OMIM - DrugBank at the moment).
+The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only OMIM - DrugBank at the moment).
 
-* The `/predict` call will return the list of potential target for this entity
+* The `/predict` call will return the list of predicted target for this entity, the labels are resolved using the [Translator Name Resolver API](http://robokop.renci.org:2434/docs#/lookup/lookup_curies_lookup_post):
 
 ```json
 {
@@ -33,15 +33,14 @@ The user provides a drug or a disease ID, and choose a prediction model (only OM
         "label": "leprosy, susceptibility to, 3",
         "type": "disease"
       }
-    }, 
-    { ... }
+    }
   ]
 }
 ```
 
 > Try it at https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394
 
-* The `/query` call will perform `predict` calls based on a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query
+* The `/query` call will return the same predictions in the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, based on a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query
 * The `/predicates` call will return the entities and relations returned by this API (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications)
 
 ### Notebook example
@@ -52,7 +51,7 @@ You can find a Jupyter Notebook with [examples to query the API on GitHub](https
 
 You can also use our tools to build new classifiers, and deploy your OpenPredict API
 
-### Install OpenPredict
+### Install OpenPredict 📥
 
 You might want to use a virtual environment for Python 3.7 to isolate the installation:
 
@@ -63,13 +62,13 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict):
+Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict) (or see below to [run the API with Docker](#option-3-run-with-docker))
 
 ```bash
 pip3 install openpredict
 ```
 
-> Package on PyPI: [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
+> Package available on PyPI: [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
 
 ---
 
