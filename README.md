@@ -79,15 +79,15 @@ Run the pipeline to train the model used by the OpenPredict API.
 From a Python script:
 
 ```python
-from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import train_drug_disease_classifier
 
-build_drug_disease_classifier()
+train_drug_disease_classifier()
 ```
 
 Or using the command line:
 
 ```bash
-openpredict build-models
+openpredict train-model
 ```
 
 > Work in progress

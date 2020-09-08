@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import train_drug_disease_classifier
 
 @click.command()
 @click.option(
@@ -19,8 +19,8 @@ def start_api(port, server_url, debug, start_spark):
 
 
 @click.command()
-def build_models():
-    build_drug_disease_classifier()
+def train_model():
+    train_drug_disease_classifier()
 
 
 @click.group()
@@ -29,7 +29,7 @@ def main(args=None):
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 main.add_command(start_api)
-main.add_command(build_models)
+main.add_command(train_model)
 
 if __name__ == "__main__":
     sys.exit(main())

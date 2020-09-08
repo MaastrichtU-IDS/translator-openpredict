@@ -24,7 +24,7 @@ def generate_classifier_metadata(classifier_id, scores, label="OpenPredict class
     clf_prop_prefix = OPENPREDICT_NAMESPACE + classifier_id + "/"
 
     if not (clf_uri, None, None) in g:
-        print('Generating RDF metadata for the classifier build at ' + TTL_METADATA_FILE)
+        print('Generating RDF metadata for the trained classifier at ' + TTL_METADATA_FILE)
         g.add((clf_uri, RDF.type, URIRef(MLS_NAMESPACE + 'ModelEvaluation')))
         g.add((clf_uri, RDFS.label, Literal(label)))
         g.add((clf_uri, URIRef('http://www.w3.org/ns/prov#generatedAtTime'), Literal(datetime.now(), datatype=XSD.dateTime)))

@@ -1,6 +1,6 @@
 from joblib import load
 from openpredict.openpredict_api import get_predict
-from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import train_drug_disease_classifier
 from openpredict.build_utils import generate_classifier_metadata
 from datetime import datetime
 
@@ -8,7 +8,7 @@ from datetime import datetime
 # python3 tests/run_function.py
 
 # time_start = datetime.now()
-# clf, scores = build_drug_disease_classifier()
+# clf, scores = train_drug_disease_classifier()
 
 # time_build = datetime.now()
 

@@ -10,7 +10,7 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 import pkg_resources
-from openpredict.build_utils import generate_classifier_metadata
+from openpredict.train_utils import generate_classifier_metadata
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -325,7 +325,7 @@ def evaluate(test_df, clf):
     return scores
 
 
-def build_drug_disease_classifier():
+def train_drug_disease_classifier():
     """The main function to run the drug-disease similarities pipeline, 
     and build the drug-disease classifier.
     It returns, and stores the generated classifier as a `.joblib` file 

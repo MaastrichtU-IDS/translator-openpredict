@@ -7,7 +7,7 @@ services:
     # Outdated image: docker.pkg.github.com/maastrichtu-ids/translator-openpredict/openpredict-api:latest
     # Outdated image: umids/openpredict-api:latest
     restart: unless-stopped
-    # command: build-models
+    # command: train-model
     command: start-api --server-url https://openpredict.137.120.31.102.nip.io
     ports:
       - 8808:8808
