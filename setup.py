@@ -16,11 +16,11 @@ setup(
     author='Vincent Emonet',
     author_email='vincent.emonet@maastrichtuniversity.nl',
     url='https://github.com/MaastrichtU-IDS/translator-openpredict',
-    # packages=find_packages(include=['openpredict']),
     packages=find_packages(),
+    # packages=find_packages(include=['openpredict']),
     # package_dir={'openpredict': 'openpredict'},
     include_package_data=True,
-    package_data={'openpredict': ['openapi.yml']},
+    package_data={'': ['openapi.yml', 'data']},
     entry_points={
         'console_scripts': [
             'openpredict=openpredict.__main__:main',
