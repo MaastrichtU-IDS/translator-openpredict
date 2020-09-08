@@ -25,7 +25,7 @@ def start_spark():
     sc = SparkContext(conf=config, appName="OpenPredict")
     print (sc)
 
-def start_api(port=8808, debug=False, start_spark=True, server_url='/'):
+def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
     :param port: Port of the OpenPredict API, defaults to 8808
