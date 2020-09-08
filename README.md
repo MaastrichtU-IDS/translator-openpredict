@@ -6,7 +6,45 @@ This service has been built from the [fair-workflows/openpredict](https://github
 
 # Use the API 🌐
 
-The Translator OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). Feel free to try it at [openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)
+The Translator OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). 
+
+> Feel free to try it at **[openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)**
+
+### How to use it
+
+The user provides a drug or a disease ID, and choose a prediction model (only OMIM - DrugBank at the moment).
+
+* The `/predict` call will return the list of potential target for this entity
+
+```json
+{
+  "count": 300,
+  "relation": "biolink:treated_by",
+  "results": [
+    {
+      "score": 0.8361061489249737,
+      "source": {
+        "id": "DRUGBANK:DB00394",
+        "label": "beclomethasone dipropionate",
+        "type": "drug"
+      },
+      "target": {
+        "id": "OMIM:246300",
+        "label": "leprosy, susceptibility to, 3",
+        "type": "disease"
+      }
+    }, 
+    { ... }
+  ]
+}
+```
+
+> Try it at https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394
+
+* The `/query` call will perform `predict` calls based on a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query
+* The `/predicates` call will return the entities and relations returned by this API (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications)
+
+### Notebook example
 
 You can find a Jupyter Notebook with [examples to query the API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
@@ -59,8 +97,6 @@ openpredict build-models
 
 ### Run the API ⚙️
 
-After installing the `openpredict` package (except for docker).
-
 The API can be run different ways:
 
 #### Option 1: Run from the command line
@@ -94,7 +130,7 @@ openpredict_api.start_api(8808, debug)
 
 #### Option 3: Run with Docker
 
-Running using Docker can be convenient if you just want to run the API without installing the packages locally, or run in production alongside other services.
+Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
 
 Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
 
@@ -103,15 +139,21 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Start the `openpredict-api` container with [docker-compose 🐳](https://docs.docker.com/compose/)
+Build and start the `openpredict-api` container with [docker-compose 🐳](https://docs.docker.com/compose/)
 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
 > We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
+
+Check the logs:
+
+```bash
+docker-compose logs
+```
 
 Stop the container:
 
