@@ -1,18 +1,14 @@
 
 import logging
 import os
-import time
 from datetime import datetime
 import numbers
 import re
-import math
-import random
 import numpy as np
 import pandas as pd
 from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
-from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
 import pkg_resources
 from openpredict.build_utils import generate_classifier_metadata
 

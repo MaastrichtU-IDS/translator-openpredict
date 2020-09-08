@@ -1,8 +1,6 @@
 import connexion
-import json
 import logging
 from datetime import datetime
-from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 from openpredict.predict_utils import get_predictions
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 
