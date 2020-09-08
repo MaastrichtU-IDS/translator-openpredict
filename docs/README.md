@@ -1,8 +1,11 @@
 # Table of Contents
 
 * [openpredict](#.openpredict)
-* [openpredict.reasonerapi\_utils](#.openpredict.reasonerapi_utils)
-  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_utils.typed_results_to_reasonerapi)
+* [openpredict.reasonerapi\_parser](#.openpredict.reasonerapi_parser)
+  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_parser.typed_results_to_reasonerapi)
+* [openpredict.predict\_utils](#.openpredict.predict_utils)
+  * [get\_predictions](#.openpredict.predict_utils.get_predictions)
+  * [get\_labels](#.openpredict.predict_utils.get_labels)
 * [openpredict.openpredict\_omim\_drugbank](#.openpredict.openpredict_omim_drugbank)
   * [adjcencydict2matrix](#.openpredict.openpredict_omim_drugbank.adjcencydict2matrix)
   * [mergeFeatureMatrix](#.openpredict.openpredict_omim_drugbank.mergeFeatureMatrix)
@@ -16,7 +19,7 @@
   * [trainModel](#.openpredict.openpredict_omim_drugbank.trainModel)
   * [multimetric\_score](#.openpredict.openpredict_omim_drugbank.multimetric_score)
   * [evaluate](#.openpredict.openpredict_omim_drugbank.evaluate)
-  * [get\_drug\_disease\_classifier](#.openpredict.openpredict_omim_drugbank.train_drug_disease_classifier)
+  * [train\_drug\_disease\_classifier](#.openpredict.openpredict_omim_drugbank.train_drug_disease_classifier)
   * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_omim_drugbank.query_omim_drugbank_classifier)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_spark](#.openpredict.openpredict_api.start_spark)
@@ -24,19 +27,18 @@
   * [get\_predict](#.openpredict.openpredict_api.get_predict)
   * [predicates\_get](#.openpredict.openpredict_api.predicates_get)
   * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
-* [openpredict.utils](#.openpredict.utils)
-  * [get\_predictions](#.openpredict.utils.get_predictions)
-  * [get\_labels](#.openpredict.utils.get_labels)
 * [openpredict.\_\_main\_\_](#.openpredict.__main__)
   * [main](#.openpredict.__main__.main)
+* [openpredict.train\_utils](#.openpredict.train_utils)
+  * [generate\_classifier\_metadata](#.openpredict.train_utils.generate_classifier_metadata)
 
 <a name=".openpredict"></a>
 # openpredict
 
-<a name=".openpredict.reasonerapi_utils"></a>
-# openpredict.reasonerapi\_utils
+<a name=".openpredict.reasonerapi_parser"></a>
+# openpredict.reasonerapi\_parser
 
-<a name=".openpredict.reasonerapi_utils.typed_results_to_reasonerapi"></a>
+<a name=".openpredict.reasonerapi_parser.typed_results_to_reasonerapi"></a>
 #### typed\_results\_to\_reasonerapi
 
 ```python
@@ -52,6 +54,40 @@ Run the get_predict to get the QueryGraph edges and nodes
 **Returns**:
 
 Results as ReasonerAPI object
+
+<a name=".openpredict.predict_utils"></a>
+# openpredict.predict\_utils
+
+<a name=".openpredict.predict_utils.get_predictions"></a>
+#### get\_predictions
+
+```python
+get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, limit=None)
+```
+
+Run classifiers to get predictions
+
+**Arguments**:
+
+- `id_to_predict`: Id of the entity to get prediction from
+- `classifier`: classifier used to get the predictions
+- `score`: score minimum of predictions
+- `limit`: limit number of predictions to return
+
+**Returns**:
+
+predictions in array of JSON object
+
+<a name=".openpredict.predict_utils.get_labels"></a>
+#### get\_labels
+
+```python
+get_labels(entity_list)
+```
+
+Send the list of node IDs to Translator Normalization API to get labels
+See API: https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
+and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
 
 <a name=".openpredict.openpredict_omim_drugbank"></a>
 # openpredict.openpredict\_omim\_drugbank
@@ -92,7 +128,8 @@ Merge the drug and disease feature matrix
 generatePairs(drug_df, disease_df, drugDiseaseKnown)
 ```
 
-Generate positive and negative pairs using the Drug dataframe, the Disease dataframe and known drug-disease associations dataframe
+Generate positive and negative pairs using the Drug dataframe,
+the Disease dataframe and known drug-disease associations dataframe
 
 **Arguments**:
 
@@ -268,7 +305,7 @@ Evaluate the trained classifier
 Scores
 
 <a name=".openpredict.openpredict_omim_drugbank.train_drug_disease_classifier"></a>
-#### get\_drug\_disease\_classifier
+#### train\_drug\_disease\_classifier
 
 ```python
 train_drug_disease_classifier()
@@ -314,7 +351,7 @@ Start local Spark cluster when possible to improve performance
 #### start\_api
 
 ```python
-start_api(port=8808, debug=False, start_spark=True)
+start_api(port=8808, server_url='/', debug=False, start_spark=True)
 ```
 
 Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -372,40 +409,6 @@ Get predicted associations for a given ReasonerAPI query.
 
 Predictions as a ReasonerStdAPI Message
 
-<a name=".openpredict.utils"></a>
-# openpredict.utils
-
-<a name=".openpredict.utils.get_predictions"></a>
-#### get\_predictions
-
-```python
-get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, limit=None)
-```
-
-Run classifiers to get predictions
-
-**Arguments**:
-
-- `id_to_predict`: Id of the entity to get prediction from
-- `classifier`: classifier used to get the predictions
-- `score`: score minimum of predictions
-- `limit`: limit number of predictions to return
-
-**Returns**:
-
-predictions in array of JSON object
-
-<a name=".openpredict.utils.get_labels"></a>
-#### get\_labels
-
-```python
-get_labels(entity_list)
-```
-
-Send the list of node IDs to Translator Normalization API to get labels
-See API: https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
-and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
-
 <a name=".openpredict.__main__"></a>
 # openpredict.\_\_main\_\_
 
@@ -418,4 +421,27 @@ main(args=None)
 ```
 
 Command Line Interface to run OpenPredict
+
+<a name=".openpredict.train_utils"></a>
+# openpredict.train\_utils
+
+<a name=".openpredict.train_utils.generate_classifier_metadata"></a>
+#### generate\_classifier\_metadata
+
+```python
+generate_classifier_metadata(classifier_id, scores, label="OpenPredict classifier")
+```
+
+Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
+https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
+
+**Arguments**:
+
+- `classifier_id`: Unique ID for the classifier
+- `scores`: scores
+- `label`: label of the classifier
+
+**Returns**:
+
+predictions in array of JSON object
 
