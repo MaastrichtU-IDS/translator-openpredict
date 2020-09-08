@@ -352,7 +352,7 @@ def get_drug_disease_classifier():
     # Merge feature matrix
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-    dump((drug_df, disease_df), 'data/features/drug_disease_dataframes.joblib')
+    dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
     # print(drug_df.head())
 
     # Generate positive and negative pairs
@@ -407,7 +407,7 @@ def get_drug_disease_classifier():
     print('Final model training runtime 🕕  ' + str(datetime.now() - final_training))
 
     print('\nStore the model in a .joblib file 💾')
-    dump(clf, 'data/models/drug_disease_model.joblib')
+    dump(clf, 'openpredict/data/models/drug_disease_model.joblib')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
