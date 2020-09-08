@@ -5,7 +5,7 @@ FROM jupyter/all-spark-notebook
 COPY . .
 
 # Install from source code
-RUN pip install -e .
+RUN pip install .
 
 EXPOSE 8808
 

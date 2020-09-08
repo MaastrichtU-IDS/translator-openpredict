@@ -9,10 +9,13 @@ from openpredict.openpredict_omim_drugbank import get_drug_disease_classifier
 @click.option(
     '-p', '--port', default=8808,
     help='Choose the port the API will run on.')
+@click.option(
+    '--server-url', default='/',
+    help='The URL the API will be deployed to.')
 @click.option('--debug', is_flag=True, help="Run in development mode with debugger enabled.")
 @click.option('--start-spark/--no-spark', default=True, help="Start local Spark cluster (default to yes).")
-def start_api(port, debug, start_spark):
-    start_openpredict_api(port, debug, start_spark)
+def start_api(port, server_url, debug, start_spark):
+    start_openpredict_api(port, server_url, debug, start_spark)
 
 
 @click.command()

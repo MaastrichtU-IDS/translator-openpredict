@@ -25,7 +25,7 @@ def start_spark():
     sc = SparkContext(conf=config, appName="OpenPredict")
     print (sc)
 
-def start_api(port=8808, debug=False, start_spark=True):
+def start_api(port=8808, debug=False, start_spark=True, server_url='/'):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
     :param port: Port of the OpenPredict API, defaults to 8808
@@ -36,14 +36,12 @@ def start_api(port=8808, debug=False, start_spark=True):
 
     if debug:
         # Run in development mode
-        server_url = "/"
         deployment_server='flask'
         logging.basicConfig(level=logging.DEBUG)
         print("Development deployment using \033[1mFlask\033[0m 🧪")
         print("Debug enabled 🐞 - The API will reload automatically at each change 🔃")
     else:
         # Run in productiom with tornado (also available: gevent)
-        server_url = "https://openpredict.137.120.31.102.nip.io"
         deployment_server='tornado'
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
