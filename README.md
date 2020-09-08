@@ -6,48 +6,66 @@ This service has been built from the [fair-workflows/openpredict](https://github
 
 # Use the API 🌐
 
-The Translator OpenPredict API Swagger UI is publicly available at [openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)
+The Translator OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). Feel free to try it at [openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)
 
 You can find a Jupyter Notebook with [examples to query the API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
-# Install the package 📦
+# Deploy your API 📦
 
-You might want to use a virtual environment for Python 3.7
+You can also use our tools to build new classifiers, and deploy your OpenPredict API
+
+### Install OpenPredict
+
+You might want to use a virtual environment for Python 3.7 to isolate the installation:
 
 ```bash
-# Create the virtual environment
+# Create the virtual environment in your workspace
 python3 -m venv .venv
 # Activate it
 source .venv/bin/activate
 ```
 
-### From PyPI
-
-Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict)
+Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict):
 
 ```bash
-pip install openpredict
+pip3 install openpredict
 ```
 
-> PyPI link : [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
-
-### From GitHub
-
-You can also install from the latest version of the source code on GitHub:
-
-```bash
-pip install git+https://github.com/MaastrichtU-IDS/translator-openpredict
-```
+> Package on PyPI: [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
 
 ---
 
-# Run the API ⚙️
+### Build the model 🔨
+
+Run the pipeline to compute the model used by the OpenPredict API.
+
+From a Python script:
+
+```python
+from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
+
+build_drug_disease_classifier()
+```
+
+Or using the command line:
+
+```bash
+openpredict build-models
+```
+
+> Work in progress.
+
+---
+
+### Run the API ⚙️
 
 After installing the `openpredict` package (except for docker).
 
-### Run from the command line
+The API can be run different ways:
 
-Run in production with [Tornado Web Server 🌪️](https://www.tornadoweb.org/en/stable/)
+#### Option 1: Run from the command line
+
+Use the `openpredict` CLI to start the API using the built classifiers:
 
 ```bash
 openpredict start-api
@@ -61,19 +79,7 @@ Provide the port as arguments:
 openpredict start-api --port 8808
 ```
 
-Run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
-
-```bash
-openpredict start-api --debug
-```
-
-Show help:
-
-```bash
-openpredict --help
-```
-
-### Run from Python script
+#### Option 2: Run from a Python script
 
 ```python
 from openpredict import openpredict_api
@@ -84,9 +90,9 @@ openpredict_api.start_api(8808, debug)
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
-> Run by default in production, set `debug = True` to run in development mode. 
+> Run by default in production, set `debug = True` to run in development environments. 
 
-### Run with Docker
+#### Option 3: Run with Docker
 
 Running using Docker can be convenient if you just want to run the API without installing the packages locally, or run in production alongside other services.
 
@@ -111,26 +117,6 @@ Stop the container:
 
 ```bash
 docker-compose down
-```
-
----
-
-# Compute the model 🤖
-
-Run the pipeline to compute the model used by the OpenPredict API.
-
-### From a Python script
-
-```python
-from openpredict.openpredict_omim_drugbank import build_drug_disease_classifier
-
-build_drug_disease_classifier()
-```
-
-### From the command line
-
-```bash
-openpredict compute-similarities
 ```
 
 ---

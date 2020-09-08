@@ -2,9 +2,9 @@ Documentation to run the **Translator OpenPredict API** in development.
 
 Contributions, feedbacks and pull requests are welcomed from anyone!
 
-# Install for dev 📥
+# Alternative: install for dev 📥
 
-Follow those instructions if you want to run **OpenPredict** in development, and more easily make changes to the source code:
+Install `openpredict` locally, if you want to run **OpenPredict** in development, make changes to the source code, and build new models.
 
 ### Clone
 
@@ -20,24 +20,6 @@ This will install `openpredict` and update the package automatically when the fi
 ```bash
 pip install -e .
 ```
-
-### Enable autocomplete
-
-Enabling command line autocomplete in the terminal provides a better experience using the CLI ⌨️ 
-
-* If you use `ZSH` (recommended): add this line to the `~/.zshrc` file:
-
-  ```bash
-  echo 'eval "$(_OPENPREDICT_COMPLETE=source_zsh openpredict)"' >> ~/.zshrc
-  ```
-
-* If you use `Bash`: add this line to the `~/.bashrc` file:
-
-  ```bash
-  echo 'eval "$(_OPENPREDICT_COMPLETE=source openpredict)"' >> ~/.bashrc
-  ```
-
-  > Bash autocomplete needs to be tested.
 
 # Run in dev 🚧
 
@@ -63,7 +45,7 @@ Run a specific test file and display `print`:
 pytest tests/test_openpredict_api.py -s
 ```
 
-### Generate documentation
+## Generate documentation
 
 Documentation in [docs/ 📖](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
