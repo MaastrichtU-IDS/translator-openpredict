@@ -75,10 +75,11 @@ def get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, limi
     time_start = datetime.now()
     # classifier: OpenPredict OMIM-DrugBank
     print("Using classifier: " + classifier)
-    try:
-        prediction_json = get_predictions(entity, classifier, score, limit)
-    except:
-        return "Not found", 404
+    prediction_json = get_predictions(entity, classifier, score, limit)
+    # try:
+    #     prediction_json = get_predictions(entity, classifier, score, limit)
+    # except:
+    #     return "Not found", 404
 
     relation = "biolink:treated_by"
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))

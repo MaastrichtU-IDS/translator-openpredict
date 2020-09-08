@@ -13,6 +13,7 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 from rdflib import Graph, URIRef, Literal, RDF, ConjunctiveGraph, Namespace
+import pkg_resources
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -336,20 +337,20 @@ def get_drug_disease_classifier():
     """
     time_start = datetime.now()
     features_folder = "data/features/"
-    resources_folder = "data/resources/"
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
                      'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
     diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
-    drugfeatfiles = [ os.path.join(features_folder, fn) for fn in drugfeatfiles]
-    diseasefeatfiles = [ os.path.join(features_folder, fn) for fn in diseasefeatfiles]
+    drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(features_folder, fn)) for fn in drugfeatfiles]
+    diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(features_folder, fn)) for fn in diseasefeatfiles]
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(resources_folder + 'openpredict-omim-drug.csv',delimiter=',') 
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())
 
     # Merge feature matrix
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     dump((drug_df, disease_df), 'data/features/drug_disease_dataframes.joblib')
     # print(drug_df.head())
@@ -443,7 +444,7 @@ def query_omim_drugbank_classifier(input_curie):
     input_namespace = parsed_curie.group(1)
     input_id = parsed_curie.group(2)
 
-    resources_folder = "data/resources/"
+    # resources_folder = "data/resources/"
     #features_folder = "data/features/"
     #drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
     #                 'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
@@ -454,8 +455,10 @@ def query_omim_drugbank_classifier(input_curie):
     ## Get all DFs
     # Merge feature matrix
     #drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-    (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
-    drugDiseaseKnown = pd.read_csv(resources_folder + 'openpredict-omim-drug.csv',delimiter=',') 
+    # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
+
+    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
@@ -470,7 +473,8 @@ def query_omim_drugbank_classifier(input_curie):
     commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
 
     # Load classifier
-    clf = load('data/models/drug_disease_model.joblib') 
+    # clf = load('data/models/drug_disease_model.joblib') 
+    clf = load(pkg_resources.resource_filename('openpredict', 'data/models/drug_disease_model.joblib')) 
 
     pairs=[]
     classes=[]
