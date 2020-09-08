@@ -3,7 +3,7 @@ import connexion
 
 # Create and start Flask OpenAPI before running tests
 flask_app = connexion.FlaskApp(__name__)
-flask_app.add_api('../openapi.yml')
+flask_app.add_api('../openpredict/openapi.yml')
 @pytest.fixture(scope='module')
 def client():
     with flask_app.app.test_client() as c:

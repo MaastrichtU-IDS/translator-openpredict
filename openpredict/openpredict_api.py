@@ -49,7 +49,7 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     api = connexion.App(__name__, options={"swagger_url": ""})
 
     api.add_api('openapi.yml', arguments={'server_url': server_url})
-    # api.add_api('../openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
+    # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
 
     logging.info('Start spark:' + str(start_spark))
     if start_spark:

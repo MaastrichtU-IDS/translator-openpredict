@@ -19,8 +19,8 @@ setup(
     packages=find_packages(),
     # packages=find_packages(include=['openpredict']),
     # package_dir={'openpredict': 'openpredict'},
-    include_package_data=True,
     package_data={'': ['openapi.yml', 'data']},
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'openpredict=openpredict.__main__:main',
