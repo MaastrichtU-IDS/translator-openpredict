@@ -12,7 +12,7 @@ setup(
     version='0.0.5',
     name='openpredict',
     license='MIT License',
-    description='An API to compute and serve predictions of biomedical concepts associations via OpenAPI, using the PREDICT method, for the NCATS Translator project',
+    description='An API to compute and serve predictions of biomedical concepts associations via OpenAPI for the NCATS Translator project',
     author='Vincent Emonet',
     author_email='vincent.emonet@maastrichtuniversity.nl',
     url='https://github.com/MaastrichtU-IDS/translator-openpredict',

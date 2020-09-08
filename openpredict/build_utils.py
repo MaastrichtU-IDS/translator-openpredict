@@ -1,9 +1,8 @@
 import logging
-import requests
 import pkg_resources
 from datetime import datetime
 from rdflib import Graph, Literal, RDF, URIRef
-from rdflib.namespace import DC, DCTERMS, RDFS, VOID, XSD
+from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 
 TTL_METADATA_FILE = pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl')
 OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'

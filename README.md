@@ -72,9 +72,9 @@ pip3 install openpredict
 
 ---
 
-### Build the model 🔨
+### Train the model 🚅
 
-Run the pipeline to compute the model used by the OpenPredict API.
+Run the pipeline to train the model used by the OpenPredict API.
 
 From a Python script:
 
@@ -90,7 +90,9 @@ Or using the command line:
 openpredict build-models
 ```
 
-> Work in progress.
+> Work in progress
+>
+> model_factory = 
 
 ---
 
