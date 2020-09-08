@@ -8,7 +8,7 @@ services:
     # image: umids/openpredict-api:latest
     restart: unless-stopped
     # command: compute-similarities
-    command: --server-url https://openpredict.137.120.31.102.nip.io
+    command: start-api --server-url https://openpredict.137.120.31.102.nip.io
     ports:
       - 8808:8808
     environment: 
