@@ -2,6 +2,7 @@
 name: Publish package
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
@@ -57,16 +58,16 @@ jobs:
         python setup.py sdist bdist_wheel
         twine upload dist/*
 
-  docker-push:
-    needs: tests
-    runs-on: ubuntu-latest
+  # docker-push:
+  #   needs: tests
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - uses: docker/build-push-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        repository: umids/openpredict-api
-        tag_with_ref: true
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: docker/build-push-action@v1
+  #     with:
+  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #       password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #       repository: umids/openpredict-api
+  #       tag_with_ref: true
         # Use env var GITHUB_TAG (set auto from git repo)
