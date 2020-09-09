@@ -50,9 +50,9 @@ The API will return the list of predicted target for the given entity, the label
 
 ### Query operation
 
-The `/query` operation will return the same predictions in the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
+The `/query` operation will return the same predictions as the `/predict` operation, using the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
 
-The user sends a ReasonerAPI query asking for the predicted targets given: a source, and the relation to predict. Use classes and relations from the [BioLink model](https://biolink.github.io/biolink-model). 
+The user sends a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query asking for the predicted targets given: a source, and the relation to predict. The query is a graph with nodes and edges defined in JSON, and uses classes from the [BioLink model](https://biolink.github.io/biolink-model).
 
 See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query example:
 
@@ -92,28 +92,17 @@ The `/predicates` operation will return the entities and relations provided by t
 
 ### Notebook example
 
-You can find a Jupyter Notebook with [examples to query the API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
+You can find a Jupyter Notebook with [examples to query the OpenPredict API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
 # Deploy your API 📦
 
 You can also use OpenPredict to build new classifiers, and deploy your API.
 
-> Requires Python 3.6+
+> Requires [Python 3.6+](https://www.python.org/downloads/)
 
 ### Install OpenPredict 📥
 
-#### Step 1: Activate Virtual Environment (optional)
-
-You might want to use a virtual environment to isolate the installation:
-
-```bash
-# Create the virtual environment in your workspace
-python3 -m venv .venv
-# Activate it
-source .venv/bin/activate
-```
-
-#### Step 2: Install the package
+#### Install the package
 
 Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict) (or see below to [run the API with Docker](#option-3-run-with-docker))
 
@@ -127,6 +116,17 @@ Upgrade to the latest release if you have a older version installed:
 
 ```bash
 pip3 install --upgrade openpredict
+```
+
+#### Optional: isolate with a Virtual Environment
+
+If you are facing conflict with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder:
+
+```bash
+# Create the virtual environment folder in your workspace
+python3 -m venv .venv
+# Activate it using a script in the created folder
+source .venv/bin/activate
 ```
 
 ### Train the model 🚅
