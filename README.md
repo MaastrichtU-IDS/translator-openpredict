@@ -8,13 +8,25 @@ This service has been built from the [fair-workflows/openpredict](https://github
 
 The Translator OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). 
 
+The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only OMIM - DrugBank at the moment). 
+
+The API will return the predicted targets for the given entity:
+
+* The potential drugs treating a given disease
+* The potential diseases a given drug could treat
+
 > Feel free to try it at **[openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)**
 
-### How to use it
+### Predict operation
 
-The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only OMIM - DrugBank at the moment).
+The `/predict` operation takes 4 parameters:
 
-* The `/predict` call will return the list of predicted target for this entity, the labels are resolved using the [Translator Name Resolver API](http://robokop.renci.org:2434/docs#/lookup/lookup_curies_lookup_post):
+* Drug/Disease identifier as a CURIE
+* The prediction model to use
+* The minimum score of the returned predictions (optional)
+* The limit of results to return, starting from the higher score (optional)  
+
+It will return the list of predicted target for the given entity, the labels are resolved using the [Translator Name Resolver API](http://robokop.renci.org:2434/docs#/lookup/lookup_curies_lookup_post):
 
 ```json
 {
@@ -40,8 +52,43 @@ The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUG
 
 > Try it at https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394
 
-* The `/query` call will return the same predictions in the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, based on a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query
-* The `/predicates` call will return the entities and relations returned by this API (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications)
+### Query operation
+
+The `/query` operation will return the same predictions in the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
+
+The user sends a ReasonerAPI query asking for the predicted target nodes given a source node and the relation to predict between those 2 nodes. See this example of a ReasonerAPI query:
+
+```json
+{
+  "message": {
+    "query_graph": {
+      "edges": [
+        {
+          "id": "e00",
+          "source_id": "n00",
+          "target_id": "n01",
+          "type": "treated_by"
+        }
+      ],
+      "nodes": [
+        {
+          "curie": "DRUGBANK:DB00394",
+          "id": "n00",
+          "type": "drug"
+        },
+        {
+          "id": "n01",
+          "type": "disease"
+        }
+      ]
+    }
+  }
+}
+```
+
+### Predicates operation
+
+The `/predicates` operation will return the entities and relations returned by this API (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
 
 ### Notebook example
 
@@ -49,7 +96,7 @@ You can find a Jupyter Notebook with [examples to query the API on GitHub](https
 
 # Deploy your API 📦
 
-You can also use our tools to build new classifiers, and deploy your OpenPredict API
+You can also use OpenPredict to build new classifiers, and deploy your API.
 
 ### Install OpenPredict 📥
 
@@ -92,7 +139,6 @@ openpredict train-model
 
 > Work in progress
 >
-> model_factory = 
 
 ---
 
@@ -121,8 +167,7 @@ openpredict start-api --port 8808
 ```python
 from openpredict import openpredict_api
 
-debug = False
-openpredict_api.start_api(8808, debug)
+openpredict_api.start_api(8808)
 ```
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
@@ -166,6 +211,5 @@ docker-compose down
 
 # See also 👀
 
-* **[Documentation to run in development 📝](docs/dev)**
+* **[Documentation to install and run in development 📝](docs/dev)**
 * **[Documentation generated from the source code 📖](docs)**
-* **[Code of Conduct 🤼](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/CODE_OF_CONDUCT.md)**
