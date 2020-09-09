@@ -2,6 +2,8 @@ Documentation to run the **Translator OpenPredict API** in development.
 
 Contributions, feedbacks and pull requests are welcomed from anyone!
 
+This repository uses [GitHub Actions](https://github.com/MaastrichtU-IDS/translator-openpredict/actions) to automatically run tests at each push to the `master` branch, and publish the OpenPredict package to PyPI when a release is created (N.B.: the version of the package needs to be increased in [setup.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/setup.py#L6) before).
+
 # Alternative: install for dev 📥
 
 Install `openpredict` locally, if you want to run **OpenPredict** in development, make changes to the source code, and build new models.

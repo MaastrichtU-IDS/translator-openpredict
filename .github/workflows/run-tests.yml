@@ -1,6 +1,5 @@
-# Run test at each push to master, if changes to package or tests files
 name: Run tests
-
+# Run test at each push to master, if changes to package or tests files
 on:
   workflow_dispatch:
   push:
