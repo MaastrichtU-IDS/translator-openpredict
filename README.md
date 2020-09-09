@@ -15,7 +15,7 @@ The API will return predicted targets for the given entity, such as:
 
 ### Predict operation
 
-The `/predict` operation takes 4 parameters (1 required):
+Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
 
 * A source Drug/Disease identifier as a CURIE, e.g. OMIM:246300 (required)
 * The prediction model to use (default to `Predict OMIM-DrugBank`)
