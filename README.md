@@ -2,11 +2,9 @@
 
 **Translator OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical concepts associations, for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 
-This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
-
 # Use the API 🌐
 
-The Translator OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). 
+The OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). 
 
 The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only OMIM - DrugBank at the moment). 
 
@@ -21,7 +19,7 @@ The API will return the predicted targets for the given entity:
 
 The `/predict` operation takes 4 parameters:
 
-* Drug/Disease identifier as a CURIE
+* A source Drug/Disease identifier as a CURIE
 * The prediction model to use
 * The minimum score of the returned predictions (optional)
 * The limit of results to return, starting from the higher score (optional)  
@@ -208,6 +206,11 @@ docker-compose down
 ```
 
 ---
+
+## Acknowledgments
+
+* This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
+* Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/)
 
 # See also 👀
 
