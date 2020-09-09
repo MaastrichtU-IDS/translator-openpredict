@@ -4,12 +4,12 @@
 
 # Use the API 🌐
 
-The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `OpenPredict OMIM - DrugBank` currently implemented). 
+The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `OpenPredict OMIM - DrugBank` classifier currently implemented). 
 
 The API will return the predicted targets for the given entity:
 
-* The potential drugs treating a given disease
-* The potential diseases a given drug could treat
+* The **potential drugs treating a given disease**
+* The **potential diseases a given drug could treat**
 
 > Feel free to try it at **[openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)**
 
@@ -46,7 +46,7 @@ The API will return the list of predicted target for the given entity, the label
 }
 ```
 
-> Try it at https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394
+> Try it at [https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394](https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394)
 
 ### Query operation
 
@@ -207,7 +207,7 @@ docker-compose down
 
 ---
 
-## Acknowledgments
+# Acknowledgments
 
 * Supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
