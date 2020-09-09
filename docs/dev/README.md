@@ -1,8 +1,11 @@
 Documentation to run the **Translator OpenPredict API** in development.
 
-Contributions, feedbacks and pull requests are welcomed from anyone!
+> Contributions, feedbacks and pull requests are welcomed!
 
-This repository uses [GitHub Actions](https://github.com/MaastrichtU-IDS/translator-openpredict/actions) to automatically run tests at each push to the `master` branch, and publish the OpenPredict package to PyPI when a release is created (N.B.: the version of the package needs to be increased in [setup.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/setup.py#L6) before).
+This repository uses [GitHub Actions](https://github.com/MaastrichtU-IDS/translator-openpredict/actions) to:
+
+* Automatically run tests at each push to the `master` branch
+* Publish the [OpenPredict package to PyPI](https://pypi.org/project/openpredict/) when a release is created (N.B.: the version of the package needs to be increased in [setup.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/setup.py#L6) before).
 
 # Alternative: install for dev 📥
 
@@ -44,10 +47,10 @@ pytest tests
 Run a specific test in a file, and display `print` in the output:
 
 ```bash
-pytest tests/test_openpredict_api.py::post_reasoner_predict -s
+pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
-## Generate documentation
+# Generate documentation
 
 Documentation in [docs/ 📖](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
@@ -82,4 +85,4 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 
 * **[Documentation main page 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)**
 * **[Documentation generated from the source code 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)**
-* **[Code of Conduct 🤼](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/CODE_OF_CONDUCT.md)**
+
