@@ -1,14 +1,14 @@
 openapi: 3.0.1
 info:
-  description: "Translator OpenPredict is an API serve predictions of biomedical concepts associations using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/), for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
-    \n\n You can query the API to retrieve predicted associations between biomedical concepts (e.g. drugs which treats a specific disease). 
-    \n\n* Use the `/predict` call to quickly retrieve predictions associated to a concept
-    \n\n* Use the `/query` call to ask for predicted associations using the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) standard.
-    \n\n You can also install the [openpredict python package](https://pypi.org/project/openpredict/) to train and serve a new model yourself.
-    \n\n> This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
-    \n\n[![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)"
+  description: "Get predicted targets for a given entity: the **potential drugs treating a given disease**, or the **potential diseases a given drug could treat**.
+    \n\n* Use the `/predict` operation to easily retrieve predictions for a given entity.
+    \n\n* Predictions are currently made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project. 
+    \n\n* You can also install the [OpenPredict Python package](https://pypi.org/project/openpredict/) to train and serve a new model yourself.
+    \n\n* More documentation available at [github.com/MaastrichtU-IDS/translator-openpredict](https://github.com/MaastrichtU-IDS/translator-openpredict)
+    \n\n[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
+    \n\nService supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about)"
   version: 0.9.2
-  title: Translator OpenPredict API 🔮🐍 
+  title: OpenPredict API 🔮🐍 
   contact:
     email: vincent.emonet@maastrichtuniversity.nl
     name: Institute of Data Science at Maastricht University
@@ -18,31 +18,34 @@ info:
     url: https://opensource.org/licenses/MIT
   termsOfService: "{{url}}"
 externalDocs:
-  description: Documentation for the NCATS Biomedical Translator Reasoners web services
+  description: Documentation for the NCATS Biomedical Translator ReasonerAPI
   url: 'https://github.com/NCATSTranslator/ReasonerAPI'
 servers:
 - url: "{{server_url}}"
 tags:
-  - name: predicates
-    description: Get relationships supported by this API
-    externalDocs:
-      description: Documentation for the reasoner predicates function
-      url: 'http://reasonerhost.ncats.io/overview.html#predicates'
+  # - name: predicates
+  #   description: Get relationships supported by this API
+  #   externalDocs:
+  #     description: Documentation for the reasoner predicates function
+  #     url: 'http://reasonerhost.ncats.io/overview.html#predicates'
   - name: query
-    description: Query the models using the Reasoner API
-    externalDocs:
-      description: Documentation for the reasoner query function
-      url: 'http://reasonerhost.ncats.io/overview.html#query'
+    description: Query the models
+    # description: Query the models using the Reasoner API
+    # externalDocs:
+    #   description: Documentation for the reasoner query function
+    #   url: 'http://reasonerhost.ncats.io/overview.html#query'
   - name: translator
+    description: Get relationships supported by this API
   - name: reasoner
+    description: Query the models using the Reasoner API
 paths:
   /predict:
     get:
       operationId: openpredict.openpredict_api.get_predict
-      summary: Get predicted associations for a given entity
-      description: "Return the predicted associations for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores."
+      summary: Get predicted targets for a given entity
+      description: "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores."
       tags:
-      - translator
+      - query
       parameters:
       - name: entity
         in: query
@@ -94,7 +97,7 @@ paths:
     get:
       operationId: openpredict.openpredict_api.predicates_get
       tags:
-        - predicates
+        - translator
       summary: Get supported relationships by source and target
       responses:
         '200':
@@ -120,7 +123,7 @@ paths:
   /query:
     post:
       tags:
-        - query
+        - reasoner
       summary: Query reasoner via one of several inputs
       description: "Retrieve predicted associations from a Translator [Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI/tree/master/API) query, 
         using entities and associations from the [BioLink model](https://biolink.github.io/biolink-model)"
