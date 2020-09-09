@@ -1,10 +1,10 @@
 [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) 
 
-**OpenPredict** is a library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug).
+**OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug).
 
 # Use the API 📬
 
-The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `Predict OMIM-DrugBank` classifier currently implemented). 
+The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented). 
 
 The API will return the predicted targets for the given entity:
 
@@ -86,7 +86,9 @@ See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query exa
 
 ### Predicates operation
 
-The `/predicates` operation will return the entities and relations returned by this API (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
+The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
+
+> Try it at [https://openpredict.137.120.31.102.nip.io/predicates](https://openpredict.137.120.31.102.nip.io/predicates)
 
 ### Notebook example
 
@@ -96,9 +98,13 @@ You can find a Jupyter Notebook with [examples to query the API on GitHub](https
 
 You can also use OpenPredict to build new classifiers, and deploy your API.
 
+> Requires Python 3.6+
+
 ### Install OpenPredict 📥
 
-You might want to use a virtual environment for Python 3.7 to isolate the installation:
+#### Step 1: Activate Virtual Environment (optional)
+
+You might want to use a virtual environment to isolate the installation:
 
 ```bash
 # Create the virtual environment in your workspace
@@ -107,15 +113,21 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+#### Step 2: Install the package
+
 Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict) (or see below to [run the API with Docker](#option-3-run-with-docker))
 
 ```bash
 pip3 install openpredict
 ```
 
-> Package available on PyPI: [https://pypi.org/project/openpredict](https://pypi.org/project/openpredict)
+#### Later: update the package
 
----
+Upgrade to the latest release if you have a older version installed:
+
+```bash
+pip3 install --upgrade openpredict
+```
 
 ### Train the model 🚅
 
@@ -137,8 +149,6 @@ openpredict train-model
 
 > Work in progress
 >
-
----
 
 ### Deploy the API 🛩️
 
@@ -205,8 +215,6 @@ Stop the container:
 docker-compose down
 ```
 
----
-
 # Acknowledgments
 
 * Supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
@@ -217,3 +225,4 @@ docker-compose down
 
 * **[Documentation to install and run in development 📝](docs/dev)**
 * **[Documentation generated from the source code 📖](docs)**
+
