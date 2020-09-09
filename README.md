@@ -1,12 +1,10 @@
 [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) 
 
-**Translator OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical concepts associations, for the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
+**OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical entities associations (e.g. disease treated by drug).
 
 # Use the API 🌐
 
-The OpenPredict API serves predictions of biomedical concepts associations (e.g. disease treated by drug). 
-
-The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only OMIM - DrugBank at the moment). 
+The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `OpenPredict OMIM - DrugBank` currently implemented). 
 
 The API will return the predicted targets for the given entity:
 
@@ -20,11 +18,11 @@ The API will return the predicted targets for the given entity:
 The `/predict` operation takes 4 parameters:
 
 * A source Drug/Disease identifier as a CURIE
-* The prediction model to use
-* The minimum score of the returned predictions (optional)
-* The limit of results to return, starting from the higher score (optional)  
+* The prediction model to use (default to `OpenPredict OMIM - DrugBank`)
+* The minimum score of the returned predictions, from 0 to 1 (optional)
+* The limit of results to return, starting from the higher score, e.g. 42 (optional)  
 
-It will return the list of predicted target for the given entity, the labels are resolved using the [Translator Name Resolver API](http://robokop.renci.org:2434/docs#/lookup/lookup_curies_lookup_post):
+The API will return the list of predicted target for the given entity, the labels are resolved using the [Translator Name Resolver API](http://robokop.renci.org:2434/docs#/lookup/lookup_curies_lookup_post):
 
 ```json
 {
@@ -144,7 +142,7 @@ openpredict train-model
 
 ### Run the API ⚙️
 
-The API can be run different ways:
+The API can be started in different ways:
 
 #### Option 1: Run from the command line
 
@@ -156,10 +154,10 @@ openpredict start-api
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
-Provide the port as arguments:
+Provide the port and debug flag as arguments:
 
 ```bash
-openpredict start-api --port 8808
+openpredict start-api --port 8808 --debug
 ```
 
 #### Option 2: Run from a Python script
@@ -211,8 +209,9 @@ docker-compose down
 
 ## Acknowledgments
 
+* Supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
-* Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/)
+* Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
 
 # See also 👀
 
