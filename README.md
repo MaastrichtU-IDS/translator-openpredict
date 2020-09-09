@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) 
 
-**OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical entities associations (e.g. disease treated by drug).
+**OpenPredict** is a library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug).
 
 # Use the API 📬
 
