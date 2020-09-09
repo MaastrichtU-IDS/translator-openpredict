@@ -60,8 +60,8 @@ paths:
         required: false
         schema:
           type: string
-          enum: ["OpenPredict OMIM-DrugBank"]
-          default: "OpenPredict OMIM-DrugBank"
+          enum: ["Predict OMIM-DrugBank"]
+          default: "Predict OMIM-DrugBank"
       - name: score
         in: query
         description: Minimum score of predictions to return (0 to 1)

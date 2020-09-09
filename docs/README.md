@@ -62,7 +62,7 @@ Results as ReasonerAPI object
 #### get\_predictions
 
 ```python
-get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, limit=None)
+get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=None, limit=None)
 ```
 
 Run classifiers to get predictions
@@ -366,7 +366,7 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 #### get\_predict
 
 ```python
-get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, limit=None)
+get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, limit=None)
 ```
 
 Get predicted associations for a given entity CURIE.

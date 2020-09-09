@@ -4,7 +4,7 @@
 
 # Use the API 🌐
 
-The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `OpenPredict OMIM - DrugBank` classifier currently implemented). 
+The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `Predict OMIM-DrugBank` classifier currently implemented). 
 
 The API will return the predicted targets for the given entity:
 
@@ -18,7 +18,7 @@ The API will return the predicted targets for the given entity:
 The `/predict` operation takes 4 parameters:
 
 * A source Drug/Disease identifier as a CURIE
-* The prediction model to use (default to `OpenPredict OMIM - DrugBank`)
+* The prediction model to use (default to `Predict OMIM-DrugBank`)
 * The minimum score of the returned predictions, from 0 to 1 (optional)
 * The limit of results to return, starting from the higher score, e.g. 42 (optional)  
 

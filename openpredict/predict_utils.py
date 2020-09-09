@@ -2,7 +2,7 @@ import logging
 import requests
 from openpredict.predict_model_omim_drugbank import query_omim_drugbank_classifier
 
-def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, n_results=None):
+def get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=None, n_results=None):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
@@ -11,7 +11,7 @@ def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score
     :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
-    # classifier: OpenPredict OMIM-DrugBank
+    # classifier: Predict OMIM-DrugBank
     logging.info("Using classifier: " + classifier)
     # TODO: improve when we will have more classifier
     predictions_array = query_omim_drugbank_classifier(id_to_predict)
