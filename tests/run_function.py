@@ -4,12 +4,12 @@ from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifi
 from openpredict.build_utils import generate_classifier_metadata
 from datetime import datetime
 
-## Run it:
+### Run it:
 # python3 tests/run_function.py
 
+### Test train + predict
 # time_start = datetime.now()
 # clf, scores = train_omim_drugbank_classifier()
-
 # time_build = datetime.now()
 
 # # Call get predict from API for a DRUG
@@ -18,10 +18,10 @@ from datetime import datetime
 # print('Build runtime: ' + str(time_build - time_start))
 # print('Predict runtime: ' + str(datetime.now() - time_build))
 # print('Total runtime: ' + str(datetime.now() - time_start))
-
 # print('Results:')
 # print(prediction_result)
 
+### Test Spark:
 # import findspark
 # from pyspark import SparkConf, SparkContext
 # findspark.init()
@@ -35,7 +35,7 @@ from datetime import datetime
 # sc = SparkContext(conf=config, appName="OpenPredict")
 # print (sc)
 
-
+### Generate RDF metadata for trained classifier
 scores = {'precision': 0.8602150537634409, 'recall': 0.7228915662650602, 'accuracy': 0.8683417085427135, 
     'roc_auc': 0.8988169874066402, 'f1': 0.7855973813420621, 'average_precision': 0.8733631857757298}
 

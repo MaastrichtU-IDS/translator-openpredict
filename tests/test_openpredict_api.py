@@ -1,7 +1,7 @@
 import pytest
 import connexion
 
-# Create and start Flask OpenAPI before running tests
+# Create and start Flask from openapi.yml before running tests
 flask_app = connexion.FlaskApp(__name__)
 flask_app.add_api('../openpredict/openapi.yml')
 @pytest.fixture(scope='module')
@@ -10,7 +10,7 @@ def client():
         yield c
 
 def test_get_predict(client):
-    """Test predict API call"""
+    """Test predict API GET operation"""
     url = "/predict?entity=DRUGBANK:DB00394"
     # expected_json = {
     #     'results': [{'source' : 'test_disease', 'target': 'associated drug 1', 'score': 0.8}],
@@ -20,3 +20,7 @@ def test_get_predict(client):
     assert len(response.json["results"]) == 300
     assert response.json["count"] == 300
     # assert response.json == expected_json
+
+def test_post_query(client):
+    """Test ReasonerAPI query POST operation"""
+    assert True
