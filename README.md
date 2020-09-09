@@ -98,7 +98,7 @@ You can find a Jupyter Notebook with [examples to query the OpenPredict API on G
 
 You can also use OpenPredict to build new classifiers, and deploy your API.
 
-> Requires [Python 3.6+](https://www.python.org/downloads/)
+> Requires [Python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/)
 
 ### Install OpenPredict 📥
 
@@ -152,7 +152,7 @@ openpredict train-model
 
 ### Deploy the API 🛩️
 
-3 options are available to deploy the API
+3 options are available to deploy the API:
 
 #### Option 1: Run from the command line
 
@@ -217,7 +217,7 @@ docker-compose down
 
 # Acknowledgments
 
-* Supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
+* Service supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 * Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
 
