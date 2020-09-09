@@ -73,7 +73,7 @@ paths:
           maximum: 1
       - name: n_results
         in: query
-        description: Limit number of predictions to return (e.g. 42)
+        description: Maximum number of results to return, ordered from best score (e.g. 42)
         required: false
         schema:
           type: integer
@@ -84,10 +84,6 @@ paths:
           description: Successful Operation
           content:
             application/json: {}
-            # application/json: 
-            #   schema:
-            #     x-body-name: PredictionResults
-            #     $ref: '#/components/schemas/PredictionResults'
             # application/xml: {}
             # application/ld+json: {}
             # text/csv: {}

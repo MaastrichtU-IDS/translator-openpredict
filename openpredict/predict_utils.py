@@ -8,7 +8,7 @@ def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score
     :param id_to_predict: Id of the entity to get prediction from
     :param classifier: classifier used to get the predictions
     :param score: score minimum of predictions
-    :param limit: limit number of predictions to return
+    :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
     # classifier: OpenPredict OMIM-DrugBank
