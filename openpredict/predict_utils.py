@@ -1,6 +1,6 @@
 import logging
 import requests
-from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
+from openpredict.openpredict_model_omim_drugbank import query_omim_drugbank_classifier
 
 def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, n_results=None):
     """Run classifiers to get predictions

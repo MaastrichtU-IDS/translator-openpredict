@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.openpredict_omim_drugbank import train_omim_drugbank_classifier
+from openpredict.openpredict_model_omim_drugbank import train_omim_drugbank_classifier
 
 @click.command()
 @click.option(

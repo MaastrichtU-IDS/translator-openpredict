@@ -124,7 +124,7 @@ Run the pipeline to train the model used by the OpenPredict API.
 From a Python script:
 
 ```python
-from openpredict.openpredict_omim_drugbank import train_omim_drugbank_classifier
+from openpredict.openpredict_model_omim_drugbank import train_omim_drugbank_classifier
 
 train_omim_drugbank_classifier()
 ```
