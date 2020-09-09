@@ -19,7 +19,7 @@
   * [trainModel](#.openpredict.openpredict_omim_drugbank.trainModel)
   * [multimetric\_score](#.openpredict.openpredict_omim_drugbank.multimetric_score)
   * [evaluate](#.openpredict.openpredict_omim_drugbank.evaluate)
-  * [train\_drug\_disease\_classifier](#.openpredict.openpredict_omim_drugbank.train_drug_disease_classifier)
+  * [train\_drug\_disease\_classifier](#.openpredict.openpredict_omim_drugbank.train_omim_drugbank_classifier)
   * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_omim_drugbank.query_omim_drugbank_classifier)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_spark](#.openpredict.openpredict_api.start_spark)
@@ -304,11 +304,11 @@ Evaluate the trained classifier
 
 Scores
 
-<a name=".openpredict.openpredict_omim_drugbank.train_drug_disease_classifier"></a>
+<a name=".openpredict.openpredict_omim_drugbank.train_omim_drugbank_classifier"></a>
 #### train\_drug\_disease\_classifier
 
 ```python
-train_drug_disease_classifier()
+train_omim_drugbank_classifier()
 ```
 
 The main function to run the drug-disease similarities pipeline,

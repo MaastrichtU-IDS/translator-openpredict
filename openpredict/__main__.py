@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.openpredict_omim_drugbank import train_drug_disease_classifier
+from openpredict.openpredict_omim_drugbank import train_omim_drugbank_classifier
 
 @click.command()
 @click.option(
@@ -20,7 +20,7 @@ def start_api(port, server_url, debug, start_spark):
 
 @click.command()
 def train_model():
-    train_drug_disease_classifier()
+    train_omim_drugbank_classifier()
 
 
 @click.group()

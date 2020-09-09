@@ -325,7 +325,7 @@ def evaluate(test_df, clf):
     return scores
 
 
-def train_drug_disease_classifier():
+def train_omim_drugbank_classifier():
     """The main function to run the drug-disease similarities pipeline, 
     and build the drug-disease classifier.
     It returns, and stores the generated classifier as a `.joblib` file 
