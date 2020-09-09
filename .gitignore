@@ -3,3 +3,7 @@ build/
 .eggs/
 dist/
 __pycache__/
+
+.env/
+.venv/
+venv/
