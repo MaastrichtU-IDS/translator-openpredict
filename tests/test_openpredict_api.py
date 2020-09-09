@@ -1,5 +1,6 @@
 import pytest
 import connexion
+import json
 
 # Create and start Flask from openapi.yml before running tests
 flask_app = connexion.FlaskApp(__name__)
@@ -11,16 +12,47 @@ def client():
 
 def test_get_predict(client):
     """Test predict API GET operation"""
-    url = "/predict?entity=DRUGBANK:DB00394"
-    # expected_json = {
-    #     'results': [{'source' : 'test_disease', 'target': 'associated drug 1', 'score': 0.8}],
-    #     'count': 1
-    # }
+    url = '/predict?entity=DRUGBANK:DB00394&n_results=42'
     response = client.get(url)
-    assert len(response.json["results"]) == 300
-    assert response.json["count"] == 300
-    # assert response.json == expected_json
+    assert len(response.json['results']) == 42
+    assert response.json['count'] == 42
+    assert response.json['results'][0]['target']['id'] == 'OMIM:246300'
 
-def test_post_query(client):
-    """Test ReasonerAPI query POST operation"""
-    assert True
+def test_post_reasoner_predict(client):
+    """Test ReasonerAPI query POST operation to get predictions"""
+    url = '/query'
+    reasoner_query = {
+        "message": {
+            # "n_results": 10,
+            "query_graph": {
+                "edges": [
+                    {
+                    "id": "e00",
+                    "source_id": "n00",
+                    "target_id": "n01",
+                    "type": "treated_by"
+                    }
+                ],
+                "nodes": [
+                    {
+                    "curie": "DRUGBANK:DB00394",
+                    "id": "n00",
+                    "type": "drug"
+                    },
+                    {
+                    "id": "n01",
+                    "type": "disease"
+                    }
+                ]
+            }
+            # "query_options": {
+            # "has_confidence_level": 0.5
+            # }
+        }
+    }
+    response = client.post(url, 
+                           data=json.dumps(reasoner_query), 
+                           content_type='application/json')
+    edges = response.json['knowledge_graph']['edges']
+    assert len(edges) == 300
+    assert edges[0]['target_id'] == 'OMIM:246300'

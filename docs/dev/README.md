@@ -41,10 +41,10 @@ Run the **OpenPredict API** tests locally:
 pytest tests
 ```
 
-Run a specific test file and display `print`:
+Run a specific test in a file, and display `print` in the output:
 
 ```bash
-pytest tests/test_openpredict_api.py -s
+pytest tests/test_openpredict_api.py::post_reasoner_predict -s
 ```
 
 ## Generate documentation
