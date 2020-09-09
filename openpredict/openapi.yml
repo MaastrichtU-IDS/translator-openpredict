@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: "Get predicted targets for a given entity: the **potential drugs treating a given disease**, or the **potential diseases a given drug could treat**.
     \n\n* Use the `/predict` operation to easily retrieve predictions for a given entity.
-    \n\n* Predictions are currently made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project. 
+    \n\n* Predictions are currently produced using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project. 
     \n\n* You can also install the [OpenPredict Python package](https://pypi.org/project/openpredict/) to train and serve a new model yourself.
     \n\n* More documentation available at [github.com/MaastrichtU-IDS/translator-openpredict](https://github.com/MaastrichtU-IDS/translator-openpredict)
     \n\n[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
@@ -121,8 +121,9 @@ paths:
       tags:
         - reasoner
       summary: Query reasoner via one of several inputs
-      description: "Retrieve predicted associations from a Translator [Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI/tree/master/API) query, 
-        using entities and associations from the [BioLink model](https://biolink.github.io/biolink-model)"
+      description: "Send a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query 
+        to request the predicted targets given: a source node, and the relation to predict. 
+        Use classes and relations from the [BioLink model](https://biolink.github.io/biolink-model)"
       operationId: openpredict.openpredict_api.post_reasoner_predict
       # operationId: query
       requestBody:

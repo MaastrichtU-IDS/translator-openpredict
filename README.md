@@ -54,7 +54,9 @@ It will return the list of predicted target for the given entity, the labels are
 
 The `/query` operation will return the same predictions in the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
 
-The user sends a ReasonerAPI query asking for the predicted target nodes given a source node and the relation to predict between those 2 nodes. See this example of a ReasonerAPI query:
+The user sends a ReasonerAPI query asking for the predicted targets given: a source, and the relation to predict. Use classes and relations from the [BioLink model](https://biolink.github.io/biolink-model). 
+
+See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query example:
 
 ```json
 {
