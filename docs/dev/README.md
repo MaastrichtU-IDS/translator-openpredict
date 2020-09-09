@@ -1,6 +1,6 @@
 Documentation to run the **Translator OpenPredict API** in development.
 
-> Contributions, feedbacks and pull requests are welcomed!
+> Contributions, [feedbacks](https://github.com/MaastrichtU-IDS/translator-openpredict/issues) and pull requests are welcomed!
 
 This repository uses [GitHub Actions](https://github.com/MaastrichtU-IDS/translator-openpredict/actions) to:
 
@@ -23,7 +23,7 @@ cd translator-openpredict
 This will install `openpredict` and update the package automatically when the files changes locally 🔃
 
 ```bash
-pip install -e .
+pip3 install -e .
 ```
 
 # Run in dev 🚧
@@ -50,12 +50,12 @@ Run a specific test in a file, and display `print` in the output:
 pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
-# Generate documentation
+# Generate documentation 📖
 
-Documentation in [docs/ 📖](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
+Documentation in [docs/](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
 ```bash
-pip install pydoc-markdown
+pip3 install pydoc-markdown
 ```
 
 Generate markdown documentation page for the `openpredict` package in `docs/`
@@ -73,7 +73,7 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 > This can also be done using Sphinx, see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
 >
 > ```bash
-> pip install sphinx
+> pip3 install sphinx
 > sphinx-quickstart sphinx-docs/ --project 'openpredict' --author 'Vincent Emonet'
 > cd sphinx-docs/
 > make html

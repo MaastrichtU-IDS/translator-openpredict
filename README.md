@@ -2,7 +2,7 @@
 
 **OpenPredict** 🔮🐍 is an API to compute and serve predicted biomedical entities associations (e.g. disease treated by drug).
 
-# Use the API 🌐
+# Use the API 📬
 
 The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, OMIM:246300), and choose a prediction model (only `Predict OMIM-DrugBank` classifier currently implemented). 
 
@@ -140,9 +140,9 @@ openpredict train-model
 
 ---
 
-### Run the API ⚙️
+### Deploy the API 🛩️
 
-The API can be started in different ways:
+3 options are available to deploy the API
 
 #### Option 1: Run from the command line
 
