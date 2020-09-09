@@ -1,5 +1,5 @@
 import pytest
-from openpredict.openpredict_model_omim_drugbank import train_omim_drugbank_classifier
+from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifier
 
 def test_train_omim_drugbank_classifier():
     """Test the model to get drug-disease similarities (drugbank-omim)"""

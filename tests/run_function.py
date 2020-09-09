@@ -1,6 +1,6 @@
 from joblib import load
 from openpredict.openpredict_api import get_predict
-from openpredict.openpredict_model_omim_drugbank import train_omim_drugbank_classifier
+from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifier
 from openpredict.build_utils import generate_classifier_metadata
 from datetime import datetime
 
