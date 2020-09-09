@@ -64,18 +64,17 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
 
 ### Code for the different calls of the app
 
-def get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, limit=None):
+def get_predict(entity, classifier="OpenPredict OMIM-DrugBank", score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
     :return: Prediction results object with score
     """
     time_start = datetime.now()
-    # classifier: OpenPredict OMIM-DrugBank
-    print("Using classifier: " + classifier)
-    # prediction_json = get_predictions(entity, classifier, score, limit)
+    
+    # prediction_json = get_predictions(entity, classifier, score, n_results)
     try:
-        prediction_json = get_predictions(entity, classifier, score, limit)
+        prediction_json = get_predictions(entity, classifier, score, n_results)
     except:
         return "Not found", 404
 

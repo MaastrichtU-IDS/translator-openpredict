@@ -71,7 +71,7 @@ paths:
           format: double
           minimum: 0
           maximum: 1
-      - name: limit
+      - name: n_results
         in: query
         description: Limit number of predictions to return (e.g. 42)
         required: false
@@ -182,7 +182,7 @@ components:
             - $ref: '#/components/schemas/RemoteKnowledgeGraph'
       additionalProperties: true
       example:
-        n_results: 10
+        n_results: 42
         query_options:
           has_confidence_level: 0.5
         query_graph:

@@ -2,7 +2,7 @@ import logging
 import requests
 from openpredict.openpredict_omim_drugbank import query_omim_drugbank_classifier
 
-def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, limit=None):
+def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score=None, n_results=None):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
@@ -11,14 +11,16 @@ def get_predictions(id_to_predict, classifier='OpenPredict OMIM-DrugBank', score
     :param limit: limit number of predictions to return
     :return: predictions in array of JSON object
     """
+    # classifier: OpenPredict OMIM-DrugBank
+    logging.info("Using classifier: " + classifier)
     # TODO: improve when we will have more classifier
     predictions_array = query_omim_drugbank_classifier(id_to_predict)
     
     if score:
         predictions_array = [p for p in predictions_array if p['score'] >= score]
-    if limit:
+    if n_results:
         # Predictions are already sorted from higher score to lower
-        predictions_array = predictions_array[:limit]
+        predictions_array = predictions_array[:n_results]
     
     # Build lists of unique node IDs to retrieve label
     predicted_ids = set([])
