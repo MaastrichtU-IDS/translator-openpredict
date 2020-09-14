@@ -120,7 +120,7 @@ pip3 install --upgrade openpredict
 
 #### Optional: isolate with a Virtual Environment
 
-If you are facing conflict with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder:
+If you are facing conflict with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder before installing OpenPredict:
 
 ```bash
 # Create the virtual environment folder in your workspace
