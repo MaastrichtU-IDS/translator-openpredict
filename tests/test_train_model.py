@@ -1,4 +1,6 @@
 import pytest
+import pandas as pd
+import numpy as np
 from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifier
 from openpredict.predict_model_omim_drugbank import geometricMean
 
