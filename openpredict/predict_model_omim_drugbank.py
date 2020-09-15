@@ -11,6 +11,7 @@ from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 import pkg_resources
 from openpredict.train_utils import generate_classifier_metadata
+from sklearn.metrics.pairwise import cosine_similarity
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -27,6 +28,61 @@ def adjcencydict2matrix(df, name1, name2):
     print(len(df))
     print(len(df))
     return df.pivot(index=name1, columns=name2)
+
+
+def addEmbedding(embedding_file, emb_name, types):
+    """Add embedding to the drug similarity matrix dataframe
+
+    :param embedding_file: Dataframe
+    :param emb_name: new column name to be added
+    :param types: types in the embedding vector ['Drugs', 'Diseases', 'Both']
+    """
+    emb_df = pd.read_csv(embedding_file, sep='\t') 
+    emb_df.set_index('Drug',inplace=True) 
+    print (emb_df.head())
+
+    # 
+    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
+
+    if  types == 'Drugs':
+        names = drug_df.columns.levels[1]
+        header = ["Drug1", "Drug2", emb_name]
+    else:
+        names = disease_df.columns.levels[1]
+        header = ["Disease1", "Disease2", emb_name]
+
+    entity_exist = [ d for d in names if d in emb_df.index]
+    print ("Number of drugs that do not exist in the embedding ", len(names)- len(entity_exist))
+    # copy only drug entity embeddings 
+    embedding_df = emb_df.loc[entity_exist].copy()
+    for d in names:
+        # add zeros values for drugs that do not exist in the embedding
+        if d not in emb_df.index:
+            embedding_df.loc[d]= np.zeros(emb_df.shape[1])
+    # calculate cosine similarity for given embedding
+    sim_mat =cosine_similarity(embedding_df.loc[names].values, embedding_df.loc[names].values)
+    # convert to DF
+    df_sim = pd.DataFrame(sim_mat, index = names, columns=names)
+    # if there is NA (It is the case when both pairs have zero values-no embedding exist)
+    df_sim = df_sim.fillna(0.0)
+    # make multi-index dataframe adding a new column with given embedding name
+    df_sim_m = pd.concat([df_sim], axis=1, keys=[emb_name])
+    # finally concatenate the embedding-based similarity to other drug similarity matrix
+    print (df_sim_m.head())
+
+    # add to the similarity tensor
+
+    if types =="Drugs":
+        drug_df= pd.concat([drug_df, df_sim_m],  axis=1)
+    elif types == "Diseases":
+        disease_df= pd.concat([disease_df, df_sim_m],  axis=1)  
+    
+    dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    print ("New embedding based similarity was added to the similarity tensor")
+    #df_sim_m= df_sim.stack().reset_index(level=[0,1])
+    #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
+    return "Done" 
+
 
 def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     """Merge the drug and disease feature matrix
@@ -325,7 +381,7 @@ def evaluate(test_df, clf):
     return scores
 
 
-def train_omim_drugbank_classifier():
+def train_omim_drugbank_classifier(from_scratch):
     """The main function to run the drug-disease similarities pipeline, 
     and build the drug-disease classifier.
     It returns, and stores the generated classifier as a `.joblib` file 
@@ -347,10 +403,16 @@ def train_omim_drugbank_classifier():
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())
 
-    # Merge feature matrix
-    drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-    dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    if not from_scratch and os.path.exists(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib')):
+        print ("Loading the similarity tensor")
+        (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
+    else:
+        # Merge feature matrix
+        drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+        dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
 
+    print ("Drug Features ",drug_df.columns.levels[0])
+    print ("Disease Features ",disease_df.columns.levels[0])
     # Generate positive and negative pairs
     pairs, classes = generatePairs(drug_df, disease_df, drugDiseaseKnown)
 

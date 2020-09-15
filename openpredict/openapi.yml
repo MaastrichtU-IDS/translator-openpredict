@@ -39,6 +39,41 @@ tags:
   - name: reasoner
     description: Query the models using the Reasoner API
 paths:
+  
+  /embedding:
+    post:
+      operationId: openpredict.openpredict_api.upload_embedding
+      summary: Upload your embedding for drugs or diseases
+      description: "Upload your embedding file:  select which types do you have in the emebddings, Drugs, Diseses or Both "
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                embedding_file:
+                  description: The embedding file to be uploaded
+                  type: string
+                  format: binary
+      parameters:
+        - name: types
+          in: query
+          description: Types of the entities in the embedding
+          required: true
+          schema:
+            type: string
+            enum: ["Drugs", "Diseases", "Both"]
+            default: "Both" 
+        - name: emb_name
+          in: query
+          description: Name of embedding (eg. TransE_DrugBank_Drug)
+          required: true
+          schema:
+            type: string
+
   /predict:
     get:
       operationId: openpredict.openpredict_api.get_predict

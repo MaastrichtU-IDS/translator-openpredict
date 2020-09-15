@@ -2,6 +2,7 @@ import connexion
 import logging
 from datetime import datetime
 from openpredict.predict_utils import get_predictions
+from openpredict.predict_model_omim_drugbank import addEmbedding
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 
 # import openpredict.utils
@@ -62,6 +63,12 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
 
 
 
+def upload_embedding(types, emb_name):
+    embedding_file = connexion.request.files['embedding_file']
+    print (emb_name, types)
+    addEmbedding(embedding_file, emb_name, types)
+    print ('file uploaded')
+    return { 'status': 200 }
 ### Code for the different calls of the app
 
 def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None):

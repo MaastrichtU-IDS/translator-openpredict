@@ -19,8 +19,10 @@ def start_api(port, server_url, debug, start_spark):
 
 
 @click.command()
-def train_model():
-    train_omim_drugbank_classifier()
+@click.option('--from-scratch/--no-scratch', default=True, help="Build the features from scratch (default to yes).")
+def train_model(from_scratch):
+    print ('from_scratch',from_scratch)
+    train_omim_drugbank_classifier(from_scratch)
 
 
 @click.group()
