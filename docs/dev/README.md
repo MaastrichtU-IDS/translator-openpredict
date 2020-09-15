@@ -50,6 +50,36 @@ Run a specific test in a file, and display `print` in the output:
 pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
+# Create a new API service
+
+1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
+
+Provide the path to the function that will resolve this API call:
+
+```yaml
+paths:
+  /predict:
+    get:
+      operationId: openpredict.openpredict_api.get_predict
+      parameters:
+      - name: entity
+        in: query
+        description: CURIE of the entity to process (e.g. drug, disease, etc)
+        example: DRUGBANK:DB00394
+        required: true
+        schema:
+          type: string
+```
+
+2. Now, create the function in the [openpredict/openpredict_api.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openpredict_api.py#L67) file
+
+```python
+def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
+    print("Do stuff with " + classifier)
+```
+
+> The parameters provided in openapi.yml and the one of the function in openpredict_api.py need to match!
+
 # Generate documentation 📖
 
 Documentation in [docs/](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
@@ -78,27 +108,6 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 > cd sphinx-docs/
 > make html
 > ```
-
-# Create a new API service
-
-1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
-
-Provide the path to the function that will resolve this API call:
-
-```yaml
-paths:
-  /predict:
-    get:
-      operationId: openpredict.openpredict_api.get_predict
-```
-
-2. Now, create the function in the [openpredict/openpredict_api.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openpredict_api.py#L67) file
-
-```python
-def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
-```
-
-> The parameters provided in openapi.yml and the one of the function in openpredict_api.py need to match!
 
 # See also 👀
 
