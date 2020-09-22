@@ -2,7 +2,8 @@ import connexion
 import logging
 from datetime import datetime
 from openpredict.predict_utils import get_predictions
-from openpredict.predict_model_omim_drugbank import addEmbedding
+from openpredict.train_utils import generate_feature_metadata
+from openpredict.predict_model_omim_drugbank import addEmbedding, train_omim_drugbank_classifier
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from rdflib import Graph, Literal, RDF, URIRef
 import pkg_resources
@@ -65,13 +66,15 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
 
 
 
-def upload_embedding(types, emb_name):
+def post_embedding(types, emb_name, description):
     embedding_file = connexion.request.files['embedding_file']
     print (emb_name, types)
     addEmbedding(embedding_file, emb_name, types)
-    print ('file uploaded')
-    return { 'status': 200 }
-### Code for the different calls of the app
+    print ('Embeddings uploaded')
+    train_omim_drugbank_classifier(False)
+    generate_feature_metadata(emb_name, description, types)
+    return { 'Embeddings added': 200 }
+    # Code for the different calls of the app
 
 def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
@@ -81,7 +84,6 @@ def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_result
     """
     time_start = datetime.now()
 
-    # prediction_json = get_predictions(entity, classifier, score, n_results)
     try:
         prediction_json = get_predictions(entity, classifier, score, n_results)
     except:

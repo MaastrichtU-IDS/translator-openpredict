@@ -54,7 +54,7 @@ paths:
   
   /embedding:
     post:
-      operationId: openpredict.openpredict_api.upload_embedding
+      operationId: openpredict.openpredict_api.post_embedding
       summary: Upload your embedding for drugs or diseases
       description: "Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both "
       tags:
@@ -84,6 +84,12 @@ paths:
         - name: emb_name
           in: query
           description: Name of embedding (eg. TransE_DrugBank_Drug)
+          required: true
+          schema:
+            type: string
+        - name: description
+          in: query
+          description: Describe how the embeddings was obtained (eg. rdf2vec on drugbank/omim data)
           required: true
           schema:
             type: string
