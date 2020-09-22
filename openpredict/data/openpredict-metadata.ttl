@@ -1,12 +1,56 @@
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix mls: <http://www.w3.org/ns/mls#> .
 @prefix ns1: <http://www.w3.org/ns/prov#> .
+@prefix ns2: <https://w3id.org/openpredict/> .
+@prefix ns3: <http://purl.org/dc/elements/1.1/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://w3id.org/openpredict/openpredict-omim-drugbank-0> a mls:ModelEvaluation ;
+<https://w3id.org/openpredict/feature/GO-SIM> a mls:Feature ;
+    ns3:description "GO based drug-drug similarity" ;
+    ns3:identifier "GO-SIM" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.831325"^^xsd:dateTime ;
+    ns2:embedding_type "type" .
+
+<https://w3id.org/openpredict/feature/HPO-SIM> a mls:Feature ;
+    ns3:description "HPO based disease-disease similarity" ;
+    ns3:identifier "HPO-SIM" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.876295"^^xsd:dateTime ;
+    ns2:embedding_type "disease" .
+
+<https://w3id.org/openpredict/feature/PHENO-SIM> a mls:Feature ;
+    ns3:description "Disease Phenotype Similarity based on MESH terms similarity" ;
+    ns3:identifier "PHENO-SIM" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.867481"^^xsd:dateTime ;
+    ns2:embedding_type "disease" .
+
+<https://w3id.org/openpredict/feature/PPI-SIM> a mls:Feature ;
+    ns3:description "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network" ;
+    ns3:identifier "PPI-SIM" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.844965"^^xsd:dateTime ;
+    ns2:embedding_type "drug" .
+
+<https://w3id.org/openpredict/feature/SE-SIM> a mls:Feature ;
+    ns3:description "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects" ;
+    ns3:identifier "SE-SIM" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.859454"^^xsd:dateTime ;
+    ns2:embedding_type "drug" .
+
+<https://w3id.org/openpredict/feature/TARGETSEQ-SIM> a mls:Feature ;
+    ns3:description "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores" ;
+    ns3:identifier "TARGETSEQ-SIM" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.838403"^^xsd:dateTime ;
+    ns2:embedding_type "drug" .
+
+<https://w3id.org/openpredict/feature/TC> a mls:Feature ;
+    ns3:description "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity" ;
+    ns3:identifier "TC" ;
+    ns1:generatedAtTime "2020-09-22T15:50:34.852087"^^xsd:dateTime ;
+    ns2:embedding_type "drug" .
+
+ns2:openpredict-omim-drugbank-0 a mls:ModelEvaluation ;
     rdfs:label "Original OpenPredict classifier based on OMIM and DrugBank" ;
     mls:specifiedBy <https://w3id.org/openpredict/openpredict-omim-drugbank-0/accuracy>,
         <https://w3id.org/openpredict/openpredict-omim-drugbank-0/average_precision>,

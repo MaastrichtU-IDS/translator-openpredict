@@ -112,7 +112,6 @@ def get_features():
     """
     g = Graph()
     g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
-    rdf_features = g.value(predicate = RDF.type, object=URIRef('http://www.w3.org/ns/mls#Feature'))
     qres = g.query(
     """SELECT DISTINCT ?id ?description ?embeddingType
        WHERE {
@@ -130,38 +129,6 @@ def get_features():
             "description": row.description,
             "type": row.embeddingType
         }
-
-    # print(qres.serialize(format='json-ld', 
-    # openpredict_features = {
-    #     "GO-SIM": {
-    #         "description": "GO based drug-drug similarity",
-    #         "type": "drug"
-    #     },
-    #     "TARGETSEQ-SIM": {
-    #         "description": "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores",
-    #         "type": "drug"
-    #     },
-    #     "PPI-SIM": {
-    #         "description": "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network",
-    #         "type": "drug"
-    #     },
-    #     "TC": {
-    #         "description": "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity",
-    #         "type": "drug"
-    #     },
-    #     "SE-SIM": {
-    #         "description": "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects",
-    #         "type": "drug"
-    #     },
-    #     "PHENO-SIM": {
-    #         "description": "Disease Phenotype Similarity based on MESH terms similarity",
-    #         "type": "disease"
-    #     },
-    #     "HPO-SIM": {
-    #         "description": "similarity",
-    #         "type": "disease"
-    #     }        
-    # }
     return features_json
 
 # TODO: get_predict wrapped in ReasonerStdApi

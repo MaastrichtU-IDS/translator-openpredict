@@ -15,7 +15,7 @@ def generate_feature_metadata(id, description, type):
 
     feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
     g.add((feature_uri, RDF.type, URIRef(MLS_NAMESPACE + 'Feature')))
-    g.add((feature_uri, DC.identifer, Literal(id)))
+    g.add((feature_uri, DC.identifier, Literal(id)))
     g.add((feature_uri, DC.description, Literal(description)))
     g.add((feature_uri, URIRef(OPENPREDICT_NAMESPACE + 'embedding_type'), Literal(type)))
     g.add((feature_uri, URIRef('http://www.w3.org/ns/prov#generatedAtTime'), Literal(datetime.now(), datatype=XSD.dateTime)))
