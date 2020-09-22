@@ -14,6 +14,7 @@ def typed_results_to_reasonerapi(reasoner_query):
         score = float(reasoner_query["message"]["query_options"]["has_confidence_level"])
     except:
         print('score retrieve failed')
+        score=None
     query_plan = {}
     # Parse the query_graph to build the query plan
     for qg_edge in query_graph["edges"]:
