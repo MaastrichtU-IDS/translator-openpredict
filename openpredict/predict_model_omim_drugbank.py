@@ -41,7 +41,6 @@ def addEmbedding(embedding_file, emb_name, types):
     emb_df.set_index('Drug',inplace=True) 
     print (emb_df.head())
 
-    # 
     (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
 
     if  types == 'Drugs':
@@ -53,7 +52,7 @@ def addEmbedding(embedding_file, emb_name, types):
 
     entity_exist = [ d for d in names if d in emb_df.index]
     print ("Number of drugs that do not exist in the embedding ", len(names)- len(entity_exist))
-    # copy only drug entity embeddings 
+    # Copy only drug entity embeddings 
     embedding_df = emb_df.loc[entity_exist].copy()
     for d in names:
         # add zeros values for drugs that do not exist in the embedding
