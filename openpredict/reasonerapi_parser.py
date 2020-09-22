@@ -75,7 +75,8 @@ def typed_results_to_reasonerapi(reasoner_query):
 
             edge_dict = {
                 'id': edge_kg_id,
-                'type': query_plan[edge_qg_id]['association_type'] }
+                'type': query_plan[edge_qg_id]['association_type'],
+                'score': association['score'] }
 
             # Map the source/target of query_graph to source/target of association
             if association['source']['type'] == query_plan[edge_qg_id]['from_type']:
