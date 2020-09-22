@@ -12,6 +12,8 @@ services:
     ports:
       - 8808:8808
     environment: 
+      PYSPARK_PYTHON: /opt/conda/bin/python3
+      PYSPARK_DRIVER_PYTHON: /opt/conda/bin/python3
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
       VIRTUAL_HOST: openpredict.137.120.31.102.nip.io
       LETSENCRYPT_HOST: openpredict.137.120.31.102.nip.io
