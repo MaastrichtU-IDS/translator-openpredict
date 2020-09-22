@@ -39,12 +39,26 @@ tags:
   - name: reasoner
     description: Query the models using the Reasoner API
 paths:
+  /features:
+    get:
+      operationId: openpredict.openpredict_api.get_features
+      summary: Return the features trained in the model
+      description: "Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both "
+      tags:
+      - openpredict
+      responses:
+        '200':
+          description: OK
+          content:
+              application/json: {}
   
   /embedding:
     post:
       operationId: openpredict.openpredict_api.upload_embedding
       summary: Upload your embedding for drugs or diseases
-      description: "Upload your embedding file:  select which types do you have in the emebddings, Drugs, Diseses or Both "
+      description: "Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both "
+      tags:
+      - openpredict
       responses:
         '200':
           description: OK
@@ -126,7 +140,7 @@ paths:
 
   /predicates:
     get:
-      operationId: openpredict.openpredict_api.predicates_get
+      operationId: openpredict.openpredict_api.get_predicates
       tags:
         - translator
       summary: Get supported relationships by source and target

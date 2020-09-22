@@ -89,7 +89,7 @@ def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_result
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
-def predicates_get():
+def get_predicates():
     """Get predicates and entities provided by the API
     
     :return: JSON with biolink entities
@@ -102,6 +102,43 @@ def predicates_get():
         }
     }
     return openpredict_predicates
+
+def get_features():
+    """Get features in the model
+    
+    :return: JSON with features
+    """
+    openpredict_features = {
+        "GO-SIM": {
+            "description": "GO based drug-drug similarity",
+            "type": "drug"
+        },
+        "TARGETSEQ-SIM": {
+            "description": "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores",
+            "type": "drug"
+        },
+        "PPI-SIM": {
+            "description": "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network",
+            "type": "drug"
+        },
+        "TC": {
+            "description": "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity",
+            "type": "drug"
+        },
+        "SE-SIM": {
+            "description": "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects",
+            "type": "drug"
+        },
+        "PHENO-SIM": {
+            "description": "Disease Phenotype Similarity based on MESH terms similarity",
+            "type": "disease"
+        },
+        "HPO-SIM": {
+            "description": "similarity",
+            "type": "disease"
+        }        
+    }
+    return openpredict_features
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):
