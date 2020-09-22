@@ -47,8 +47,14 @@ import pandas as pd
 # clf = load('openpredict/data/models/drug_disease_model.joblib') 
 # print(clf.feature_names)
 
-# (drug_df, disease_df) = load('openpredict/data/features/drug_disease_dataframes.joblib')
-# print(drug_df.index.names)
+(drug_df, disease_df) = load('openpredict/data/features/drug_disease_dataframes.joblib')
+
+print(drug_df.index)
+# length=505 drugs
+
+print(disease_df.index)
+# length=300
+
 # print(drug_df.head())
 # print(disease_df.head())
 # print(drug_df.columns.names)
@@ -62,10 +68,10 @@ import pandas as pd
     # (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
 # print(features.feature_names)
 
-generate_feature_metadata("GO-SIM", "GO based drug-drug similarity", "type")
-generate_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "drug")
-generate_feature_metadata("PPI-SIM", "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network", "drug")
-generate_feature_metadata("TC", "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity", "drug")
-generate_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "drug")
-generate_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "disease")
-generate_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "disease")
+# generate_feature_metadata("GO-SIM", "GO based drug-drug similarity", "type")
+# generate_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "drug")
+# generate_feature_metadata("PPI-SIM", "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network", "drug")
+# generate_feature_metadata("TC", "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity", "drug")
+# generate_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "drug")
+# generate_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "disease")
+# generate_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "disease")
