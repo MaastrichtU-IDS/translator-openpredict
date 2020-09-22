@@ -9,6 +9,11 @@ def typed_results_to_reasonerapi(reasoner_query):
     :return: Results as ReasonerAPI object
     """
     query_graph = reasoner_query["message"]["query_graph"]
+    # score = reasoner_query["message"]["query_options"]["has_confidence_level"]
+    try:
+        score = float(reasoner_query["message"]["query_options"]["has_confidence_level"])
+    except:
+        print('score retrieve failed')
     query_plan = {}
     # Parse the query_graph to build the query plan
     for qg_edge in query_graph["edges"]:
@@ -45,7 +50,7 @@ def typed_results_to_reasonerapi(reasoner_query):
         # Run get_predict!
         # TODO: pass score and limit from Reasoner query
         # TODO: add try catch
-        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'])
+        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], 'Predict OMIM-DrugBank', score)
 
         for association in prediction_json:
             edge_kg_id = 'e' + str(kg_edge_count)
