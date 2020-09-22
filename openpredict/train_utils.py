@@ -14,7 +14,7 @@ def generate_feature_metadata(id, description, type):
     g.parse(TTL_METADATA_FILE, format="ttl")
 
     feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
-    g.add((feature_uri, RDF.type, URIRef(MLS_NAMESPACE + 'ModelEvaluation')))
+    g.add((feature_uri, RDF.type, URIRef(MLS_NAMESPACE + 'Feature')))
     g.add((feature_uri, DC.identifer, Literal(id)))
     g.add((feature_uri, DC.description, Literal(description)))
     g.add((feature_uri, URIRef(OPENPREDICT_NAMESPACE + 'embedding_type'), Literal(type)))

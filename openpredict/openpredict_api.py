@@ -4,6 +4,8 @@ from datetime import datetime
 from openpredict.predict_utils import get_predictions
 from openpredict.predict_model_omim_drugbank import addEmbedding
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
+from rdflib import Graph, Literal, RDF, URIRef
+import pkg_resources
 
 # import openpredict.utils
 
@@ -108,6 +110,10 @@ def get_features():
     
     :return: JSON with features
     """
+    g = Graph()
+    g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
+    rdf_features = g.value(predicate = RDF.type, object=URIRef('http://www.w3.org/ns/mls#Feature'))
+    print(rdf_features)
     openpredict_features = {
         "GO-SIM": {
             "description": "GO based drug-drug similarity",
