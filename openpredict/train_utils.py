@@ -7,6 +7,21 @@ from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 TTL_METADATA_FILE = pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl')
 OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'
 MLS_NAMESPACE = 'http://www.w3.org/ns/mls#'
+BIOLINK_NAMESPACE = 'https://w3.org/biolink/'
+
+def generate_feature_metadata(id, description, type):
+    g = Graph()
+    g.parse(TTL_METADATA_FILE, format="ttl")
+
+    feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
+    g.add((feature_uri, RDF.type, URIRef(MLS_NAMESPACE + 'ModelEvaluation')))
+    g.add((feature_uri, DC.identifer, Literal(id)))
+    g.add((feature_uri, DC.description, Literal(description)))
+    g.add((feature_uri, URIRef(OPENPREDICT_NAMESPACE + 'embedding_type'), Literal(type)))
+    g.add((feature_uri, URIRef('http://www.w3.org/ns/prov#generatedAtTime'), Literal(datetime.now(), datatype=XSD.dateTime)))
+
+    g.serialize(TTL_METADATA_FILE, format="ttl")
+    return g
 
 def generate_classifier_metadata(classifier_id, scores, label="OpenPredict classifier"):
     """Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
