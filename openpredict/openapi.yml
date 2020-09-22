@@ -28,8 +28,8 @@ tags:
   #   externalDocs:
   #     description: Documentation for the reasoner predicates function
   #     url: 'http://reasonerhost.ncats.io/overview.html#predicates'
-  - name: query
-    description: Query the models
+  # - name: query
+  #   description: Query the models
     # description: Query the models using the Reasoner API
     # externalDocs:
     #   description: Documentation for the reasoner query function
@@ -94,7 +94,7 @@ paths:
       summary: Get predicted targets for a given entity
       description: "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores."
       tags:
-      - query
+      - openpredict
       parameters:
       - name: entity
         in: query
