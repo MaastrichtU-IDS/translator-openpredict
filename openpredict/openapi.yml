@@ -39,12 +39,33 @@ tags:
   - name: reasoner
     description: Query the models using the Reasoner API
 paths:
+  /model:
+    put:
+      operationId: openpredict.openpredict_api.put_model
+      summary: Create a new model for drugs or diseases
+      description: "Create a new model from scratch to witch embeddings can be added"
+      tags:
+      - openpredict
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: id
+          in: query
+          description: Model identifier
+          required: true
+          schema:
+            type: string
+            pattern: '^[-_a-zA-Z0-9]{5,30}$'
+            default: "model-custom"
   
   /embedding:
     post:
       operationId: openpredict.openpredict_api.upload_embedding
       summary: Upload your embedding for drugs or diseases
-      description: "Upload your embedding file:  select which types do you have in the emebddings, Drugs, Diseses or Both "
+      description: "Upload your embedding file: select which types do you have in the embeddings, Drugs, Diseases or Both "
+      tags:
+      - openpredict
       responses:
         '200':
           description: OK

@@ -62,6 +62,10 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     api.run(port=port, debug=debug, server=deployment_server)
 
 
+def put_model(model_id):
+    # create_new_model(model_id)
+    return "nulll"
+
 
 def upload_embedding(types, emb_name):
     embedding_file = connexion.request.files['embedding_file']
