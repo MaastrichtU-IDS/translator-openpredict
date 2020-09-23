@@ -5,7 +5,7 @@ FROM jupyter/all-spark-notebook
 COPY . .
 
 # Install from source code
-RUN pip install .
+RUN pip install . --user
 
 EXPOSE 8808
 
