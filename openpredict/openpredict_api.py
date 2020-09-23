@@ -147,7 +147,7 @@ def get_models():
     """
     g = Graph()
     g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
-    # ?average_precision ?f1 ?precision ?recall ?roc_auc
+
     sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
         PREFIX mls: <http://www.w3.org/ns/mls#>
         PREFIX prov: <http://www.w3.org/ns/prov#>
@@ -158,58 +158,31 @@ def get_models():
         PREFIX xml: <http://www.w3.org/XML/1998/namespace>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
         SELECT DISTINCT ?model ?label ?generatedAtTime ?features ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
-        
         WHERE {
             ?model a mls:ModelEvaluation ;
                 rdfs:label ?label ;
                 prov:generatedAtTime ?generatedAtTime ;
-                openpredict:has_features ?features ;
-                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                openpredict:has_features ?features .
+            ?model mls:specifiedBy [a mls:EvaluationMeasure ; 
                         rdfs:label "accuracy" ;
                         mls:hasValue ?accuracy ] .
-                OPTIONAL {
-                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                         rdfs:label "precision" ;
-                         mls:hasValue ?precision ] .
-                }
-                OPTIONAL {
-                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                         rdfs:label "f1" ;
-                         mls:hasValue ?f1 ] .
-                }
-                OPTIONAL {
-                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                         rdfs:label "recall" ;
-                         mls:hasValue ?recall ] .
-                }
-                OPTIONAL {
-                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                         rdfs:label "roc_auc" ;
-                         mls:hasValue ?roc_auc ] .
-                }
-                OPTIONAL {
-                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                         rdfs:label "average_precision" ;
-                         mls:hasValue ?average_precision ] .
-                }
+            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                    rdfs:label "precision" ;
+                    mls:hasValue ?precision ] .
+            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                    rdfs:label "f1" ;
+                    mls:hasValue ?f1 ] .
+            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                    rdfs:label "recall" ;
+                    mls:hasValue ?recall ] .
+            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                    rdfs:label "roc_auc" ;
+                    mls:hasValue ?roc_auc ] .
+            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                    rdfs:label "average_precision" ;
+                    mls:hasValue ?average_precision ] .
         }
         """
-    
-                    # [a mls:EvaluationMeasure ; 
-                    #     rdfs:label "average_precision" ;
-                    #     mls:hasValue ?average_precision ] ,
-                    # [a mls:EvaluationMeasure ; 
-                    #     rdfs:label "f1" ;
-                    #     mls:hasValue ?f1 ] ,
-                    # [a mls:EvaluationMeasure ; 
-                    #     rdfs:label "precision" ;
-                    #     mls:hasValue ?precision ] ,
-                    # [a mls:EvaluationMeasure ; 
-                    #     rdfs:label "recall" ;
-                    #     mls:hasValue ?recall ] ,
-                    # [a mls:EvaluationMeasure ; 
-                    #     rdfs:label "roc_auc" ;
-                    #     mls:hasValue ?roc_auc ] .
     qres = g.query(sparql_get_scores)
     features_json = {}
     for row in qres:
