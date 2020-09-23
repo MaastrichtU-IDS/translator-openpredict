@@ -480,12 +480,13 @@ def train_omim_drugbank_classifier(from_scratch=True):
     dump(clf, 'openpredict/data/models/drug_disease_model.joblib')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
-    # Get the list of features in the built model
+    # TODO: How can we get the list of features directly from the built model 
+    # The baseline features are here, but not the one added 
     drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
     disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
     model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
 
-    generate_classifier_metadata(scores, model_features, "Original OpenPredict classifier based on OMIM and DrugBank")
+    generate_classifier_metadata(scores, model_features, "OpenPredict classifier (OMIM-DrugBank)")
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
 

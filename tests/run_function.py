@@ -52,6 +52,9 @@ import pandas as pd
 # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
 # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
 
+# print(drug_features_df)
+# print(disease_features_df)
+
 # print(drug_df.index)
 # ## length=505 drugs
 
@@ -80,5 +83,3 @@ import pandas as pd
 # generate_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "Drugs")
 # generate_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "Diseases")
 # generate_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "Diseases")
-
-generate_classifier_metadata({'f1': 65.6}, ['TOTO'], "Original OpenPredict classifier based on OMIM and DrugBank")
