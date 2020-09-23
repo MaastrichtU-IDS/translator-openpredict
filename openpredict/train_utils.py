@@ -26,7 +26,7 @@ def generate_feature_metadata(id, description, type):
     g.add((feature_uri, DC.identifier, Literal(id)))
     g.add((feature_uri, DC.description, Literal(description)))
     g.add((feature_uri, URIRef(OPENPREDICT_NAMESPACE + 'embedding_type'), Literal(type)))
-    g.add((feature_uri, URIRef('http://www.w3.org/ns/prov#generatedAtTime'), Literal(datetime.now(), datatype=XSD.dateTime)))
+    # g.add((feature_uri, URIRef('http://www.w3.org/ns/prov#generatedAtTime'), Literal(datetime.now(), datatype=XSD.dateTime)))
 
     g.serialize(TTL_METADATA_FILE, format="ttl")
     return g
@@ -41,7 +41,7 @@ def generate_classifier_metadata(scores, model_features, label="OpenPredict clas
     :return: predictions in array of JSON object
     """
 
-    classifier_id = uuid.uuid1() 
+    classifier_id = str(uuid.uuid1())
     g = Graph()
     g.parse(TTL_METADATA_FILE, format="ttl")
 

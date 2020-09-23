@@ -141,13 +141,13 @@ def get_features(type):
     return features_json
 
 def get_models():
-    """Get models and their features
+    """Get models with their scores and features
     
-    :return: JSON with features
+    :return: JSON with models and features
     """
     g = Graph()
     g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
-
+    # ?average_precision ?f1 ?precision ?recall ?roc_auc
     sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
         PREFIX mls: <http://www.w3.org/ns/mls#>
         PREFIX prov: <http://www.w3.org/ns/prov#>
@@ -157,39 +157,65 @@ def get_models():
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX xml: <http://www.w3.org/XML/1998/namespace>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        SELECT DISTINCT ?model ?label ?generatedAtTime ?features ?accuracy 
-        ?average_precision ?f1 ?precision ?recall ?roc_auc
+        SELECT DISTINCT ?model ?label ?generatedAtTime ?features ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
+        
         WHERE {
             ?model a mls:ModelEvaluation ;
                 rdfs:label ?label ;
                 prov:generatedAtTime ?generatedAtTime ;
                 openpredict:has_features ?features ;
                 mls:specifiedBy [a mls:EvaluationMeasure ; 
-                    rdfs:label "accuracy" ;
-                    mls:hasValue ?accuracy ] ;
-                mls:specifiedBy [a mls:EvaluationMeasure ; 
-                    rdfs:label "average_precision" ;
-                    mls:hasValue ?average_precision ] ;
-                mls:specifiedBy [a mls:EvaluationMeasure ; 
-                    rdfs:label "f1" ;
-                    mls:hasValue ?f1 ] ;
-                mls:specifiedBy [a mls:EvaluationMeasure ; 
-                    rdfs:label "precision" ;
-                    mls:hasValue ?precision ] ;
-                mls:specifiedBy [a mls:EvaluationMeasure ; 
-                    rdfs:label "recall" ;
-                    mls:hasValue ?recall ] ;
-                mls:specifiedBy [a mls:EvaluationMeasure ; 
-                    rdfs:label "roc_auc" ;
-                    mls:hasValue ?roc_auc ] .
+                        rdfs:label "accuracy" ;
+                        mls:hasValue ?accuracy ] .
+                OPTIONAL {
+                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                         rdfs:label "precision" ;
+                         mls:hasValue ?precision ] .
+                }
+                OPTIONAL {
+                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                         rdfs:label "f1" ;
+                         mls:hasValue ?f1 ] .
+                }
+                OPTIONAL {
+                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                         rdfs:label "recall" ;
+                         mls:hasValue ?recall ] .
+                }
+                OPTIONAL {
+                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                         rdfs:label "roc_auc" ;
+                         mls:hasValue ?roc_auc ] .
+                }
+                OPTIONAL {
+                    ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+                         rdfs:label "average_precision" ;
+                         mls:hasValue ?average_precision ] .
+                }
         }
         """
+    
+                    # [a mls:EvaluationMeasure ; 
+                    #     rdfs:label "average_precision" ;
+                    #     mls:hasValue ?average_precision ] ,
+                    # [a mls:EvaluationMeasure ; 
+                    #     rdfs:label "f1" ;
+                    #     mls:hasValue ?f1 ] ,
+                    # [a mls:EvaluationMeasure ; 
+                    #     rdfs:label "precision" ;
+                    #     mls:hasValue ?precision ] ,
+                    # [a mls:EvaluationMeasure ; 
+                    #     rdfs:label "recall" ;
+                    #     mls:hasValue ?recall ] ,
+                    # [a mls:EvaluationMeasure ; 
+                    #     rdfs:label "roc_auc" ;
+                    #     mls:hasValue ?roc_auc ] .
     qres = g.query(sparql_get_scores)
     features_json = {}
     for row in qres:
         print(row.label)
-        if features_json[row.model]:
-            features_json[row.model]['features'].append(row.scoreValue)
+        if row.model in features_json:
+            features_json[row.model]['features'].append(row.features)
         else:
             features_json[row.model] = {
                 "label": row.label,

@@ -49,6 +49,9 @@ import pandas as pd
 
 # (drug_df, disease_df) = load('openpredict/data/features/drug_disease_dataframes.joblib')
 
+# drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
+# disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
+
 # print(drug_df.index)
 # ## length=505 drugs
 
@@ -63,16 +66,19 @@ import pandas as pd
 # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
 # # print(drug_df.columns.get_level_values(0).drop_duplicates(keep=False))
 # # df.drop_duplicates(keep=False, inplace=True)
+
 # print(drug_features_df)
 # pd.set_option("display.max_rows", 10, "display.max_columns", None)
 # print(drug_df)
     # (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
 # print(features.feature_names)
 
-generate_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
-generate_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "Drugs")
-generate_feature_metadata("PPI-SIM", "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network", "Drugs")
-generate_feature_metadata("TC", "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity", "Drugs")
-generate_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "Drugs")
-generate_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "Diseases")
-generate_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "Diseases")
+# generate_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
+# generate_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "Drugs")
+# generate_feature_metadata("PPI-SIM", "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network", "Drugs")
+# generate_feature_metadata("TC", "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity", "Drugs")
+# generate_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "Drugs")
+# generate_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "Diseases")
+# generate_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "Diseases")
+
+generate_classifier_metadata({'f1': 65.6}, ['TOTO'], "Original OpenPredict classifier based on OMIM and DrugBank")

@@ -483,7 +483,7 @@ def train_omim_drugbank_classifier(from_scratch=True):
     # Get the list of features in the built model
     drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
     disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
-    model_features = drug_features_df + disease_features_df
+    model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
 
     generate_classifier_metadata(scores, model_features, "Original OpenPredict classifier based on OMIM and DrugBank")
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
