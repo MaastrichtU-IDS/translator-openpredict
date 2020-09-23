@@ -33,13 +33,19 @@ def adjcencydict2matrix(df, name1, name2):
 def addEmbedding(embedding_file, emb_name, types):
     """Add embedding to the drug similarity matrix dataframe
 
-    :param embedding_file: Dataframe
+    :param embedding_file: JSON file containing records ('entity': id, 'embdding': array of numbers )
     :param emb_name: new column name to be added
     :param types: types in the embedding vector ['Drugs', 'Diseases', 'Both']
     """
-    emb_df = pd.read_csv(embedding_file, sep='\t') 
-    emb_df.set_index('Drug',inplace=True) 
+    emb_df = pd.read_json(embedding_file, orient='records') 
+    #emb_df = pd.read_csv(embedding_file) 
+    emb_df.entity= emb_df.entity.str.replace('DRUGBANK:','')
+    #print (emb_df.head())
+    emb_df.set_index('entity',inplace=True) 
+    
     print (emb_df.head())
+    emb_size = len(emb_df.iloc[0]['embedding'])
+    print ('Emebdding dimension',emb_size)
 
     (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
 
@@ -54,12 +60,15 @@ def addEmbedding(embedding_file, emb_name, types):
     print ("Number of drugs that do not exist in the embedding ", len(names)- len(entity_exist))
     # Copy only drug entity embeddings 
     embedding_df = emb_df.loc[entity_exist].copy()
+    emb_matrix = np.empty(shape=(0, emb_size))
     for d in names:
         # add zeros values for drugs that do not exist in the embedding
         if d not in emb_df.index:
-            embedding_df.loc[d]= np.zeros(emb_df.shape[1])
+            emb_matrix= np.vstack([emb_matrix, np.zeros(emb_size)])
+        else:
+            emb_matrix= np.vstack([emb_matrix, np.array(embedding_df.loc[d]['embedding'])])
     # calculate cosine similarity for given embedding
-    sim_mat =cosine_similarity(embedding_df.loc[names].values, embedding_df.loc[names].values)
+    sim_mat =cosine_similarity(emb_matrix, emb_matrix)
     # convert to DF
     df_sim = pd.DataFrame(sim_mat, index = names, columns=names)
     # if there is NA (It is the case when both pairs have zero values-no embedding exist)
@@ -67,7 +76,7 @@ def addEmbedding(embedding_file, emb_name, types):
     # make multi-index dataframe adding a new column with given embedding name
     df_sim_m = pd.concat([df_sim], axis=1, keys=[emb_name])
     # finally concatenate the embedding-based similarity to other drug similarity matrix
-    print (df_sim_m.head())
+    print (df_sim_m.sample(5))
 
     # add to the similarity tensor
 
@@ -78,6 +87,9 @@ def addEmbedding(embedding_file, emb_name, types):
     
     dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
     print ("New embedding based similarity was added to the similarity tensor")
+
+    # train the model again
+    train_omim_drugbank_classifier(from_scratch=False)
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
     #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
     return "Done" 
