@@ -85,7 +85,8 @@ def addEmbedding(embedding_file, emb_name, types):
     elif types == "Diseases":
         disease_df= pd.concat([disease_df, df_sim_m],  axis=1)  
     
-    dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    dump((drug_df, disease_df), pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
     print ("New embedding based similarity was added to the similarity tensor")
 
     # train the model again

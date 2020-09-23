@@ -71,7 +71,7 @@ def post_embedding(types, emb_name, description):
     print (emb_name, types)
     addEmbedding(embedding_file, emb_name, types)
     print ('Embeddings uploaded')
-    train_omim_drugbank_classifier(False)
+    # train_omim_drugbank_classifier(False)
     generate_feature_metadata(emb_name, description, types)
     return { 'Embeddings added': 200 }
     # Code for the different calls of the app
