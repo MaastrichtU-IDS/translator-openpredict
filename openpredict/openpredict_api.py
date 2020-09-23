@@ -107,21 +107,28 @@ def get_predicates():
     }
     return openpredict_predicates
 
-def get_features():
+def get_features(type):
     """Get features in the model
     
     :return: JSON with features
     """
     g = Graph()
     g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
-    qres = g.query(
-    """SELECT DISTINCT ?id ?description ?embeddingType
-       WHERE {
-          ?feature a <http://www.w3.org/ns/mls#Feature> ;
-            <http://purl.org/dc/elements/1.1/identifier> ?id ;
-            <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
-            <http://purl.org/dc/elements/1.1/description> ?description .
-       }""")
+
+    type_filter = ''
+    if (type != "All"):
+        type_filter = 'FILTER(?embeddingType = "' + type + '")'
+
+    sparql_query = """SELECT DISTINCT ?id ?description ?embeddingType
+        WHERE {{
+            ?feature a <http://www.w3.org/ns/mls#Feature> ;
+                <http://purl.org/dc/elements/1.1/identifier> ?id ;
+                <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+                <http://purl.org/dc/elements/1.1/description> ?description .
+            {type_filter}
+        }}
+        """.format(type_filter=type_filter)
+    qres = g.query(sparql_query)
     print('QRES')
     print(len(qres))
     features_json = {}
@@ -131,6 +138,70 @@ def get_features():
             "description": row.description,
             "type": row.embeddingType
         }
+    return features_json
+
+def get_models():
+    """Get models and their features
+    
+    :return: JSON with features
+    """
+    g = Graph()
+    g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
+
+    sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
+        PREFIX mls: <http://www.w3.org/ns/mls#>
+        PREFIX prov: <http://www.w3.org/ns/prov#>
+        PREFIX openpredict: <https://w3id.org/openpredict/>
+        PREFIX dc: <http://purl.org/dc/elements/1.1/>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX xml: <http://www.w3.org/XML/1998/namespace>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        SELECT DISTINCT ?model ?label ?generatedAtTime ?features ?accuracy 
+        ?average_precision ?f1 ?precision ?recall ?roc_auc
+        WHERE {
+            ?model a mls:ModelEvaluation ;
+                rdfs:label ?label ;
+                prov:generatedAtTime ?generatedAtTime ;
+                openpredict:has_features ?features ;
+                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                    rdfs:label "accuracy" ;
+                    mls:hasValue ?accuracy ] ;
+                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                    rdfs:label "average_precision" ;
+                    mls:hasValue ?average_precision ] ;
+                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                    rdfs:label "f1" ;
+                    mls:hasValue ?f1 ] ;
+                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                    rdfs:label "precision" ;
+                    mls:hasValue ?precision ] ;
+                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                    rdfs:label "recall" ;
+                    mls:hasValue ?recall ] ;
+                mls:specifiedBy [a mls:EvaluationMeasure ; 
+                    rdfs:label "roc_auc" ;
+                    mls:hasValue ?roc_auc ] .
+        }
+        """
+    qres = g.query(sparql_get_scores)
+    features_json = {}
+    for row in qres:
+        print(row.label)
+        if features_json[row.model]:
+            features_json[row.model]['features'].append(row.scoreValue)
+        else:
+            features_json[row.model] = {
+                "label": row.label,
+                "generatedAtTime": row.generatedAtTime,
+                'features': [row.features],
+                'accuracy': row.accuracy,
+                'average_precision': row.average_precision,
+                'f1': row.f1,
+                'precision': row.precision,
+                'recall': row.recall,
+                'roc_auc': row.roc_auc
+            }
     return features_json
 
 # TODO: get_predict wrapped in ReasonerStdApi

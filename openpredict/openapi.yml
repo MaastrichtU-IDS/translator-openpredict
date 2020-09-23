@@ -42,10 +42,41 @@ paths:
   /features:
     get:
       operationId: openpredict.openpredict_api.get_features
-      summary: Return the features trained in the model
-      description: "Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both "
+      summary: Return the features trained in the models
+      description: "Return the features trained in the model, for Drugs, Diseases or Both "
       tags:
       - openpredict
+      parameters:
+        - name: type
+          in: query
+          description: Type of the entities in the features
+          required: true
+          schema:
+            type: string
+            enum: ["All", "Drugs", "Diseases", "Both"]
+            default: "All" 
+      responses:
+        '200':
+          description: OK
+          content:
+              application/json: {}
+
+  /models:
+    get:
+      operationId: openpredict.openpredict_api.get_models
+      summary: Return the models with their training features and scores
+      description: "Return the models with their training features and scores"
+      tags:
+      - openpredict
+      # parameters:
+      #   - name: type
+      #     in: query
+      #     description: Type of the entities in the features
+      #     required: true
+      #     schema:
+      #       type: string
+      #       enum: ["All", "Drugs", "Diseases", "Both"]
+      #       default: "All" 
       responses:
         '200':
           description: OK
