@@ -2,7 +2,7 @@ import connexion
 import logging
 from datetime import datetime
 from openpredict.predict_utils import get_predictions
-from openpredict.train_utils import generate_feature_metadata
+from openpredict.train_utils import generate_feature_metadata, get_features_from_model
 from openpredict.predict_model_omim_drugbank import addEmbedding, train_omim_drugbank_classifier
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from rdflib import Graph, Literal, RDF, URIRef
@@ -69,10 +69,9 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
 def post_embedding(types, emb_name, description):
     embedding_file = connexion.request.files['embedding_file']
     print (emb_name, types)
-    addEmbedding(embedding_file, emb_name, types)
+    addEmbedding(embedding_file, emb_name, types, description)
     print ('Embeddings uploaded')
     # train_omim_drugbank_classifier(False)
-    generate_feature_metadata(emb_name, description, types)
     return { 'Embeddings added': 200 }
     # Code for the different calls of the app
 
@@ -112,33 +111,7 @@ def get_features(type):
     
     :return: JSON with features
     """
-    g = Graph()
-    g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
-
-    type_filter = ''
-    if (type != "All"):
-        type_filter = 'FILTER(?embeddingType = "' + type + '")'
-
-    sparql_query = """SELECT DISTINCT ?id ?description ?embeddingType
-        WHERE {{
-            ?feature a <http://www.w3.org/ns/mls#Feature> ;
-                <http://purl.org/dc/elements/1.1/identifier> ?id ;
-                <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
-                <http://purl.org/dc/elements/1.1/description> ?description .
-            {type_filter}
-        }}
-        """.format(type_filter=type_filter)
-    qres = g.query(sparql_query)
-    print('QRES')
-    print(len(qres))
-    features_json = {}
-    for row in qres:
-        print(row.id)
-        features_json[row.id] = {
-            "description": row.description,
-            "type": row.embeddingType
-        }
-    return features_json
+    return get_features_from_model(type)
 
 def get_models():
     """Get models with their scores and features

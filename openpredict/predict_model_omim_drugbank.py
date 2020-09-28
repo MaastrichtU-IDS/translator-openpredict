@@ -10,7 +10,7 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 import pkg_resources
-from openpredict.train_utils import generate_classifier_metadata
+from openpredict.train_utils import generate_classifier_metadata, get_features_from_model, generate_feature_metadata
 from sklearn.metrics.pairwise import cosine_similarity
 
 def adjcencydict2matrix(df, name1, name2):
@@ -30,12 +30,13 @@ def adjcencydict2matrix(df, name1, name2):
     return df.pivot(index=name1, columns=name2)
 
 
-def addEmbedding(embedding_file, emb_name, types):
+def addEmbedding(embedding_file, emb_name, types, description):
     """Add embedding to the drug similarity matrix dataframe
 
     :param embedding_file: JSON file containing records ('entity': id, 'embdding': array of numbers )
     :param emb_name: new column name to be added
     :param types: types in the embedding vector ['Drugs', 'Diseases', 'Both']
+    :param description: description of the embedding provenance
     """
     emb_df = pd.read_json(embedding_file, orient='records') 
     #emb_df = pd.read_csv(embedding_file) 
@@ -89,6 +90,7 @@ def addEmbedding(embedding_file, emb_name, types):
     dump((drug_df, disease_df), pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
     print ("New embedding based similarity was added to the similarity tensor")
 
+    generate_feature_metadata(emb_name, description, types)
     # train the model again
     train_omim_drugbank_classifier(from_scratch=False)
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
@@ -482,9 +484,10 @@ def train_omim_drugbank_classifier(from_scratch=True):
 
     # TODO: How can we get the list of features directly from the built model 
     # The baseline features are here, but not the one added 
-    drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
-    disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
-    model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
+    # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
+    # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
+    # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
+    model_features = get_features_from_model('All').keys()
 
     generate_classifier_metadata(scores, model_features, "OpenPredict classifier (OMIM-DrugBank)")
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))

@@ -10,6 +10,49 @@ OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'
 MLS_NAMESPACE = 'http://www.w3.org/ns/mls#'
 BIOLINK_NAMESPACE = 'https://w3.org/biolink/'
 
+def get_features_from_model(type='All'):
+    """Get features in the model
+    
+    :param type: type of the feature (All, Both, Drug, Disease)
+    :return: JSON with features
+    """
+    g = Graph()
+    g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
+
+    type_filter = ''
+    if (type != "All"):
+        type_filter = 'FILTER(?embeddingType = "' + type + '")'
+
+    sparql_query = """SELECT DISTINCT ?id ?description ?embeddingType
+        WHERE {{
+            ?feature a <http://www.w3.org/ns/mls#Feature> ;
+                <http://purl.org/dc/elements/1.1/identifier> ?id ;
+                <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+                <http://purl.org/dc/elements/1.1/description> ?description .
+            {type_filter}
+        }}
+        """.format(type_filter=type_filter)
+    qres = g.query(sparql_query)
+    print('QRES')
+    print(len(qres))
+    features_json = {}
+    for row in qres:
+        print(row.id)
+        features_json[row.id] = {
+            "description": row.description,
+            "type": row.embeddingType
+        }
+    return features_json
+
+def get_model_features(from_scratch=False):
+    """Get features for a trained model from the RDF metadata
+
+    :param from_scratch: model restarted from default features
+    :return: List of features for the model
+    """
+
+    return features_list
+
 def generate_feature_metadata(id, description, type):
     """Generate RDF metadata for a feature
 
