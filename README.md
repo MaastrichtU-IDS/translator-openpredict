@@ -217,12 +217,13 @@ docker-compose down
 
 # Acknowledgments
 
-* Service supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 * Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
+* Service funded by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
+
+[![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)](https://ncats.nih.gov/translator/about)
 
 # See also 👀
 
 * **[Documentation to install and run in development 📝](docs/dev)**
 * **[Documentation generated from the source code 📖](docs)**
-

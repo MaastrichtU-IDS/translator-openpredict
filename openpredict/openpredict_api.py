@@ -7,6 +7,7 @@ from openpredict.predict_model_omim_drugbank import addEmbedding, train_omim_dru
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from rdflib import Graph, Literal, RDF, URIRef
 import pkg_resources
+from flask_cors import CORS
 
 # import openpredict.utils
 
@@ -53,6 +54,9 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     api.add_api('openapi.yml', arguments={'server_url': server_url})
     # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
 
+    # Add CORS support
+    CORS(api.app)
+
     logging.info('Start spark:' + str(start_spark))
     if start_spark:
         try:
@@ -63,7 +67,6 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
 
     print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(port=port, debug=debug, server=deployment_server)
-
 
 
 def post_embedding(types, emb_name, description):
