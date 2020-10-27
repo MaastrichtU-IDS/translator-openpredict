@@ -14,6 +14,7 @@ services:
     environment: 
       OPENPREDICT_USERNAME: ${OPENPREDICT_USERNAME}
       OPENPREDICT_PASSWORD: ${OPENPREDICT_PASSWORD}
+      # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
       PYSPARK_PYTHON: /opt/conda/bin/python3
       PYSPARK_DRIVER_PYTHON: /opt/conda/bin/python3
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/

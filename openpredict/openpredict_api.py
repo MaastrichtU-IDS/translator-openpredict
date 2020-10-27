@@ -2,30 +2,11 @@ import os
 import connexion
 import logging
 from datetime import datetime
-from openpredict.predict_utils import get_predictions
+from openpredict.openpredict_utils import get_predictions
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, train_model
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
-
-# import openpredict.utils
-
-def start_spark():
-    """Start local Spark cluster when possible to improve performance
-    """
-    logging.info("Trying to find a Spark cluster...")
-    import findspark
-    from pyspark import SparkConf, SparkContext
-    findspark.init()
-
-    config = SparkConf()
-    config.setMaster("local[*]")
-    config.set("spark.executor.memory", "5g")
-    config.set('spark.driver.memory', '5g')
-    config.set("spark.memory.offHeap.enabled",True)
-    config.set("spark.memory.offHeap.size","5g") 
-    sc = SparkContext(conf=config, appName="OpenPredict")
-    print (sc)
 
 def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -50,19 +31,21 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     
     api = connexion.App(__name__, options={"swagger_url": ""})
 
-    api.add_api('openapi.yml', arguments={'server_url': 'https://openpredict.137.120.31.102.nip.io'})
+    ## Server URL not taken into account when running in Docker
+    # api.add_api('openapi.yml', arguments={'server_url': 'https://openpredict.137.120.31.102.nip.io'})
+    api.add_api('openapi.yml', arguments={'server_url': server_url})
     # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
 
     # Add CORS support
     CORS(api.app)
 
-    logging.info('Start spark:' + str(start_spark))
-    if start_spark:
-        try:
-            start_spark()
-            logging.info('Started Spark locally')
-        except:
-            logging.info("Could not start Spark locally")
+    # logging.info('Start spark:' + str(start_spark))
+    # if start_spark:
+    #     try:
+    #         start_spark()
+    #         logging.info('Started Spark locally')
+    #     except:
+    #         logging.info("Could not start Spark locally")
 
     print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(port=port, debug=debug, server=deployment_server)

@@ -3,9 +3,9 @@
 * [openpredict](#.openpredict)
 * [openpredict.reasonerapi\_parser](#.openpredict.reasonerapi_parser)
   * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_parser.typed_results_to_reasonerapi)
-* [openpredict.predict\_utils](#.openpredict.predict_utils)
-  * [get\_predictions](#.openpredict.predict_utils.get_predictions)
-  * [get\_labels](#.openpredict.predict_utils.get_labels)
+* [openpredict.predict\_utils](#.openpredict.openpredict_utils)
+  * [get\_predictions](#.openpredict.openpredict_utils.get_predictions)
+  * [get\_labels](#.openpredict.openpredict_utils.get_labels)
 * [openpredict.rdf\_utils](#.openpredict.rdf_utils)
   * [insert\_graph\_in\_sparql\_endpoint](#.openpredict.rdf_utils.insert_graph_in_sparql_endpoint)
   * [query\_sparql\_endpoint](#.openpredict.rdf_utils.query_sparql_endpoint)
@@ -64,10 +64,10 @@ Run the get_predict to get the QueryGraph edges and nodes
 
 Results as ReasonerAPI object
 
-<a name=".openpredict.predict_utils"></a>
+<a name=".openpredict.openpredict_utils"></a>
 # openpredict.predict\_utils
 
-<a name=".openpredict.predict_utils.get_predictions"></a>
+<a name=".openpredict.openpredict_utils.get_predictions"></a>
 #### get\_predictions
 
 ```python
@@ -87,7 +87,7 @@ Run classifiers to get predictions
 
 predictions in array of JSON object
 
-<a name=".openpredict.predict_utils.get_labels"></a>
+<a name=".openpredict.openpredict_utils.get_labels"></a>
 #### get\_labels
 
 ```python

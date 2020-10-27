@@ -8,10 +8,13 @@ import numpy as np
 import pandas as pd
 from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
 from sklearn.model_selection import GroupKFold, StratifiedKFold
+from sklearn.metrics.pairwise import cosine_similarity
 from joblib import dump, load
 import pkg_resources
 from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata
-from sklearn.metrics.pairwise import cosine_similarity
+# from openpredict.openpredict_utils import get_spark_context
+# from openpredict.openpredict_utils import get_spark_context
+# from openpredict.openpredict_utils import get_predictions
 
 hyper_params = {
     'penalty': 'l2',
@@ -20,6 +23,49 @@ hyper_params = {
     'C': 1.0,
     'random_state': 100
 }
+
+def get_spark_context():
+    """Get Spark context, either from Spark Master URL to a Spark cluster
+    If not URL is provided, then it will try to run Spark locally 
+
+    :return: Spark context
+    """
+    spark_master_url = os.getenv('SPARK_MASTER_URL')
+
+    sc = None
+    if os.getenv('SPARK_HOME'):
+        # Do not try to run Spark if SPARK_HOME env variable not set
+        logging.info('SPARK env var found')
+        # import findspark
+        # findspark.init(os.getenv('SPARK_HOME'))
+        import pyspark
+        if spark_master_url:
+            logging.info('SPARK_MASTER_URL provided, connecting to the Spark cluster ✨')
+            # e.g. spark://my-spark-spark-master:7077
+            sc = pyspark.SparkContext(appName="Pi", master=spark_master_url)
+            logging.info(sc)
+        else:
+            try:
+                logging.info('SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
+                sc = pyspark.SparkContext.getOrCreate()
+                logging.info(sc)
+            except:
+                logging.info("Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
+    else:
+        logging.info('SPARK_HOME not found, using pandas to handle dataframes 🐼')
+    return sc
+    ## Old way:
+    #     import findspark
+    #     from pyspark import SparkConf, SparkContext
+    #     findspark.init()
+
+    #     config = SparkConf()
+    #     config.setMaster("local[*]")
+    #     config.set("spark.executor.memory", "5g")
+    #     config.set('spark.driver.memory', '5g')
+    #     config.set("spark.memory.offHeap.enabled",True)
+    #     config.set("spark.memory.offHeap.size","5g") 
+    #     sc = SparkContext(conf=config, appName="OpenPredict")
 
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
@@ -312,7 +358,7 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
 
 
 def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease):
-    """Compute combined similarities
+    """Compute combined similarities. Use Spark if available for speed, otherwise use pandas
 
     :param pairs_train: Pairs used to train
     :param pairs_test: Pairs used to test
@@ -322,22 +368,21 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
     :param disease_df: Disease dataframe
     :param knownDrugDisease: Known drug-disease associations
     """
-    try:
-        # sc = pyspark.SparkContext(appName="Pi", master="spark://my-spark-spark-master:7077")
-        from pyspark import SparkConf, SparkContext
-        sc = SparkContext.getOrCreate()
-        drug_df_bc= sc.broadcast(drug_df)
-        disease_df_bc = sc.broadcast(disease_df)
-        knownDrugDis_bc = sc.broadcast(knownDrugDisease)
-        print ('Running Spark...')
+    spark_context = get_spark_context()
+    if spark_context:
+        drug_df_bc= spark_context.broadcast(drug_df)
+        disease_df_bc = spark_context.broadcast(disease_df)
+        knownDrugDis_bc = spark_context.broadcast(knownDrugDisease)
+        logging.info('Running Spark ✨')
        
-        train_df= sparkBuildFeatures(sc, pairs_train, classes_train, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        test_df= sparkBuildFeatures(sc, pairs_test, classes_test, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        logging.info("Finishing Spark jobs...")
-    except:
-        logging.info("Spark cluster not found ...")
+        train_df= sparkBuildFeatures(spark_context, pairs_train, classes_train, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        test_df= sparkBuildFeatures(spark_context, pairs_test, classes_test, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        logging.info("Finishing Spark jobs 🏁")
+    else:
+        logging.info("Spark cluster not found, using pandas 🐼")
         train_df  = createFeatureDF(pairs_train, classes_train, knownDrugDisease, drug_df, disease_df)
         test_df = createFeatureDF(pairs_test, classes_test, knownDrugDisease, drug_df, disease_df)
+    
     return train_df, test_df
 
 
@@ -420,6 +465,7 @@ def train_model(from_scratch=True):
     It returns, and stores the generated classifier as a `.joblib` file 
     in the `data/models` folder,
     
+    :param from_scratch: Train the model for scratch (True by default)
     :return: Classifier of predicted similarities and scores
     """
     time_start = datetime.now()
@@ -512,19 +558,23 @@ def train_model(from_scratch=True):
 
 
 def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
-
-    try:
-        logging.info('Running Spark...')
-        from pyspark import SparkConf, SparkContext
-        sc = SparkContext.getOrCreate()
-        logging.info(sc)
-        drug_df_bc= sc.broadcast(drug_df)
-        disease_df_bc = sc.broadcast(disease_df)
-        knownDrugDis_bc = sc.broadcast(pairs[classes==1])
-        feature_df= sparkBuildFeatures(sc, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-
-    except:
-        logging.info("Spark cluster not found. Using pandas to create feature dataframes")
+    """Create features dataframes. Use Spark if available for speed, otherwise use pandas
+    :param pairs: pairs
+    :param classes: classes
+    :param drug_df: drug 
+    :param disease_df: disease dataframe
+    :return: Feature dataframe
+    """
+    spark_context = get_spark_context()
+    if spark_context:
+        logging.info('Running Spark ✨')
+        drug_df_bc= spark_context.broadcast(drug_df)
+        disease_df_bc = spark_context.broadcast(disease_df)
+        knownDrugDis_bc = spark_context.broadcast(pairs[classes==1])
+        feature_df= sparkBuildFeatures(spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        logging.info("Finishing Spark jobs 🏁")
+    else:
+        logging.info("Spark cluster not found, using pandas 🐼")
         feature_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
 
     return feature_df
@@ -599,7 +649,6 @@ def query_omim_drugbank_classifier(input_curie):
 
     test_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
     
-
     # Get list of drug-disease pairs (should be saved somewhere from previous computer?)
     # Another API: given the type, what kind of entities exists?
     # Getting list of Drugs and Diseases:

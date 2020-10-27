@@ -4,6 +4,9 @@ build/
 dist/
 __pycache__/
 
-.env/
+.env
 .venv/
 venv/
+
+openpredict/data/features/drug_disease_dataframes.joblib
+openpredict/data/models/drug_disease_model.joblib
