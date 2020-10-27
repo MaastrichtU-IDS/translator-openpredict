@@ -1,7 +1,7 @@
 ---
 name: Request embeddings integration
 about: Request new embeddings to be integrated from a specific dataset to the OpenPredict model
-title: 'Add [DATASET] embeddings'
+title: 'Add DATASET_NAME embeddings'
 labels: embedding-request
 assignees: vemonet, rcelebi
 ---
@@ -20,6 +20,7 @@ Public URL where the dataset can be download or SPARQL endpoint URL.
 - [ ] CSV file (bulk download)
 - [ ] JSON API
 - [ ] CSV API
+- [ ] XML file
 - [ ] SQL database
 
 #### Data model informations

@@ -4,39 +4,40 @@ about: Report a bug, issue or missing documentation related to the OpenPredict A
 title: ''
 labels: api-deployment, bug
 assignees: 'vemonet'
-
 ---
 
-**Describe the bug**
+#### Describe the problem
+
 A clear and concise description of what the bug is.
 
-**Which version of the action are you using?**
+#### Which version of the package are you using?
 
-- [ ] `v1`
-- [ ] `main`
-- [ ] Some other tag (precise it)
+Provide the version of package from PyPI the branch (e.g. `main`) 
 
-**Environment**
-- [ ] self-hosted
+#### Environment
+
 - [ ] Linux
+- [ ] MacOS
+- [ ] Windows
 
-If applicable, please specify if you're using a container
+If applicable, please specify if you're using a Docker container
 
-**Spark Versions**
-Please list all of the effected versions of Spark (`3.0.1`, etc.)
+#### To Reproduce
 
-**To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
 2. Click on '....'
-3. Scroll down to '....'
+3. Write '....'
 4. See error
 
-**Run/Repo Url**
-If applicable, and if your repo/run is public, please include a URL so it is easier for us to investigate.
+#### Problematic repository URL
 
-**Screenshots**
+If applicable, and if your repository is public, please include a URL so it is easier for us to investigate.
+
+#### Screenshots
+
 If applicable, add screenshots to help explain your problem.
 
-**Additional context**
+#### Additional context
+
 Add any other context about the problem here.
