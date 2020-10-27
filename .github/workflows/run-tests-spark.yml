@@ -37,8 +37,10 @@ jobs:
     - run: |-
         python --version
         which python
+        pip --version
         python3 --version
         which python3
+        pip3 --version
 
     - name: Install dependencies
       run: |
