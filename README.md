@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) 
 
-**OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug).
+**OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). Metadata about runs and model are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
 
 # Use the API 📬
 
@@ -94,126 +94,9 @@ The `/predicates` operation will return the entities and relations provided by t
 
 You can find a Jupyter Notebook with [examples to query the OpenPredict API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
-# Deploy your API 📦
+# Deploy OpenPredict API
 
-You can also use OpenPredict to build new classifiers, and deploy your API.
-
-> Requires [Python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/)
-
-### Install OpenPredict 📥
-
-#### Install the package
-
-Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict) (or see below to [run the API with Docker](#option-3-run-with-docker))
-
-```bash
-pip3 install openpredict
-```
-
-#### Later: update the package
-
-Upgrade to the latest release if you have a older version installed:
-
-```bash
-pip3 install --upgrade openpredict
-```
-
-#### Optional: isolate with a Virtual Environment
-
-If you are facing conflict with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder before installing OpenPredict:
-
-```bash
-# Create the virtual environment folder in your workspace
-python3 -m venv .venv
-# Activate it using a script in the created folder
-source .venv/bin/activate
-```
-
-### Train the model 🚅
-
-Run the pipeline to train the model used by the OpenPredict API.
-
-From a Python script:
-
-```python
-from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifier
-
-train_omim_drugbank_classifier()
-```
-
-Or using the command line:
-
-```bash
-openpredict train-model
-```
-
-> Work in progress
->
-
-### Deploy the API 🛩️
-
-3 options are available to deploy the API:
-
-#### Option 1: Run from the command line
-
-Use the `openpredict` CLI to start the API using the built classifiers:
-
-```bash
-openpredict start-api
-```
-
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-Provide the port and debug flag as arguments:
-
-```bash
-openpredict start-api --port 8808 --debug
-```
-
-#### Option 2: Run from a Python script
-
-```python
-from openpredict import openpredict_api
-
-openpredict_api.start_api(8808)
-```
-
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-> Run by default in production, set `debug = True` to run in development environments. 
-
-#### Option 3: Run with Docker
-
-Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
-
-Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
-
-```bash
-git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
-cd translator-openpredict
-```
-
-Build and start the `openpredict-api` container with [docker-compose 🐳](https://docs.docker.com/compose/)
-
-```bash
-docker-compose up -d
-```
-
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-> We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
-
-Check the logs:
-
-```bash
-docker-compose logs
-```
-
-Stop the container:
-
-```bash
-docker-compose down
-```
+See the **[documentation to deploy the OpenPredict API 📝](docs/dev)** locally or with Docker.
 
 # Acknowledgments
 
@@ -223,7 +106,3 @@ docker-compose down
 
 [![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)](https://ncats.nih.gov/translator/about)
 
-# See also 👀
-
-* **[Documentation to install and run in development 📝](docs/dev)**
-* **[Documentation generated from the source code 📖](docs)**

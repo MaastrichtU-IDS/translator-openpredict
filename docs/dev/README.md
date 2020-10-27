@@ -1,4 +1,4 @@
-Documentation to run the **Translator OpenPredict API** in development.
+Documentation to deploy the **Translator OpenPredict API**.
 
 > Contributions, [feedbacks](https://github.com/MaastrichtU-IDS/translator-openpredict/issues) and pull requests are welcomed!
 
@@ -7,18 +7,34 @@ This repository uses [GitHub Actions](https://github.com/MaastrichtU-IDS/transla
 * Automatically run tests at each push to the `master` branch
 * Publish the [OpenPredict package to PyPI](https://pypi.org/project/openpredict/) when a release is created (N.B.: the version of the package needs to be increased in [setup.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/setup.py#L6) before).
 
-# Alternative: install for dev 📥
+See [here](https://maastrichtu-ids.github.io/translator-openpredict/docs) for the automatically generated Python documentation 📖
+
+# Install OpenPredict 📥
+
+> Requires [Python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/)
 
 Install `openpredict` locally, if you want to run **OpenPredict** in development, make changes to the source code, and build new models.
 
-### Clone
+The **OpenPredict API store its data in a  RDF triplestore**. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore. You can pass the credentials using environment variables `OPENPREDICT_USERNAME` and `OPENPREDICT_PASSWORD`
+
+### Install from PyPI
+
+Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict) (or see below to [run the API with Docker](#option-3-run-with-docker))
+
+```bash
+pip3 install openpredict
+```
+
+### Install from the source code
+
+All contribution to OpenPredict are welcome!
+
+Clone this repository:
 
 ```bash
 git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
-
-### Install
 
 This will install `openpredict` and update the package automatically when the files changes locally 🔃
 
@@ -26,11 +42,24 @@ This will install `openpredict` and update the package automatically when the fi
 pip3 install -e .
 ```
 
-# Run in dev 🚧
+#### Optional: isolate with a Virtual Environment
 
-### Define environment variable
+If you are facing conflict with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder before installing OpenPredict:
 
-For triplestore credentials and the APIKEY to use when querying the API
+```bash
+# Create the virtual environment folder in your workspace
+python3 -m venv .venv
+# Activate it using a script in the created folder
+source .venv/bin/activate
+```
+
+# Deploy OpenPredict API 🛩️
+
+The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore
+
+### Define environment variables
+
+Define the environment variables for the triplestore credentials and the APIKEY in your local terminal
 
 ```bash
 export OPENPREDICT_USERNAME=import_user
@@ -38,15 +67,78 @@ export OPENPREDICT_PASSWORD=password
 export OPENPREDICT_APIKEY=myapikey
 ```
 
-### Start API
+3 options are available to deploy the API:
 
-Use the CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
+#### Option 1: Run from the command line ⌨️
+
+Use the `openpredict` CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
 
 ```bash
 openpredict start-api --debug
 ```
 
-### Run tests
+You can also start the API in production settings using [Tornado 🌪️](https://www.tornadoweb.org/en/stable/)
+
+```bash
+openpredict start-api
+```
+
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
+
+You can provide the API port as argument:
+
+```bash
+openpredict start-api --port 8808
+```
+
+#### Option 2: Run from a Python script 🐍
+
+```python
+from openpredict import openpredict_api
+
+openpredict_api.start_api(8808)
+```
+
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
+
+> Run by default in production, set `debug = True` to run in development environments. 
+
+#### Option 3: Run with Docker 🐳
+
+Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
+
+1. Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
+
+```bash
+git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+cd translator-openpredict
+```
+
+2. Change the triplestore credentials and API key in the `.env` file
+
+3. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
+
+```bash
+docker-compose up -d
+```
+
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
+
+> We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
+
+Check the logs:
+
+```bash
+docker-compose logs
+```
+
+Stop the container:
+
+```bash
+docker-compose down
+```
+
+## Run tests ✔️
 
 Run the **OpenPredict API** tests locally:
 
@@ -60,7 +152,7 @@ Run a specific test in a file, and display `print` in the output:
 pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
-# Create a new API service
+# Create a new API service 📝
 
 1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
 
@@ -123,10 +215,5 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 
 The data model to represent runs, models evaluation, features, etc is based on the Machine Learning Schema. See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html)
 
-> See the OpenPredict diagram in `docs/OpenPREDICT_datamodel.jpg`
-
-# See also 👀
-
-* **[Documentation main page 🔮🐍](https://maastrichtu-ids.github.io/translator-openpredict)**
-* **[Documentation generated from the source code 📖](https://maastrichtu-ids.github.io/translator-openpredict/docs)**
+![OpenPredict datamodel](/docs/OpenPREDICT_datamodel.jpg)
 
