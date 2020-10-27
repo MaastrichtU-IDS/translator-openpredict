@@ -53,7 +53,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-# Deploy OpenPredict API 🛩️
+# Deploy the OpenPredict API
 
 The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore
 
@@ -215,5 +215,5 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 
 The data model to represent runs, models evaluation, features, etc is based on the Machine Learning Schema. See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html)
 
-![OpenPredict datamodel](/docs/OpenPREDICT_datamodel.jpg)
+![OpenPredict datamodel](https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/docs/OpenPREDICT_datamodel.jpg)
 

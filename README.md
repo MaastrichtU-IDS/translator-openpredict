@@ -94,15 +94,15 @@ The `/predicates` operation will return the entities and relations provided by t
 
 You can find a Jupyter Notebook with [examples to query the OpenPredict API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
-# Deploy OpenPredict API
+# Deploy the OpenPredict API
 
-See the **[documentation to deploy the OpenPredict API 📝](docs/dev)** locally or with Docker.
+See the **[documentation to deploy the OpenPredict API](docs/dev)** locally or with Docker.
 
 # Acknowledgments
 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 * Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
-* Service funded by the [NCATS Translator project](https://ncats.nih.gov/translator/about). 
+* Service funded by the [NIH NCATS Translator project](https://ncats.nih.gov/translator/about). 
 
-[![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)](https://ncats.nih.gov/translator/about)
+![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)
 
