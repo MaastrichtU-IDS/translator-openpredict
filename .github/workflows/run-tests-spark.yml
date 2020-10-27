@@ -41,6 +41,7 @@ jobs:
         python3 --version
         which python3
         pip3 --version
+        echo $PYSPARK_PYTHON
 
     - name: Install dependencies
       run: |
