@@ -63,7 +63,6 @@ def add_feature_metadata(id, description, type):
     :return: rdflib graph after loading the feature
     """
     g = Graph()
-    # g.parse(TTL_METADATA_FILE, format="ttl")
 
     feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
     g.add((feature_uri, RDF.type, MLS['Feature']))
@@ -71,7 +70,6 @@ def add_feature_metadata(id, description, type):
     g.add((feature_uri, DC.description, Literal(description)))
     g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
 
-    g.serialize(TTL_METADATA_FILE, format="ttl")
     insert_graph_in_sparql_endpoint(g)
     return g
 
@@ -111,6 +109,7 @@ def add_run_metadata(scores, model_features, hyper_params):
     g.add((OPENPREDICT['LogisticRegression'], RDF.type, MLS['Algorithm']))
     g.add((implementation_uri, RDF.type, MLS['Implementation']))
     g.add((implementation_uri, MLS['implements'], OPENPREDICT['LogisticRegression']))
+
     # Add HyperParameters and their settings to implementation
     for hyperparam, hyperparam_setting in hyper_params.items():
         hyperparam_uri = URIRef(OPENPREDICT_NAMESPACE + 'HyperParameter/' + hyperparam)
@@ -139,15 +138,11 @@ def add_run_metadata(scores, model_features, hyper_params):
         g.add((key_uri, RDF.type, MLS['EvaluationMeasure']))
         g.add((key_uri, RDFS.label, Literal(key)))
         g.add((key_uri, MLS['hasValue'], Literal(scores[key], datatype=XSD.double)))
-        # The example puts hasValue in the ModelEvaluation, but that prevents to provide
-        # multiple values for 1 evaluation
+        # TODO: The example puts hasValue in the ModelEvaluation
+        # but that prevents to provide multiple values for 1 evaluation
         # http://ml-schema.github.io/documentation/ML%20Schema.html#overview
 
     insert_graph_in_sparql_endpoint(g)
-
-    # import pprint
-    # for stmt in g:
-    #     pprint.pprint(stmt)
     return g
 
 

@@ -13,6 +13,14 @@ import pkg_resources
 from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata
 from sklearn.metrics.pairwise import cosine_similarity
 
+hyper_params = {
+    'penalty': 'l2',
+    'dual': False,
+    'tol': 0.0001,
+    'C': 1.0,
+    'random_state': 100
+}
+
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
 
@@ -115,6 +123,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     :param diseasefeatfiles: Disease features files list
     """
     print('Load and merge features files 📂')
+    drug_df = None
     for i,featureFilename in enumerate(drugfeatfiles):
         print(featureFilename)
         df = pd.read_csv(featureFilename, delimiter=',')
@@ -131,7 +140,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     drug_df = adjcencydict2matrix(drug_df, 'Drug1', 'Drug2')
     drug_df = drug_df.fillna(1.0)
 
-    
+    disease_df = None
     for i,featureFilename in enumerate(diseasefeatfiles):
         print(featureFilename)
         df=pd.read_csv(featureFilename, delimiter=',')
@@ -465,8 +474,9 @@ def train_model(from_scratch=True):
 
     # Model Training, get classifier (clf)
     print('\nModel training, getting the classifier 🏃')
-    n_seed = 100
-    clf = linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, random_state=n_seed) 
+    clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
+            dual=hyper_params['dual'], tol=hyper_params['tol'], 
+            C=hyper_params['C'], random_state=hyper_params['random_state']) 
     clf = train_classifier(train_df, clf)
     time_training = datetime.now()
     print('Model training runtime 🕕  ' + str(time_training - time_calculate_similarity))
@@ -485,13 +495,6 @@ def train_model(from_scratch=True):
     final_training = datetime.now()
     train_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
 
-    hyper_params = {
-        'penalty': 'l2',
-        'dual': False,
-        'tol': 0.0001,
-        'C': 1.0,
-        'random_state': n_seed
-    }
     clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
             dual=hyper_params['dual'], tol=hyper_params['tol'], 
             C=hyper_params['C'], random_state=hyper_params['random_state']) 

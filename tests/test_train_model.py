@@ -4,8 +4,8 @@ import numpy as np
 from openpredict.openpredict_model import train_model, geometricMean
 
 def test_train_model():
-    """Test the model to get drug-disease similarities (drugbank-omim)"""
-    clf, scores = train_model()
+    """Test to train from baseline model to get drug-disease similarities (drugbank-omim)"""
+    clf, scores, hyper_params = train_model()
 
     assert 0.80 < scores['precision'] < 0.95
     assert 0.60 < scores['recall'] < 0.80
@@ -19,9 +19,8 @@ def test_calculate_combined():
   disease = '206200'
   drug = 'DB00136'
 
-  di_feat_col ='HPO-SIM'
-  dr_feat_col ='SE-SIM'
-  
+  # di_feat_col ='HPO-SIM'
+  # dr_feat_col ='SE-SIM'
   #diseaseDF= disease_df[di_feat_col]
   #drugDF = drug_df[dr_feat_col]
 
