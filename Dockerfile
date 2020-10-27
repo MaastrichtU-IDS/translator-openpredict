@@ -5,6 +5,8 @@ FROM jupyter/all-spark-notebook
 # Required to be able to edit the .joblib model directly in the python package
 USER root
 
+RUN apt-get update && apt-get install -y build-essential
+
 COPY . .
 
 # Install from source code

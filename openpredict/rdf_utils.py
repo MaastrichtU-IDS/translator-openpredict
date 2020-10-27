@@ -132,6 +132,10 @@ def add_run_metadata(scores, model_features, hyper_params):
         # g.add((run_uri, OPENPREDICT['has_features'], feature_uri))
         g.add((run_uri, MLS['hasInput'], feature_uri))
 
+    # TODO: those 2 triples are for the PLEX ontology
+    g.add((evaluation_uri, RDF.type, PROV['Entity']))
+    g.add((evaluation_uri, PROV['wasGeneratedBy'], run_uri))
+    
     # Add scores as EvaluationMeasures
     g.add((evaluation_uri, RDF.type, MLS['ModelEvaluation']))
     for key in scores.keys():
@@ -237,7 +241,7 @@ def retrieve_models():
                 'recall': result['recall']['value'],
                 'roc_auc': result['roc_auc']['value']
             }
-            
+
         ## We could create an object with feature description instead of passing just the ID
         # features_json[result['id']['value']] = {
         #     "description": result['description']['value'],
