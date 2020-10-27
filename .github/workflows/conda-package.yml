@@ -13,7 +13,8 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        # os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
         python-version: [3.8]
 
     steps:
@@ -23,10 +24,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    # $CONDA is an environment variable pointing to the root of the miniconda directory
     - name: Install dependencies
       run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env update --file environment.yml --name base
+        $CONDA/bin/conda env update --file requirements.txt --name base
+      # $CONDA/bin/conda env update --file environment.yml --name base
+      # conda create -y --name py37 python=3.7
+      # conda install --force-reinstall -y -q --name py37 -c conda-forge --file requirements.txt
+      # conda activate py37
+      
     - name: Test with pytest
       run: |
         conda install pytest
