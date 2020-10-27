@@ -29,8 +29,7 @@ jobs:
       with:
         java-version: '11' # The JDK version to make available on the path.
 
-    # - uses: vemonet/setup-spark@v1
-    - uses: vemonet/setup-spark@main
+    - uses: vemonet/setup-spark@v1
       with:
         spark-version: '3.0.1'
 
