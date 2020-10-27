@@ -46,44 +46,12 @@ def insert_graph_in_sparql_endpoint(g):
     sparql.setQuery(query)
     return sparql.query()
 
-
-def get_features_from_model(type='All'):
-    """Get features in the ML model
-    
-    :param type: type of the feature (All, Both, Drug, Disease)
-    :return: JSON with features
-    """
-    # g = Graph()
-    # g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
+def query_sparql_endpoint(query):
     sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
     sparql.setReturnFormat(JSON)
-    type_filter = ''
-    if (type != "All"):
-        type_filter = 'FILTER(?embeddingType = "' + type + '")'
-
-    query = """SELECT DISTINCT ?id ?description ?embeddingType
-        WHERE {{
-            ?feature a <http://www.w3.org/ns/mls#Feature> ;
-                <http://purl.org/dc/elements/1.1/identifier> ?id ;
-                <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
-                <http://purl.org/dc/elements/1.1/description> ?description .
-            {type_filter}
-        }}
-        """.format(type_filter=type_filter)
-    # qres = g.query(sparql_query)
     sparql.setQuery(query)
     results = sparql.query().convert()
-
-    features_json = {}
-    for result in results["results"]["bindings"]:
-        # print(result["label"]["value"])
-        print(result)
-        print(result['id']['value'])
-        features_json[result['id']['value']] = {
-            "description": result['description']['value'],
-            "type": result['embeddingType']['value']
-        }
-    return features_json
+    return results["results"]["bindings"]
 
 
 def add_feature_metadata(id, description, type):
@@ -108,7 +76,7 @@ def add_feature_metadata(id, description, type):
     return g
 
 
-def generate_classifier_metadata(scores, model_features, hyper_params):
+def add_run_metadata(scores, model_features, hyper_params):
     """Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
     https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
 
@@ -175,9 +143,6 @@ def generate_classifier_metadata(scores, model_features, hyper_params):
         # multiple values for 1 evaluation
         # http://ml-schema.github.io/documentation/ML%20Schema.html#overview
 
-    # g.serialize("data/openpredict-metadata.ttl", format="ttl")
-    g.serialize(TTL_METADATA_FILE, format="ttl")
-
     insert_graph_in_sparql_endpoint(g)
 
     # import pprint
@@ -185,59 +150,86 @@ def generate_classifier_metadata(scores, model_features, hyper_params):
     #     pprint.pprint(stmt)
     return g
 
+
+def retrieve_features(type='All'):
+    """Get features in the ML model
+    
+    :param type: type of the feature (All, Both, Drug, Disease)
+    :return: JSON with features
+    """
+    type_filter = ''
+    if (type != "All"):
+        type_filter = 'FILTER(?embeddingType = "' + type + '")'
+
+    query = """SELECT DISTINCT ?id ?description ?embeddingType
+        WHERE {{
+            ?feature a <http://www.w3.org/ns/mls#Feature> ;
+                <http://purl.org/dc/elements/1.1/identifier> ?id ;
+                <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+                <http://purl.org/dc/elements/1.1/description> ?description .
+            {type_filter}
+        }}
+        """.format(type_filter=type_filter)
+
+    results = query_sparql_endpoint(query)
+
+    features_json = {}
+    for result in results:
+        features_json[result['id']['value']] = {
+            "description": result['description']['value'],
+            "type": result['embeddingType']['value']
+        }
+    return features_json
+
+
 def retrieve_models():
     """Get models with their scores and features
     
     :return: JSON with models and features
     """
-
     sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
         PREFIX mls: <http://www.w3.org/ns/mls#>
         PREFIX prov: <http://www.w3.org/ns/prov#>
         PREFIX openpredict: <https://w3id.org/openpredict/>
         PREFIX dc: <http://purl.org/dc/elements/1.1/>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX xml: <http://www.w3.org/XML/1998/namespace>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        SELECT DISTINCT ?model ?label ?generatedAtTime ?features ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
+        SELECT DISTINCT ?run ?generatedAtTime ?features ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
         WHERE {
-            ?model a mls:ModelEvaluation ;
-                rdfs:label ?label ;
-                prov:generatedAtTime ?generatedAtTime ;
+    		?run a mls:Run ;
+           		prov:generatedAtTime ?generatedAtTime ;
+            	mls:hasOutput ?evaluation .
+            ?evaluation a mls:ModelEvaluation ;
                 mls:hasInput ?features .
-            ?model mls:specifiedBy [a mls:EvaluationMeasure ; 
+    
+            ?evaluation mls:specifiedBy [a mls:EvaluationMeasure ; 
                         rdfs:label "accuracy" ;
                         mls:hasValue ?accuracy ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
                     rdfs:label "precision" ;
                     mls:hasValue ?precision ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
                     rdfs:label "f1" ;
                     mls:hasValue ?f1 ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
                     rdfs:label "recall" ;
                     mls:hasValue ?recall ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
                     rdfs:label "roc_auc" ;
                     mls:hasValue ?roc_auc ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
                     rdfs:label "average_precision" ;
                     mls:hasValue ?average_precision ] .
         }
         """
 
-    sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
-    sparql.setReturnFormat(JSON)
-    sparql.setQuery(sparql_get_scores)
-    results = sparql.query().convert()
-
+    results = query_sparql_endpoint(sparql_get_scores)
     features_json = {}
-    for result in results["results"]["bindings"]:
-        if result['model']['value'] in features_json:
-            features_json[result['model']['value']]['features'].append(result['features']['value'])
+    for result in results:
+        if result['run']['value'] in features_json:
+            features_json[result['run']['value']]['features'].append(result['features']['value'])
         else:
-            features_json[result['model']['value']] = {
+            features_json[result['run']['value']] = {
                 "label": result['label']['value'],
                 "generatedAtTime": result['generatedAtTime']['value'],
                 'features': [result['features']['value']],
@@ -248,9 +240,7 @@ def retrieve_models():
                 'recall': result['recall']['value'],
                 'roc_auc': result['roc_auc']['value']
             }
-        # print(result["label"]["value"])
-        print(result)
-        print(result['id']['value'])
+
         features_json[result['id']['value']] = {
             "description": result['description']['value'],
             "type": result['embeddingType']['value']

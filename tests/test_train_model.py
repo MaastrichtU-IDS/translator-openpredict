@@ -1,12 +1,11 @@
 import pytest
 import pandas as pd
 import numpy as np
-from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifier
-from openpredict.predict_model_omim_drugbank import geometricMean
+from openpredict.openpredict_model import train_model, geometricMean
 
-def test_train_omim_drugbank_classifier():
+def test_train_model():
     """Test the model to get drug-disease similarities (drugbank-omim)"""
-    clf, scores = train_omim_drugbank_classifier()
+    clf, scores = train_model()
 
     assert 0.80 < scores['precision'] < 0.95
     assert 0.60 < scores['recall'] < 0.80

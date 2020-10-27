@@ -3,7 +3,7 @@ import connexion
 import logging
 from datetime import datetime
 from openpredict.predict_utils import get_predictions
-from openpredict.rdf_utils import get_features_from_model, retrieve_models
+from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, train_model
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
@@ -119,7 +119,7 @@ def get_features(type):
     
     :return: JSON with features
     """
-    return get_features_from_model(type)
+    return retrieve_features(type)
 
 def get_models():
     """Get models with their scores and features

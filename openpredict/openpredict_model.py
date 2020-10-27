@@ -10,7 +10,7 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 import pkg_resources
-from openpredict.rdf_utils import generate_classifier_metadata, get_features_from_model, add_feature_metadata
+from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata
 from sklearn.metrics.pairwise import cosine_similarity
 
 def adjcencydict2matrix(df, name1, name2):
@@ -499,11 +499,11 @@ def train_model(from_scratch=True):
     # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
     # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
     # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
-    model_features = get_features_from_model('All').keys()
+    model_features = retrieve_features('All').keys()
 
     # TODO: add an entry to the triplestore for a new run? It will define the ModelEvaluation
     # save_run_metadata(scores, model_features, hyper_params)
-    generate_classifier_metadata(scores, model_features, hyper_params)
+    add_run_metadata(scores, model_features, hyper_params)
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
 
