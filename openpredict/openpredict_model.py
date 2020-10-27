@@ -476,7 +476,6 @@ def train_model(from_scratch=True):
     train_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
 
     hyper_params = {
-        'algorithm': 'LogisticRegression',
         'penalty': 'l2',
         'dual': False,
         'tol': 0.0001,

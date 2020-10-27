@@ -94,7 +94,7 @@ The `/predicates` operation will return the entities and relations provided by t
 
 You can find a Jupyter Notebook with [examples to query the OpenPredict API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 
-# Deploy the OpenPredict API
+# Deploy OpenPredict API
 
 See the **[documentation to deploy the OpenPredict API](docs/dev)** locally or with Docker.
 

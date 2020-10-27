@@ -53,7 +53,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-# Deploy the OpenPredict API
+# Deploy OpenPredict API
 
 The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore
 

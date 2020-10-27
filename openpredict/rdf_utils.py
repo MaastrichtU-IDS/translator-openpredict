@@ -41,12 +41,9 @@ def insert_graph_in_sparql_endpoint(g):
     }}
     }}
     """.format(ntriples=g.serialize(format='nt').decode('utf-8'))
-    # print('SPARQL UPDATE query:')
-    # print(query)
 
     sparql.setQuery(query)
     return sparql.query()
-    # print(results.response.read())
 
 
 def get_features_from_model(type='All'):
