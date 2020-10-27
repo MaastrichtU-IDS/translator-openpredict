@@ -90,9 +90,9 @@ def add_run_metadata(scores, model_features, hyper_params):
     g = Graph()
     # g.parse(TTL_METADATA_FILE, format="ttl")
 
-    run_uri = URIRef(OPENPREDICT_NAMESPACE + 'model/' + run_id)
+    run_uri = URIRef(OPENPREDICT_NAMESPACE + 'run/' + run_id)
     run_prop_prefix = OPENPREDICT_NAMESPACE + run_id + "/"
-    evaluation_uri = URIRef(OPENPREDICT_NAMESPACE + 'model/' + run_id + '/ModelEvaluation')
+    evaluation_uri = URIRef(OPENPREDICT_NAMESPACE + 'run/' + run_id + '/ModelEvaluation')
     # The same for all run:
     implementation_uri = URIRef(OPENPREDICT_NAMESPACE + 'implementation/OpenPredict')
 
@@ -194,13 +194,14 @@ def retrieve_models():
         PREFIX dc: <http://purl.org/dc/elements/1.1/>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        SELECT DISTINCT ?run ?generatedAtTime ?features ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
+        SELECT DISTINCT ?run ?generatedAtTime ?featureId ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
         WHERE {
     		?run a mls:Run ;
            		prov:generatedAtTime ?generatedAtTime ;
+                mls:hasInput ?features ;
             	mls:hasOutput ?evaluation .
-            ?evaluation a mls:ModelEvaluation ;
-                mls:hasInput ?features .
+            ?evaluation a mls:ModelEvaluation  .
+            ?features dc:identifier ?featureId .
     
             ?evaluation mls:specifiedBy [a mls:EvaluationMeasure ; 
                         rdfs:label "accuracy" ;
@@ -227,12 +228,11 @@ def retrieve_models():
     features_json = {}
     for result in results:
         if result['run']['value'] in features_json:
-            features_json[result['run']['value']]['features'].append(result['features']['value'])
+            features_json[result['run']['value']]['features'].append(result['featureId']['value'])
         else:
             features_json[result['run']['value']] = {
-                "label": result['label']['value'],
                 "generatedAtTime": result['generatedAtTime']['value'],
-                'features': [result['features']['value']],
+                'features': [result['featureId']['value']],
                 'accuracy': result['accuracy']['value'],
                 'average_precision': result['average_precision']['value'],
                 'f1': result['f1']['value'],
@@ -241,8 +241,8 @@ def retrieve_models():
                 'roc_auc': result['roc_auc']['value']
             }
 
-        features_json[result['id']['value']] = {
-            "description": result['description']['value'],
-            "type": result['embeddingType']['value']
-        }
+        # features_json[result['id']['value']] = {
+        #     "description": result['description']['value'],
+        #     "type": result['embeddingType']['value']
+        # }
     return features_json
