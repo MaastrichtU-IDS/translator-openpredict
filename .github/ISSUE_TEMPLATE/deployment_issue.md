@@ -2,7 +2,7 @@
 name: Issue deploying the API
 about: Report a bug, issue or missing documentation related to the OpenPredict API deployment to help us improve OpenPredict
 title: ''
-labels: api-deployment
+labels: api-deployment, bug
 assignees: 'vemonet'
 
 ---

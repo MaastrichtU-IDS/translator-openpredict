@@ -2,7 +2,7 @@
 name: Issue querying the API
 about: Report a bug, issue or missing documentation related to querying the OpenPredict API to help us improve OpenPredict
 title: ''
-labels: api-query
+labels: api-query, bug
 assignees: 'vemonet'
 
 ---
