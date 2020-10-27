@@ -1,5 +1,4 @@
 import logging
-import pkg_resources
 import uuid 
 import os
 from datetime import datetime
@@ -7,7 +6,6 @@ from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 from SPARQLWrapper import SPARQLWrapper, POST, JSON
 
-TTL_METADATA_FILE = pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl')
 OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'
 
 RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
@@ -24,10 +22,10 @@ OPENPREDICT = Namespace("https://w3id.org/openpredict/")
 SPARQL_ENDPOINT_URL = 'https://graphdb.dumontierlab.com/repositories/translator-openpredict'
 SPARQL_ENDPOINT_UPDATE_URL = 'https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements'
 SPARQL_ENDPOINT_USERNAME = os.getenv('OPENPREDICT_USERNAME')
-SPARQL_ENDPOINT_PASSWORD = os.environ.get('OPENPREDICT_PASSWORD')
+SPARQL_ENDPOINT_PASSWORD = os.getenv('OPENPREDICT_PASSWORD')
 
 def insert_graph_in_sparql_endpoint(g):
-    """Insert rdflib graph in a SPARQL endpoint using SPARQLWrapper
+    """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
 
     :param g: rdflib graph to insert
     :return: SPARQL update query result
@@ -47,6 +45,11 @@ def insert_graph_in_sparql_endpoint(g):
     return sparql.query()
 
 def query_sparql_endpoint(query):
+    """Run select SPARQL query against SPARQL endpoint
+
+    :param query: SPARQL query as a string
+    :return: Object containing the result bindings
+    """
     sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
     sparql.setReturnFormat(JSON)
     sparql.setQuery(query)
@@ -83,10 +86,9 @@ def add_run_metadata(scores, model_features, hyper_params):
     :param label: label of the classifier
     :return: predictions in array of JSON object
     """
-
-    run_id = str(uuid.uuid1())
     g = Graph()
-    # g.parse(TTL_METADATA_FILE, format="ttl")
+    # Generate random UUID for the run ID
+    run_id = str(uuid.uuid1())
 
     run_uri = URIRef(OPENPREDICT_NAMESPACE + 'run/' + run_id)
     run_prop_prefix = OPENPREDICT_NAMESPACE + run_id + "/"
@@ -138,7 +140,7 @@ def add_run_metadata(scores, model_features, hyper_params):
         g.add((key_uri, RDF.type, MLS['EvaluationMeasure']))
         g.add((key_uri, RDFS.label, Literal(key)))
         g.add((key_uri, MLS['hasValue'], Literal(scores[key], datatype=XSD.double)))
-        # TODO: The example puts hasValue in the ModelEvaluation
+        # TODO: The Example 1 puts hasValue directly in the ModelEvaluation
         # but that prevents to provide multiple values for 1 evaluation
         # http://ml-schema.github.io/documentation/ML%20Schema.html#overview
 
@@ -235,7 +237,8 @@ def retrieve_models():
                 'recall': result['recall']['value'],
                 'roc_auc': result['roc_auc']['value']
             }
-
+            
+        ## We could create an object with feature description instead of passing just the ID
         # features_json[result['id']['value']] = {
         #     "description": result['description']['value'],
         #     "type": result['embeddingType']['value']

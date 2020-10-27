@@ -1,4 +1,4 @@
-# Table of Contents
+# OpenPredict Package documentation 🔮🐍
 
 * [openpredict](#.openpredict)
 * [openpredict.reasonerapi\_parser](#.openpredict.reasonerapi_parser)
@@ -6,31 +6,40 @@
 * [openpredict.predict\_utils](#.openpredict.predict_utils)
   * [get\_predictions](#.openpredict.predict_utils.get_predictions)
   * [get\_labels](#.openpredict.predict_utils.get_labels)
-* [openpredict.openpredict\_omim\_drugbank](#.openpredict.predict_model_omim_drugbank)
-  * [adjcencydict2matrix](#.openpredict.predict_model_omim_drugbank.adjcencydict2matrix)
-  * [mergeFeatureMatrix](#.openpredict.predict_model_omim_drugbank.mergeFeatureMatrix)
-  * [generatePairs](#.openpredict.predict_model_omim_drugbank.generatePairs)
-  * [balance\_data](#.openpredict.predict_model_omim_drugbank.balance_data)
-  * [geometricMean](#.openpredict.predict_model_omim_drugbank.geometricMean)
-  * [createFeatureArray](#.openpredict.predict_model_omim_drugbank.createFeatureArray)
-  * [sparkBuildFeatures](#.openpredict.predict_model_omim_drugbank.sparkBuildFeatures)
-  * [createFeatureDF](#.openpredict.predict_model_omim_drugbank.createFeatureDF)
-  * [calculateCombinedSimilarity](#.openpredict.predict_model_omim_drugbank.calculateCombinedSimilarity)
-  * [trainModel](#.openpredict.predict_model_omim_drugbank.trainModel)
-  * [multimetric\_score](#.openpredict.predict_model_omim_drugbank.multimetric_score)
-  * [evaluate](#.openpredict.predict_model_omim_drugbank.evaluate)
-  * [train\_drug\_disease\_classifier](#.openpredict.predict_model_omim_drugbank.train_omim_drugbank_classifier)
-  * [query\_omim\_drugbank\_classifier](#.openpredict.predict_model_omim_drugbank.query_omim_drugbank_classifier)
+* [openpredict.rdf\_utils](#.openpredict.rdf_utils)
+  * [insert\_graph\_in\_sparql\_endpoint](#.openpredict.rdf_utils.insert_graph_in_sparql_endpoint)
+  * [query\_sparql\_endpoint](#.openpredict.rdf_utils.query_sparql_endpoint)
+  * [add\_feature\_metadata](#.openpredict.rdf_utils.add_feature_metadata)
+  * [add\_run\_metadata](#.openpredict.rdf_utils.add_run_metadata)
+  * [retrieve\_features](#.openpredict.rdf_utils.retrieve_features)
+  * [retrieve\_models](#.openpredict.rdf_utils.retrieve_models)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_spark](#.openpredict.openpredict_api.start_spark)
   * [start\_api](#.openpredict.openpredict_api.start_api)
+  * [post\_embedding](#.openpredict.openpredict_api.post_embedding)
   * [get\_predict](#.openpredict.openpredict_api.get_predict)
-  * [predicates\_get](#.openpredict.openpredict_api.predicates_get)
+  * [get\_predicates](#.openpredict.openpredict_api.get_predicates)
+  * [get\_features](#.openpredict.openpredict_api.get_features)
+  * [get\_models](#.openpredict.openpredict_api.get_models)
   * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
 * [openpredict.\_\_main\_\_](#.openpredict.__main__)
   * [main](#.openpredict.__main__.main)
-* [openpredict.train\_utils](#.openpredict.train_utils)
-  * [generate\_classifier\_metadata](#.openpredict.train_utils.generate_classifier_metadata)
+* [openpredict.openpredict\_model](#.openpredict.openpredict_model)
+  * [adjcencydict2matrix](#.openpredict.openpredict_model.adjcencydict2matrix)
+  * [addEmbedding](#.openpredict.openpredict_model.addEmbedding)
+  * [mergeFeatureMatrix](#.openpredict.openpredict_model.mergeFeatureMatrix)
+  * [generatePairs](#.openpredict.openpredict_model.generatePairs)
+  * [balance\_data](#.openpredict.openpredict_model.balance_data)
+  * [geometricMean](#.openpredict.openpredict_model.geometricMean)
+  * [createFeatureArray](#.openpredict.openpredict_model.createFeatureArray)
+  * [sparkBuildFeatures](#.openpredict.openpredict_model.sparkBuildFeatures)
+  * [createFeatureDF](#.openpredict.openpredict_model.createFeatureDF)
+  * [calculateCombinedSimilarity](#.openpredict.openpredict_model.calculateCombinedSimilarity)
+  * [train\_classifier](#.openpredict.openpredict_model.train_classifier)
+  * [multimetric\_score](#.openpredict.openpredict_model.multimetric_score)
+  * [evaluate](#.openpredict.openpredict_model.evaluate)
+  * [train\_model](#.openpredict.openpredict_model.train_model)
+  * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_model.query_omim_drugbank_classifier)
 
 <a name=".openpredict"></a>
 # openpredict
@@ -62,7 +71,7 @@ Results as ReasonerAPI object
 #### get\_predictions
 
 ```python
-get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=None, limit=None)
+get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=None, n_results=None)
 ```
 
 Run classifiers to get predictions
@@ -72,7 +81,7 @@ Run classifiers to get predictions
 - `id_to_predict`: Id of the entity to get prediction from
 - `classifier`: classifier used to get the predictions
 - `score`: score minimum of predictions
-- `limit`: limit number of predictions to return
+- `n_results`: number of predictions to return
 
 **Returns**:
 
@@ -89,251 +98,111 @@ Send the list of node IDs to Translator Normalization API to get labels
 See API: https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
 and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
 
-<a name=".openpredict.predict_model_omim_drugbank"></a>
-# openpredict.openpredict\_omim\_drugbank
+<a name=".openpredict.rdf_utils"></a>
+# openpredict.rdf\_utils
 
-<a name=".openpredict.predict_model_omim_drugbank.adjcencydict2matrix"></a>
-#### adjcencydict2matrix
+<a name=".openpredict.rdf_utils.insert_graph_in_sparql_endpoint"></a>
+#### insert\_graph\_in\_sparql\_endpoint
 
 ```python
-adjcencydict2matrix(df, name1, name2)
+insert_graph_in_sparql_endpoint(g)
 ```
 
-Convert dict to matrix
+Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
 
 **Arguments**:
 
-- `df`: Dataframe
-- `name1`: index name
-- `name2`: columns name
-
-<a name=".openpredict.predict_model_omim_drugbank.mergeFeatureMatrix"></a>
-#### mergeFeatureMatrix
-
-```python
-mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-```
-
-Merge the drug and disease feature matrix
-
-**Arguments**:
-
-- `drugfeatfiles`: Drug features files list
-- `diseasefeatfiles`: Disease features files list
-
-<a name=".openpredict.predict_model_omim_drugbank.generatePairs"></a>
-#### generatePairs
-
-```python
-generatePairs(drug_df, disease_df, drugDiseaseKnown)
-```
-
-Generate positive and negative pairs using the Drug dataframe,
-the Disease dataframe and known drug-disease associations dataframe
-
-**Arguments**:
-
-- `drug_df`: Drug dataframe
-- `disease_df`: Disease dataframe
-- `drugDiseaseKnown`: Known drug-disease association dataframe
-
-<a name=".openpredict.predict_model_omim_drugbank.balance_data"></a>
-#### balance\_data
-
-```python
-balance_data(pairs, classes, n_proportion)
-```
-
-Balance negative and positives samples
-
-**Arguments**:
-
-- `pairs`: Positive/negative pairs previously generated
-- `classes`: Classes corresponding to the pairs
-- `n_proportion`: Proportion number, e.g. 2
-
-<a name=".openpredict.predict_model_omim_drugbank.geometricMean"></a>
-#### geometricMean
-
-```python
-geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF)
-```
-
-Compute the geometric means of a drug-disease association using previously generated dataframes
-
-**Arguments**:
-
-- `drug`: Drug
-- `disease`: Disease
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDF`: Drug dataframe
-- `diseaseDF`: Disease dataframe
-
-<a name=".openpredict.predict_model_omim_drugbank.createFeatureArray"></a>
-#### createFeatureArray
-
-```python
-createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs)
-```
-
-Create the features dataframes for Spark.
-
-**Arguments**:
-
-- `drug`: Drug
-- `disease`: Disease
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDFs`: Drug dataframes
-- `diseaseDFs`: Disease dataframes
+- `g`: rdflib graph to insert
 
 **Returns**:
 
-The features dataframe
+SPARQL update query result
 
-<a name=".openpredict.predict_model_omim_drugbank.sparkBuildFeatures"></a>
-#### sparkBuildFeatures
+<a name=".openpredict.rdf_utils.query_sparql_endpoint"></a>
+#### query\_sparql\_endpoint
 
 ```python
-sparkBuildFeatures(sc, pairs, classes, knownDrugDis, drug_df, disease_df)
+query_sparql_endpoint(query)
 ```
 
-Create the feature matrix for Spark.
+Run select SPARQL query against SPARQL endpoint
 
 **Arguments**:
 
-- `sc`: Spark context
-- `pairs`: Generated pairs
-- `classes`: Classes corresponding to the pairs
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDFs`: Drug dataframes
-- `diseaseDFs`: Disease dataframes
+- `query`: SPARQL query as a string
 
 **Returns**:
 
-The features dataframe
+Object containing the result bindings
 
-<a name=".openpredict.predict_model_omim_drugbank.createFeatureDF"></a>
-#### createFeatureDF
+<a name=".openpredict.rdf_utils.add_feature_metadata"></a>
+#### add\_feature\_metadata
 
 ```python
-createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
+add_feature_metadata(id, description, type)
 ```
 
-Create the features dataframes.
+Generate RDF metadata for a feature
 
 **Arguments**:
 
-- `pairs`: Generated pairs
-- `classes`: Classes corresponding to the pairs
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDFs`: Drug dataframes
-- `diseaseDFs`: Disease dataframes
+- `id`: if used to identify the feature
+- `description`: feature description
+- `type`: feature type
 
 **Returns**:
 
-The features dataframe
+rdflib graph after loading the feature
 
-<a name=".openpredict.predict_model_omim_drugbank.calculateCombinedSimilarity"></a>
-#### calculateCombinedSimilarity
+<a name=".openpredict.rdf_utils.add_run_metadata"></a>
+#### add\_run\_metadata
 
 ```python
-calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
+add_run_metadata(scores, model_features, hyper_params)
 ```
 
-Compute combined similarities
+Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
+https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
 
 **Arguments**:
 
-- `pairs_train`: Pairs used to train
-- `pairs_test`: Pairs used to test
-- `classes_train`: Classes corresponding to the pairs used to train
-- `classes_test`: Classes corresponding to the pairs used to test
-- `drug_df`: Drug dataframe
-- `disease_df`: Disease dataframe
-- `knownDrugDisease`: Known drug-disease associations
+- `scores`: scores
+- `model_features`: List of features in the model
+- `label`: label of the classifier
 
-<a name=".openpredict.predict_model_omim_drugbank.trainModel"></a>
-#### trainModel
+**Returns**:
+
+predictions in array of JSON object
+
+<a name=".openpredict.rdf_utils.retrieve_features"></a>
+#### retrieve\_features
 
 ```python
-trainModel(train_df, clf)
+retrieve_features(type='All')
 ```
 
-Train model
+Get features in the ML model
 
 **Arguments**:
 
-- `train_df`: Train dataframe
-- `clf`: Classifier
-
-<a name=".openpredict.predict_model_omim_drugbank.multimetric_score"></a>
-#### multimetric\_score
-
-```python
-multimetric_score(estimator, X_test, y_test, scorers)
-```
-
-Return a dict of score for multimetric scoring
-
-**Arguments**:
-
-- `estimator`: Estimator
-- `X_test`: X test
-- `y_test`: Y test
-- `scorers`: Dict of scorers
+- `type`: type of the feature (All, Both, Drug, Disease)
 
 **Returns**:
 
-Multimetric scores
+JSON with features
 
-<a name=".openpredict.predict_model_omim_drugbank.evaluate"></a>
-#### evaluate
+<a name=".openpredict.rdf_utils.retrieve_models"></a>
+#### retrieve\_models
 
 ```python
-evaluate(test_df, clf)
+retrieve_models()
 ```
 
-Evaluate the trained classifier
-
-**Arguments**:
-
-- `test_df`: Test dataframe
-- `clf`: Classifier
+Get models with their scores and features
 
 **Returns**:
 
-Scores
-
-<a name=".openpredict.predict_model_omim_drugbank.train_omim_drugbank_classifier"></a>
-#### train\_drug\_disease\_classifier
-
-```python
-train_omim_drugbank_classifier()
-```
-
-The main function to run the drug-disease similarities pipeline,
-and build the drug-disease classifier.
-It returns, and stores the generated classifier as a `.joblib` file
-in the `data/models` folder,
-
-**Returns**:
-
-Classifier of predicted similarities and scores
-
-<a name=".openpredict.predict_model_omim_drugbank.query_omim_drugbank_classifier"></a>
-#### query\_omim\_drugbank\_classifier
-
-```python
-query_omim_drugbank_classifier(input_curie)
-```
-
-The main function to query the drug-disease OpenPredict classifier,
-It queries the previously generated classifier a `.joblib` file
-in the `data/models` folder
-
-**Returns**:
-
-Predictions and scores
+JSON with models and features
 
 <a name=".openpredict.openpredict_api"></a>
 # openpredict.openpredict\_api
@@ -362,11 +231,21 @@ Start the Translator OpenPredict API using [zalando/connexion](https://github.co
 - `debug`: Run in debug mode, defaults to False
 - `start_spark`: Start a local Spark cluster, default to true
 
+<a name=".openpredict.openpredict_api.post_embedding"></a>
+#### post\_embedding
+
+```python
+post_embedding(types, emb_name, description)
+```
+
+Post JSON embeddings via the API, with simple APIKEY authentication
+provided in environment variables
+
 <a name=".openpredict.openpredict_api.get_predict"></a>
 #### get\_predict
 
 ```python
-get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, limit=None)
+get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None)
 ```
 
 Get predicted associations for a given entity CURIE.
@@ -379,11 +258,11 @@ Get predicted associations for a given entity CURIE.
 
 Prediction results object with score
 
-<a name=".openpredict.openpredict_api.predicates_get"></a>
-#### predicates\_get
+<a name=".openpredict.openpredict_api.get_predicates"></a>
+#### get\_predicates
 
 ```python
-predicates_get()
+get_predicates()
 ```
 
 Get predicates and entities provided by the API
@@ -391,6 +270,32 @@ Get predicates and entities provided by the API
 **Returns**:
 
 JSON with biolink entities
+
+<a name=".openpredict.openpredict_api.get_features"></a>
+#### get\_features
+
+```python
+get_features(type)
+```
+
+Get features in the model
+
+**Returns**:
+
+JSON with features
+
+<a name=".openpredict.openpredict_api.get_models"></a>
+#### get\_models
+
+```python
+get_models()
+```
+
+Get models with their scores and features
+
+**Returns**:
+
+JSON with models and features
 
 <a name=".openpredict.openpredict_api.post_reasoner_predict"></a>
 #### post\_reasoner\_predict
@@ -422,26 +327,265 @@ main(args=None)
 
 Command Line Interface to run OpenPredict
 
-<a name=".openpredict.train_utils"></a>
-# openpredict.train\_utils
+<a name=".openpredict.openpredict_model"></a>
+# openpredict.openpredict\_model
 
-<a name=".openpredict.train_utils.generate_classifier_metadata"></a>
-#### generate\_classifier\_metadata
+<a name=".openpredict.openpredict_model.adjcencydict2matrix"></a>
+#### adjcencydict2matrix
 
 ```python
-generate_classifier_metadata(classifier_id, scores, label="OpenPredict classifier")
+adjcencydict2matrix(df, name1, name2)
 ```
 
-Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
-https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
+Convert dict to matrix
 
 **Arguments**:
 
-- `classifier_id`: Unique ID for the classifier
-- `scores`: scores
-- `label`: label of the classifier
+- `df`: Dataframe
+- `name1`: index name
+- `name2`: columns name
+
+<a name=".openpredict.openpredict_model.addEmbedding"></a>
+#### addEmbedding
+
+```python
+addEmbedding(embedding_file, emb_name, types, description)
+```
+
+Add embedding to the drug similarity matrix dataframe
+
+**Arguments**:
+
+- `embedding_file`: JSON file containing records ('entity': id, 'embdding': array of numbers )
+- `emb_name`: new column name to be added
+- `types`: types in the embedding vector ['Drugs', 'Diseases', 'Both']
+- `description`: description of the embedding provenance
+
+<a name=".openpredict.openpredict_model.mergeFeatureMatrix"></a>
+#### mergeFeatureMatrix
+
+```python
+mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+```
+
+Merge the drug and disease feature matrix
+
+**Arguments**:
+
+- `drugfeatfiles`: Drug features files list
+- `diseasefeatfiles`: Disease features files list
+
+<a name=".openpredict.openpredict_model.generatePairs"></a>
+#### generatePairs
+
+```python
+generatePairs(drug_df, disease_df, drugDiseaseKnown)
+```
+
+Generate positive and negative pairs using the Drug dataframe,
+the Disease dataframe and known drug-disease associations dataframe
+
+**Arguments**:
+
+- `drug_df`: Drug dataframe
+- `disease_df`: Disease dataframe
+- `drugDiseaseKnown`: Known drug-disease association dataframe
+
+<a name=".openpredict.openpredict_model.balance_data"></a>
+#### balance\_data
+
+```python
+balance_data(pairs, classes, n_proportion)
+```
+
+Balance negative and positives samples
+
+**Arguments**:
+
+- `pairs`: Positive/negative pairs previously generated
+- `classes`: Classes corresponding to the pairs
+- `n_proportion`: Proportion number, e.g. 2
+
+<a name=".openpredict.openpredict_model.geometricMean"></a>
+#### geometricMean
+
+```python
+geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF)
+```
+
+Compute the geometric means of a drug-disease association using previously generated dataframes
+
+**Arguments**:
+
+- `drug`: Drug
+- `disease`: Disease
+- `knownDrugDisease`: Known drug-disease associations
+- `drugDF`: Drug dataframe
+- `diseaseDF`: Disease dataframe
+
+<a name=".openpredict.openpredict_model.createFeatureArray"></a>
+#### createFeatureArray
+
+```python
+createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs)
+```
+
+Create the features dataframes for Spark.
+
+**Arguments**:
+
+- `drug`: Drug
+- `disease`: Disease
+- `knownDrugDisease`: Known drug-disease associations
+- `drugDFs`: Drug dataframes
+- `diseaseDFs`: Disease dataframes
 
 **Returns**:
 
-predictions in array of JSON object
+The features dataframe
+
+<a name=".openpredict.openpredict_model.sparkBuildFeatures"></a>
+#### sparkBuildFeatures
+
+```python
+sparkBuildFeatures(sc, pairs, classes, knownDrugDis, drug_df, disease_df)
+```
+
+Create the feature matrix for Spark.
+
+**Arguments**:
+
+- `sc`: Spark context
+- `pairs`: Generated pairs
+- `classes`: Classes corresponding to the pairs
+- `knownDrugDisease`: Known drug-disease associations
+- `drugDFs`: Drug dataframes
+- `diseaseDFs`: Disease dataframes
+
+**Returns**:
+
+The features dataframe
+
+<a name=".openpredict.openpredict_model.createFeatureDF"></a>
+#### createFeatureDF
+
+```python
+createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
+```
+
+Create the features dataframes.
+
+**Arguments**:
+
+- `pairs`: Generated pairs
+- `classes`: Classes corresponding to the pairs
+- `knownDrugDisease`: Known drug-disease associations
+- `drugDFs`: Drug dataframes
+- `diseaseDFs`: Disease dataframes
+
+**Returns**:
+
+The features dataframe
+
+<a name=".openpredict.openpredict_model.calculateCombinedSimilarity"></a>
+#### calculateCombinedSimilarity
+
+```python
+calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
+```
+
+Compute combined similarities
+
+**Arguments**:
+
+- `pairs_train`: Pairs used to train
+- `pairs_test`: Pairs used to test
+- `classes_train`: Classes corresponding to the pairs used to train
+- `classes_test`: Classes corresponding to the pairs used to test
+- `drug_df`: Drug dataframe
+- `disease_df`: Disease dataframe
+- `knownDrugDisease`: Known drug-disease associations
+
+<a name=".openpredict.openpredict_model.train_classifier"></a>
+#### train\_classifier
+
+```python
+train_classifier(train_df, clf)
+```
+
+Train classifier
+
+**Arguments**:
+
+- `train_df`: Train dataframe
+- `clf`: Classifier
+
+<a name=".openpredict.openpredict_model.multimetric_score"></a>
+#### multimetric\_score
+
+```python
+multimetric_score(estimator, X_test, y_test, scorers)
+```
+
+Return a dict of score for multimetric scoring
+
+**Arguments**:
+
+- `estimator`: Estimator
+- `X_test`: X test
+- `y_test`: Y test
+- `scorers`: Dict of scorers
+
+**Returns**:
+
+Multimetric scores
+
+<a name=".openpredict.openpredict_model.evaluate"></a>
+#### evaluate
+
+```python
+evaluate(test_df, clf)
+```
+
+Evaluate the trained classifier
+
+**Arguments**:
+
+- `test_df`: Test dataframe
+- `clf`: Classifier
+
+**Returns**:
+
+Scores
+
+<a name=".openpredict.openpredict_model.train_model"></a>
+#### train\_model
+
+```python
+train_model(from_scratch=True)
+```
+
+The main function to run the drug-disease similarities pipeline,
+and train the drug-disease classifier.
+It returns, and stores the generated classifier as a `.joblib` file
+in the `data/models` folder,
+
+**Returns**:
+
+Classifier of predicted similarities and scores
+
+<a name=".openpredict.openpredict_model.query_omim_drugbank_classifier"></a>
+#### query\_omim\_drugbank\_classifier
+
+```python
+query_omim_drugbank_classifier(input_curie)
+```
+
+The main function to query the drug-disease OpenPredict classifier,
+It queries the previously generated classifier a `.joblib` file
+in the `data/models` folder
+
+**Returns**:
+
+Predictions and scores
 

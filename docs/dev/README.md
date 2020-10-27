@@ -61,7 +61,7 @@ The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext Gr
 
 ### Define environment variables
 
-Define the environment variables for the triplestore credentials and the APIKEY in your local terminal
+Define the environment variables for the triplestore credentials and the APIKEY to post embeddings in your local terminal:
 
 ```bash
 export OPENPREDICT_USERNAME=import_user
@@ -71,7 +71,7 @@ export OPENPREDICT_APIKEY=myapikey
 
 3 options are available to deploy the API:
 
-#### Option 1: Run from the command line ⌨️
+### Option 1: Run from the command line ⌨️
 
 Use the `openpredict` CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
 
@@ -93,7 +93,7 @@ You can provide the API port as argument:
 openpredict start-api --port 8808
 ```
 
-#### Option 2: Run from a Python script 🐍
+### Option 2: Run from a Python script 🐍
 
 ```python
 from openpredict import openpredict_api
@@ -105,7 +105,7 @@ openpredict_api.start_api(8808)
 
 > Run by default in production, set `debug = True` to run in development environments. 
 
-#### Option 3: Run with Docker 🐳
+### Option 3: Run with Docker 🐳
 
 Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
 
@@ -116,7 +116,7 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-2. Change the triplestore credentials and API key in the `.env` file
+2. Change the triplestore credentials and API key in the `.env` file 🔑
 
 3. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
 
@@ -140,9 +140,11 @@ Stop the container:
 docker-compose down
 ```
 
-## Run tests ✔️
+# Run tests ✔️
 
 [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
+
+Tests are automatically run by a [GitHub Action](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch. They are also run in the GitHub Action to publish a package.
 
 Run the **OpenPredict API** tests locally:
 
