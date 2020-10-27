@@ -3,7 +3,7 @@ version: "3"
 services:
   sut:
     build: .
-    command: pytest tests
+    command: pip install pytest && pytest tests
     environment: 
       PYSPARK_PYTHON: /opt/conda/bin/python3
       PYSPARK_DRIVER_PYTHON: /opt/conda/bin/python3
