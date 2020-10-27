@@ -4,6 +4,7 @@ import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
 from openpredict.openpredict_model import train_model
+from openpredict.rdf_utils import add_run_metadata, retrieve_features
 
 @click.command()
 @click.option(
@@ -22,7 +23,9 @@ def start_api(port, server_url, debug, start_spark):
 @click.option('--from-scratch/--no-scratch', default=True, help="Build the features from scratch (default to yes).")
 def train_model(from_scratch):
     print ('from_scratch',from_scratch)
-    train_model(from_scratch)
+    model_features = retrieve_features('All').keys()
+    clf, scores, hyper_params = train_model(from_scratch)
+    add_run_metadata(scores, model_features, hyper_params)
 
 
 @click.group()

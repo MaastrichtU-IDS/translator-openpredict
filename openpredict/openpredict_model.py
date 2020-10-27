@@ -92,7 +92,17 @@ def addEmbedding(embedding_file, emb_name, types, description):
 
     add_feature_metadata(emb_name, description, types)
     # train the model again
-    train_model(from_scratch=False)
+    clf, scores, hyper_params = train_model(from_scratch=False)
+
+     # TODO: How can we get the list of features directly from the built model?
+    # The baseline features are here, but not the one added 
+    # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
+    # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
+    # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
+    model_features = retrieve_features('All').keys()
+
+    add_run_metadata(scores, model_features, hyper_params)
+
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
     #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
     return "Done" 
@@ -494,18 +504,8 @@ def train_model(from_scratch=True):
     dump(clf, 'openpredict/data/models/drug_disease_model.joblib')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
-    # TODO: How can we get the list of features directly from the built model 
-    # The baseline features are here, but not the one added 
-    # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
-    # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
-    # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
-    model_features = retrieve_features('All').keys()
-
-    # TODO: add an entry to the triplestore for a new run? It will define the ModelEvaluation
-    # save_run_metadata(scores, model_features, hyper_params)
-    add_run_metadata(scores, model_features, hyper_params)
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
-    return clf, scores
+    return clf, scores, hyper_params
 
 
 def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):

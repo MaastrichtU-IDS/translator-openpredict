@@ -8,7 +8,7 @@ on:
     - 'requirements.txt'
     - 'openpredict/**'
     - 'tests/**'
-    - '.github/workflows/*'
+    - '.github/workflows/run-tests.yml'
 
 jobs:
 
