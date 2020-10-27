@@ -3,11 +3,9 @@ import connexion
 import logging
 from datetime import datetime
 from openpredict.predict_utils import get_predictions
-from openpredict.rdf_utils import add_feature_metadata, get_features_from_model
+from openpredict.rdf_utils import get_features_from_model, retrieve_models
 from openpredict.openpredict_model import addEmbedding, train_model
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
-from rdflib import Graph, Literal, RDF, URIRef
-import pkg_resources
 from flask_cors import CORS
 
 # import openpredict.utils
@@ -128,63 +126,7 @@ def get_models():
     
     :return: JSON with models and features
     """
-    g = Graph()
-    g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
-
-    sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
-        PREFIX mls: <http://www.w3.org/ns/mls#>
-        PREFIX prov: <http://www.w3.org/ns/prov#>
-        PREFIX openpredict: <https://w3id.org/openpredict/>
-        PREFIX dc: <http://purl.org/dc/elements/1.1/>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX xml: <http://www.w3.org/XML/1998/namespace>
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        SELECT DISTINCT ?model ?label ?generatedAtTime ?features ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
-        WHERE {
-            ?model a mls:ModelEvaluation ;
-                rdfs:label ?label ;
-                prov:generatedAtTime ?generatedAtTime ;
-                mls:hasInput ?features .
-            ?model mls:specifiedBy [a mls:EvaluationMeasure ; 
-                        rdfs:label "accuracy" ;
-                        mls:hasValue ?accuracy ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                    rdfs:label "precision" ;
-                    mls:hasValue ?precision ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                    rdfs:label "f1" ;
-                    mls:hasValue ?f1 ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                    rdfs:label "recall" ;
-                    mls:hasValue ?recall ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                    rdfs:label "roc_auc" ;
-                    mls:hasValue ?roc_auc ] .
-            ?model mls:specifiedBy [ a mls:EvaluationMeasure ; 
-                    rdfs:label "average_precision" ;
-                    mls:hasValue ?average_precision ] .
-        }
-        """
-    qres = g.query(sparql_get_scores)
-    features_json = {}
-    for row in qres:
-        print(row.label)
-        if row.model in features_json:
-            features_json[row.model]['features'].append(row.features)
-        else:
-            features_json[row.model] = {
-                "label": row.label,
-                "generatedAtTime": row.generatedAtTime,
-                'features': [row.features],
-                'accuracy': row.accuracy,
-                'average_precision': row.average_precision,
-                'f1': row.f1,
-                'precision': row.precision,
-                'recall': row.recall,
-                'roc_auc': row.roc_auc
-            }
-    return features_json
+    return retrieve_models()
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):

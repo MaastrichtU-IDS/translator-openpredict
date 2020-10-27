@@ -10,5 +10,6 @@ pyspark
 findspark
 scikit-learn
 rdflib==4.2.2
+SPARQLWrapper
 networkx==1.11
 # kgx
