@@ -8,7 +8,7 @@ def test_train_model():
     clf, scores, hyper_params = train_model()
 
     assert 0.80 < scores['precision'] < 0.95
-    assert 0.60 < scores['recall'] < 0.80
+    assert 0.60 < scores['recall'] < 0.85
     assert 0.80 < scores['accuracy'] < 0.95
     assert 0.85 < scores['roc_auc'] < 0.95
     assert 0.70 < scores['f1'] < 0.85
