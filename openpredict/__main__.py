@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.predict_model_omim_drugbank import train_omim_drugbank_classifier
+from openpredict.openpredict_model import train_model
 
 @click.command()
 @click.option(
@@ -22,7 +22,7 @@ def start_api(port, server_url, debug, start_spark):
 @click.option('--from-scratch/--no-scratch', default=True, help="Build the features from scratch (default to yes).")
 def train_model(from_scratch):
     print ('from_scratch',from_scratch)
-    train_omim_drugbank_classifier(from_scratch)
+    train_model(from_scratch)
 
 
 @click.group()

@@ -87,7 +87,11 @@ paths:
     post:
       operationId: openpredict.openpredict_api.post_embedding
       summary: Upload your embedding for drugs or diseases
-      description: "Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both "
+      description: |-
+        Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both. 
+        1. provided embeddings will be added to the model
+        2. the model will be retrained
+        3. the model evaluation will be stored in a triplestore
       tags:
       - openpredict
       responses:
@@ -124,6 +128,12 @@ paths:
           required: true
           schema:
             type: string
+        # - name: apikey
+        #   in: query
+        #   description: APIKEY required to upload embeddings
+        #   required: true
+        #   schema:
+        #     type: string
 
   /predict:
     get:

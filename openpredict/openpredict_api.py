@@ -1,9 +1,10 @@
+import os
 import connexion
 import logging
 from datetime import datetime
 from openpredict.predict_utils import get_predictions
-from openpredict.train_utils import generate_feature_metadata, get_features_from_model
-from openpredict.predict_model_omim_drugbank import addEmbedding, train_omim_drugbank_classifier
+from openpredict.rdf_utils import add_feature_metadata, get_features_from_model
+from openpredict.openpredict_model import addEmbedding, train_model
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from rdflib import Graph, Literal, RDF, URIRef
 import pkg_resources
@@ -70,13 +71,19 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
 
 
 def post_embedding(types, emb_name, description):
-    embedding_file = connexion.request.files['embedding_file']
-    print (emb_name, types)
-    addEmbedding(embedding_file, emb_name, types, description)
-    print ('Embeddings uploaded')
-    # train_omim_drugbank_classifier(False)
-    return { 'Embeddings added': 200 }
-    # Code for the different calls of the app
+    """Post JSON embeddings via the API, with simple APIKEY authentication 
+    provided in environment variables 
+    """
+    # if os.getenv('OPENPREDICT_APIKEY') == apikey:
+    if True:
+        embedding_file = connexion.request.files['embedding_file']
+        print (emb_name, types)
+        addEmbedding(embedding_file, emb_name, types, description)
+        print ('Embeddings uploaded')
+        # train_model(False)
+        return { 'Embeddings added': 200 }
+    else:
+        return { 'Forbidden': 403 }
 
 def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
@@ -138,7 +145,7 @@ def get_models():
             ?model a mls:ModelEvaluation ;
                 rdfs:label ?label ;
                 prov:generatedAtTime ?generatedAtTime ;
-                openpredict:has_features ?features .
+                mls:hasInput ?features .
             ?model mls:specifiedBy [a mls:EvaluationMeasure ; 
                         rdfs:label "accuracy" ;
                         mls:hasValue ?accuracy ] .

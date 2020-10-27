@@ -28,6 +28,16 @@ pip3 install -e .
 
 # Run in dev 🚧
 
+### Define environment variable
+
+For triplestore credentials and the APIKEY to use when querying the API
+
+```bash
+export OPENPREDICT_USERNAME=import_user
+export OPENPREDICT_PASSWORD=password
+export OPENPREDICT_APIKEY=myapikey
+```
+
 ### Start API
 
 Use the CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
@@ -108,6 +118,12 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 > cd sphinx-docs/
 > make html
 > ```
+
+## More about the data model
+
+The data model to represent runs, models evaluation, features, etc is based on the Machine Learning Schema. See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html)
+
+> See the OpenPredict diagram in `docs/OpenPREDICT_datamodel.jpg`
 
 # See also 👀
 

@@ -10,7 +10,7 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold
 from joblib import dump, load
 import pkg_resources
-from openpredict.train_utils import generate_classifier_metadata, get_features_from_model, generate_feature_metadata
+from openpredict.rdf_utils import generate_classifier_metadata, get_features_from_model, add_feature_metadata
 from sklearn.metrics.pairwise import cosine_similarity
 
 def adjcencydict2matrix(df, name1, name2):
@@ -46,7 +46,7 @@ def addEmbedding(embedding_file, emb_name, types, description):
     
     print (emb_df.head())
     emb_size = len(emb_df.iloc[0]['embedding'])
-    print ('Emebdding dimension',emb_size)
+    print ('Embedding dimension',emb_size)
 
     (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
 
@@ -90,9 +90,9 @@ def addEmbedding(embedding_file, emb_name, types, description):
     dump((drug_df, disease_df), pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
     print ("New embedding based similarity was added to the similarity tensor")
 
-    generate_feature_metadata(emb_name, description, types)
+    add_feature_metadata(emb_name, description, types)
     # train the model again
-    train_omim_drugbank_classifier(from_scratch=False)
+    train_model(from_scratch=False)
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
     #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
     return "Done" 
@@ -322,15 +322,15 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
     return train_df, test_df
 
 
-def trainModel(train_df, clf):
-    """Train model
+def train_classifier(train_df, clf):
+    """Train classifier
     
     :param train_df: Train dataframe
     :param clf: Classifier
     """
     features = list(train_df.columns.difference(['Drug','Disease','Class']))
     X = train_df[features]
-    print("Dataframe sample of training X (trainModel features):")
+    print("Dataframe sample of training X (train_classifier features):")
     print(X.head())
     y = train_df['Class']
     print(y.head())
@@ -395,9 +395,9 @@ def evaluate(test_df, clf):
     return scores
 
 
-def train_omim_drugbank_classifier(from_scratch=True):
+def train_model(from_scratch=True):
     """The main function to run the drug-disease similarities pipeline, 
-    and build the drug-disease classifier.
+    and train the drug-disease classifier.
     It returns, and stores the generated classifier as a `.joblib` file 
     in the `data/models` folder,
     
@@ -457,7 +457,7 @@ def train_omim_drugbank_classifier(from_scratch=True):
     print('\nModel training, getting the classifier 🏃')
     n_seed = 100
     clf = linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, random_state=n_seed) 
-    clf = trainModel(train_df, clf)
+    clf = train_classifier(train_df, clf)
     time_training = datetime.now()
     print('Model training runtime 🕕  ' + str(time_training - time_calculate_similarity))
 
@@ -474,8 +474,21 @@ def train_omim_drugbank_classifier(from_scratch=True):
     print("\n Train the final model using all dataset")
     final_training = datetime.now()
     train_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
-    clf = linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, random_state=n_seed) 
-    clf = trainModel(train_df, clf)
+
+    hyper_params = {
+        'algorithm': 'LogisticRegression',
+        'penalty': 'l2',
+        'dual': False,
+        'tol': 0.0001,
+        'C': 1.0,
+        'random_state': n_seed
+    }
+    clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
+            dual=hyper_params['dual'], tol=hyper_params['tol'], 
+            C=hyper_params['C'], random_state=hyper_params['random_state']) 
+    # penalty: HyperParameter , l2: HyperParameterSetting
+    # Implementation: LogisticRegression
+    clf = train_classifier(train_df, clf)
     print('Final model training runtime 🕕  ' + str(datetime.now() - final_training))
 
     print('\nStore the model in a .joblib file 💾')
@@ -489,7 +502,9 @@ def train_omim_drugbank_classifier(from_scratch=True):
     # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
     model_features = get_features_from_model('All').keys()
 
-    generate_classifier_metadata(scores, model_features, "OpenPredict classifier (OMIM-DrugBank)")
+    # TODO: add an entry to the triplestore for a new run? It will define the ModelEvaluation
+    # save_run_metadata(scores, model_features, hyper_params)
+    generate_classifier_metadata(scores, model_features, hyper_params)
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores
 
