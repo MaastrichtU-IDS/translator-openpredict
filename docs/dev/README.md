@@ -152,7 +152,7 @@ Run a specific test in a file, and display `print` in the output:
 pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
-# Create a new API service 📝
+# Create a new API call 📝
 
 1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
 
@@ -182,7 +182,7 @@ def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_result
 
 > The parameters provided in openapi.yml and the one of the function in openpredict_api.py need to match!
 
-# Generate documentation 📖
+# Generate docs 📖
 
 Documentation in [docs/](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
@@ -211,7 +211,7 @@ find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Pa
 > make html
 > ```
 
-## More about the data model
+# More about the data model
 
 The data model to represent runs, models evaluation, features, etc is based on the Machine Learning Schema. See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html)
 
