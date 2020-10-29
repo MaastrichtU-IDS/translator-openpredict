@@ -1,0 +1,33 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix asf: <http://projects.apache.org/ns/asfext#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<https://w3id.org/idsproject/project/translator-openpredict>
+  a doap:Project ;
+  doap:name "Translator OpenPredict" ;
+  doap:description "OpenPredict is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). 
+Metadata about runs, models evaluations, features are stored using the ML Schema ontology in a RDF triplestore (Ontotext GraphDB)." ;
+
+  doap:programming-language "Python" ;
+  doap:license <https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/LICENSE> ;
+  doap:homepage <https://maastrichtu-ids.github.io/translator-openpredict> ;
+  doap:bug-database <https://github.com/MaastrichtU-IDS/translator-openpredict/issues> ;
+  
+  
+  doap:service-endpoint <https://openpredict.137.120.31.102.nip.io> ;
+  
+  doap:category "Research" ;
+  doap:repository [
+    a doap:GitRepository ;
+    doap:location <https://github.com/MaastrichtU-IDS/translator-openpredict> ;
+  ] ;
+  doap:maintainer [
+    a foaf:Person ;
+    foaf:name "Remzi Celebi" ;
+    foaf:mbox <mailto:remzi.celebi@maastrichtuniversity.nl>
+  ] ;
+  doap:maintainer [
+    a foaf:Person ;
+    foaf:name "Vincent Emonet" ;
+    foaf:mbox <mailto:vincent.emonet@maastrichtuniversity.nl>
+  ] .

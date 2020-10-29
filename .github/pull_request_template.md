@@ -3,8 +3,8 @@
 ## Pull request checklist
 
 Please check if your PR fulfills the following requirements:
-- [ ] The existing suite of tests have been run (`pytest`)
-- [ ] Docs have been reviewed and added / updated if needed (for bug fixes / features)
+- [ ] The existing suite of tests passes (`pytest`)
+- [ ] Docs have been reviewed and updated if needed (for bug fixes / features)
 - [ ] Tests for the changes have been added (for bug fixes / features) 
 
 
