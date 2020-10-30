@@ -5,8 +5,7 @@
 <https://w3id.org/umids/project/translator-openpredict>
   a doap:Project ;
   doap:name "Translator OpenPredict" ;
-  doap:description "OpenPredict is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). 
-Metadata about runs, models evaluations, features are stored using the ML Schema ontology in a RDF triplestore (Ontotext GraphDB)." ;
+  doap:description "OpenPredict is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). Metadata about runs, models evaluations, features are stored using the ML Schema ontology in a RDF triplestore (Ontotext GraphDB)." ;
 
   doap:programming-language "Python" ;
   doap:license <https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/LICENSE> ;
