@@ -61,13 +61,20 @@ The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext Gr
 
 ### Define environment variables
 
-Define the environment variables for the triplestore credentials and the APIKEY to post embeddings in your local terminal:
+Define the environment variable for the triplestore password in your local terminal:
 
 ```bash
-export OPENPREDICT_USERNAME=import_user
 export OPENPREDICT_PASSWORD=password
-export OPENPREDICT_APIKEY=myapikey
 ```
+
+> You can also use a different repository and user by settting those environment variables:
+>
+> ```bash
+> export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+> export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+> export OPENPREDICT_USERNAME=import_user
+> export OPENPREDICT_APIKEY=myapikey
+> ```
 
 3 options are available to deploy the API:
 

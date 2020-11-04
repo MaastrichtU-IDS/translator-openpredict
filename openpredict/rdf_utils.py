@@ -19,10 +19,19 @@ MLS = Namespace("http://www.w3.org/ns/mls#")
 BIOLINK = Namespace("https://w3.org/biolink/")
 OPENPREDICT = Namespace("https://w3id.org/openpredict/")
 
-SPARQL_ENDPOINT_URL = 'https://graphdb.dumontierlab.com/repositories/translator-openpredict'
-SPARQL_ENDPOINT_UPDATE_URL = 'https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements'
-SPARQL_ENDPOINT_USERNAME = os.getenv('OPENPREDICT_USERNAME')
+# Get SPARQL endpoint credentials from environment variables
 SPARQL_ENDPOINT_PASSWORD = os.getenv('OPENPREDICT_PASSWORD')
+SPARQL_ENDPOINT_USERNAME = os.getenv('OPENPREDICT_USERNAME')
+SPARQL_ENDPOINT_URL = os.getenv('SPARQL_ENDPOINT_URL')
+SPARQL_ENDPOINT_UPDATE_URL = os.getenv('SPARQL_ENDPOINT_UPDATE_URL')
+
+# Default credentials for dev (if no environment variables provided)
+if not SPARQL_ENDPOINT_USERNAME:
+    SPARQL_ENDPOINT_USERNAME='import_user'
+if not SPARQL_ENDPOINT_URL:
+    SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
+if not SPARQL_ENDPOINT_UPDATE_URL:
+    SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
 
 def insert_graph_in_sparql_endpoint(g):
     """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
@@ -30,6 +39,7 @@ def insert_graph_in_sparql_endpoint(g):
     :param g: rdflib graph to insert
     :return: SPARQL update query result
     """
+    # TODO: If debug then we write to text file or to a dev SPARQL endpoint
     sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
     sparql.setMethod(POST)
     # sparql.setHTTPAuth(BASIC)
@@ -50,6 +60,7 @@ def query_sparql_endpoint(query):
     :param query: SPARQL query as a string
     :return: Object containing the result bindings
     """
+    print(SPARQL_ENDPOINT_URL)
     sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
     sparql.setReturnFormat(JSON)
     sparql.setQuery(query)
