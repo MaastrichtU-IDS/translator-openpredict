@@ -44,7 +44,7 @@ jobs:
     - name: Test with pytest with coverage
       run: |
         coverage erase
-        pytest --cov --cov-report xml:coverage.xml tests/*
+        pytest --cov openpredict --cov-report xml:coverage.xml tests/*
         coverage combine --append || true
         coverage report
         coverage xml
