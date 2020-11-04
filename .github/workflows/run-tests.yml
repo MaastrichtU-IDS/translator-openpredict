@@ -45,6 +45,7 @@ jobs:
       run: |
         coverage erase
         pytest --cov openpredict --cov-report xml:coverage.xml tests/*
+        cat coverage.xml
         coverage combine --append || true
         coverage report
         coverage xml
