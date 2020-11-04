@@ -1,12 +1,15 @@
 import os
 import connexion
 import logging
+import shutil
 from datetime import datetime
 from openpredict.openpredict_utils import get_predictions
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, train_model
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
+
+openpredict_data_folder = '/data/openpredict/'
 
 def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -16,6 +19,11 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     :param start_spark: Start a local Spark cluster, default to true
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
+
+    if not os.path.exists(openpredict_data_folder):
+        os.makedirs(openpredict_data_folder)
+        shutil.copy('data/features/openpredict-baseline-omim-drugbank.joblib', openpredict_data_folder + 'features/openpredict-baseline-omim-drugbank.joblib')
+        shutil.copy('data/models/openpredict-baseline-omim-drugbank.joblib', openpredict_data_folder + 'models/openpredict-baseline-omim-drugbank.joblib')
 
     if debug:
         # Run in development mode
@@ -66,7 +74,7 @@ def post_embedding(types, emb_name, description, model_id):
     else:
         return { 'Forbidden': 403 }
 
-def get_predict(entity, model_id, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
+def get_predict(entity, model_id, score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
@@ -75,7 +83,7 @@ def get_predict(entity, model_id, classifier="Predict OMIM-DrugBank", score=None
     time_start = datetime.now()
 
     try:
-        prediction_json = get_predictions(entity, model_id, classifier, score, n_results)
+        prediction_json = get_predictions(entity, model_id, score, n_results)
     except:
         return "Not found", 404
 

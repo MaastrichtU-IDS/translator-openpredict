@@ -86,7 +86,7 @@ def adjcencydict2matrix(df, name1, name2):
     return df.pivot(index=name1, columns=name2)
 
 
-def addEmbedding(embedding_file, emb_name, types, description, model_id):
+def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     """Add embedding to the drug similarity matrix dataframe
 
     :param embedding_file: JSON file containing records ('entity': id, 'embdding': array of numbers )
@@ -106,7 +106,7 @@ def addEmbedding(embedding_file, emb_name, types, description, model_id):
 
     # TODO: now also save the feature dataframe for each run to be able to add embedding to any run?
     # Or can we just use the models/run_id.joblib file instead of having 2 files for 1 run?
-    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
+    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/' + from_model_id + '.joblib'))
 
     if  types == 'Drugs':
         names = drug_df.columns.levels[1]
@@ -143,14 +143,10 @@ def addEmbedding(embedding_file, emb_name, types, description, model_id):
         drug_df= pd.concat([drug_df, df_sim_m],  axis=1)
     elif types == "Diseases":
         disease_df= pd.concat([disease_df, df_sim_m],  axis=1)  
-    
-    # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
-    dump((drug_df, disease_df), pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
-    print ("New embedding based similarity was added to the similarity tensor")
 
     add_feature_metadata(emb_name, description, types)
     # train the model again
-    clf, scores, hyper_params = train_model(from_scratch=False)
+    clf, scores, hyper_params = train_model(from_model_id)
 
      # TODO: How can we get the list of features directly from the built model?
     # The baseline features are here, but not the one added 
@@ -161,8 +157,12 @@ def addEmbedding(embedding_file, emb_name, types, description, model_id):
 
     run_id = add_run_metadata(scores, model_features, hyper_params)
 
-    print('\nStore the model in the file ' + models_folder + run_id + '.joblib 💾')
+    # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    dump((drug_df, disease_df), pkg_resources.resource_filename('openpredict', 'data/features/' + run_id + '.joblib'))
+    print ('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/' + run_id + '.joblib')
+
     dump(clf, models_folder + run_id + '.joblib')
+    print('\nStore the model in the file ' + models_folder + run_id + '.joblib 💾')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
@@ -466,8 +466,29 @@ def evaluate(test_df, clf):
     scores = multimetric_score(clf, X_test, y_test, scorers)
     return scores
 
+def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
+    """Create features dataframes. Use Spark if available for speed, otherwise use pandas
+    :param pairs: pairs
+    :param classes: classes
+    :param drug_df: drug 
+    :param disease_df: disease dataframe
+    :return: Feature dataframe
+    """
+    spark_context = get_spark_context()
+    if spark_context:
+        logging.info('Running Spark ✨')
+        drug_df_bc= spark_context.broadcast(drug_df)
+        disease_df_bc = spark_context.broadcast(disease_df)
+        knownDrugDis_bc = spark_context.broadcast(pairs[classes==1])
+        feature_df= sparkBuildFeatures(spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        logging.info("Finishing Spark jobs 🏁")
+    else:
+        logging.info("Spark cluster not found, using pandas 🐼")
+        feature_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
+    return feature_df
 
-def train_model(from_scratch=True):
+
+def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     """The main function to run the drug-disease similarities pipeline, 
     and train the drug-disease classifier.
     It returns, and stores the generated classifier as a `.joblib` file 
@@ -477,12 +498,12 @@ def train_model(from_scratch=True):
     :return: Classifier of predicted similarities and scores
     """
     time_start = datetime.now()
-    features_folder = "data/features/"
+    baseline_features_folder = "data/baseline_features/"
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
                      'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
     diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
-    drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(features_folder, fn)) for fn in drugfeatfiles]
-    diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(features_folder, fn)) for fn in diseasefeatfiles]
+    drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
+    diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
 
     # Prepare drug-disease dictionary
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
@@ -490,13 +511,12 @@ def train_model(from_scratch=True):
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())
 
-    if not from_scratch and os.path.exists(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib')):
-        print ("Loading the similarity tensor")
-        (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
-    else:
-        # Merge feature matrix
-        drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-        dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    print ("Loading the similarity tensor")
+    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/' + from_model_id + '.joblib'))
+    
+    # Merge feature matrix to start from scratch
+    # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+    # dump((drug_df, disease_df), 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib')
 
     print ("Drug Features ",drug_df.columns.levels[0])
     print ("Disease Features ",disease_df.columns.levels[0])
@@ -565,28 +585,6 @@ def train_model(from_scratch=True):
     return clf, scores, hyper_params
 
 
-def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
-    """Create features dataframes. Use Spark if available for speed, otherwise use pandas
-    :param pairs: pairs
-    :param classes: classes
-    :param drug_df: drug 
-    :param disease_df: disease dataframe
-    :return: Feature dataframe
-    """
-    spark_context = get_spark_context()
-    if spark_context:
-        logging.info('Running Spark ✨')
-        drug_df_bc= spark_context.broadcast(drug_df)
-        disease_df_bc = spark_context.broadcast(disease_df)
-        knownDrugDis_bc = spark_context.broadcast(pairs[classes==1])
-        feature_df= sparkBuildFeatures(spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        logging.info("Finishing Spark jobs 🏁")
-    else:
-        logging.info("Spark cluster not found, using pandas 🐼")
-        feature_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
-
-    return feature_df
-
 def query_omim_drugbank_classifier(input_curie, model_id):
     """The main function to query the drug-disease OpenPredict classifier, 
     It queries the previously generated classifier a `.joblib` file 
@@ -612,7 +610,9 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     #drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
+    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/' + model_id + '.joblib'))
+
+    # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
