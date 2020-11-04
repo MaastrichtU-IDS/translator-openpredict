@@ -12,7 +12,7 @@ def test_train_model():
     assert 0.80 < scores['accuracy'] < 0.95
     assert 0.85 < scores['roc_auc'] < 0.95
     assert 0.70 < scores['f1'] < 0.85
-    assert 0.80 < scores['average_precision'] < 0.95
+    assert 0.75 < scores['average_precision'] < 0.95
 
 def test_calculate_combined():
   """Test geometric mean, a measure for drug-disease similarities (drugbank-omim)"""
