@@ -51,7 +51,7 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     api.run(port=port, debug=debug, server=deployment_server)
 
 
-def post_embedding(types, emb_name, description):
+def post_embedding(types, emb_name, description, model_id):
     """Post JSON embeddings via the API, with simple APIKEY authentication 
     provided in environment variables 
     """
@@ -59,14 +59,14 @@ def post_embedding(types, emb_name, description):
     if True:
         embedding_file = connexion.request.files['embedding_file']
         print (emb_name, types)
-        addEmbedding(embedding_file, emb_name, types, description)
+        addEmbedding(embedding_file, emb_name, types, description, model_id)
         print ('Embeddings uploaded')
         # train_model(False)
         return { 'Embeddings added': 200 }
     else:
         return { 'Forbidden': 403 }
 
-def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
+def get_predict(entity, model_id, classifier="Predict OMIM-DrugBank", score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
@@ -75,7 +75,7 @@ def get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_result
     time_start = datetime.now()
 
     try:
-        prediction_json = get_predictions(entity, classifier, score, n_results)
+        prediction_json = get_predictions(entity, model_id, classifier, score, n_results)
     except:
         return "Not found", 404
 

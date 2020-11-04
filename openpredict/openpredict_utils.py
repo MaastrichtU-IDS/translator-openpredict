@@ -4,7 +4,7 @@ import requests
 from openpredict.openpredict_model import query_omim_drugbank_classifier
 
 
-def get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=None, n_results=None):
+def get_predictions(id_to_predict, model_id, classifier='Predict OMIM-DrugBank', score=None, n_results=None):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
@@ -16,7 +16,7 @@ def get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=Non
     # classifier: Predict OMIM-DrugBank
     logging.info("Using classifier: " + classifier)
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict)
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
     
     if score:
         predictions_array = [p for p in predictions_array if p['score'] >= score]

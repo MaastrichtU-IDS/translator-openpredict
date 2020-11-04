@@ -16,6 +16,8 @@ from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_featu
 # from openpredict.openpredict_utils import get_spark_context
 # from openpredict.openpredict_utils import get_predictions
 
+models_folder = 'openpredict/data/models/'
+
 hyper_params = {
     'penalty': 'l2',
     'dual': False,
@@ -84,7 +86,7 @@ def adjcencydict2matrix(df, name1, name2):
     return df.pivot(index=name1, columns=name2)
 
 
-def addEmbedding(embedding_file, emb_name, types, description):
+def addEmbedding(embedding_file, emb_name, types, description, model_id):
     """Add embedding to the drug similarity matrix dataframe
 
     :param embedding_file: JSON file containing records ('entity': id, 'embdding': array of numbers )
@@ -102,6 +104,8 @@ def addEmbedding(embedding_file, emb_name, types, description):
     emb_size = len(emb_df.iloc[0]['embedding'])
     print ('Embedding dimension',emb_size)
 
+    # TODO: now also save the feature dataframe for each run to be able to add embedding to any run?
+    # Or can we just use the models/run_id.joblib file instead of having 2 files for 1 run?
     (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
 
     if  types == 'Drugs':
@@ -155,7 +159,11 @@ def addEmbedding(embedding_file, emb_name, types, description):
     # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
     model_features = retrieve_features('All').keys()
 
-    add_run_metadata(scores, model_features, hyper_params)
+    run_id = add_run_metadata(scores, model_features, hyper_params)
+
+    print('\nStore the model in the file ' + models_folder + run_id + '.joblib 💾')
+    dump(clf, models_folder + run_id + '.joblib')
+    # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
     #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
@@ -549,8 +557,8 @@ def train_model(from_scratch=True):
     clf = train_classifier(train_df, clf)
     print('Final model training runtime 🕕  ' + str(datetime.now() - final_training))
 
-    print('\nStore the model in a .joblib file 💾')
-    dump(clf, 'openpredict/data/models/drug_disease_model.joblib')
+    # print('\nStore the model in a .joblib file 💾')
+    # dump(clf, models_folder + 'openpredict-baseline-omim-drugbank.joblib')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
@@ -579,7 +587,7 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
 
     return feature_df
 
-def query_omim_drugbank_classifier(input_curie):
+def query_omim_drugbank_classifier(input_curie, model_id):
     """The main function to query the drug-disease OpenPredict classifier, 
     It queries the previously generated classifier a `.joblib` file 
     in the `data/models` folder
@@ -620,8 +628,8 @@ def query_omim_drugbank_classifier(input_curie):
     commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
 
     # Load classifier
-    # clf = load('data/models/drug_disease_model.joblib') 
-    clf = load(pkg_resources.resource_filename('openpredict', 'data/models/drug_disease_model.joblib')) 
+    # clf = load('data/models/openpredict-baseline-omim-drugbank.joblib') 
+    clf = load(pkg_resources.resource_filename('openpredict', 'data/models/' + model_id + '.joblib')) 
 
     pairs=[]
     classes=[]

@@ -38,7 +38,7 @@ import pandas as pd
 
 
 ### Print Dataframes
-# clf = load('openpredict/data/models/drug_disease_model.joblib') 
+# clf = load('openpredict/data/models/openpredict-baseline-omim-drugbank.joblib') 
 # print(clf.feature_names)
 
 # (drug_df, disease_df) = load('openpredict/data/features/drug_disease_dataframes.joblib')

@@ -128,6 +128,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: model_id
+          in: query
+          description: Provide the ID of the run output you want to use as base model to add the embeddings
+          required: false
+          example: openpredict-baseline-omim-drugbank
+          schema:
+            type: string
         # - name: apikey
         #   in: query
         #   description: APIKEY required to upload embeddings
@@ -150,14 +157,15 @@ paths:
         required: true
         schema:
           type: string
-      - name: classifier
+      - name: model_id
         in: query
-        description: Classifier to use to predict associations
+        description: Provide the ID of the run output you want to use as model to use to predict associations
         required: false
+        example: openpredict-baseline-omim-drugbank
         schema:
           type: string
-          enum: ["Predict OMIM-DrugBank"]
-          default: "Predict OMIM-DrugBank"
+          # default: "Predict OMIM-DrugBank"
+          # enum: ["Predict OMIM-DrugBank"]
       - name: score
         in: query
         description: Minimum score of predictions to return (0 to 1)

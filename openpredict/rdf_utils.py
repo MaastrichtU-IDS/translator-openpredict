@@ -95,7 +95,7 @@ def add_run_metadata(scores, model_features, hyper_params):
     :param scores: scores
     :param model_features: List of features in the model
     :param label: label of the classifier
-    :return: predictions in array of JSON object
+    :return: Run id
     """
     g = Graph()
     # Generate random UUID for the run ID
@@ -109,6 +109,7 @@ def add_run_metadata(scores, model_features, hyper_params):
 
     # Add Run metadata
     g.add((run_uri, RDF.type, MLS['Run']))
+    g.add((run_uri, DC.identifier, Literal(run_id)))
     g.add((run_uri, PROV['generatedAtTime'], Literal(datetime.now(), datatype=XSD.dateTime)))
     g.add((run_uri, MLS['realizes'], OPENPREDICT['LogisticRegression']))
     g.add((run_uri, MLS['executes'], implementation_uri))
@@ -160,7 +161,7 @@ def add_run_metadata(scores, model_features, hyper_params):
         # http://ml-schema.github.io/documentation/ML%20Schema.html#overview
 
     insert_graph_in_sparql_endpoint(g)
-    return g
+    return run_id
 
 
 def retrieve_features(type='All'):
@@ -209,6 +210,7 @@ def retrieve_models():
         SELECT DISTINCT ?run ?generatedAtTime ?featureId ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
         WHERE {
     		?run a mls:Run ;
+                ?features dc:identifier ?runId .
            		prov:generatedAtTime ?generatedAtTime ;
                 mls:hasInput ?features ;
             	mls:hasOutput ?evaluation .
@@ -237,12 +239,13 @@ def retrieve_models():
         """
 
     results = query_sparql_endpoint(sparql_get_scores)
-    features_json = {}
+    models_json = {}
     for result in results:
-        if result['run']['value'] in features_json:
-            features_json[result['run']['value']]['features'].append(result['featureId']['value'])
+        if result['run']['value'] in models_json:
+            models_json[result['run']['value']]['features'].append(result['featureId']['value'])
         else:
-            features_json[result['run']['value']] = {
+            models_json[result['run']['value']] = {
+                "id": result['runId']['value'],
                 "generatedAtTime": result['generatedAtTime']['value'],
                 'features': [result['featureId']['value']],
                 'accuracy': result['accuracy']['value'],
@@ -258,4 +261,4 @@ def retrieve_models():
         #     "description": result['description']['value'],
         #     "type": result['embeddingType']['value']
         # }
-    return features_json
+    return models_json
