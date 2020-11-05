@@ -1,6 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
+import pathlib
 from openpredict.openpredict_model import train_model, geometricMean, addEmbedding
 
 def test_train_model():
