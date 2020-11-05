@@ -61,10 +61,10 @@ def post_embedding(types, emb_name, description, model_id):
     if True:
         embedding_file = connexion.request.files['embedding_file']
         print (emb_name, types)
-        addEmbedding(embedding_file, emb_name, types, description, model_id)
+        run_id = addEmbedding(embedding_file, emb_name, types, description, model_id)
         print ('Embeddings uploaded')
         # train_model(False)
-        return { 'Embeddings added': 200 }
+        return { 'Embeddings added for run ' + run_id: 200 }
     else:
         return { 'Forbidden': 403 }
 
@@ -76,14 +76,16 @@ def get_predict(entity, model_id, score=None, n_results=None):
     """
     time_start = datetime.now()
 
-    try:
-        prediction_json = get_predictions(entity, model_id, score, n_results)
-    except:
-        return "Not found", 404
+    prediction_json = get_predictions(entity, model_id, score, n_results)
+    # try:
+    #     prediction_json = get_predictions(entity, model_id, score, n_results)
+    # except:
+    #     return "Not found", 404
 
     relation = "biolink:treated_by"
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
-    return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
+    return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)}
+    # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
 def get_predicates():
     """Get predicates and entities provided by the API

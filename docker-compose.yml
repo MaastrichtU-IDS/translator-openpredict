@@ -14,6 +14,7 @@ services:
     environment: 
       OPENPREDICT_USERNAME: ${OPENPREDICT_USERNAME}
       OPENPREDICT_PASSWORD: ${OPENPREDICT_PASSWORD}
+      OPENPREDICT_DATA_DIR: /data/openpredict
       # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
       PYSPARK_PYTHON: /opt/conda/bin/python3
       PYSPARK_DRIVER_PYTHON: /opt/conda/bin/python3

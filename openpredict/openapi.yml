@@ -131,7 +131,7 @@ paths:
         - name: model_id
           in: query
           description: Provide the ID of the run output you want to use as base model to add the embeddings
-          required: false
+          required: true
           example: openpredict-baseline-omim-drugbank
           schema:
             type: string

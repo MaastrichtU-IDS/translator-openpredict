@@ -106,7 +106,8 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
 
     # TODO: now also save the feature dataframe for each run to be able to add embedding to any run?
     # Or can we just use the models/run_id.joblib file instead of having 2 files for 1 run?
-    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/' + from_model_id + '.joblib'))
+    print('📥 Loading features file: ' + get_openpredict_dir('features/' + from_model_id + '.joblib'))
+    (drug_df, disease_df)= load(get_openpredict_dir('features/' + from_model_id + '.joblib'))
 
     if  types == 'Drugs':
         names = drug_df.columns.levels[1]
@@ -167,7 +168,7 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
 
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
     #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
-    return "Done" 
+    return run_id 
 
 
 def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
@@ -511,8 +512,8 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())
 
-    print ("Loading the similarity tensor")
-    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/' + from_model_id + '.joblib'))
+    print ("📥 Loading the similarity tensor from " + get_openpredict_dir('features/' + from_model_id + '.joblib'))
+    (drug_df, disease_df)= load(get_openpredict_dir('features/' + from_model_id + '.joblib'))
     
     # Merge feature matrix to start from scratch
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
@@ -607,7 +608,8 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     #drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/' + model_id + '.joblib'))
+    print("📥 Loading features " + get_openpredict_dir('features/' + model_id + '.joblib'))
+    (drug_df, disease_df)= load(get_openpredict_dir('features/' + model_id + '.joblib'))
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
@@ -624,8 +626,8 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     commonDrugs= drugwithfeatures.intersection( drugDiseaseKnown.Drug.unique())
     commonDiseases=  diseaseswithfeatures.intersection(drugDiseaseKnown.Disease.unique() )
 
-    # Load classifier
     # clf = load('data/models/openpredict-baseline-omim-drugbank.joblib') 
+    print("📥 Loading classifier " + get_openpredict_dir('models/' + model_id + '.joblib'))
     clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
 
     pairs=[]

@@ -57,7 +57,7 @@ source .venv/bin/activate
 
 # Deploy OpenPredict API
 
-The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore
+The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore.
 
 ### Define environment variables
 
@@ -67,13 +67,16 @@ Define the environment variable for the triplestore password in your local termi
 export OPENPREDICT_PASSWORD=password
 ```
 
-> You can also use a different repository and user by settting those environment variables:
+Add it to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
+
+> You can also use a different repository and user by setting those environment variables:
 >
 > ```bash
 > export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
 > export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
 > export OPENPREDICT_USERNAME=import_user
 > export OPENPREDICT_APIKEY=myapikey
+> export OPENPREDICT_DATA_DIR=/data/openpredict
 > ```
 
 3 options are available to deploy the API:

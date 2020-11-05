@@ -1,11 +1,13 @@
 import logging
 import uuid 
 import os
+import pkg_resources
 from datetime import datetime
 from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 from SPARQLWrapper import SPARQLWrapper, POST, JSON
 
+OPENPREDICT_GRAPH = 'https://w3id.org/openpredict/graph'
 OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'
 
 RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
@@ -39,17 +41,16 @@ def insert_graph_in_sparql_endpoint(g):
     :param g: rdflib graph to insert
     :return: SPARQL update query result
     """
-    # TODO: If debug then we write to text file or to a dev SPARQL endpoint
     sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
     sparql.setMethod(POST)
     # sparql.setHTTPAuth(BASIC)
     sparql.setCredentials(SPARQL_ENDPOINT_USERNAME, SPARQL_ENDPOINT_PASSWORD)
-    query = """INSERT DATA {{ GRAPH  <https://w3id.org/openpredict/graph>
+    query = """INSERT DATA {{ GRAPH  <{graph}>
     {{
     {ntriples}
     }}
     }}
-    """.format(ntriples=g.serialize(format='nt').decode('utf-8'))
+    """.format(ntriples=g.serialize(format='nt').decode('utf-8'), graph=OPENPREDICT_GRAPH)
 
     sparql.setQuery(query)
     return sparql.query()
@@ -67,6 +68,21 @@ def query_sparql_endpoint(query):
     results = sparql.query().convert()
     return results["results"]["bindings"]
 
+def init_triplestore():
+    """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
+    Init using the data/openpredict-metadata.ttl RDF file
+    """
+    check_baseline_run_query = """SELECT DISTINCT ?runType
+    WHERE {
+        <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
+    } LIMIT 10
+    """
+    results = query_sparql_endpoint(check_baseline_run_query)
+    if (len(results) < 1):
+        g = Graph()
+        g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
+        insert_graph_in_sparql_endpoint(g)
+        print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
 def add_feature_metadata(id, description, type):
     """Generate RDF metadata for a feature
@@ -207,10 +223,10 @@ def retrieve_models():
         PREFIX dc: <http://purl.org/dc/elements/1.1/>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        SELECT DISTINCT ?run ?generatedAtTime ?featureId ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
+        SELECT DISTINCT ?run ?runId ?generatedAtTime ?featureId ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
         WHERE {
     		?run a mls:Run ;
-                ?features dc:identifier ?runId .
+                dc:identifier ?runId ;
            		prov:generatedAtTime ?generatedAtTime ;
                 mls:hasInput ?features ;
             	mls:hasOutput ?evaluation .
