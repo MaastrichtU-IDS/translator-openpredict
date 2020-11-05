@@ -69,6 +69,6 @@ def test_post_embeddings(client):
         # print(embeddings_json)
         response = client.post(url, 
                             data=json.dumps(embeddings_json), 
-                            content_type='application/json')
+                            headers={'Content-Type': 'application/json'})
         print(response.status_code)
         assert response.status_code == 200
