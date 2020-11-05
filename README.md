@@ -13,7 +13,7 @@ The API will return predicted targets for the given entity, such as:
 * The **potential drugs treating a given disease**
 * The **potential diseases a given drug could treat**
 
-> Feel free to try the API at **[openpredict.137.120.31.102.nip.io](https://openpredict.137.120.31.102.nip.io)**
+> Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
 ### Predict operation
 
@@ -48,7 +48,7 @@ The API will return the list of predicted target for the given entity, the label
 }
 ```
 
-> Try it at [https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394](https://openpredict.137.120.31.102.nip.io/predict?entity=DRUGBANK:DB00394)
+> Try it at [https://openpredict.semanticscience.org/predict?entity=DRUGBANK:DB00394](https://openpredict.semanticscience.org/predict?entity=DRUGBANK:DB00394)
 
 ### Query operation
 
@@ -90,7 +90,7 @@ See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query exa
 
 The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
 
-> Try it at [https://openpredict.137.120.31.102.nip.io/predicates](https://openpredict.137.120.31.102.nip.io/predicates)
+> Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
 
 ### Notebook example
 

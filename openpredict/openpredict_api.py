@@ -34,7 +34,7 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     api = connexion.App(__name__, options={"swagger_url": ""})
 
     ## Server URL not taken into account when running in Docker
-    # api.add_api('openapi.yml', arguments={'server_url': 'https://openpredict.137.120.31.102.nip.io'})
+    # api.add_api('openapi.yml', arguments={'server_url': 'https://openpredict.semanticscience.org'})
     api.add_api('openapi.yml', arguments={'server_url': server_url})
     # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
 

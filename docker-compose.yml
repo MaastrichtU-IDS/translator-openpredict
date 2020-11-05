@@ -25,8 +25,6 @@ services:
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
       VIRTUAL_HOST: openpredict.semanticscience.org
       LETSENCRYPT_HOST: openpredict.semanticscience.org
-      # VIRTUAL_HOST: openpredict.137.120.31.102.nip.io
-      # LETSENCRYPT_HOST: openpredict.137.120.31.102.nip.io
       VIRTUAL_PORT: 8808
     # volumes:
     #   - ./data:/data
