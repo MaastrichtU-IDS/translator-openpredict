@@ -1,5 +1,5 @@
 from joblib import load
-from openpredict.openpredict_api import get_predict
+from openpredict.openpredict_api import get_predict, init_openpredict_dir
 from openpredict.openpredict_model import train_model
 from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, retrieve_features
 from datetime import datetime
@@ -73,24 +73,24 @@ import pandas as pd
 
 ### Generate RDF metadata for baseline features and first run
 
-add_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
-add_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "Drugs")
-add_feature_metadata("PPI-SIM", "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network", "Drugs")
-add_feature_metadata("TC", "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity", "Drugs")
-add_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "Drugs")
-add_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "Diseases")
-add_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "Diseases")
+# add_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
+# add_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "Drugs")
+# add_feature_metadata("PPI-SIM", "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network", "Drugs")
+# add_feature_metadata("TC", "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity", "Drugs")
+# add_feature_metadata("SE-SIM", "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects", "Drugs")
+# add_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "Diseases")
+# add_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "Diseases")
 
-hyper_params = {
-    'penalty': 'l2',
-    'dual': False,
-    'tol': 0.0001,
-    'C': 1.0,
-    'random_state': 100
-}
-scores = {'precision': 0.8602150537634409, 'recall': 0.7228915662650602, 'accuracy': 0.8683417085427135, 
-    'roc_auc': 0.8988169874066402, 'f1': 0.7855973813420621, 'average_precision': 0.8733631857757298}
+# hyper_params = {
+#     'penalty': 'l2',
+#     'dual': False,
+#     'tol': 0.0001,
+#     'C': 1.0,
+#     'random_state': 100
+# }
+# scores = {'precision': 0.8602150537634409, 'recall': 0.7228915662650602, 'accuracy': 0.8683417085427135, 
+#     'roc_auc': 0.8988169874066402, 'f1': 0.7855973813420621, 'average_precision': 0.8733631857757298}
 
-model_features = retrieve_features('All').keys()
+# model_features = retrieve_features('All').keys()
 
-add_run_metadata(scores, model_features, hyper_params)
+# add_run_metadata(scores, model_features, hyper_params)

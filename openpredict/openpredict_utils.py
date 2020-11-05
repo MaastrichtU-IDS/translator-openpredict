@@ -5,15 +5,19 @@ import requests
 from openpredict.openpredict_model import query_omim_drugbank_classifier
 from openpredict.rdf_utils import add_feature_metadata
 
-OPENPREDICT_DATA_FOLDER = os.getenv('OPENPREDICT_DATA_FOLDER')
-if not OPENPREDICT_DATA_FOLDER:
-    OPENPREDICT_DATA_FOLDER = 'data/'
-    # OPENPREDICT_DATA_FOLDER = '/data/openpredict/'
+# OPENPREDICT_DATA_FOLDER = os.getenv('OPENPREDICT_DATA_FOLDER')
+# if not OPENPREDICT_DATA_FOLDER:
+#     OPENPREDICT_DATA_FOLDER = 'data/'
+#     # OPENPREDICT_DATA_FOLDER = '/data/openpredict/'
 
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
     Where models and features for runs are stored
     """
+    OPENPREDICT_DATA_FOLDER = os.getenv('OPENPREDICT_DATA_FOLDER')
+    if not OPENPREDICT_DATA_FOLDER:
+        OPENPREDICT_DATA_FOLDER = 'data/'
+        # OPENPREDICT_DATA_FOLDER = '/data/openpredict/'
     return OPENPREDICT_DATA_FOLDER + subfolder
 
 def init_openpredict_dir():
