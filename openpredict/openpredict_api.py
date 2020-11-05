@@ -58,6 +58,7 @@ def post_embedding(types, emb_name, description, model_id):
     provided in environment variables 
     """
     # if os.getenv('OPENPREDICT_APIKEY') == apikey:
+    print ('Post a new embeddings')
     if True:
         embedding_file = connexion.request.files['embedding_file']
         print (emb_name, types)
