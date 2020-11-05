@@ -1,8 +1,10 @@
 import pytest
 import connexion
 import json
+from openpredict.openpredict_utils import init_openpredict_dir
 
 # Create and start Flask from openapi.yml before running tests
+init_openpredict_dir()
 flask_app = connexion.FlaskApp(__name__)
 flask_app.add_api('../openpredict/openapi.yml')
 @pytest.fixture(scope='module')
