@@ -14,7 +14,7 @@ import pkg_resources
 from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata
 # from openpredict.openpredict_utils import get_spark_context
 # from openpredict.openpredict_utils import get_spark_context
-from openpredict.openpredict_utils import get_openpredict_dir
+from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels
 
 # models_folder = 'openpredict/data/models/'
 
@@ -673,3 +673,64 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # prediction_results=prediction_df.to_json(orient='records')
     prediction_results=prediction_df.to_dict(orient='records')
     return prediction_results
+
+def get_predictions(id_to_predict, model_id, score=None, n_results=None):
+    """Run classifiers to get predictions
+
+    :param id_to_predict: Id of the entity to get prediction from
+    :param classifier: classifier used to get the predictions
+    :param score: score minimum of predictions
+    :param n_results: number of predictions to return
+    :return: predictions in array of JSON object
+    """
+    # classifier: Predict OMIM-DrugBank
+    # TODO: improve when we will have more classifier
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
+    
+    if score:
+        predictions_array = [p for p in predictions_array if p['score'] >= score]
+    if n_results:
+        # Predictions are already sorted from higher score to lower
+        predictions_array = predictions_array[:n_results]
+    
+    # Build lists of unique node IDs to retrieve label
+    predicted_ids = set([])
+    for prediction in predictions_array:
+        for key, value in prediction.items():
+            if key != 'score':
+                predicted_ids.add(value)
+    labels_dict = get_entities_labels(predicted_ids)
+
+    # Add label for each ID, and reformat the dict using source/target
+    labelled_predictions = []
+    for prediction in predictions_array:
+        labelled_prediction = {}
+        for key, value in prediction.items():
+            if key == 'score':
+                labelled_prediction['score'] = value
+            elif value == id_to_predict:
+                labelled_prediction['source'] = {
+                    'id': id_to_predict,
+                    'type': key
+                }
+                if id_to_predict in labels_dict and labels_dict[id_to_predict]:
+                    labelled_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
+            else:
+                # Then it is the target node
+                labelled_prediction['target'] = {
+                    'id': value,
+                    'type': key
+                }
+                if value in labels_dict and labels_dict[value]:
+                    labelled_prediction['target']['label'] = labels_dict[value]['id']['label']
+        labelled_predictions.append(labelled_prediction)
+        # returns
+        # { score: 12,
+        #  source: {
+        #      id: DB0001
+        #      type: drug,
+        #      label: a drug
+        #  },
+        #  target { .... }}
+    
+    return labelled_predictions

@@ -1,4 +1,4 @@
-from openpredict.openpredict_utils import get_predictions
+from openpredict.openpredict_model import get_predictions
 
 def typed_results_to_reasonerapi(reasoner_query, model_id):
     """Convert an array of predictions objects to ReasonerAPI format

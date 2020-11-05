@@ -2,10 +2,9 @@ import os
 import connexion
 import logging
 from datetime import datetime
-from openpredict.openpredict_utils import get_predictions
 from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import retrieve_features, retrieve_models
-from openpredict.openpredict_model import addEmbedding, train_model
+from openpredict.openpredict_model import addEmbedding, get_predictions
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
 
