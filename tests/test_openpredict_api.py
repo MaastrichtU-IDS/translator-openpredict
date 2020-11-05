@@ -65,7 +65,7 @@ def test_post_embeddings(client):
     with open('tests/data/neurodkg_embedding.json',  encoding="utf8") as data_file:
         json_data = json.load(data_file)
         response = client.post(url, 
-                            data=json.dumps(json_data), 
+                            data=json_data, 
                             content_type='application/json')
         print(response.status_code)
         assert response.status_code == 200
