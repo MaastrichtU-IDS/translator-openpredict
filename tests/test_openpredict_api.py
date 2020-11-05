@@ -2,7 +2,9 @@ import pytest
 import connexion
 import json
 import pathlib
+from requests_toolbelt import MultipartEncoder
 from openpredict.openpredict_utils import init_openpredict_dir
+from openpredict.openpredict_model import addEmbedding
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
@@ -60,15 +62,28 @@ def test_post_reasoner_predict(client):
     assert len(edges) == 300
     assert edges[0]['target_id'] == 'OMIM:246300'
 
-def test_post_embeddings(client):
-    """Test POST embedding call to add embeddings to the model and rebuild it"""
-    url = '/embedding?types=Both&emb_name=test_embedding&description=Embeddingdescription&model_id=openpredict-baseline-omim-drugbank'
-    embeddings_filepath = pathlib.Path(__file__).parent.joinpath("data/neurodkg_embedding.json")
+def test_post_embeddings():
+    """Test add embeddings to the model and rebuild it"""
+    embeddings_filepath = str(pathlib.Path(__file__).parent.joinpath("data/neurodkg_embedding.json"))
+    
     with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
-        embeddings_json = json.load(embeddings_file)
-        # print(embeddings_json)
-        response = client.post(url, 
-                            data=json.dumps(embeddings_json), 
-                            headers={'Content-Type': 'application/json'})
-        print(response.status_code)
-        assert response.status_code == 200
+        run_id = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
+        assert len(run_id) == 36
+    
+    # curl -X POST "http://localhost:8808/embedding?types=Both&emb_name=test4&description=test&model_id=openpredict-baseline-omim-drugbank" -H  "accept: */*" -H  "Content-Type: multipart/form-data" -F "embedding_file=@neurodkg_embedding.json;type=application/json"
+    # url = '/embedding?types=Both&emb_name=test_embedding&description=Embeddingdescription&model_id=openpredict-baseline-omim-drugbank'
+    # files = {
+    #     'embedding_file': ('neurodkg_embedding.json;type', open(embeddings_filepath + ';type', 'rb')),
+    # }
+    # headers = {
+    #     'accept': '*/*',
+    #     'Content-Type': 'multipart/form-data',
+    # }
+    # response = client.post(url, 
+    #                         # files=('embedding_file', json.dumps(embeddings_json)), 
+    #                         files=files,
+    #                         headers=headers)
+    #                         # content_type='application/json'))
+    # print(response.status_code)
+    # assert response.status_code == 200
+
