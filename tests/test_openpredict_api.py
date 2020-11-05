@@ -1,6 +1,7 @@
 import pytest
 import connexion
 import json
+import pathlib
 from openpredict.openpredict_utils import init_openpredict_dir
 
 # Create and start Flask from openapi.yml before running tests
@@ -62,10 +63,12 @@ def test_post_reasoner_predict(client):
 def test_post_embeddings(client):
     """Test POST embedding call to add embeddings to the model and rebuild it"""
     url = '/embedding?types=Both&emb_name=test_embedding&description=Embedding%20description&model_id=openpredict-baseline-omim-drugbank'
-    with open('tests/data/neurodkg_embedding.json',  encoding="utf8") as data_file:
-        json_data = json.load(data_file)
+    embeddings_filepath = pathlib.Path(__file__).parent.joinpath("data/neurodkg_embedding.json")
+    with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
+        embeddings_json = json.load(embeddings_file)
+        print(embeddings_json)
         response = client.post(url, 
-                            data=json_data, 
+                            data=json.dumps(embeddings_json), 
                             content_type='application/json')
         print(response.status_code)
         assert response.status_code == 200
