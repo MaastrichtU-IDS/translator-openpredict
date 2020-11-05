@@ -8,5 +8,5 @@ __pycache__/
 .venv/
 venv/
 
-# openpredict/data/features/drug_disease_dataframes.joblib
-# openpredict/data/models/openpredict-baseline-omim-drugbank.joblib
+openpredict/data/features/openpredict-baseline-omim-drugbank.joblib
+openpredict/data/models/openpredict-baseline-omim-drugbank.joblib

@@ -1,15 +1,12 @@
 import os
 import connexion
 import logging
-import shutil
 from datetime import datetime
-from openpredict.openpredict_utils import get_predictions
+from openpredict.openpredict_utils import get_predictions, get_openpredict_dir, init_openpredict_dir
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, train_model
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
-
-openpredict_data_folder = '/data/openpredict/'
 
 def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -20,10 +17,7 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
     """
     print("Starting the \033[1mTranslator OpenPredict API\033[0m 🔮🐍")
 
-    if not os.path.exists(openpredict_data_folder):
-        os.makedirs(openpredict_data_folder)
-        shutil.copy('data/features/openpredict-baseline-omim-drugbank.joblib', openpredict_data_folder + 'features/openpredict-baseline-omim-drugbank.joblib')
-        shutil.copy('data/models/openpredict-baseline-omim-drugbank.joblib', openpredict_data_folder + 'models/openpredict-baseline-omim-drugbank.joblib')
+    init_openpredict_dir()
 
     if debug:
         # Run in development mode
@@ -127,13 +121,14 @@ def post_reasoner_predict(request_body):
     :return: Predictions as a ReasonerStdAPI Message
     """
     query_graph = request_body["message"]["query_graph"]
+    model_id = 'openpredict-baseline-omim-drugbank'
     print(query_graph)
     if len(query_graph["edges"]) == 0:
         return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
     if len(query_graph["edges"]) > 1:
         return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-    reasonerapi_response = typed_results_to_reasonerapi(request_body)
+    reasonerapi_response = typed_results_to_reasonerapi(request_body, model_id)
 
     # TODO: populate edges/nodes with association predictions    
     #  Edge: {

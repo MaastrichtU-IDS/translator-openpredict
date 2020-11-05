@@ -14,9 +14,9 @@ import pkg_resources
 from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata
 # from openpredict.openpredict_utils import get_spark_context
 # from openpredict.openpredict_utils import get_spark_context
-# from openpredict.openpredict_utils import get_predictions
+from openpredict.openpredict_utils import get_openpredict_dir
 
-models_folder = 'openpredict/data/models/'
+# models_folder = 'openpredict/data/models/'
 
 hyper_params = {
     'penalty': 'l2',
@@ -158,11 +158,11 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     run_id = add_run_metadata(scores, model_features, hyper_params)
 
     # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
-    dump((drug_df, disease_df), pkg_resources.resource_filename('openpredict', 'data/features/' + run_id + '.joblib'))
+    dump((drug_df, disease_df), get_openpredict_dir('features/' + run_id + '.joblib'))
     print ('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/' + run_id + '.joblib')
 
-    dump(clf, models_folder + run_id + '.joblib')
-    print('\nStore the model in the file ' + models_folder + run_id + '.joblib 💾')
+    dump(clf, get_openpredict_dir('models/' + run_id + '.joblib'))
+    print('\nStore the model in the file ' + get_openpredict_dir('models/' + run_id) + '.joblib 💾')
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
@@ -537,9 +537,6 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     knownDrugDisease = pairs_train[classes_train==1]
     time_pairs_train = datetime.now()
 
-    print('Store Drug and Disease DF')
-    drug_df, disease_df, knownDrugDisease
-
     print('Pairs train runtime 🕓  ' + str(time_pairs_train - time_start))
     print('\nCalculate the combined similarity of the training pairs 🏳️‍🌈')
     train_df, test_df = calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
@@ -629,7 +626,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
 
     # Load classifier
     # clf = load('data/models/openpredict-baseline-omim-drugbank.joblib') 
-    clf = load(pkg_resources.resource_filename('openpredict', 'data/models/' + model_id + '.joblib')) 
+    clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
 
     pairs=[]
     classes=[]

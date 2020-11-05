@@ -18,13 +18,13 @@ from openpredict.rdf_utils import add_run_metadata, retrieve_features
 def start_api(port, server_url, debug, start_spark):
     start_openpredict_api(port, server_url, debug, start_spark)
 
-
+# TODO: update this call to make it "addEmbeddings?"
 @click.command()
-@click.option('--from-scratch/--no-scratch', default=True, help="Build the features from scratch (default to yes).")
-def train_model(from_scratch):
-    print ('from_scratch',from_scratch)
+@click.option('--model', default='openpredict-baseline-omim-drugbank', help="Build the features from scratch (default to yes).")
+def train_model(model):
+    print ('Using model: ', model)
     model_features = retrieve_features('All').keys()
-    clf, scores, hyper_params = train_model(from_scratch)
+    clf, scores, hyper_params = train_model(model)
     add_run_metadata(scores, model_features, hyper_params)
 
 

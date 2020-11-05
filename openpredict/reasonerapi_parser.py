@@ -1,6 +1,6 @@
 from openpredict.openpredict_utils import get_predictions
 
-def typed_results_to_reasonerapi(reasoner_query):
+def typed_results_to_reasonerapi(reasoner_query, model_id):
     """Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
@@ -50,8 +50,8 @@ def typed_results_to_reasonerapi(reasoner_query):
         
         # Run get_predict!
         # TODO: pass score and limit from Reasoner query
-        # TODO: add try catch
-        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], 'Predict OMIM-DrugBank', score)
+        # TODO: add try catch and n_results
+        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, score)
 
         for association in prediction_json:
             edge_kg_id = 'e' + str(kg_edge_count)
