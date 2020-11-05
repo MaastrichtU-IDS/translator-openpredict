@@ -1,10 +1,7 @@
 import pytest
 import connexion
 import json
-import pathlib
-from requests_toolbelt import MultipartEncoder
 from openpredict.openpredict_utils import init_openpredict_dir
-from openpredict.openpredict_model import addEmbedding
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
@@ -62,14 +59,8 @@ def test_post_reasoner_predict(client):
     assert len(edges) == 300
     assert edges[0]['target_id'] == 'OMIM:246300'
 
-def test_post_embeddings():
-    """Test add embeddings to the model and rebuild it"""
-    embeddings_filepath = str(pathlib.Path(__file__).parent.joinpath("data/neurodkg_embedding.json"))
-    
-    with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
-        run_id = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
-        assert len(run_id) == 36
-    
+# def test_post_embeddings():
+#     """Test post embeddings to add embeddings to the model and rebuild it"""
     # curl -X POST "http://localhost:8808/embedding?types=Both&emb_name=test4&description=test&model_id=openpredict-baseline-omim-drugbank" -H  "accept: */*" -H  "Content-Type: multipart/form-data" -F "embedding_file=@neurodkg_embedding.json;type=application/json"
     # url = '/embedding?types=Both&emb_name=test_embedding&description=Embeddingdescription&model_id=openpredict-baseline-omim-drugbank'
     # files = {

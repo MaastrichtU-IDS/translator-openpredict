@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
-from openpredict.openpredict_model import train_model, geometricMean
+from openpredict.openpredict_model import train_model, geometricMean, addEmbedding
 
 def test_train_model():
     """Test to train from baseline model to get drug-disease similarities (drugbank-omim)"""
@@ -13,6 +13,14 @@ def test_train_model():
     assert 0.85 < scores['roc_auc'] < 0.95
     assert 0.70 < scores['f1'] < 0.85
     assert 0.75 < scores['average_precision'] < 0.95
+
+def test_add_embeddings():
+    """Test add embeddings to the model and rebuild it"""
+    embeddings_filepath = str(pathlib.Path(__file__).parent.joinpath("data/neurodkg_embedding.json"))
+    
+    with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
+        run_id = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
+        assert len(run_id) == 36
 
 def test_calculate_combined():
   """Test geometric mean, a measure for drug-disease similarities (drugbank-omim)"""
