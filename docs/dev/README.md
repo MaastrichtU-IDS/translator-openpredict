@@ -79,6 +79,8 @@ Add it to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
 > export OPENPREDICT_DATA_DIR=/data/openpredict
 > ```
 
+You can provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started openpredict api.
+
 3 options are available to deploy the API:
 
 ### Option 1: Run from the command line ⌨️
@@ -134,9 +136,12 @@ SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/transla
 OPENPREDICT_USERNAME=import_user
 OPENPREDICT_PASSWORD=password
 OPENPREDICT_APIKEY=apikey
+OPENPREDICT_DATA_DIR=/data/openpredict
 ```
 
-2. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
+You can provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started openpredict api
+
+1. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
 
 ```bash
 docker-compose up -d

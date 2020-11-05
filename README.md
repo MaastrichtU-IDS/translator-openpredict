@@ -15,6 +15,16 @@ The API will return predicted targets for the given entity, such as:
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
+### Add embedding
+
+The default baseline model is `openpredict-baseline-omim-drugbank`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
+
+1. add embeddings to the provided model
+2. train the model with the new embeddings
+3. store the features and model using a unique ID for the run (e.g. `7621843c-1f5f-11eb-85ae-48a472db7414`)
+
+Once the embedding has been added you can find the existing models previously generated (including `openpredict-baseline-omim-drugbank`), and use them as base model when you ask the model for prediction or add new embeddings.
+
 ### Predict operation
 
 Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
