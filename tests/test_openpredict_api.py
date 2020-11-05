@@ -58,3 +58,14 @@ def test_post_reasoner_predict(client):
     edges = response.json['knowledge_graph']['edges']
     assert len(edges) == 300
     assert edges[0]['target_id'] == 'OMIM:246300'
+
+def test_post_embeddings(client):
+    """Test POST embedding call to add embeddings to the model and rebuild it"""
+    url = '/embedding?types=Both&emb_name=test_embedding&description=Embedding%20description&model_id=openpredict-baseline-omim-drugbank'
+    with open('tests/data/neurodkg_embedding.json',  encoding="utf8") as data_file:
+        json_data = json.load(data_file)
+        response = client.post(url, 
+                            data=json.dumps(json_data), 
+                            content_type='application/json')
+        print(response.status_code)
+        assert response.status_code == 200
