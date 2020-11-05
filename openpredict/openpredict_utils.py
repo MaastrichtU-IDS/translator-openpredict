@@ -9,6 +9,9 @@ OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
 if not OPENPREDICT_DATA_DIR:
     # Data folder in current dir if not provided via environment variable
     OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
+else:
+    if not OPENPREDICT_DATA_DIR.endswith('/'):
+        OPENPREDICT_DATA_DIR += '/'
 
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
