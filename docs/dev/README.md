@@ -126,9 +126,17 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-2. Change the triplestore credentials and API key in the `.env` file 🔑
+2. Define the triplestore credentials and API key in the `.env` file 🔑
 
-3. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
+```bash
+SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+OPENPREDICT_USERNAME=import_user
+OPENPREDICT_PASSWORD=password
+OPENPREDICT_APIKEY=apikey
+```
+
+2. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
 
 ```bash
 docker-compose up -d
