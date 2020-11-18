@@ -17,7 +17,7 @@ See [here](https://maastrichtu-ids.github.io/translator-openpredict/docs) to bro
 
 Install `openpredict` locally, if you want to run **OpenPredict** in development, make changes to the source code, and build new models.
 
-The **OpenPredict API store its data in a  RDF triplestore**. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore. You can pass the credentials using environment variables `OPENPREDICT_USERNAME` and `OPENPREDICT_PASSWORD`
+The **OpenPredict API store its data in a  RDF triplestore**. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore. You can pass the credentials using environment variables `SPARQL_USER` and `SPARQL_PASSWORD`
 
 ### Install from PyPI
 
@@ -64,7 +64,7 @@ The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext Gr
 Define the environment variable for the triplestore password in your local terminal:
 
 ```bash
-export OPENPREDICT_PASSWORD=password
+export SPARQL_PASSWORD=password
 ```
 
 Add it to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
@@ -74,7 +74,7 @@ Add it to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
 > ```bash
 > export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
 > export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-> export OPENPREDICT_USERNAME=import_user
+> export SPARQL_USER=import_user
 > export OPENPREDICT_APIKEY=myapikey
 > export OPENPREDICT_DATA_DIR=/data/openpredict
 > ```
@@ -133,8 +133,8 @@ cd translator-openpredict
 ```bash
 SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
 SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-OPENPREDICT_USERNAME=import_user
-OPENPREDICT_PASSWORD=password
+SPARQL_USER=import_user
+SPARQL_PASSWORD=password
 OPENPREDICT_APIKEY=apikey
 OPENPREDICT_DATA_DIR=/data/openpredict
 ```

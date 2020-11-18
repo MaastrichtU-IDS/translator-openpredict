@@ -5,6 +5,10 @@ FROM jupyter/all-spark-notebook
 # Required to be able to edit the .joblib model directly in the python package
 USER root
 
+ENV OPENPREDICT_DATA_DIR=/data/openpredict
+ENV PYSPARK_PYTHON=/opt/conda/bin/python3
+ENV PYSPARK_DRIVER_PYTHON=/opt/conda/bin/python3
+
 RUN apt-get update && apt-get install -y build-essential
 
 COPY . .

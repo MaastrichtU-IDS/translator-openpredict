@@ -39,12 +39,13 @@ jobs:
         flake8 . --count --exit-zero --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
     - name: Setup SonarCloud
       uses: warchant/setup-sonar-scanner@v3
     - name: Test with pytest with coverage
       env:
-        OPENPREDICT_USERNAME: ${{ secrets.GRAPHDB_USER }}
-        OPENPREDICT_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
+        SPARQL_USER: ${{ secrets.GRAPHDB_USER }}
+        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
         coverage erase
         pytest --cov openpredict --cov-report xml:coverage.xml tests/*
@@ -91,7 +92,7 @@ jobs:
       # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       env:
-        OPENPREDICT_USERNAME: ${{ secrets.GRAPHDB_USER }}
-        OPENPREDICT_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
+        SPARQL_USER: ${{ secrets.GRAPHDB_USER }}
+        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: pytest
 

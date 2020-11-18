@@ -5,26 +5,40 @@ services:
     container_name: openpredict-api
     build: .
     # Outdated image: docker.pkg.github.com/maastrichtu-ids/translator-openpredict/openpredict-api:latest
-    # Outdated image: umids/openpredict-api:latest
     restart: unless-stopped
-    # command: train-model
-    command: start-api --server-url https://openpredict.semanticscience.org
     ports:
       - 8808:8808
     volumes:
-      - /data/openpredict:/data/openpredict
+      - ./openpredict/api:/data/openpredict
+      # - /data/openpredict:/data/openpredict
     environment: 
-      OPENPREDICT_USERNAME: ${OPENPREDICT_USERNAME}
-      OPENPREDICT_PASSWORD: ${OPENPREDICT_PASSWORD}
-      OPENPREDICT_DATA_DIR: /data/openpredict
-      SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
-      SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
-      # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
-      PYSPARK_PYTHON: /opt/conda/bin/python3
-      PYSPARK_DRIVER_PYTHON: /opt/conda/bin/python3
+      SPARQL_USER: dba
+      SPARQL_PASSWORD: dba
+      SPARQL_ENDPOINT_URL: http://virtuoso:8890/sparql
+      SPARQL_ENDPOINT_UPDATE_URL: http://virtuoso:8890/sparql
+
+      # SPARQL_USER: ${SPARQL_USER}
+      # SPARQL_PASSWORD: ${SPARQL_PASSWORD}
+      # SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
+      # SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
+
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
       VIRTUAL_HOST: openpredict.semanticscience.org
       LETSENCRYPT_HOST: openpredict.semanticscience.org
       VIRTUAL_PORT: 8808
-    # volumes:
-    #   - ./data:/data
+      # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
+    # command: start-api --server-url https://openpredict.semanticscience.org
+
+
+  virtuoso:
+    container_name: openpredict-virtuoso
+    image: tenforce/virtuoso:latest
+    environment:
+      DBA_PASSWORD: dba
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: https://w3id.org/openpredict/graph
+    volumes:
+      - ./openpredict/virtuoso:/data
+    ports:
+      - 8890:8890
+      - 1111:1111
