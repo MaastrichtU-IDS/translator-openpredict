@@ -141,7 +141,7 @@ OPENPREDICT_DATA_DIR=/data/openpredict
 
 You can provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started openpredict api
 
-1. Build and start the `openpredict-api` container with a Virtuoso triplestore locally using [docker-compose](https://docs.docker.com/compose/)
+* Build and start the **OpenPredict API in Docker** with a Virtuoso triplestore locally using [docker-compose](https://docs.docker.com/compose/)
 
 ```bash
 docker-compose up -d
@@ -163,10 +163,36 @@ Stop the container:
 docker-compose down
 ```
 
-For production deployment on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`:
+* Or start just the virtuoso triplestore to **develop locally**:
+
+Set the environment variable for Virtuoso:
+
+```bash
+export SPARQL_USER: dba
+export SPARQL_PASSWORD: dba
+export SPARQL_ENDPOINT_URL: http://localhost:8890/sparql
+export SPARQL_ENDPOINT_UPDATE_URL: http://localhost:8890/sparql
+```
+
+Start Virtuoso with docker and the OpenPredict API in debug mode:
+
+```bash
+docker-compose up -f docker-compose.dev.yml up -d
+# Wait a minute for Virtuoso to start, and start openpredict locally
+openpredict start-api --debug
+```
+
+* For **production deployment** on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`:
 
 ```bash
 docker-compose up -f docker-compose.prod.yml up -d
+```
+
+Build and push to the [GitHub Docker Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api)
+
+```bash
+docker build -t ghcr.io/maastrichtu-ids/openpredict-api .
+docker push ghcr.io/maastrichtu-ids/openpredict-api
 ```
 
 # Run tests ✔️
@@ -188,6 +214,8 @@ pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
 # Create a new API call 📝
+
+Guidelines to create a new API  call in the OpenPredict Open API.
 
 1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
 

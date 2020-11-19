@@ -3,8 +3,8 @@ version: "3"
 services:
   openpredict-api:
     container_name: openpredict-api
-    build: .
-    # Outdated image: docker.pkg.github.com/maastrichtu-ids/translator-openpredict/openpredict-api:latest
+    image: ghcr.io/maastrichtu-ids/openpredict-api:latest
+    # build: .
     restart: unless-stopped
     ports:
       - 8808:8808
