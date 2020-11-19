@@ -121,7 +121,7 @@ openpredict_api.start_api(8808)
 
 Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
 
-1. Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
+Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
 
 ```bash
 git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
@@ -165,7 +165,7 @@ docker-compose down
 
 * Or start just the virtuoso triplestore to **develop locally**:
 
-Set the environment variable for Virtuoso:
+Set the environment variable for Virtuoso in your terminal:
 
 ```bash
 export SPARQL_USER: dba
@@ -182,7 +182,18 @@ docker-compose up -f docker-compose.dev.yml up -d
 openpredict start-api --debug
 ```
 
-* For **production deployment** on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`:
+* For **production deployment** on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`
+
+Define the triplestore credentials and API key in the `.env` file 🔑
+
+```bash
+nano .env
+SPARQL_USER=import_user
+SPARQL_PASSWORD=password
+OPENPREDICT_APIKEY=apikey
+```
+
+Start the API in production using GraphDB as backend:
 
 ```bash
 docker-compose up -f docker-compose.prod.yml up -d
