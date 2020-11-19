@@ -16,7 +16,11 @@ COPY . .
 # Install from source code
 RUN pip install .
 
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
 EXPOSE 8808
 
-ENTRYPOINT [ "openpredict" ]
-CMD [ "start-api" ]
+# ENTRYPOINT [ "sleep 60 && openpredict" ]
+# CMD [ "start-api" ]

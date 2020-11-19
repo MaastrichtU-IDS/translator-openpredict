@@ -9,28 +9,15 @@ services:
     ports:
       - 8808:8808
     volumes:
-      - ./openpredict/api:/data/openpredict
-      # - /data/openpredict:/data/openpredict
+      - ./data/api:/data/openpredict
     environment: 
       SPARQL_USER: dba
       SPARQL_PASSWORD: dba
-      SPARQL_ENDPOINT_URL: http://virtuoso:8890/sparql
-      SPARQL_ENDPOINT_UPDATE_URL: http://virtuoso:8890/sparql
-
-      # SPARQL_USER: ${SPARQL_USER}
-      # SPARQL_PASSWORD: ${SPARQL_PASSWORD}
-      # SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
-      # SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
-
-      # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
-      VIRTUAL_HOST: openpredict.semanticscience.org
-      LETSENCRYPT_HOST: openpredict.semanticscience.org
-      VIRTUAL_PORT: 8808
-      # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
-    # command: start-api --server-url https://openpredict.semanticscience.org
+      SPARQL_ENDPOINT_URL: http://openpredict-virtuoso:8890/sparql
+      SPARQL_ENDPOINT_UPDATE_URL: http://openpredict-virtuoso:8890/sparql
 
 
-  virtuoso:
+  openpredict-virtuoso:
     container_name: openpredict-virtuoso
     image: tenforce/virtuoso:latest
     environment:
@@ -38,7 +25,7 @@ services:
       SPARQL_UPDATE: "true"
       DEFAULT_GRAPH: https://w3id.org/openpredict/graph
     volumes:
-      - ./openpredict/virtuoso:/data
+      - ./data/virtuoso:/data
     ports:
       - 8890:8890
       - 1111:1111

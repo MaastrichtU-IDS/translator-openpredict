@@ -141,7 +141,7 @@ OPENPREDICT_DATA_DIR=/data/openpredict
 
 You can provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started openpredict api
 
-1. Build and start the `openpredict-api` container with [docker-compose](https://docs.docker.com/compose/)
+1. Build and start the `openpredict-api` container with a Virtuoso triplestore locally using [docker-compose](https://docs.docker.com/compose/)
 
 ```bash
 docker-compose up -d
@@ -161,6 +161,12 @@ Stop the container:
 
 ```bash
 docker-compose down
+```
+
+For production deployment on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`:
+
+```bash
+docker-compose up -f docker-compose.prod.yml up -d
 ```
 
 # Run tests ✔️
