@@ -7,6 +7,19 @@ from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 from SPARQLWrapper import SPARQLWrapper, POST, JSON
 
+## Importing the openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
+OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
+if not OPENPREDICT_DATA_DIR:
+    # Data folder in current dir if not provided via environment variable
+    OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
+else:
+    if not OPENPREDICT_DATA_DIR.endswith('/'):
+        OPENPREDICT_DATA_DIR += '/'
+
+# TODO: improve this path (add to init?)
+RDF_DATA_PATH = OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
+
+
 OPENPREDICT_GRAPH = 'https://w3id.org/openpredict/graph'
 OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'
 
@@ -66,12 +79,40 @@ def query_sparql_endpoint(query):
     :param query: SPARQL query as a string
     :return: Object containing the result bindings
     """
-    print(SPARQL_ENDPOINT_URL)
-    sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
-    sparql.setReturnFormat(JSON)
-    sparql.setQuery(query)
-    results = sparql.query().convert()
-    return results["results"]["bindings"]
+    # print(SPARQL_ENDPOINT_URL)
+    # SPARQL_ENDPOINT_URL=None
+    if SPARQL_ENDPOINT_URL:
+        sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
+        sparql.setReturnFormat(JSON)
+        sparql.setQuery(query)
+        results = sparql.query().convert()
+        print('SPARQLWrapper Results:')
+        print(results["results"]["bindings"])
+        return results["results"]["bindings"]
+    else:
+        ## Trying to SPARQL query a RDF file directly (to avoid using triplestores in dev)
+        # Docs: https://rdflib.readthedocs.io/en/stable/intro_to_sparql.html
+        # Examples: https://github.com/RDFLib/rdflib/tree/master/examples
+        # Use SPARQLStore? https://github.com/RDFLib/rdflib/blob/master/examples/sparqlstore_example.py
+        g = Graph()
+        g.parse(RDF_DATA_PATH, format="ttl")
+        qres = g.query(query)
+        for row in qres:
+            print('row')
+            print(row)
+            for variable in row:
+                print('variable')
+                print(variable)
+            # How can we iterate over the variable defined in the SPARQL query?
+            # It only returns the results, without the variables list
+            # Does not seems possible: https://dokk.org/documentation/rdflib/3.2.0/gettingstarted/#run-a-query
+            # print(row.run)
+            # or row["s"]
+            # or row[rdflib.Variable("s")]
+            # TODO: create an object similar to SPARQLWrapper
+            # result[variable]['value']
+        return qres
+
 
 def init_triplestore():
     """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
