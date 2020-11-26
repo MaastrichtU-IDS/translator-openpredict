@@ -34,8 +34,8 @@ BIOLINK = Namespace("https://w3.org/biolink/")
 OPENPREDICT = Namespace("https://w3id.org/openpredict/")
 
 # Get SPARQL endpoint credentials from environment variables
-SPARQL_ENDPOINT_PASSWORD = os.getenv('OPENPREDICT_PASSWORD')
-SPARQL_ENDPOINT_USERNAME = os.getenv('OPENPREDICT_USERNAME')
+SPARQL_ENDPOINT_PASSWORD = os.getenv('SPARQL_PASSWORD')
+SPARQL_ENDPOINT_USERNAME = os.getenv('SPARQL_USERNAME')
 SPARQL_ENDPOINT_URL = os.getenv('SPARQL_ENDPOINT_URL')
 SPARQL_ENDPOINT_UPDATE_URL = os.getenv('SPARQL_ENDPOINT_UPDATE_URL')
 

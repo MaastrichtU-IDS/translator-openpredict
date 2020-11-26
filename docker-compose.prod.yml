@@ -11,7 +11,7 @@ services:
     volumes:
       - /data/openpredict:/data/openpredict
     environment: 
-      SPARQL_USER: ${SPARQL_USER}
+      SPARQL_USERNAME: ${SPARQL_USER}
       SPARQL_PASSWORD: ${SPARQL_PASSWORD}
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
       SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
