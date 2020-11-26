@@ -22,7 +22,7 @@
   dc:description "HPO based disease-disease similarity";
   dc:identifier "HPO-SIM";
   openpredict:embedding_type "Diseases" .
-
+aaa
 <https://w3id.org/openpredict/feature/PHENO-SIM> a mls:Feature;
   dc:description "Disease Phenotype Similarity based on MESH terms similarity";
   dc:identifier "PHENO-SIM";

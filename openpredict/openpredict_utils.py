@@ -41,6 +41,11 @@ def init_openpredict_dir():
         print('Initiating ' + get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib'))
         shutil.copy(pkg_resources.resource_filename('openpredict', 'data/models/openpredict-baseline-omim-drugbank.joblib'), 
             get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib'))
+    if not os.path.exists(get_openpredict_dir('openpredict-metadata.ttl')):
+        print('Creating ' + get_openpredict_dir('openpredict-metadata.ttl'))
+        # shutil.copy(get_openpredict_dir('initial-openpredict-metadata.ttl'), 
+        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), 
+            get_openpredict_dir('openpredict-metadata.ttl'))
     init_triplestore()
     # Check if https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank exist before iniating the triplestore
     # add_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
