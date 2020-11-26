@@ -44,6 +44,8 @@ jobs:
       uses: warchant/setup-sonar-scanner@v3
     - name: Test with pytest with coverage
       env:
+        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
         SPARQL_USER: ${{ secrets.GRAPHDB_USER }}
         SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |

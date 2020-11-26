@@ -114,7 +114,11 @@ See the [instructions to contribute :man_technologist:](/CONTRIBUTING.md)
 
 Error Windows Home py3.8
 
+Known issue: pip install does not support emoji in the README on windows
 
+C++ errror:
+
+```bash
 c:\python38\lib\distutils\dist.py:274: UserWarning: Unknown distribution option: 'define_macros'
       warnings.warn(msg)
     running install
@@ -132,9 +136,31 @@ c:\python38\lib\distutils\dist.py:274: UserWarning: Unknown distribution option:
     creating build\src.win-amd64-3.8\numpy\distutils
     building library "npymath" sources
     No module named 'numpy.distutils._msvccompiler' in numpy.distutils; trying from distutils
+
     error: Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": https://visualstudio.microsoft.com/downloads/
-    ----------------------------------------
-ERROR: Command errored out with exit status 1: 'c:\python38\python.exe' -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'C:\\Users\\Windows\\AppData\\Local\\Temp\\pip-install-xh6nw5kx\\numpy\\setup.py'"'"'; __file__='"'"'C:\\Users\\Windows\\AppData\\Local\\Temp\\pip-install-xh6nw5kx\\numpy\\setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record 'C:\Users\Windows\AppData\Local\Temp\pip-record-tp_x64iq\install-record.txt' --single-version-externally-managed --compile --install-headers 'c:\python38\Include\numpy' Check the logs for full command output.
+
+ERROR: Command errored out with exit status 1: 'c:\python38\python.exe' -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'C:\Users\Windows\AppData\Local\Temp\pip-install-xh6nw5kx\numpy\setup.py'"'"'; file='"'"'C:\Users\Windows\AppData\Local\Temp\pip-install-xh6nw5kx\numpy\setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(file);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, file, '"'"'exec'"'"'))' install --record 'C:\Users\Windows\AppData\Local\Temp\pip-record-tp_x64iq\install-record.txt' --single-version-externally-managed --compile --install-headers 'c:\python38\Include\numpy' Check the logs for full command output.
+```
+
+Fix?
+
+```bash
+pip install --upgrade setuptools
+```
+
+Still issue with C++ Build tools
+
+```
+building library "npymath" sources
+    No module named 'numpy.distutils._msvccompiler' in numpy.distutils; trying from distutils
+    error: Microsoft Visual C++ 14.0 or greater is required. Get it with "Microsoft C++ Build Tools": https://visualstudio.microsoft.com/visual-cpp-build-tools/
+```
+
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+Now installing "Visual Studio Build Tools 2019", after checking the C++ 14 version checkbox (7G)
+
+
 
 # Acknowledgments
 
