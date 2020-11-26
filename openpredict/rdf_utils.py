@@ -29,11 +29,16 @@ SPARQL_ENDPOINT_UPDATE_URL = os.getenv('SPARQL_ENDPOINT_UPDATE_URL')
 
 # Default credentials for dev (if no environment variables provided)
 if not SPARQL_ENDPOINT_USERNAME:
-    SPARQL_ENDPOINT_USERNAME='import_user'
+    # SPARQL_ENDPOINT_USERNAME='import_user'
+    SPARQL_ENDPOINT_USERNAME='dba'
+if not SPARQL_ENDPOINT_PASSWORD:
+    SPARQL_ENDPOINT_PASSWORD='dba'
 if not SPARQL_ENDPOINT_URL:
-    SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
+    SPARQL_ENDPOINT_URL='http://localhost:8890/sparql'
+    # SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
 if not SPARQL_ENDPOINT_UPDATE_URL:
-    SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
+    SPARQL_ENDPOINT_UPDATE_URL='http://localhost:8890/sparql'
+    # SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
 
 def insert_graph_in_sparql_endpoint(g):
     """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper

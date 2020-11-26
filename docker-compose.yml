@@ -1,20 +1,20 @@
 version: "3"
 
 services:
-  openpredict-api:
-    container_name: openpredict-api
-    image: ghcr.io/maastrichtu-ids/openpredict-api:latest
-    # build: .
-    restart: unless-stopped
-    ports:
-      - 8808:8808
-    volumes:
-      - ./data/api:/data/openpredict
-    environment: 
-      SPARQL_USER: dba
-      SPARQL_PASSWORD: dba
-      SPARQL_ENDPOINT_URL: http://openpredict-virtuoso:8890/sparql
-      SPARQL_ENDPOINT_UPDATE_URL: http://openpredict-virtuoso:8890/sparql
+  # openpredict-api:
+  #   container_name: openpredict-api
+  #   image: ghcr.io/maastrichtu-ids/openpredict-api:latest
+  #   # build: .
+  #   restart: unless-stopped
+  #   ports:
+  #     - 8808:8808
+  #   volumes:
+  #     - ./data/api:/data/openpredict
+  #   environment: 
+  #     SPARQL_USER: dba
+  #     SPARQL_PASSWORD: dba
+  #     SPARQL_ENDPOINT_URL: http://openpredict-virtuoso:8890/sparql
+  #     SPARQL_ENDPOINT_UPDATE_URL: http://openpredict-virtuoso:8890/sparql
 
 
   openpredict-virtuoso:

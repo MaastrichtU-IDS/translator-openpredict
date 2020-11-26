@@ -59,6 +59,45 @@ source .venv/bin/activate
 
 The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore.
 
+### Start the Virtuoso triplestore
+
+First clone this repository:
+
+```bash
+git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+cd translator-openpredict
+```
+
+Then start Virtuoso locally on http://localhost:8890
+
+```bash
+docker-compose up -d
+```
+
+> Stop the container:
+>
+> ```bash
+> docker-compose down
+> ```
+
+### Start the OpenPredict API
+
+Start in development mode after installing the `openpredict` pip package:
+
+```bash
+openpredict start-api --debug
+```
+
+### Reset the Virtuoso triplestore database
+
+Delete the volume where the virtuoso data is stored, normally in `./data/virtuoso`
+
+```bash
+rm -rf data/virtuoso
+```
+
+## Other options to run OpenPredict
+
 ### Define environment variables
 
 Define the environment variable for the triplestore password in your local terminal:
@@ -161,25 +200,6 @@ Stop the container:
 
 ```bash
 docker-compose down
-```
-
-* Or start just the virtuoso triplestore to **develop locally**:
-
-Set the environment variable for Virtuoso in your terminal:
-
-```bash
-export SPARQL_USER: dba
-export SPARQL_PASSWORD: dba
-export SPARQL_ENDPOINT_URL: http://localhost:8890/sparql
-export SPARQL_ENDPOINT_UPDATE_URL: http://localhost:8890/sparql
-```
-
-Start Virtuoso with docker and the OpenPredict API in debug mode:
-
-```bash
-docker-compose up -f docker-compose.dev.yml up -d
-# Wait a minute for Virtuoso to start, and start openpredict locally
-openpredict start-api --debug
 ```
 
 * For **production deployment** on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`
