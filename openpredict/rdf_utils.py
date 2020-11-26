@@ -52,13 +52,15 @@ if not SPARQL_ENDPOINT_UPDATE_URL:
     SPARQL_ENDPOINT_UPDATE_URL='http://localhost:8890/sparql'
     # SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
 
+## Uncomment this line to test OpenPredict in dev mode using a RDF file instead of a SPARQL endpoint
+# SPARQL_ENDPOINT_URL=None
+
 def insert_graph_in_sparql_endpoint(g):
     """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
 
     :param g: rdflib graph to insert
     :return: SPARQL update query result
     """
-    # SPARQL_ENDPOINT_URL=None
     if SPARQL_ENDPOINT_URL:
         sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
         sparql.setMethod(POST)
@@ -88,8 +90,6 @@ def query_sparql_endpoint(query):
     :param query: SPARQL query as a string
     :return: Object containing the result bindings
     """
-    # print(SPARQL_ENDPOINT_URL)
-    # SPARQL_ENDPOINT_URL=None
     if SPARQL_ENDPOINT_URL:
         sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
         sparql.setReturnFormat(JSON)
@@ -99,10 +99,12 @@ def query_sparql_endpoint(query):
         print(results["results"]["bindings"])
         return results["results"]["bindings"]
     else:
-        ## Trying to SPARQL query a RDF file directly (to avoid using triplestores in dev)
+        ## Trying to SPARQL query a RDF file directly, to avoid using triplestores in dev (not working)
         # Docs: https://rdflib.readthedocs.io/en/stable/intro_to_sparql.html
         # Examples: https://github.com/RDFLib/rdflib/tree/master/examples
         # Use SPARQLStore? https://github.com/RDFLib/rdflib/blob/master/examples/sparqlstore_example.py
+        # But this would require to rewrite all SPARQL query resolution to use rdflib response object
+        # Which miss the informations about which SPARQL variables (just returns rows of results without variable bind)
         g = Graph()
         g.parse(RDF_DATA_PATH, format="ttl")
         qres = g.query(query)
