@@ -88,13 +88,15 @@ Start in development mode after installing the `openpredict` pip package:
 openpredict start-api --debug
 ```
 
-### Reset the Virtuoso triplestore database
+### Reset the OpenPredict and Virtuoso data
 
-Delete the volume where the virtuoso data is stored, normally in `./data/virtuoso`
+Delete the folders where the OpenPredict API and Virtuoso data are stored, usually in `data/virtuoso` and `data/openpredict`
 
 ```bash
-rm -rf data/virtuoso
+sudo rm -rf data/*
 ```
+
+> Then restart the `docker-compose`
 
 ## Other options to run OpenPredict
 
