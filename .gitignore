@@ -11,6 +11,6 @@ venv/
 .ipynb_checkpoints/
 .virtual_documents/
 
-data/virtuoso
+data
 openpredict/data/features/openpredict-baseline-omim-drugbank.joblib
 openpredict/data/models/openpredict-baseline-omim-drugbank.joblib
