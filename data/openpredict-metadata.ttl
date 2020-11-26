@@ -1,0 +1,143 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix mls: <http://www.w3.org/ns/mls#> .
+@prefix openpredict: <https://w3id.org/openpredict/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/openpredict/feature/GO-SIM> a mls:Feature;
+  dc:description "GO based drug-drug similarity";
+  dc:identifier "GO-SIM";
+  openpredict:embedding_type "Drugs" .
+
+<https://w3id.org/openpredict/feature/HPO-SIM> a mls:Feature;
+  dc:description "HPO based disease-disease similarity";
+  dc:identifier "HPO-SIM";
+  openpredict:embedding_type "Diseases" .
+
+<https://w3id.org/openpredict/feature/PHENO-SIM> a mls:Feature;
+  dc:description "Disease Phenotype Similarity based on MESH terms similarity";
+  dc:identifier "PHENO-SIM";
+  openpredict:embedding_type "Diseases" .
+
+<https://w3id.org/openpredict/feature/PPI-SIM> a mls:Feature;
+  dc:description "PPI based drug-drug similarity, calculate distance between drugs on protein-protein interaction network";
+  dc:identifier "PPI-SIM";
+  openpredict:embedding_type "Drugs" .
+
+<https://w3id.org/openpredict/feature/SE-SIM> a mls:Feature;
+  dc:description "Drug side effect similarity, calculating Jaccard coefficient based on drug sideefects";
+  dc:identifier "SE-SIM";
+  openpredict:embedding_type "Drugs" .
+
+<https://w3id.org/openpredict/feature/TARGETSEQ-SIM> a mls:Feature;
+  dc:description "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores";
+  dc:identifier "TARGETSEQ-SIM";
+  openpredict:embedding_type "Drugs" .
+
+<https://w3id.org/openpredict/feature/TC> a mls:Feature;
+  dc:description "Drug fingerprint similarity, calculating MACS based fingerprint (substructure) similarity";
+  dc:identifier "TC";
+  openpredict:embedding_type "Drugs" .
+
+<https://w3id.org/openpredict/HyperParameterSetting/random_state> a mls:HyperParameterSetting;
+  mls:hasValue 100;
+  mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/random_state> .
+
+<https://w3id.org/openpredict/HyperParameter/tol> a mls:HyperParameter;
+  rdfs:label "tol" .
+
+<https://w3id.org/openpredict/HyperParameter/dual> a mls:HyperParameter;
+  rdfs:label "dual" .
+
+<https://w3id.org/openpredict/HyperParameterSetting/penalty> a mls:HyperParameterSetting;
+  mls:hasValue "l2";
+  mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/penalty> .
+
+<https://w3id.org/openpredict/HyperParameter/penalty> a mls:HyperParameter;
+  rdfs:label "penalty" .
+
+<https://w3id.org/openpredict/implementation/OpenPredict> a mls:Implementation;
+  mls:hasHyperParameter <https://w3id.org/openpredict/HyperParameter/C>, <https://w3id.org/openpredict/HyperParameter/dual>,
+    <https://w3id.org/openpredict/HyperParameter/penalty>, <https://w3id.org/openpredict/HyperParameter/random_state>,
+    <https://w3id.org/openpredict/HyperParameter/tol>, <https://w3id.org/openpredict/HyperParameterSetting/C>,
+    <https://w3id.org/openpredict/HyperParameterSetting/dual>, <https://w3id.org/openpredict/HyperParameterSetting/penalty>,
+    <https://w3id.org/openpredict/HyperParameterSetting/random_state>, <https://w3id.org/openpredict/HyperParameterSetting/tol>;
+  mls:implements openpredict:LogisticRegression .
+
+<https://w3id.org/openpredict/HyperParameterSetting/tol> a mls:HyperParameterSetting;
+  mls:hasValue 1.0E-4;
+  mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/tol> .
+
+<https://w3id.org/openpredict/HyperParameter/random_state> a mls:HyperParameter;
+  rdfs:label "random_state" .
+
+<https://w3id.org/openpredict/HyperParameter/C> a mls:HyperParameter;
+  rdfs:label "C" .
+
+<https://w3id.org/openpredict/HyperParameterSetting/C> a mls:HyperParameterSetting;
+  mls:hasValue 1.0E0;
+  mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/C> .
+
+openpredict:LogisticRegression a mls:Algorithm .
+
+<https://w3id.org/openpredict/HyperParameterSetting/dual> a mls:HyperParameterSetting;
+  mls:hasValue false;
+  mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/dual> .
+
+<https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a mls:Run;
+  dc:identifier "openpredict-baseline-omim-drugbank";
+  mls:executes <https://w3id.org/openpredict/implementation/OpenPredict>;
+  mls:hasInput <https://w3id.org/openpredict/HyperParameterSetting/C>, <https://w3id.org/openpredict/HyperParameterSetting/dual>,
+    <https://w3id.org/openpredict/HyperParameterSetting/penalty>, <https://w3id.org/openpredict/HyperParameterSetting/random_state>,
+    <https://w3id.org/openpredict/HyperParameterSetting/tol>, <https://w3id.org/openpredict/feature/GO-SIM>,
+    <https://w3id.org/openpredict/feature/HPO-SIM>, <https://w3id.org/openpredict/feature/PHENO-SIM>,
+    <https://w3id.org/openpredict/feature/PPI-SIM>, <https://w3id.org/openpredict/feature/SE-SIM>,
+    <https://w3id.org/openpredict/feature/TARGETSEQ-SIM>, <https://w3id.org/openpredict/feature/TC>;
+  mls:hasOutput <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/Model>,
+    <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank/ModelEvaluation>;
+  mls:realizes openpredict:LogisticRegression;
+  prov:generatedAtTime "2020-11-04T20:06:51.778207"^^xsd:dateTime .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/accuracy> a mls:EvaluationMeasure;
+  rdfs:label "accuracy";
+  mls:hasValue 8.683417085427135E-1 .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/recall> a mls:EvaluationMeasure;
+  rdfs:label "recall";
+  mls:hasValue 7.228915662650602E-1 .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/average_precision>
+  a mls:EvaluationMeasure;
+  rdfs:label "average_precision";
+  mls:hasValue 8.733631857757298E-1 .
+
+<https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank/ModelEvaluation>
+  a mls:ModelEvaluation, prov:Entity;
+  mls:specifiedBy <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/accuracy>,
+    <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/average_precision>,
+    <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/f1>, <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/precision>,
+    <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/recall>, <https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/roc_auc>;
+  prov:wasGeneratedBy <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/Model> a mls:Model .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/precision> a mls:EvaluationMeasure;
+  rdfs:label "precision";
+  mls:hasValue 8.602150537634409E-1 .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/roc_auc> a mls:EvaluationMeasure;
+  rdfs:label "roc_auc";
+  mls:hasValue 8.988169874066402E-1 .
+
+<https://w3id.org/openpredict/openpredict-baseline-omim-drugbank/f1> a mls:EvaluationMeasure;
+  rdfs:label "f1";
+  mls:hasValue 7.855973813420621E-1 .
