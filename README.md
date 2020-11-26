@@ -4,9 +4,9 @@
 
 Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
 
-# Use the API 📬
+# Use the API :mailbox_with_mail:
 
-The user provides a drug 💊 or a disease 🦠 identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented). 
+The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented). 
 
 The API will return predicted targets for the given entity, such as:
 
@@ -110,7 +110,31 @@ You can find a Jupyter Notebook with [examples to query the OpenPredict API on G
 
 See the **[documentation to deploy the OpenPredict API](docs/dev)** locally or with Docker.
 
-See the [instructions to contribute 👨‍💻](/CONTRIBUTING.md).
+See the [instructions to contribute :man_technologist:](/CONTRIBUTING.md)
+
+Error Windows Home py3.8
+
+
+c:\python38\lib\distutils\dist.py:274: UserWarning: Unknown distribution option: 'define_macros'
+      warnings.warn(msg)
+    running install
+    running build
+    running config_cc
+    unifing config_cc, config, build_clib, build_ext, build commands --compiler options
+    running config_fc
+    unifing config_fc, config, build_clib, build_ext, build commands --fcompiler options
+    running build_src
+    build_src
+    building py_modules sources
+    creating build
+    creating build\src.win-amd64-3.8
+    creating build\src.win-amd64-3.8\numpy
+    creating build\src.win-amd64-3.8\numpy\distutils
+    building library "npymath" sources
+    No module named 'numpy.distutils._msvccompiler' in numpy.distutils; trying from distutils
+    error: Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": https://visualstudio.microsoft.com/downloads/
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: 'c:\python38\python.exe' -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'C:\\Users\\Windows\\AppData\\Local\\Temp\\pip-install-xh6nw5kx\\numpy\\setup.py'"'"'; __file__='"'"'C:\\Users\\Windows\\AppData\\Local\\Temp\\pip-install-xh6nw5kx\\numpy\\setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record 'C:\Users\Windows\AppData\Local\Temp\pip-record-tp_x64iq\install-record.txt' --single-version-externally-managed --compile --install-headers 'c:\python38\Include\numpy' Check the logs for full command output.
 
 # Acknowledgments
 
