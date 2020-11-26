@@ -7,7 +7,7 @@ from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 from SPARQLWrapper import SPARQLWrapper, POST, JSON
 
-## Importing the openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
+## Importing the data/openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
 if not OPENPREDICT_DATA_DIR:
     # Data folder in current dir if not provided via environment variable
@@ -16,7 +16,6 @@ else:
     if not OPENPREDICT_DATA_DIR.endswith('/'):
         OPENPREDICT_DATA_DIR += '/'
 
-# TODO: improve this path (add to init?)
 RDF_DATA_PATH = OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
 
 
@@ -59,19 +58,29 @@ def insert_graph_in_sparql_endpoint(g):
     :param g: rdflib graph to insert
     :return: SPARQL update query result
     """
-    sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
-    sparql.setMethod(POST)
-    # sparql.setHTTPAuth(BASIC)
-    sparql.setCredentials(SPARQL_ENDPOINT_USERNAME, SPARQL_ENDPOINT_PASSWORD)
-    query = """INSERT DATA {{ GRAPH  <{graph}>
-    {{
-    {ntriples}
-    }}
-    }}
-    """.format(ntriples=g.serialize(format='nt').decode('utf-8'), graph=OPENPREDICT_GRAPH)
+    # SPARQL_ENDPOINT_URL=None
+    if SPARQL_ENDPOINT_URL:
+        sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
+        sparql.setMethod(POST)
+        # sparql.setHTTPAuth(BASIC)
+        sparql.setCredentials(SPARQL_ENDPOINT_USERNAME, SPARQL_ENDPOINT_PASSWORD)
+        query = """INSERT DATA {{ GRAPH  <{graph}>
+        {{
+        {ntriples}
+        }}
+        }}
+        """.format(ntriples=g.serialize(format='nt').decode('utf-8'), graph=OPENPREDICT_GRAPH)
 
-    sparql.setQuery(query)
-    return sparql.query()
+        sparql.setQuery(query)
+        return sparql.query()
+    else:
+        # If no SPARQL endpoint provided we store to the RDF file in data/openpredict-metadata.ttl (working)
+        graph_from_file = Graph()
+        graph_from_file.parse(RDF_DATA_PATH, format="ttl")
+        # graph_from_file.parse(g.serialize(format='turtle').decode('utf-8'), format="ttl")
+        graph_from_file = graph_from_file + g
+        graph_from_file.serialize(RDF_DATA_PATH, format='turtle')
+
 
 def query_sparql_endpoint(query):
     """Run select SPARQL query against SPARQL endpoint
