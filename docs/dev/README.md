@@ -55,7 +55,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-# Deploy OpenPredict API
+# Deploy the OpenPredict API locally
 
 The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore.
 
@@ -68,7 +68,7 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Then start Virtuoso locally on http://localhost:8890
+Then start Virtuoso locally on http://localhost:8890 (login: `dba` / `dba`)
 
 ```bash
 docker-compose up -d
@@ -82,7 +82,7 @@ docker-compose up -d
 
 ### Start the OpenPredict API
 
-Start in development mode after installing the `openpredict` pip package:
+Start the OpenPredict API in development mode after installing the `openpredict` pip package:
 
 ```bash
 openpredict start-api --debug
@@ -90,39 +90,34 @@ openpredict start-api --debug
 
 ### Reset the OpenPredict and Virtuoso data
 
-Delete the folders where the OpenPredict API and Virtuoso data are stored, usually in `data/virtuoso` and `data/openpredict`
+Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored, in `data/virtuoso` and `data/openpredict`
 
 ```bash
-sudo rm -rf data/*
+./reset_openpredict.sh
 ```
 
-> Then restart the `docker-compose`
-
-## Other options to run OpenPredict
-
-### Define environment variables
-
-Define the environment variable for the triplestore password in your local terminal:
-
-```bash
-export SPARQL_PASSWORD=password
-```
-
-Add it to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
-
-> You can also use a different repository and user by setting those environment variables:
+> This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
 >
-> ```bash
-> export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-> export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-> export SPARQL_USER=import_user
-> export OPENPREDICT_APIKEY=myapikey
-> export OPENPREDICT_DATA_DIR=/data/openpredict
-> ```
+> On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
-You can provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started openpredict api.
+# Alternatives to run OpenPredict
 
-3 options are available to deploy the API:
+### Define environment variables locally
+
+Define the OpenPredict using environment variables for the triplestore credentials in your local terminal. You can also provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started the OpenPredict API.
+
+```bash
+export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+export SPARQL_USER=import_user
+export SPARQL_PASSWORD=password
+export OPENPREDICT_APIKEY=myapikey
+export OPENPREDICT_DATA_DIR=/data/openpredict
+```
+
+> You can add those exports to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
+
+The OpenPredict API can deployed in 3 different ways:
 
 ### Option 1: Run from the command line ⌨️
 
@@ -169,28 +164,26 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-2. Define the triplestore credentials and API key in the `.env` file 🔑
+1. For **development environments**: see above to use the default `docker-compose.yml` file to deploy the Virtuoso triplestore for development using Docker 
+2. For **production deployment** use the `docker-compose.prod.yml`
+
+> The docker-compose is currently configured to deploy on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) using a [nginx-proxy for Docker](https://github.com/nginx-proxy)
+
+Define the triplestore credentials and API key in the `.env` file 🔑
 
 ```bash
-SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+nano .env
 SPARQL_USER=import_user
 SPARQL_PASSWORD=password
-OPENPREDICT_APIKEY=apikey
-OPENPREDICT_DATA_DIR=/data/openpredict
 ```
 
-You can provide the path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started openpredict api
-
-* Build and start the **OpenPredict API in Docker** with a Virtuoso triplestore locally using [docker-compose](https://docs.docker.com/compose/)
+Start the API in production using GraphDB as backend:
 
 ```bash
-docker-compose up -d
+docker-compose up -f docker-compose.prod.yml up -d
 ```
 
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-> We use [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
+> We use a [nginx-proxy for Docker](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
 
 Check the logs:
 
@@ -204,28 +197,13 @@ Stop the container:
 docker-compose down
 ```
 
-* For **production deployment** on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) use the `docker-compose.prod.yml`
+# Build the OpenPredict API Docker image
 
-Define the triplestore credentials and API key in the `.env` file 🔑
-
-```bash
-nano .env
-SPARQL_USER=import_user
-SPARQL_PASSWORD=password
-OPENPREDICT_APIKEY=apikey
-```
-
-Start the API in production using GraphDB as backend:
+Build and push to the [GitHub Docker Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api) (make sure the tests passes first!)
 
 ```bash
-docker-compose up -f docker-compose.prod.yml up -d
-```
-
-Build and push to the [GitHub Docker Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api)
-
-```bash
-docker build -t ghcr.io/maastrichtu-ids/openpredict-api .
-docker push ghcr.io/maastrichtu-ids/openpredict-api
+docker build -t ghcr.io/maastrichtu-ids/openpredict-api:latest .
+docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
 ```
 
 # Run tests ✔️
