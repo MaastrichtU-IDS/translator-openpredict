@@ -10,5 +10,15 @@ venv/
 
 .ipynb_checkpoints/
 .virtual_documents/
+.cache/
+.config/
+.ipython/
+.jupyter/
+.local/
+.npm/
+
+docs/walks/
+docs/neurodkg_embedding.csv
+docs/neurodkg_embedding.json
 
 data/
