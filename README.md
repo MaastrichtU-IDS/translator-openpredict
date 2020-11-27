@@ -11,10 +11,10 @@ Requirements:
 * [Docker](https://docs.docker.com/get-docker/) installed (and `docker-compose`)
 * Python 3.6+ installed
 
-The OpenPredict API store its data using a  RDF triplestore database. 
+The OpenPredict API store its data using a  RDF triplestore database:
 
-* We use will use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment
-* We also use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore
+* We use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment
+* We also use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore!
 
 ### Install from the source code :inbox_tray:
 
@@ -60,7 +60,7 @@ openpredict start-api
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
 
-Once you finished you can stop the Virtuoso container:
+Once you finished you can stop the Virtuoso container, and restart it later. The data will be stored in `data/virtuoso`
 
 ```bash
 docker-compose down
@@ -68,7 +68,9 @@ docker-compose down
 
 ### Reset your local OpenPredict data :x:
 
-Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored (in `data/virtuoso` and `data/openpredict`)
+You can easily reset the data of your local OpenPredict deployment (virtuoso, features and models, stored in `data/`)
+
+Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored
 
 ```bash
 ./reset_openpredict.sh
@@ -76,7 +78,7 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 
 This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
 
-On Windows: delete all files in the `data` folder, just keep the `initial-openpredict-metadata.ttl` file
+On Windows: delete all files in the `data/` folder, just keep the `initial-openpredict-metadata.ttl` file.
 
 > If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs) locally or with Docker.
 
