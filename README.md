@@ -4,7 +4,7 @@
 
 Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (such as Ontotext GraphDB, or Virtuoso).
 
-# Deploy the OpenPredict API locally
+# Deploy the OpenPredict API locally :woman_technologist:
 
 Requirements:
 
@@ -16,7 +16,7 @@ The OpenPredict API store its data using a  RDF triplestore database.
 * We use will use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment
 * We also use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore
 
-### Install from the source code
+### Install from the source code :inbox_tray:
 
 Clone the repository:
 
@@ -66,7 +66,7 @@ Once you finished you can stop the Virtuoso container:
 docker-compose down
 ```
 
-### Reset your local OpenPredict data
+### Reset your local OpenPredict data :x:
 
 Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored (in `data/virtuoso` and `data/openpredict`)
 
@@ -200,7 +200,7 @@ Metadata about runs, models evaluations, features are stored using the [ML Schem
 
 ---
 
-# Acknowledgments
+# Acknowledgments​
 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 * Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
