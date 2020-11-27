@@ -11,11 +11,9 @@ Requirements:
 * [Docker](https://docs.docker.com/get-docker/) installed (and `docker-compose`)
 * Python 3.6+ installed
 
-> Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
+The OpenPredict API store its data using a  RDF triplestore database. 
 
-The OpenPredict API store its data using a  RDF triplestore. 
-
-* We use will use the open source Virtuoso triplestore in local development environment
+* We use will use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment
 * We also use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore
 
 ### Install from the source code
@@ -27,7 +25,7 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Install `openpredict` from the source code, and update the package automatically when the files changes locally :arrows_counterclockwise:
+Install `openpredict` from the source code, the package will be automatically updated when the files changes locally :arrows_counterclockwise:
 
 ```bash
 pip3 install -e .
@@ -54,21 +52,23 @@ source .venv/bin/activate
 docker-compose up -d --force-recreate
 ```
 
-2. **Start the OpenPredict API** (wait 30s for the database to start) on http://localhost:8808:
+2. **Start the OpenPredict API** on http://localhost:8808 (wait 30s for the database to start first):
 
 ```bash
 openpredict start-api
 ```
 
-> Stop the Virtuoso container:
->
-> ```bash
-> docker-compose down
-> ```
+> Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
+
+Once you finished you can stop the Virtuoso container:
+
+```bash
+docker-compose down
+```
 
 ### Reset your local OpenPredict data
 
-Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored, in `data/virtuoso` and `data/openpredict`
+Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored (in `data/virtuoso` and `data/openpredict`)
 
 ```bash
 ./reset_openpredict.sh
@@ -78,7 +78,7 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 >
 > On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
-> See [additional documentation to deploy the OpenPredict API](docs/dev) locally or with Docker.
+> If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](docs/dev) locally or with Docker.
 
 ---
 
