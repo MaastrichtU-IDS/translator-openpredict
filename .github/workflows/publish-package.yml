@@ -31,6 +31,11 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+        SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
+        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
         python setup.py pytest
 
@@ -58,6 +63,11 @@ jobs:
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
+      env:
+        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+        SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
+        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: python setup.py pytest
   
   publish:

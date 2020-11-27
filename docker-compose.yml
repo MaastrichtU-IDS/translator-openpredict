@@ -1,31 +1,14 @@
-version: "3"
-
+version: '3'
 services:
-  # openpredict-api:
-  #   container_name: openpredict-api
-  #   image: ghcr.io/maastrichtu-ids/openpredict-api:latest
-  #   # build: .
-  #   restart: unless-stopped
-  #   ports:
-  #     - 8808:8808
-  #   volumes:
-  #     - ./data/api:/data/openpredict
-  #   environment: 
-  #     SPARQL_USER: dba
-  #     SPARQL_PASSWORD: dba
-  #     SPARQL_ENDPOINT_URL: http://openpredict-virtuoso:8890/sparql
-  #     SPARQL_ENDPOINT_UPDATE_URL: http://openpredict-virtuoso:8890/sparql
-
-
   openpredict-virtuoso:
     container_name: openpredict-virtuoso
-    image: tenforce/virtuoso:latest
+    image: 'tenforce/virtuoso:latest'
     environment:
       DBA_PASSWORD: dba
-      SPARQL_UPDATE: "true"
-      DEFAULT_GRAPH: https://w3id.org/openpredict/graph
+      SPARQL_UPDATE: 'true'
+      DEFAULT_GRAPH: 'https://w3id.org/openpredict/graph'
     volumes:
-      - ./data/virtuoso:/data
+      - './data/virtuoso:/data'
     ports:
-      - 8890:8890
-      - 1111:1111
+      - '8890:8890'
+      - '1111:1111'
