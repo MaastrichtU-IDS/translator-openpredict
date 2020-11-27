@@ -1,0 +1,1996 @@
+@prefix ns1: <http://www.w3id.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG1> ns1:neurodkg:hasCurrentMedication "standard antipsychotics " ;
+    ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG13> ns1:neurodkg:hasCurrentMedication <http://bioportal.bioontology.org/ontologies/umls/C0353697> ;
+    ns1:neurodkg:responseStatus "treatment_resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG139> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG15> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG156A> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG156B> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG156C> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG20> ns1:neurodkg:hasTreatment <http://bioportal.bioontology.org/ontologies/umls/C0242402> ;
+    ns1:neurodkg:responseStatus "resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG28> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG29> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG3> ns1:neurodkg:hasCurrentMedication <http://bioportal.bioontology.org/ontologies/umls/C0006982> ;
+    ns1:neurodkg:responseStatus "decreasing_response" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG56> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG74> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG77> ns1:neurodkg:responseStatus "treatment resistant" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG94> ns1:neurodkg:treatmentDuration "acute" .
+
+<http://www.w3id.org/neurodkg/Instances/Treatment1_TG95> ns1:neurodkg:treatmentDuration "acute" .
+
+<http://www.w3id.org/neurodkg/Instances/combination84> ns1:neurodkg:contains ns1:drugbank:DB00316,
+        ns1:drugbank:DB00956 .
+
+<http://www.w3id.org/neurodkg/Instances/contex23> ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup23> .
+
+<http://www.w3id.org/neurodkg/Instances/context1> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "indication " ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00363 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup1> .
+
+<http://www.w3id.org/neurodkg/Instances/context10> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/SNOMEDCT/76948002> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00575 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup10> .
+
+<http://www.w3id.org/neurodkg/Instances/context100> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10066714> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00482 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup100> .
+
+<http://www.w3id.org/neurodkg/Instances/context101> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/10652> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00843 .
+
+<http://www.w3id.org/neurodkg/Instances/context102> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2030> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00490 .
+
+<http://www.w3id.org/neurodkg/Instances/context103> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/3312> ;
+    ns1:neurodkg:drug ns1:drugbank:DB14509 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup103> .
+
+<http://www.w3id.org/neurodkg/Instances/context104> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/10652> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01043 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup104A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup104B> .
+
+<http://www.w3id.org/neurodkg/Instances/context105> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050561> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 .
+
+<http://www.w3id.org/neurodkg/Instances/context106> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10001543> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 .
+
+<http://www.w3id.org/neurodkg/Instances/context107> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/OMIM/MTHU002980> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 .
+
+<http://www.w3id.org/neurodkg/Instances/context108> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/594> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 ;
+    ns1:neurodkg:treatmentDuration "up to 9 weeks" .
+
+<http://www.w3id.org/neurodkg/Instances/context109> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00285 .
+
+<http://www.w3id.org/neurodkg/Instances/context11> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Prevention ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/6364> ;
+    ns1:neurodkg:drug ns1:drugbank:DB14039 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup11> .
+
+<http://www.w3id.org/neurodkg/Instances/context110> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://sbmi.uth.tmc.edu/ontology/ochv#11553> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00924 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup110> ;
+    ns1:neurodkg:treatmentDuration "2-3 weeks" .
+
+<http://www.w3id.org/neurodkg/Instances/context111> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/8986> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00182 .
+
+<http://www.w3id.org/neurodkg/Instances/context112> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1093> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00182 .
+
+<http://www.w3id.org/neurodkg/Instances/context113> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050561> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 .
+
+<http://www.w3id.org/neurodkg/Instances/context114> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1093> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00422 ;
+    ns1:neurodkg:hasTherapy "educational therapy",
+        "psychological therapy",
+        "social therapy" ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup114> .
+
+<http://www.w3id.org/neurodkg/Instances/context115> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/8986> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00422 .
+
+<http://www.w3id.org/neurodkg/Instances/context116> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00555 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup116> .
+
+<http://www.w3id.org/neurodkg/Instances/context117> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00555 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup117> .
+
+<http://www.w3id.org/neurodkg/Instances/context118> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Prevention ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00555 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup118> .
+
+<http://www.w3id.org/neurodkg/Instances/context119> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00273 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup119> .
+
+<http://www.w3id.org/neurodkg/Instances/context12> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00996 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup12A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup12B> .
+
+<http://www.w3id.org/neurodkg/Instances/context120> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00273 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup120> .
+
+<http://www.w3id.org/neurodkg/Instances/context121> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Prevention ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/6364> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00273 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup121> .
+
+<http://www.w3id.org/neurodkg/Instances/context122> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01224 .
+
+<http://www.w3id.org/neurodkg/Instances/context123> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01224 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup123> .
+
+<http://www.w3id.org/neurodkg/Instances/context124> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01224 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup124A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup124B> .
+
+<http://www.w3id.org/neurodkg/Instances/context125> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01224 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup125> .
+
+<http://www.w3id.org/neurodkg/Instances/context126> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/594> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00404 .
+
+<http://www.w3id.org/neurodkg/Instances/context127> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/SYMP_0000141> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00697 .
+
+<http://www.w3id.org/neurodkg/Instances/context128> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01050 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup128> .
+
+<http://www.w3id.org/neurodkg/Instances/context129> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01202 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup129> .
+
+<http://www.w3id.org/neurodkg/Instances/context13> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://purl.jp/bio/4/id/201206030931671705> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00323 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup13> .
+
+<http://www.w3id.org/neurodkg/Instances/context130> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/4890> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01202 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup130> .
+
+<http://www.w3id.org/neurodkg/Instances/context131> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1827> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01202 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup131> .
+
+<http://www.w3id.org/neurodkg/Instances/context132> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00313 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup132> .
+
+<http://www.w3id.org/neurodkg/Instances/context133> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DBSALT000185 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup133> .
+
+<http://www.w3id.org/neurodkg/Instances/context134> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00788 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup134> .
+
+<http://www.w3id.org/neurodkg/Instances/context135> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2377> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00181 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup135> .
+
+<http://www.w3id.org/neurodkg/Instances/context136> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00586 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup136A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup136B> .
+
+<http://www.w3id.org/neurodkg/Instances/context137> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.ebi.ac.uk/efo/EFO_1001919> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00181 .
+
+<http://www.w3id.org/neurodkg/Instances/context138> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00370 .
+
+<http://www.w3id.org/neurodkg/Instances/context139> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00956 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup139> .
+
+<http://www.w3id.org/neurodkg/Instances/context14> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "acute treatment" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/6364> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00918 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup14> .
+
+<http://www.w3id.org/neurodkg/Instances/context140> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease "musculoskeletal conditions" ;
+    ns1:neurodkg:drug ns1:drugbank:DB00395 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup140> .
+
+<http://www.w3id.org/neurodkg/Instances/context141> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00268 .
+
+<http://www.w3id.org/neurodkg/Instances/context142> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10038741> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00268 .
+
+<http://www.w3id.org/neurodkg/Instances/context143> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease "musclusoskeletal conditions" ;
+    ns1:neurodkg:drug ns1:drugbank:DB00423 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup143> .
+
+<http://www.w3id.org/neurodkg/Instances/context144> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00776 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup144> .
+
+<http://www.w3id.org/neurodkg/Instances/context145> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00776 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup145> .
+
+<http://www.w3id.org/neurodkg/Instances/context146> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00413 .
+
+<http://www.w3id.org/neurodkg/Instances/context147> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10038741> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00413 .
+
+<http://www.w3id.org/neurodkg/Instances/context148> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1093> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00289 .
+
+<http://www.w3id.org/neurodkg/Instances/context149> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive_therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050561> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00273 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup149> .
+
+<http://www.w3id.org/neurodkg/Instances/context15> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/SYMP_0000837> ;
+    ns1:neurodkg:drug ns1:drugbank:DB06283 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup15> .
+
+<http://www.w3id.org/neurodkg/Instances/context150> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1093> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01255 .
+
+<http://www.w3id.org/neurodkg/Instances/context151> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00945 .
+
+<http://www.w3id.org/neurodkg/Instances/context152> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00376 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup152> .
+
+<http://www.w3id.org/neurodkg/Instances/context153> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://sbmi.uth.tmc.edu/ontology/ochv#4801> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00376 .
+
+<http://www.w3id.org/neurodkg/Instances/context154> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/8986> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01576 .
+
+<http://www.w3id.org/neurodkg/Instances/context155> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1093> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01576 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup155> .
+
+<http://www.w3id.org/neurodkg/Instances/context156> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00295 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup156>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup156A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup156B>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup156C> .
+
+<http://www.w3id.org/neurodkg/Instances/context157> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/437> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00545 .
+
+<http://www.w3id.org/neurodkg/Instances/context158> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0005530> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00921 .
+
+<http://www.w3id.org/neurodkg/Instances/context159> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050741> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00704 .
+
+<http://www.w3id.org/neurodkg/Instances/context16> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01200 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup16> .
+
+<http://www.w3id.org/neurodkg/Instances/context160> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/332> ;
+    ns1:neurodkg:drug ns1:drugbank:DB12243 .
+
+<http://www.w3id.org/neurodkg/Instances/context161> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/12858> ;
+    ns1:neurodkg:drug ns1:drugbank:DB04844 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup161> .
+
+<http://www.w3id.org/neurodkg/Instances/context162> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/332> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00740 .
+
+<http://www.w3id.org/neurodkg/Instances/context163> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050214> ;
+    ns1:neurodkg:drug ns1:drugbank:DB11640 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup163> .
+
+<http://www.w3id.org/neurodkg/Instances/context164> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01086 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup164> .
+
+<http://www.w3id.org/neurodkg/Instances/context165> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/12894> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00185 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup165> .
+
+<http://www.w3id.org/neurodkg/Instances/context166> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00316 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup166A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup166B>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup166C>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup166D>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup166E>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup166F> .
+
+<http://www.w3id.org/neurodkg/Instances/context167> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10016558> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00316 .
+
+<http://www.w3id.org/neurodkg/Instances/context168> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10001543> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 .
+
+<http://www.w3id.org/neurodkg/Instances/context169> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/OMIM/MTHU002980> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01068 .
+
+<http://www.w3id.org/neurodkg/Instances/context17> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0013600> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00231 ;
+    ns1:neurodkg:treatmentDuration "7-10 days" .
+
+<http://www.w3id.org/neurodkg/Instances/context170> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease "reflex spasms" ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup170> .
+
+<http://www.w3id.org/neurodkg/Instances/context171> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1969> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup171> .
+
+<http://www.w3id.org/neurodkg/Instances/context172> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/607> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup172> .
+
+<http://www.w3id.org/neurodkg/Instances/context173> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10003620> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 .
+
+<http://www.w3id.org/neurodkg/Instances/context174> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/13366> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 .
+
+<http://www.w3id.org/neurodkg/Instances/context175> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/11338> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 .
+
+<http://www.w3id.org/neurodkg/Instances/context18> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1824> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00186 .
+
+<http://www.w3id.org/neurodkg/Instances/context19> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2030> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00186 .
+
+<http://www.w3id.org/neurodkg/Instances/context2> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00915 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup2A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup2B>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup2C> .
+
+<http://www.w3id.org/neurodkg/Instances/context20> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9203> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00813 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup20> .
+
+<http://www.w3id.org/neurodkg/Instances/context21> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2030> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup21> .
+
+<http://www.w3id.org/neurodkg/Instances/context22> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1824> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 .
+
+<http://www.w3id.org/neurodkg/Instances/context23> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB04946 .
+
+<http://www.w3id.org/neurodkg/Instances/context24> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01238 .
+
+<http://www.w3id.org/neurodkg/Instances/context25> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "acute treatment" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01238 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup25> .
+
+<http://www.w3id.org/neurodkg/Instances/context26> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01238 .
+
+<http://www.w3id.org/neurodkg/Instances/context27> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/12849> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01238 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup27> .
+
+<http://www.w3id.org/neurodkg/Instances/context28> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00949 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup28> .
+
+<http://www.w3id.org/neurodkg/Instances/context29> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10010145> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01080 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup29> .
+
+<http://www.w3id.org/neurodkg/Instances/context3> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01037 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup3> .
+
+<http://www.w3id.org/neurodkg/Instances/context30> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10021750> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01080 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup30> .
+
+<http://www.w3id.org/neurodkg/Instances/context31> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00252 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup31> .
+
+<http://www.w3id.org/neurodkg/Instances/context32> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1826> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01320 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup32A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup32B> .
+
+<http://www.w3id.org/neurodkg/Instances/context33> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10074835> ;
+    ns1:neurodkg:drug ns1:drugbank:DB05316 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup33> .
+
+<http://www.w3id.org/neurodkg/Instances/context34> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00734 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup34A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup34B> .
+
+<http://www.w3id.org/neurodkg/Instances/context35> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00734 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup35A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup35B> .
+
+<http://www.w3id.org/neurodkg/Instances/context36> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "combination treatment" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00734 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup36A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup36B> .
+
+<http://www.w3id.org/neurodkg/Instances/context37> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/12849> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00734 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup37> .
+
+<http://www.w3id.org/neurodkg/Instances/context38> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjuctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB11632 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup38> .
+
+<http://www.w3id.org/neurodkg/Instances/context39> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjuctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14330> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00494 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup39> .
+
+<http://www.w3id.org/neurodkg/Instances/context40> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00458 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup40> .
+
+<http://www.w3id.org/neurodkg/Instances/context41> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08567 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup41> .
+
+<http://www.w3id.org/neurodkg/Instances/context42> a <http://purl.bioontology.org/ontology/OMIM/MTHU039559>,
+        ns1:neurodkg:DrugDiseaseTargetGroup ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/10933> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08567 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup42> .
+
+<http://www.w3id.org/neurodkg/Instances/context43> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/594> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08567 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup43> .
+
+<http://www.w3id.org/neurodkg/Instances/context44> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2055> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08567 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup44> .
+
+<http://www.w3id.org/neurodkg/Instances/context45> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10041242> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08567 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup45> .
+
+<http://www.w3id.org/neurodkg/Instances/context46> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00472 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup46A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup46B> .
+
+<http://www.w3id.org/neurodkg/Instances/context47> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/10933> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00472 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup47> .
+
+<http://www.w3id.org/neurodkg/Instances/context48> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/12129> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00472 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup48> .
+
+<http://www.w3id.org/neurodkg/Instances/context49> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "indication " ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/594> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00472 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup49> .
+
+<http://www.w3id.org/neurodkg/Instances/context5> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/8986> ;
+    ns1:neurodkg:drug ns1:drugbank:DB09072 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup5> .
+
+<http://www.w3id.org/neurodkg/Instances/context50> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "combination treatment" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00472 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup50> .
+
+<http://www.w3id.org/neurodkg/Instances/context51> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease "musculo-skeletal conditions" ;
+    ns1:neurodkg:drug ns1:drugbank:DB01173 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup51> .
+
+<http://www.w3id.org/neurodkg/Instances/context52> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0013600> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00980 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup52> .
+
+<http://www.w3id.org/neurodkg/Instances/context53> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/6364> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00998 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup53> .
+
+<http://www.w3id.org/neurodkg/Instances/context54> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/6364> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00669 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup54> .
+
+<http://www.w3id.org/neurodkg/Instances/context55> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01247 .
+
+<http://www.w3id.org/neurodkg/Instances/context56> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://bioportal.bioontology.org/ontologies/umls/C0040517> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01100 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup56> .
+
+<http://www.w3id.org/neurodkg/Instances/context57> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01623 .
+
+<http://www.w3id.org/neurodkg/Instances/context58> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08815 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup58> .
+
+<http://www.w3id.org/neurodkg/Instances/context59> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08815 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup59> .
+
+<http://www.w3id.org/neurodkg/Instances/context6> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5418> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00363 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup6> .
+
+<http://www.w3id.org/neurodkg/Instances/context60> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive Therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/14042> ;
+    ns1:neurodkg:drug ns1:drugbank:DB08815 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup60> .
+
+<http://www.w3id.org/neurodkg/Instances/context61> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00476 .
+
+<http://www.w3id.org/neurodkg/Instances/context62> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10018105> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00476 .
+
+<http://www.w3id.org/neurodkg/Instances/context63> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/631> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00476 .
+
+<http://www.w3id.org/neurodkg/Instances/context64> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10012683> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00476 .
+
+<http://www.w3id.org/neurodkg/Instances/context65> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1596> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00344 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup65> .
+
+<http://www.w3id.org/neurodkg/Instances/context66> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01156 .
+
+<http://www.w3id.org/neurodkg/Instances/context67> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Prevention ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0060167> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01156 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup67> .
+
+<http://www.w3id.org/neurodkg/Instances/context68> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "symtomatic_relief" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470>,
+        <http://www.w3id.org/doid/1595> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00321 .
+
+<http://www.w3id.org/neurodkg/Instances/context69> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470>,
+        <http://www.w3id.org/doid/1595> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00726 .
+
+<http://www.w3id.org/neurodkg/Instances/context7> a ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00497 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup7> .
+
+<http://www.w3id.org/neurodkg/Instances/context70> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "Adjunctive Therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050561> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00349 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup70> .
+
+<http://www.w3id.org/neurodkg/Instances/context71> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00850 .
+
+<http://www.w3id.org/neurodkg/Instances/context72> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0005433> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00829 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup72> .
+
+<http://www.w3id.org/neurodkg/Instances/context73> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/5419> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00623 .
+
+<http://www.w3id.org/neurodkg/Instances/context74> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00780 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup74> .
+
+<http://www.w3id.org/neurodkg/Instances/context75> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/631> ;
+    ns1:neurodkg:drug ns1:drugbank:DB04896 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup75> .
+
+<http://www.w3id.org/neurodkg/Instances/context76> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2030> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00371 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup76> .
+
+<http://www.w3id.org/neurodkg/Instances/context77> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0050561> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00949 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup77> .
+
+<http://www.w3id.org/neurodkg/Instances/context78> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/0060167> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01065 .
+
+<http://www.w3id.org/neurodkg/Instances/context79> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/535> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01065 .
+
+<http://www.w3id.org/neurodkg/Instances/context8> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://bioportal.bioontology.org/ontologies/umls/C0393739> ;
+    ns1:neurodkg:drug ns1:drugbank:DB14042 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup8> .
+
+<http://www.w3id.org/neurodkg/Instances/context80> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01065 .
+
+<http://www.w3id.org/neurodkg/Instances/context81> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0013600> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00402 .
+
+<http://www.w3id.org/neurodkg/Instances/context82> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0013600> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00425 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup82> .
+
+<http://www.w3id.org/neurodkg/Instances/context83> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0013600> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01589 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup83A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup83B>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup83C> .
+
+<http://www.w3id.org/neurodkg/Instances/context84> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "combination treatment" ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug "combination84" .
+
+<http://www.w3id.org/neurodkg/Instances/context85> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00193 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup85> .
+
+<http://www.w3id.org/neurodkg/Instances/context86> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00656 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup86> .
+
+<http://www.w3id.org/neurodkg/Instances/context87> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00215 .
+
+<http://www.w3id.org/neurodkg/Instances/context88> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00715 .
+
+<http://www.w3id.org/neurodkg/Instances/context89> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/10933> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00715 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup89> .
+
+<http://www.w3id.org/neurodkg/Instances/context9> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Prevention ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/6364> ;
+    ns1:neurodkg:drug ns1:drugbank:DB14042 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup9> .
+
+<http://www.w3id.org/neurodkg/Instances/context90> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/594> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00715 .
+
+<http://www.w3id.org/neurodkg/Instances/context91> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10041242> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00715 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup91> .
+
+<http://www.w3id.org/neurodkg/Instances/context92> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10018105> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00715 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup92> .
+
+<http://www.w3id.org/neurodkg/Instances/context93> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/2055> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00715 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup93> .
+
+<http://www.w3id.org/neurodkg/Instances/context94> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/1470> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01175 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup94> .
+
+<http://www.w3id.org/neurodkg/Instances/context95> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:Indication ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10018105> ;
+    ns1:neurodkg:drug ns1:drugbank:DB01175 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup95> .
+
+<http://www.w3id.org/neurodkg/Instances/context96> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.bioontology.org/ontology/MEDDRA/10054095> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00230 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup96A>,
+        <http://www.w3id.org/neurodkg/Instances/TargetGroup96B> .
+
+<http://www.w3id.org/neurodkg/Instances/context97> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/MONDO_0041052> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00230 .
+
+<http://www.w3id.org/neurodkg/Instances/context98> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        "adjunctive therapy" ;
+    ns1:neurodkg:disease <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00230 ;
+    ns1:neurodkg:targetGroup <http://www.w3id.org/neurodkg/Instances/TargetGroup98> .
+
+<http://www.w3id.org/neurodkg/Instances/context99> a ns1:neurodkg:DrugDiseaseTargetGroup,
+        ns1:neurodkg:SymptomaticRelief ;
+    ns1:neurodkg:disease <http://www.w3id.org/doid/631> ;
+    ns1:neurodkg:drug ns1:drugbank:DB00230 .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0002772> rdfs:label "opioid analgesic" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0006982> rdfs:label "levodopa/carbidopa" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0040517> rdfs:label "Tourette's Disorder" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0234533> rdfs:label "generalized seizures" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0242402> rdfs:label "opioids" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0353697> rdfs:label "levodopa/carbidopa" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0393739> rdfs:label "Episodic Cluster Headaches" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0424419> rdfs:label "binge-eating " .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0694563> rdfs:label "excessive daytime sleepiness" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0751901> rdfs:label "phonic tics" .
+
+<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C50535> rdfs:label "discomfort" .
+
+<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C75540> rdfs:label "tenderness" .
+
+<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9203> rdfs:label "breakthrough pain" .
+
+<http://purl.bioontology.org/ontology/ICPC2P/S02002> rdfs:label "itching" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10001497> rdfs:label "acute agitation" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10002855> rdfs:label "anxiety" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10003620> rdfs:label "Athetosis" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10003993> rdfs:label "backache" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10012225> rdfs:label "delirium tremens" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10012260> rdfs:label "delusions " .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10013486> rdfs:label "distractibility" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10019077> rdfs:label "hallucination" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10019211> rdfs:label "headache" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10021750> rdfs:label "Infantile Spasms" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10028333> rdfs:label "skeletal muscle spasms" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10028361> rdfs:label "muscular aches" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10041552> rdfs:label "spinal cord injury " .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10044055> rdfs:label "toothache" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10044565> rdfs:label "tremor" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10047700> rdfs:label "vomiting " .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10048013> rdfs:label "withdrawal" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10065956> rdfs:label "terminal cancer" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10066714> rdfs:label "Acute pain" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10074835> rdfs:label "Parkinson's Disease Psychosis " .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU000554> rdfs:label "hyperactivity" .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU001787> rdfs:label "short attention span" .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU004076> rdfs:label "muscular rigidity" .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU004285> rdfs:label "impulsivity" .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU036678> rdfs:label "emotional lability" .
+
+<http://purl.bioontology.org/ontology/SNOMEDCT/248274002> rdfs:label "anergetic" .
+
+<http://purl.bioontology.org/ontology/SNOMEDCT/40196000> rdfs:label "mild pain" .
+
+<http://purl.bioontology.org/ontology/SNOMEDCT/50415004> rdfs:label "moderate pain" .
+
+<http://purl.bioontology.org/ontology/SNOMEDCT/73917004> rdfs:label "hallucinosis" .
+
+<http://purl.bioontology.org/ontology/SNOMEDCT/900000000000448009> rdfs:label "cataplexy" .
+
+<http://purl.obolibrary.org/obo/DDO.owl#0009300> rdfs:label "symptomatic parkinsonism" .
+
+<http://purl.obolibrary.org/obo/HP_0032660> rdfs:label "generalized tonic-clonic status epilepticus" .
+
+<http://purl.obolibrary.org/obo/HP_0100034> rdfs:label "motor tics" .
+
+<http://purl.obolibrary.org/obo/MFOMD_0000145> rdfs:label "hypomanic episode" .
+
+<http://purl.obolibrary.org/obo/MONDO_0005433> rdfs:label "Alcohol Withdrawal" .
+
+<http://purl.obolibrary.org/obo/MONDO_0005530> rdfs:label "Opioid Dependence" .
+
+<http://purl.obolibrary.org/obo/MONDO_0041052> rdfs:label "postherapetic neuralgia " .
+
+<http://purl.obolibrary.org/obo/OntoAD#AD000270> rdfs:label "moderate dementia" .
+
+<http://purl.obolibrary.org/obo/OntoAD#AD000391> rdfs:label "severe dementia" .
+
+<http://purl.obolibrary.org/obo/SYMP_0000260> rdfs:label "dry mouth" .
+
+<http://purl.obolibrary.org/obo/SYMP_0000837> rdfs:label "chronic pain" .
+
+<http://sbmi.uth.tmc.edu/ontology/ochv#11553> rdfs:label "muscle spasm" .
+
+<http://sbmi.uth.tmc.edu/ontology/ochv#2235> rdfs:label "minor burns and skin irritations" .
+
+<http://sbmi.uth.tmc.edu/ontology/ochv#23169> rdfs:label "obsessions" .
+
+<http://sbmi.uth.tmc.edu/ontology/ochv#45350> rdfs:label "minor arthritis pain" .
+
+<http://sbmi.uth.tmc.edu/ontology/ochv#50484> rdfs:label "arthritic pain" .
+
+<http://www.ebi.ac.uk/efo/EFO_1001919> rdfs:label "spinal cord injury" .
+
+<http://www.w3id.org/doid/0050214> rdfs:label "Lambert-Eaton myasthenic syndrome (LEMS)" .
+
+<http://www.w3id.org/doid/0050741> rdfs:label "Alcohol Dependence" .
+
+<http://www.w3id.org/doid/10459> rdfs:label "common cold" .
+
+<http://www.w3id.org/doid/11338> rdfs:label "Tetanus" .
+
+<http://www.w3id.org/doid/12129> rdfs:label "Bulimia Nervosa " .
+
+<http://www.w3id.org/doid/12294> rdfs:label "atypical depression" .
+
+<http://www.w3id.org/doid/12858> rdfs:label "Huntington's Disease" .
+
+<http://www.w3id.org/doid/12859> rdfs:label "chorea" .
+
+<http://www.w3id.org/doid/12894> rdfs:label "Sjögren’s Syndrome" .
+
+<http://www.w3id.org/doid/13366> rdfs:label "Stiff Man Syndrome" .
+
+<http://www.w3id.org/doid/1596> rdfs:label "mental depression" .
+
+<http://www.w3id.org/doid/1827> rdfs:label "idiopathic generalized epilepsy" .
+
+<http://www.w3id.org/doid/1969> rdfs:label "Cerebral Palsy" .
+
+<http://www.w3id.org/doid/2377> rdfs:label "Multiple Sclerosis" .
+
+<http://www.w3id.org/doid/3312> rdfs:label "Bipolar Disorder" .
+
+<http://www.w3id.org/doid/437> rdfs:label "Myasthenia Gravis" .
+
+<http://www.w3id.org/doid/4890> rdfs:label "juvenile myoclonic epilepsy" .
+
+<http://www.w3id.org/doid/4964> rdfs:label "neurotic depression" .
+
+<http://www.w3id.org/doid/535> rdfs:label "Sleep Disorders" .
+
+<http://www.w3id.org/doid/5418> rdfs:label "Schizoaffective Disorder" .
+
+<http://www.w3id.org/doid/5844> rdfs:label "myocardial infarction" .
+
+<http://www.w3id.org/doid/607> rdfs:label "Paraplegia" .
+
+ns1:drugbank:DB00185 rdfs:label "Cevimeline" .
+
+ns1:drugbank:DB00193 rdfs:label "tramadol" .
+
+ns1:drugbank:DB00215 rdfs:label "Citalopram" .
+
+ns1:drugbank:DB00231 rdfs:label "Temazepam" .
+
+ns1:drugbank:DB00252 rdfs:label "Phenytoin" .
+
+ns1:drugbank:DB00285 rdfs:label "Venlafaxine" .
+
+ns1:drugbank:DB00289 rdfs:label "Atomoxetine" .
+
+ns1:drugbank:DB00295 rdfs:label "Morphine" .
+
+ns1:drugbank:DB00321 rdfs:label "Amitriptyline" .
+
+ns1:drugbank:DB00323 rdfs:label "Tolcapone" .
+
+ns1:drugbank:DB00334 rdfs:label "olanzapine " .
+
+ns1:drugbank:DB00344 rdfs:label "Protriptyline" .
+
+ns1:drugbank:DB00349 rdfs:label "Clobazam" .
+
+ns1:drugbank:DB00370 rdfs:label "Mirtazapine" .
+
+ns1:drugbank:DB00371 rdfs:label "Meprobamate" .
+
+ns1:drugbank:DB00395 rdfs:label "Carisoprodol" .
+
+ns1:drugbank:DB00402 rdfs:label "Eszopiclone" .
+
+ns1:drugbank:DB00404 rdfs:label "Alprazolam" .
+
+ns1:drugbank:DB00423 rdfs:label "Methocarbamol" .
+
+ns1:drugbank:DB00425 rdfs:label "Zolpidem" .
+
+ns1:drugbank:DB00458 rdfs:label "Imipramine" .
+
+ns1:drugbank:DB00482 rdfs:label "Celecoxib" .
+
+ns1:drugbank:DB00490 rdfs:label "Busiprone" .
+
+ns1:drugbank:DB00494 rdfs:label "Entacapone" .
+
+ns1:drugbank:DB00497 rdfs:label "Oxycodone" .
+
+ns1:drugbank:DB00545 rdfs:label "Pyridostigmine" .
+
+ns1:drugbank:DB00575 rdfs:label "Clonidine" .
+
+ns1:drugbank:DB00586 rdfs:label "Diclofenac" .
+
+ns1:drugbank:DB00623 rdfs:label "Fluphanzine" .
+
+ns1:drugbank:DB00656 rdfs:label "trazodone" .
+
+ns1:drugbank:DB00669 rdfs:label "Sumatriptan" .
+
+ns1:drugbank:DB00697 rdfs:label "Tizanidine" .
+
+ns1:drugbank:DB00704 rdfs:label "Naltrexone" .
+
+ns1:drugbank:DB00726 rdfs:label "Trimipramine" .
+
+ns1:drugbank:DB00740 rdfs:label "Riluzole" .
+
+ns1:drugbank:DB00780 rdfs:label "Phenelzine" .
+
+ns1:drugbank:DB00788 rdfs:label "Naproxen" .
+
+ns1:drugbank:DB00813 rdfs:label "Fentanyl" .
+
+ns1:drugbank:DB00843 rdfs:label "Donepezil" .
+
+ns1:drugbank:DB00850 rdfs:label "Perphenazine" .
+
+ns1:drugbank:DB00915 rdfs:label "amantidine" .
+
+ns1:drugbank:DB00918 rdfs:label "almotriptan" .
+
+ns1:drugbank:DB00921 rdfs:label "Buprenorphine" .
+
+ns1:drugbank:DB00924 rdfs:label "Cyclobenzaprine" .
+
+ns1:drugbank:DB00945 rdfs:label "Acetylsalicylic acid" .
+
+ns1:drugbank:DB00980 rdfs:label "Ramelteon" .
+
+ns1:drugbank:DB00996 rdfs:label "Gabapentin" .
+
+ns1:drugbank:DB00998 rdfs:label "Frovatriptan" .
+
+ns1:drugbank:DB01037 rdfs:label "Selegiline" .
+
+ns1:drugbank:DB01043 rdfs:label "Memantine" .
+
+ns1:drugbank:DB01050 rdfs:label "Ibuprofen" .
+
+ns1:drugbank:DB01086 rdfs:label "Benzocaine" .
+
+ns1:drugbank:DB01100 rdfs:label "Pimozide" .
+
+ns1:drugbank:DB01173 rdfs:label "Orphenadrine" .
+
+ns1:drugbank:DB01200 rdfs:label "Bromocriptine" .
+
+ns1:drugbank:DB01247 rdfs:label "Isocarboxazid" .
+
+ns1:drugbank:DB01255 rdfs:label "Lisdexamfetamine" .
+
+ns1:drugbank:DB01320 rdfs:label "Fosphenytoin" .
+
+ns1:drugbank:DB01589 rdfs:label "Quazepam" .
+
+ns1:drugbank:DB01623 rdfs:label "Thiothixene" .
+
+ns1:drugbank:DB04844 rdfs:label "Tetrabenazine" .
+
+ns1:drugbank:DB04896 rdfs:label "Milnacipran" .
+
+ns1:drugbank:DB04946 rdfs:label "Iloperidone" .
+
+ns1:drugbank:DB05316 rdfs:label "Pimavanserin" .
+
+ns1:drugbank:DB06283 rdfs:label "ziconotide" .
+
+ns1:drugbank:DB09072 rdfs:label "Xyrem/sodium oxybate" .
+
+ns1:drugbank:DB11632 rdfs:label "opicapone" .
+
+ns1:drugbank:DB11640 rdfs:label "Amifampridine" .
+
+ns1:drugbank:DB12243 rdfs:label "Edaravone" .
+
+ns1:drugbank:DB14039 rdfs:label "Erenumab" .
+
+ns1:drugbank:DB14509 rdfs:label "Lithium Carbonate" .
+
+ns1:drugbank:DBSALT000185 rdfs:label "Divalproex" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup1> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10065604> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG1" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup10> ns1:neurodkg:hasComorbidity <http://www.w3id.org/doid/162> ;
+    ns1:neurodkg:hasCurrentMedication <http://bioportal.bioontology.org/ontologies/umls/C0002772> ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10054095> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup100> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup103> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup104A> ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/OntoAD#AD000270> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup104B> ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/OntoAD#AD000391> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup11> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup110> ns1:neurodkg:hasSymptom <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C75540>,
+        <http://purl.obolibrary.org/obo/OGMS_0000085>,
+        "limitation of motion" ;
+    ns1:neurodkg:hasTherapy <http://bioportal.bioontology.org/ontologies/umls/C0949766>,
+        <http://purl.obolibrary.org/obo/CHEBI_24433> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup114> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10013486>,
+        <http://purl.bioontology.org/ontology/OMIM/MTHU000554>,
+        <http://purl.bioontology.org/ontology/OMIM/MTHU001787>,
+        <http://purl.bioontology.org/ontology/OMIM/MTHU004285>,
+        <http://purl.bioontology.org/ontology/OMIM/MTHU036678> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup116> ns1:neurodkg:hasMinAge 2 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0007359>,
+        <http://www.w3id.org/doid/0050561>,
+        <http://www.w3id.org/doid/7725> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup117> ns1:neurodkg:hasMinAge 16 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup118> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10012402>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10026778>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000145>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000149> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup119> ns1:neurodkg:hasMinAge 2 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0007359>,
+        <http://www.w3id.org/doid/7725> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup120> ns1:neurodkg:hasMinAge 2 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0007359>,
+        <http://www.w3id.org/doid/7725> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup121> ns1:neurodkg:hasMinAge 12 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup123> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup124A> ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB14507 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup124B> ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB00313 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup125> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10012402> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup128> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10016558>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10027324>,
+        <http://purl.obolibrary.org/obo/SYMP_0000006>,
+        <http://purl.obolibrary.org/obo/SYMP_0000438>,
+        <http://purl.obolibrary.org/obo/SYMP_0000504>,
+        <http://sbmi.uth.tmc.edu/ontology/ochv#45350>,
+        "muscular ache" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup129> ns1:neurodkg:hasMinAge 16 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0007359> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup12A> ns1:neurodkg:hasMinAge 12 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup12B> ns1:neurodkg:hasAgeGroup "2020-03-12T00:00:00"^^xsd:dateTime .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup13> ns1:neurodkg:hasTreatment "Treatment1_TG13" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup130> ns1:neurodkg:hasMinAge 16 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/OMIM/MTHU002980> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup131> ns1:neurodkg:hasMinAge 16 ;
+    ns1:neurodkg:hasSymptom <http://www.w3id.org/doid/7725> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup132> ns1:neurodkg:hasMinAge 10 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10010145> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup133> ns1:neurodkg:hasMinAge 10 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10010145> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup134> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10016558>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10027324>,
+        <http://purl.obolibrary.org/obo/SYMP_0000006>,
+        <http://purl.obolibrary.org/obo/SYMP_0000438>,
+        <http://purl.obolibrary.org/obo/SYMP_0000504>,
+        <http://sbmi.uth.tmc.edu/ontology/ochv#50484>,
+        "muscular aches" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup135> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/OMIM/MTHU004076>,
+        <http://purl.obolibrary.org/obo/OGMS_0000085>,
+        <http://purl.obolibrary.org/obo/SYMP_0000141>,
+        "clonus",
+        "flexor spasm" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup136A> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/SNOMEDCT/40196000> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup136B> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/SNOMEDCT/50415004> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup139> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/SNOMEDCT/76948002> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG139" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup14> ns1:neurodkg:hasSymptom "migraine duration >4h" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup140> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10013082> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup143> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10013082>,
+        <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:hasTherapy <http://bioportal.bioontology.org/ontologies/umls/C0949766>,
+        <http://purl.obolibrary.org/obo/CHEBI_24433> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup144> ns1:neurodkg:hasMinAge 4 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup145> ns1:neurodkg:hasMinAge 2 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup149> ns1:neurodkg:hasMinAge 2 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0001250> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup15> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG15" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup152> ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB01235 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup155> ns1:neurodkg:hasAgeGroup "2020-03-16T00:00:00"^^xsd:dateTime .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup156A> ns1:neurodkg:hasComorbidity <http://www.w3id.org/doid/5844> ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/SNOMEDCT/76948002> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG156A" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup156B> ns1:neurodkg:hasComorbidity <http://purl.bioontology.org/ontology/MEDDRA/10065956> ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/SNOMEDCT/76948002> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG156B" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup156C> ns1:neurodkg:hasComorbidity "severe injuries" ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/SNOMEDCT/76948002> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG156C" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup16> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB01235 ;
+    ns1:neurodkg:hasSymptom <http://purl.jp/bio/4/id/201206030931671705>,
+        "postencephalitic Parkinson's disease" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup161> ns1:neurodkg:hasSymptom <http://www.w3id.org/doid/12859> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup163> ns1:neurodkg:hasAgeGroup "2020-06-16T00:00:00"^^xsd:dateTime .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup164> ns1:neurodkg:hasMinAge 12 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/ICPC2P/S02002>,
+        <http://sbmi.uth.tmc.edu/ontology/ochv#2235>,
+        "minor cuts and scrapes" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup165> ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/SYMP_0000260> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup166A> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10019211> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup166B> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10003993> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup166C> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10044055> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup166D> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10028361> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup166E> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10027324> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup166F> ns1:neurodkg:hasSymptom <http://www.w3id.org/doid/10459> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup170> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10028333> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup171> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10041416> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup172> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10041416> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup20> ns1:neurodkg:hasComorbidity <http://www.w3id.org/doid/162> ;
+    ns1:neurodkg:hasMinAge 18 ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG20" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup21> ns1:neurodkg:hasSymptom "Anxiety" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup23> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup25> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000149> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup27> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10022998> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup28> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG28" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup29> ns1:neurodkg:hasMinAge 2 ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG29" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup2A> ns1:neurodkg:hasComorbidity <http://www.w3id.org/doid/12720> ;
+    ns1:neurodkg:hasSymptom <http://sbmi.uth.tmc.edu/ontology/ochv#4801>,
+        "postencephalitic parkinsonsim" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup2B> ns1:neurodkg:hasComorbidity <http://www.w3id.org/doid/12720> ;
+    ns1:neurodkg:hasSymptom <http://purl.jp/bio/4/id/201206030931671705>,
+        <http://sbmi.uth.tmc.edu/ontology/ochv#4801> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup2C> ns1:neurodkg:hasComorbidity <http://www.w3id.org/doid/12720> ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/DDO.owl#0009300>,
+        <http://sbmi.uth.tmc.edu/ontology/ochv#4801> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup3> ns1:neurodkg:hasTreatment "Treatment1_TG3" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup30> ns1:neurodkg:hasAgeGroup "1Month - 2Years" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup31> ns1:neurodkg:hasSymptom <http://www.w3id.org/doid/7725>,
+        "psychomotor seizures" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup32A> ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0032660> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup32B> ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0001250> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup33> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10012260>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10019077> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup34A> ns1:neurodkg:hasMinAge 18 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup34B> ns1:neurodkg:hasAgeGroup "13-17 " .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup35A> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000149> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup35B> ns1:neurodkg:hasAgeGroup "2020-10-17T00:00:00"^^xsd:dateTime ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000149> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup36A> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB14507 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000149> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup36B> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB00313 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10026778>,
+        <http://purl.obolibrary.org/obo/MFOMD_0000149> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup37> ns1:neurodkg:hasAgeGroup "2020-05-16T00:00:00"^^xsd:dateTime ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10022998> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup38> ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB00190,
+        ns1:drugbank:DB01235 ;
+    ns1:neurodkg:hasSymptom "off_episodes" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup39> ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB00190,
+        ns1:drugbank:DB01235 ;
+    ns1:neurodkg:hasSymptom "End-of-dose wearing-off" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup40> ns1:neurodkg:hasSymptom <http://www.w3id.org/doid/1595> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup41> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup42> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10010219>,
+        <http://purl.bioontology.org/ontology/OMIM/MTHU039559> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup43> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup44> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup45> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup46A> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup46B> ns1:neurodkg:hasAgeGroup "2020-08-18T00:00:00"^^xsd:dateTime .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup47> ns1:neurodkg:hasAgeGroup "2020-07-17T00:00:00"^^xsd:dateTime,
+        "adults" ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10010219>,
+        <http://purl.bioontology.org/ontology/OMIM/MTHU039559> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup48> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasSymptom <http://bioportal.bioontology.org/ontologies/umls/C0424419>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10047700> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup49> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup5> ns1:neurodkg:hasMinAge 7 ;
+    ns1:neurodkg:hasSymptom <http://bioportal.bioontology.org/ontologies/umls/C0694563>,
+        <http://purl.bioontology.org/ontology/SNOMEDCT/900000000000448009> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup50> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB00334 ;
+    ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10012402> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup51> ns1:neurodkg:hasSymptom <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C50535>,
+        <http://purl.obolibrary.org/obo/OGMS_0000085> ;
+    ns1:neurodkg:hasTherapy <http://bioportal.bioontology.org/ontologies/umls/C0949766>,
+        <http://purl.obolibrary.org/obo/CHEBI_24433> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup52> ns1:neurodkg:hasSymptom "sleep-onset problems" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup53> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:treatmentDuration "acute treatment " .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup54> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:treatmentDuration "acute treatment" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup56> ns1:neurodkg:hasSymptom <http://bioportal.bioontology.org/ontologies/umls/C0751901>,
+        <http://purl.obolibrary.org/obo/HP_0100034> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG56" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup58> ns1:neurodkg:hasAgeGroup "13-17" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup59> ns1:neurodkg:hasMinAge 10 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/MFOMD_0000143> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup6> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10065604> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup60> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasCurrentMedication ns1:drugbank:DB00313,
+        ns1:drugbank:DB14507 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/MFOMD_0000143> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup65> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10048013>,
+        <http://purl.bioontology.org/ontology/SNOMEDCT/248274002> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup67> ns1:neurodkg:hasSymptom "seasonal major depressive episodes" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup7> ns1:neurodkg:hasCurrentMedication "Oxycodone 20mg" ;
+    ns1:neurodkg:hasMinAge 11 .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup70> ns1:neurodkg:hasMinAge 2 ;
+    ns1:neurodkg:hasSymptom <http://purl.obolibrary.org/obo/HP_0001250> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup72> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10001497>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10012225>,
+        <http://purl.bioontology.org/ontology/MEDDRA/10044565>,
+        <http://purl.bioontology.org/ontology/SNOMEDCT/73917004> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup74> ns1:neurodkg:hasSymptom <http://www.w3id.org/doid/12294>,
+        <http://www.w3id.org/doid/2030>,
+        <http://www.w3id.org/doid/4964>,
+        "nonendogeneous depression" ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG74" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup75> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup76> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10002855> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup77> ns1:neurodkg:hasAgeGroup "children" ;
+    ns1:neurodkg:hasSymptom <http://bioportal.bioontology.org/ontologies/umls/C0234533>,
+        <http://purl.obolibrary.org/obo/HP_0007359> ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG77" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup8> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup82> ns1:neurodkg:hasSymptom "sleep initiation difficulty" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup83A> ns1:neurodkg:hasSymptom "sleep initiation difficulty" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup83B> ns1:neurodkg:hasSymptom "frequent nocturnal awakening" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup83C> ns1:neurodkg:hasSymptom "early morning awakenings" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup85> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup86> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup89> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10010219>,
+        <http://sbmi.uth.tmc.edu/ontology/ochv#23169> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup9> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup91> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup92> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup93> ns1:neurodkg:hasAgeGroup "adults" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup94> ns1:neurodkg:hasAgeGroup "2020-12-17T00:00:00"^^xsd:dateTime ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG94" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup95> ns1:neurodkg:hasAgeGroup "adults" ;
+    ns1:neurodkg:hasTreatment "Treatment1_TG95" .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup96A> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10012683> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup96B> ns1:neurodkg:hasSymptom <http://purl.bioontology.org/ontology/MEDDRA/10041552> .
+
+<http://www.w3id.org/neurodkg/Instances/TargetGroup98> ns1:neurodkg:hasMinAge "1 month" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10001543> rdfs:label "akinetic seizures" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10012683> rdfs:label "Diabetic Peripheral Neuropathy ",
+        "diabetic peripheral neuropathy" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10013082> rdfs:label "discomfort" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10022998> rdfs:label "Irritability",
+        "irritability" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10038741> rdfs:label "Restless Leg Syndrome" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10041242> rdfs:label "Social Anxiety Disorder ",
+        "Social anxiety disorder " .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10041416> rdfs:label "spasticity" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10054095> rdfs:label "Neuropathic Pain ",
+        "neuropathic pain" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10065604> rdfs:label "suicidal behavior" .
+
+<http://purl.obolibrary.org/obo/MFOMD_0000143> rdfs:label "Major Depressive episode" .
+
+<http://purl.obolibrary.org/obo/SYMP_0000006> rdfs:label "backache" .
+
+<http://purl.obolibrary.org/obo/SYMP_0000141> rdfs:label "spasticity" .
+
+<http://purl.obolibrary.org/obo/SYMP_0000438> rdfs:label "toothache" .
+
+<http://purl.obolibrary.org/obo/SYMP_0000504> rdfs:label "headache" .
+
+<http://www.w3id.org/doid/0060167> rdfs:label "Seasonal Affective Disorder" .
+
+<http://www.w3id.org/doid/10652> rdfs:label "Alzheimer's disease" .
+
+<http://www.w3id.org/doid/12849> rdfs:label "Autistic Disorder" .
+
+<http://www.w3id.org/doid/162> rdfs:label "cancer" .
+
+<http://www.w3id.org/doid/1824> rdfs:label "Status Epilepticus",
+        "Status Epilepticus " .
+
+<http://www.w3id.org/doid/2055> rdfs:label "Post-traumatic Stress Disorder" .
+
+<http://www.w3id.org/doid/332> rdfs:label "amyotrophic lateral sclerosis (ALS)" .
+
+ns1:drugbank:DB00181 rdfs:label "baclofen" .
+
+ns1:drugbank:DB00182 rdfs:label "Amphetamine" .
+
+ns1:drugbank:DB00186 rdfs:label "Lorazepam" .
+
+ns1:drugbank:DB00190 rdfs:label "carbidopa" .
+
+ns1:drugbank:DB00268 rdfs:label "Ropinirole Hydrochloride" .
+
+ns1:drugbank:DB00363 rdfs:label "Clozapine",
+        "clozapine" .
+
+ns1:drugbank:DB00376 rdfs:label "Trihexyphenidyl" .
+
+ns1:drugbank:DB00413 rdfs:label "Pramipexole Dihydrochloride" .
+
+ns1:drugbank:DB00422 rdfs:label "Methylphenidate" .
+
+ns1:drugbank:DB00776 rdfs:label "Oxcarbazepine" .
+
+ns1:drugbank:DB00949 rdfs:label "Felbamate" .
+
+ns1:drugbank:DB00956 rdfs:label "Hydrocodone",
+        "Hydrocodone Bitartrate" .
+
+ns1:drugbank:DB01080 rdfs:label "Vigabatrin" .
+
+ns1:drugbank:DB01156 rdfs:label "Bupropion" .
+
+ns1:drugbank:DB01175 rdfs:label "Escitalopram" .
+
+ns1:drugbank:DB01576 rdfs:label "Dextroamphetamine" .
+
+ns1:drugbank:DB14042 rdfs:label "galcanezumab" .
+
+<http://bioportal.bioontology.org/ontologies/umls/C0949766> rdfs:label "physical therapy" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10010145> rdfs:label "complex partial seizures",
+        "refractory complex partial seizures" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10010219> rdfs:label "compulsions" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10012402> rdfs:label "depressive episode",
+        "depressive episode " .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10016558> rdfs:label "fever" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10018105> rdfs:label "Generalized Anxiety Disorder" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10027324> rdfs:label "menstrual cramps",
+        "menstural cramps" .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU002980> rdfs:label "myoclonic seizures" .
+
+<http://purl.bioontology.org/ontology/OMIM/MTHU039559> rdfs:label "obsessions",
+        "symptomatic_relief" .
+
+<http://purl.jp/bio/4/id/201206030931671705> rdfs:label "idiopathic Parkinson's disease",
+        "idiopathic parkinson's disease" .
+
+<http://purl.obolibrary.org/obo/CHEBI_24433> rdfs:label "rest" .
+
+<http://purl.obolibrary.org/obo/HP_0001250> rdfs:label "seizures" .
+
+<http://www.w3id.org/doid/10933> rdfs:label "Obsessive Compulsive Disoder",
+        "Obsessive Compulsive Disorder",
+        "Obsessive Compulsive Disorder " .
+
+<http://www.w3id.org/doid/12720> rdfs:label "Cerebral Atherosclerosis" .
+
+<http://www.w3id.org/doid/1595> rdfs:label "Endogeneous depression",
+        "endogenous depression" .
+
+<http://www.w3id.org/doid/631> rdfs:label "Fibromyalgia",
+        "Fibromyalgia " .
+
+ns1:drugbank:DB00316 rdfs:label "Acetaminophen" .
+
+ns1:drugbank:DB00555 rdfs:label "Lamotrigine" .
+
+ns1:drugbank:DB01065 rdfs:label "Melatonin" .
+
+ns1:drugbank:DB01202 rdfs:label "Levetiracetam" .
+
+ns1:drugbank:DB08815 rdfs:label "Lurasidone" .
+
+ns1:drugbank:DB14507 rdfs:label "Lithium",
+        "lithium" .
+
+<http://sbmi.uth.tmc.edu/ontology/ochv#4801> rdfs:label "drug-induced extrapyramidal disorders",
+        "drug-induced extrapyramidal reactions" .
+
+<http://www.w3id.org/doid/8986> rdfs:label "Narcolepsy",
+        "Narcolepsy ",
+        "narcolepsy" .
+
+ns1:drugbank:DB00230 rdfs:label "Pregabalin" .
+
+ns1:drugbank:DB00273 rdfs:label "Topiramate" .
+
+ns1:drugbank:DB00313 rdfs:label "Divalproex",
+        "Valproate",
+        "divalproex" .
+
+ns1:drugbank:DB00476 rdfs:label "Duloxetine" .
+
+ns1:drugbank:DB00734 rdfs:label "Risperidone" .
+
+ns1:drugbank:DB01224 rdfs:label "Quetiapine Fumarate" .
+
+ns1:drugbank:DB01235 rdfs:label "levodopa" .
+
+ns1:drugbank:DB01238 rdfs:label "Aripiprazole" .
+
+<http://purl.bioontology.org/ontology/SNOMEDCT/76948002> rdfs:label "severe pain" .
+
+<http://purl.obolibrary.org/obo/MONDO_0013600> rdfs:label "Insomnia",
+        "Insomnia ",
+        "Short-term Insomnia",
+        "insomnia" .
+
+<http://www.w3id.org/doid/1093> rdfs:label "ADHD",
+        "Attention Deficit Hyperactivity Disorder (ADHD)" .
+
+<http://www.w3id.org/doid/2030> rdfs:label "Anxiety",
+        "Anxiety Disorder",
+        "Anxiety Disorders" .
+
+<http://www.w3id.org/doid/594> rdfs:label "Panic Disorder",
+        "panic disorder" .
+
+<http://www.w3id.org/doid/7725> rdfs:label "primary generalized tonic-clonic (PGTC) seizures",
+        "primary generalized tonic-clonic seizures",
+        "tonic-clonic seizures" .
+
+ns1:drugbank:DB00472 rdfs:label "fluoxetine",
+        "fluoxetine " .
+
+ns1:drugbank:DB08567 rdfs:label "Sertraline" .
+
+<http://purl.obolibrary.org/obo/MFOMD_0000149> rdfs:label "Mixed Episode",
+        "Mixed episode",
+        "mixed episode" .
+
+<http://www.w3id.org/doid/0050561> rdfs:label "Lennox-Gastaut Syndrome",
+        "Lennox-Gastaut syndrome",
+        "generalized seizures of Lennox-Gastaut syndrome" .
+
+<http://www.w3id.org/doid/6364> rdfs:label "Migraine",
+        "Migraine ",
+        "migraine" .
+
+ns1:drugbank:DB00715 rdfs:label "Paroxetine" .
+
+ns1:drugbank:DB01068 rdfs:label "Clonazepam" .
+
+<http://www.w3id.org/doid/14330> rdfs:label "Parkinson's Disease" .
+
+<http://www.w3id.org/doid/5419> rdfs:label "Schizophrenia",
+        "schizophrenia" .
+
+ns1:drugbank:DB00829 rdfs:label "Diazepam",
+        "diazepam" .
+
+<http://purl.bioontology.org/ontology/MEDDRA/10026778> rdfs:label "Manic Episode",
+        "Manic Episode ",
+        "Manic episode",
+        "manic episode" .
+
+<http://www.w3id.org/doid/14042> rdfs:label "Bipolar I Disorder",
+        "Bipolar I disorder",
+        "Bipolar I disorder " .
+
+<http://www.w3id.org/doid/1826> rdfs:label "Epilepsy",
+        "epilepsy" .
+
+<http://purl.obolibrary.org/obo/HP_0007359> rdfs:label "Partial-onset seizures",
+        "partial onset seizures",
+        "partial seizures",
+        "partial seizures ",
+        "partial-onset seizures" .
+
+<http://purl.obolibrary.org/obo/OGMS_0000085> rdfs:label "Pain",
+        "Pain ",
+        "pain" .
+
+<http://www.w3id.org/doid/1470> rdfs:label "Major Depressive Disorder",
+        "major depressive disorder" .
+

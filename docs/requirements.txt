@@ -1,0 +1,9 @@
+pyRDF2vec
+gensim
+numpy
+pandas
+matplotlib
+scikit-learn
+scipy
+findspark
+pyspark
