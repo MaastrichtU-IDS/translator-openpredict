@@ -20,7 +20,7 @@ def get_openpredict_dir(subfolder=''):
     return OPENPREDICT_DATA_DIR + subfolder
 
 def init_openpredict_dir():
-    """Create OpenPredict folder and initiatite files if necessary.
+    """Create OpenPredict folder and initiate files if necessary.
     Also create baseline features in the triplestore
     """
     print('Using directory: ' + OPENPREDICT_DATA_DIR)

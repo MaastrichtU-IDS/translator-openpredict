@@ -11,10 +11,15 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     query_graph = reasoner_query["message"]["query_graph"]
     # score = reasoner_query["message"]["query_options"]["has_confidence_level"]
     try:
-        score = float(reasoner_query["message"]["query_options"]["has_confidence_level"])
+        min_score = float(reasoner_query["message"]["query_options"]["has_confidence_level"])
     except:
-        print('score retrieve failed')
-        score=None
+        print('min score retrieve failed')
+        min_score=None
+    try:
+        max_score = float(reasoner_query["message"]["query_options"]["max_score"])
+    except:
+        print('max score retrieve failed')
+        max_score=None
     query_plan = {}
     # Parse the query_graph to build the query plan
     for qg_edge in query_graph["edges"]:
@@ -51,7 +56,7 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
         # Run get_predict!
         # TODO: pass score and limit from Reasoner query
         # TODO: add try catch and n_results
-        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, score)
+        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, min_score, max_score)
 
         for association in prediction_json:
             edge_kg_id = 'e' + str(kg_edge_count)

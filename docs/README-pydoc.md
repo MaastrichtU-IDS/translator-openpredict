@@ -636,7 +636,7 @@ Predictions and scores
 #### get\_predictions
 
 ```python
-get_predictions(id_to_predict, model_id, score=None, n_results=None)
+get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_results=None)
 ```
 
 Run classifiers to get predictions

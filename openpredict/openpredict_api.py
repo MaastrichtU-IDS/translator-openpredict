@@ -69,7 +69,7 @@ def post_embedding(types, emb_name, description, model_id):
     else:
         return { 'Forbidden': 403 }
 
-def get_predict(entity, model_id, score=None, n_results=None):
+def get_predict(entity, model_id, min_score=None, max_score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
@@ -77,7 +77,7 @@ def get_predict(entity, model_id, score=None, n_results=None):
     """
     time_start = datetime.now()
 
-    prediction_json = get_predictions(entity, model_id, score, n_results)
+    prediction_json = get_predictions(entity, model_id, min_score, max_score, n_results)
     # try:
     #     prediction_json = get_predictions(entity, model_id, score, n_results)
     # except:

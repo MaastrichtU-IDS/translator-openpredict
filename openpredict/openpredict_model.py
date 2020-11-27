@@ -676,7 +676,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     prediction_results=prediction_df.to_dict(orient='records')
     return prediction_results
 
-def get_predictions(id_to_predict, model_id, score=None, n_results=None):
+def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_results=None):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
@@ -689,8 +689,10 @@ def get_predictions(id_to_predict, model_id, score=None, n_results=None):
     # TODO: improve when we will have more classifier
     predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
     
-    if score:
-        predictions_array = [p for p in predictions_array if p['score'] >= score]
+    if min_score:
+        predictions_array = [p for p in predictions_array if p['score'] >= min_score]
+    if max_score:
+        predictions_array = [p for p in predictions_array if p['score'] <= max_score]
     if n_results:
         # Predictions are already sorted from higher score to lower
         predictions_array = predictions_array[:n_results]

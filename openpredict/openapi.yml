@@ -166,9 +166,18 @@ paths:
           type: string
           # default: "Predict OMIM-DrugBank"
           # enum: ["Predict OMIM-DrugBank"]
-      - name: score
+      - name: min_score
         in: query
         description: Minimum score of predictions to return (0 to 1)
+        required: false
+        schema:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+      - name: max_score
+        in: query
+        description: Maximum score of predictions to return (0 to 1)
         required: false
         schema:
           type: number
