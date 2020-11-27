@@ -55,20 +55,11 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-# Deploy the OpenPredict API locally
-
-The OpenPredict API store its data using a  RDF triplestore. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore.
+# Start the OpenPredict API from the source code
 
 ### Start the Virtuoso triplestore
 
-First clone this repository:
-
-```bash
-git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
-cd translator-openpredict
-```
-
-Then start Virtuoso locally on http://localhost:8890 (login: `dba` / `dba`)
+Start Virtuoso locally on http://localhost:8890 using Docker (login: `dba` / `dba`)
 
 ```bash
 docker-compose up -d
@@ -82,13 +73,13 @@ docker-compose up -d
 
 ### Start the OpenPredict API
 
-Start the OpenPredict API in development mode after installing the `openpredict` pip package:
+Start the OpenPredict API:
 
 ```bash
-openpredict start-api --debug
+openpredict start-api
 ```
 
-### Reset the OpenPredict and Virtuoso data
+### Reset your local OpenPredict data
 
 Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored, in `data/virtuoso` and `data/openpredict`
 
@@ -100,7 +91,11 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 >
 > On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
+> See more **[documentation to deploy the OpenPredict API](docs/dev)** locally or with Docker.
+
 # Alternatives to run OpenPredict
+
+See the main README.md if you just want to OpenPredict locally, this documentation is for people who wants to use a specific triplestore, or try out new way to run OpenPredict
 
 ### Define environment variables locally
 
