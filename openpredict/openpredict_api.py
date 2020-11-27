@@ -31,7 +31,14 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
-    api = connexion.App(__name__, options={"swagger_url": ""})
+    # Define server URL based on nginx-proxy environment variables
+    if os.getenv('VIRTUAL_HOST'):
+        server_url='http://' + os.getenv('VIRTUAL_HOST')
+    if os.getenv('LETSENCRYPT_HOST'):
+        server_url='https://' + os.getenv('LETSENCRYPT_HOST')
+        
+    print('Server URL: '+ server_url)
+    api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
 
     ## Server URL not taken into account when running in Docker
     # api.add_api('openapi.yml', arguments={'server_url': 'https://openpredict.semanticscience.org'})
