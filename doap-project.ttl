@@ -11,7 +11,7 @@
 
   doap:programming-language "Python" ;
   doap:license <https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/LICENSE> ;
-  doap:homepage <https://maastrichtu-ids.github.io/translator-openpredict> ;
+  doap:homepage <https://github.com/MaastrichtU-IDS/translator-openpredict> ;
   doap:bug-database <https://github.com/MaastrichtU-IDS/translator-openpredict/issues> ;
   
   

@@ -78,7 +78,7 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 >
 > On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
-> If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](docs/dev) locally or with Docker.
+> If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs) locally or with Docker.
 
 ---
 

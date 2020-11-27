@@ -1,591 +1,292 @@
-# OpenPredict Package documentation 🔮🐍
+[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=alert_status)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-* [openpredict](#.openpredict)
-* [openpredict.reasonerapi\_parser](#.openpredict.reasonerapi_parser)
-  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_parser.typed_results_to_reasonerapi)
-* [openpredict.predict\_utils](#.openpredict.openpredict_utils)
-  * [get\_predictions](#.openpredict.openpredict_utils.get_predictions)
-  * [get\_labels](#.openpredict.openpredict_utils.get_labels)
-* [openpredict.rdf\_utils](#.openpredict.rdf_utils)
-  * [insert\_graph\_in\_sparql\_endpoint](#.openpredict.rdf_utils.insert_graph_in_sparql_endpoint)
-  * [query\_sparql\_endpoint](#.openpredict.rdf_utils.query_sparql_endpoint)
-  * [add\_feature\_metadata](#.openpredict.rdf_utils.add_feature_metadata)
-  * [add\_run\_metadata](#.openpredict.rdf_utils.add_run_metadata)
-  * [retrieve\_features](#.openpredict.rdf_utils.retrieve_features)
-  * [retrieve\_models](#.openpredict.rdf_utils.retrieve_models)
-* [openpredict.openpredict\_api](#.openpredict.openpredict_api)
-  * [start\_spark](#.openpredict.openpredict_api.start_spark)
-  * [start\_api](#.openpredict.openpredict_api.start_api)
-  * [post\_embedding](#.openpredict.openpredict_api.post_embedding)
-  * [get\_predict](#.openpredict.openpredict_api.get_predict)
-  * [get\_predicates](#.openpredict.openpredict_api.get_predicates)
-  * [get\_features](#.openpredict.openpredict_api.get_features)
-  * [get\_models](#.openpredict.openpredict_api.get_models)
-  * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
-* [openpredict.\_\_main\_\_](#.openpredict.__main__)
-  * [main](#.openpredict.__main__.main)
-* [openpredict.openpredict\_model](#.openpredict.openpredict_model)
-  * [adjcencydict2matrix](#.openpredict.openpredict_model.adjcencydict2matrix)
-  * [addEmbedding](#.openpredict.openpredict_model.addEmbedding)
-  * [mergeFeatureMatrix](#.openpredict.openpredict_model.mergeFeatureMatrix)
-  * [generatePairs](#.openpredict.openpredict_model.generatePairs)
-  * [balance\_data](#.openpredict.openpredict_model.balance_data)
-  * [geometricMean](#.openpredict.openpredict_model.geometricMean)
-  * [createFeatureArray](#.openpredict.openpredict_model.createFeatureArray)
-  * [sparkBuildFeatures](#.openpredict.openpredict_model.sparkBuildFeatures)
-  * [createFeatureDF](#.openpredict.openpredict_model.createFeatureDF)
-  * [calculateCombinedSimilarity](#.openpredict.openpredict_model.calculateCombinedSimilarity)
-  * [train\_classifier](#.openpredict.openpredict_model.train_classifier)
-  * [multimetric\_score](#.openpredict.openpredict_model.multimetric_score)
-  * [evaluate](#.openpredict.openpredict_model.evaluate)
-  * [train\_model](#.openpredict.openpredict_model.train_model)
-  * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_model.query_omim_drugbank_classifier)
+Additional documentation to develop the **Translator OpenPredict API**.
 
-<a name=".openpredict"></a>
-# openpredict
+> Contributions, [feedbacks](https://github.com/MaastrichtU-IDS/translator-openpredict/issues) and pull requests are welcomed!
 
-<a name=".openpredict.reasonerapi_parser"></a>
-# openpredict.reasonerapi\_parser
+This repository uses [GitHub Actions](https://github.com/MaastrichtU-IDS/translator-openpredict/actions) to:
 
-<a name=".openpredict.reasonerapi_parser.typed_results_to_reasonerapi"></a>
-#### typed\_results\_to\_reasonerapi
+* Automatically run tests at each push to the `master` branch
+* Publish the [OpenPredict package to PyPI](https://pypi.org/project/openpredict/) when a release is created (N.B.: the version of the package needs to be increased in [setup.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/setup.py#L6) before).
 
-```python
-typed_results_to_reasonerapi(reasoner_query)
+See [here](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs/README-pydoc.md) to browse the Python code documentation automatically generated by [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/) 📖
+
+# Install OpenPredict 📥
+
+> Requires [Python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/)
+
+Install `openpredict` locally, if you want to run **OpenPredict** in development, make changes to the source code, and build new models.
+
+The **OpenPredict API store its data in a  RDF triplestore**. We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) at IDS, but you are free to use any other triplestore. You can pass the credentials using environment variables `SPARQL_USER` and `SPARQL_PASSWORD`
+
+### Install from PyPI
+
+Install the latest release published on [PyPI 🏷️](https://pypi.org/project/openpredict) (or see below to [run the API with Docker](#option-3-run-with-docker))
+
+```bash
+pip3 install openpredict
 ```
 
-Convert an array of predictions objects to ReasonerAPI format
-Run the get_predict to get the QueryGraph edges and nodes
-{disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
+> It is currently recommended to install from the source code to get the latest version
 
-:param: reasoner_query Query from Reasoner API
+### Install from the source code
 
-**Returns**:
+Clone this repository:
 
-Results as ReasonerAPI object
-
-<a name=".openpredict.openpredict_utils"></a>
-# openpredict.predict\_utils
-
-<a name=".openpredict.openpredict_utils.get_predictions"></a>
-#### get\_predictions
-
-```python
-get_predictions(id_to_predict, classifier='Predict OMIM-DrugBank', score=None, n_results=None)
+```bash
+git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+cd translator-openpredict
 ```
 
-Run classifiers to get predictions
+This will install `openpredict` and update the package automatically when the files changes locally 🔃
 
-**Arguments**:
-
-- `id_to_predict`: Id of the entity to get prediction from
-- `classifier`: classifier used to get the predictions
-- `score`: score minimum of predictions
-- `n_results`: number of predictions to return
-
-**Returns**:
-
-predictions in array of JSON object
-
-<a name=".openpredict.openpredict_utils.get_labels"></a>
-#### get\_labels
-
-```python
-get_labels(entity_list)
+```bash
+pip3 install -e .
 ```
 
-Send the list of node IDs to Translator Normalization API to get labels
-See API: https://nodenormalization-sri.renci.org/apidocs/#/Interfaces/get_get_normalized_nodes
-and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
+#### Optional: isolate with a Virtual Environment
 
-<a name=".openpredict.rdf_utils"></a>
-# openpredict.rdf\_utils
+If you are facing conflict with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder before installing OpenPredict:
 
-<a name=".openpredict.rdf_utils.insert_graph_in_sparql_endpoint"></a>
-#### insert\_graph\_in\_sparql\_endpoint
-
-```python
-insert_graph_in_sparql_endpoint(g)
+```bash
+# Create the virtual environment folder in your workspace
+python3 -m venv .venv
+# Activate it using a script in the created folder
+source .venv/bin/activate
 ```
 
-Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
+# Start the OpenPredict API from the source code
 
-**Arguments**:
+### Start the Virtuoso triplestore
 
-- `g`: rdflib graph to insert
+Start Virtuoso locally on http://localhost:8890 using Docker (login: `dba` / `dba`)
 
-**Returns**:
-
-SPARQL update query result
-
-<a name=".openpredict.rdf_utils.query_sparql_endpoint"></a>
-#### query\_sparql\_endpoint
-
-```python
-query_sparql_endpoint(query)
+```bash
+docker-compose up -d
 ```
 
-Run select SPARQL query against SPARQL endpoint
+> Stop the container:
+>
+> ```bash
+> docker-compose down
+> ```
 
-**Arguments**:
+### Start the OpenPredict API
 
-- `query`: SPARQL query as a string
+Start the OpenPredict API:
 
-**Returns**:
-
-Object containing the result bindings
-
-<a name=".openpredict.rdf_utils.add_feature_metadata"></a>
-#### add\_feature\_metadata
-
-```python
-add_feature_metadata(id, description, type)
+```bash
+openpredict start-api
 ```
 
-Generate RDF metadata for a feature
+### Reset your local OpenPredict data
 
-**Arguments**:
+Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored, in `data/virtuoso` and `data/openpredict`
 
-- `id`: if used to identify the feature
-- `description`: feature description
-- `type`: feature type
-
-**Returns**:
-
-rdflib graph after loading the feature
-
-<a name=".openpredict.rdf_utils.add_run_metadata"></a>
-#### add\_run\_metadata
-
-```python
-add_run_metadata(scores, model_features, hyper_params)
+```bash
+./reset_openpredict.sh
 ```
 
-Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
-https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
+> This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
+>
+> On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
-**Arguments**:
 
-- `scores`: scores
-- `model_features`: List of features in the model
-- `label`: label of the classifier
+# Alternatives to run OpenPredict
 
-**Returns**:
+See the main README.md if you just want to OpenPredict locally, this documentation is for people who wants to use a specific triplestore, or try out new way to run OpenPredict
 
-predictions in array of JSON object
+### Define environment variables locally
 
-<a name=".openpredict.rdf_utils.retrieve_features"></a>
-#### retrieve\_features
+OpenPredict can be configured using environment variables in your local terminal:
 
-```python
-retrieve_features(type='All')
+* triplestore credentials
+* path you want to be used as directory to store models and features files. By default it will do it in a `data` folder in the directory where you started the OpenPredict API.
+
+```bash
+export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+export SPARQL_USER=import_user
+export SPARQL_PASSWORD=password
+export OPENPREDICT_APIKEY=myapikey
+export OPENPREDICT_DATA_DIR=/data/openpredict
 ```
 
-Get features in the ML model
+> You can add those exports to your `~/.bashrc` or `~/.zshrc` file to define it permanently.
 
-**Arguments**:
+The OpenPredict API can deployed in 3 different ways:
 
-- `type`: type of the feature (All, Both, Drug, Disease)
+### Option 1: Run from the command line ⌨️
 
-**Returns**:
+Use the `openpredict` CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
 
-JSON with features
-
-<a name=".openpredict.rdf_utils.retrieve_models"></a>
-#### retrieve\_models
-
-```python
-retrieve_models()
+```bash
+openpredict start-api --debug
 ```
 
-Get models with their scores and features
+You can also start the API in production settings using [Tornado 🌪️](https://www.tornadoweb.org/en/stable/)
 
-**Returns**:
-
-JSON with models and features
-
-<a name=".openpredict.openpredict_api"></a>
-# openpredict.openpredict\_api
-
-<a name=".openpredict.openpredict_api.start_spark"></a>
-#### start\_spark
-
-```python
-start_spark()
+```bash
+openpredict start-api
 ```
 
-Start local Spark cluster when possible to improve performance
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
-<a name=".openpredict.openpredict_api.start_api"></a>
-#### start\_api
+You can provide the API port as argument:
 
-```python
-start_api(port=8808, server_url='/', debug=False, start_spark=True)
+```bash
+openpredict start-api --port 8808
 ```
 
-Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
-
-**Arguments**:
-
-- `port`: Port of the OpenPredict API, defaults to 8808
-- `debug`: Run in debug mode, defaults to False
-- `start_spark`: Start a local Spark cluster, default to true
-
-<a name=".openpredict.openpredict_api.post_embedding"></a>
-#### post\_embedding
+### Option 2: Run from a Python script 🐍
 
 ```python
-post_embedding(types, emb_name, description)
+from openpredict import openpredict_api
+
+openpredict_api.start_api(8808)
 ```
 
-Post JSON embeddings via the API, with simple APIKEY authentication
-provided in environment variables
+> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
-<a name=".openpredict.openpredict_api.get_predict"></a>
-#### get\_predict
+> Run by default in production, set `debug = True` to run in development environments. 
+
+### Option 3: Run with Docker 🐳
+
+Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
+
+Clone the [repository](https://github.com/MaastrichtU-IDS/translator-openpredict):
+
+```bash
+git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+cd translator-openpredict
+```
+
+1. For **development environments**: see above to use the default `docker-compose.yml` file to deploy the Virtuoso triplestore for development using Docker 
+2. For **production deployment** use the `docker-compose.prod.yml`
+
+> The docker-compose is currently configured to deploy on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) using a [nginx-proxy for Docker](https://github.com/nginx-proxy)
+
+Define the triplestore credentials and API key in the `.env` file 🔑
+
+```bash
+nano .env
+SPARQL_USER=import_user
+SPARQL_PASSWORD=password
+```
+
+Start the API in production using GraphDB as backend:
+
+```bash
+docker-compose up -f docker-compose.prod.yml up -d
+```
+
+> We use a [nginx-proxy for Docker](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
+
+Check the logs:
+
+```bash
+docker-compose logs
+```
+
+Stop the container:
+
+```bash
+docker-compose down
+```
+
+# Build the OpenPredict API Docker image
+
+Build and push to the [GitHub Docker Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api) (make sure the tests passes first!)
+
+```bash
+docker build -t ghcr.io/maastrichtu-ids/openpredict-api:latest .
+docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
+```
+
+# Run tests ✔️
+
+[![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
+
+Tests are automatically run by a [GitHub Action](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch. They are also run in the GitHub Action to publish a package.
+
+Run the **OpenPredict API** tests locally:
+
+```bash
+pytest tests
+```
+
+Run a specific test in a file, and display `print` in the output:
+
+```bash
+pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
+```
+
+# Create a new API call 📝
+
+Guidelines to create a new API  call in the OpenPredict Open API.
+
+1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
+
+Provide the path to the function that will resolve this API call:
+
+```yaml
+paths:
+  /predict:
+    get:
+      operationId: openpredict.openpredict_api.get_predict
+      parameters:
+      - name: entity
+        in: query
+        description: CURIE of the entity to process (e.g. drug, disease, etc)
+        example: DRUGBANK:DB00394
+        required: true
+        schema:
+          type: string
+```
+
+2. Now, create the function in the [openpredict/openpredict_api.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openpredict_api.py#L67) file
 
 ```python
-get_predict(entity, classifier="Predict OMIM-DrugBank", score=None, n_results=None)
+def get_predict(entity='DB00001'):
+    print("Do stuff with " + entity)
 ```
 
-Get predicted associations for a given entity CURIE.
+> The parameters provided in `openapi.yml` and the arguments of the function in `openpredict_api.py` need to match!
 
-**Arguments**:
+# Generate docs 📖
 
-- `entity`: Search for predicted associations for this entity CURIE
+Documentation in [docs/](docs/)  generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
-**Returns**:
-
-Prediction results object with score
-
-<a name=".openpredict.openpredict_api.get_predicates"></a>
-#### get\_predicates
-
-```python
-get_predicates()
+```bash
+pip3 install pydoc-markdown
 ```
 
-Get predicates and entities provided by the API
+Generate markdown documentation page for the `openpredict` package in `docs/`
 
-**Returns**:
-
-JSON with biolink entities
-
-<a name=".openpredict.openpredict_api.get_features"></a>
-#### get\_features
-
-```python
-get_features(type)
+```bash
+pydoc-markdown --render-toc -p openpredict > docs/README-pydoc.md
 ```
 
-Get features in the model
+Modify the generated page title:
 
-**Returns**:
-
-JSON with features
-
-<a name=".openpredict.openpredict_api.get_models"></a>
-#### get\_models
-
-```python
-get_models()
+```bash
+find docs/README.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Package documentation 🔮🐍/g" {} +
 ```
 
-Get models with their scores and features
+> This can also be done using Sphinx, see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
+>
+> ```bash
+> pip3 install sphinx
+> sphinx-quickstart sphinx-docs/ --project 'openpredict' --author 'Vincent Emonet'
+> cd sphinx-docs/
+> make html
+> ```
 
-**Returns**:
+# More about the data model
 
-JSON with models and features
+Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
 
-<a name=".openpredict.openpredict_api.post_reasoner_predict"></a>
-#### post\_reasoner\_predict
+> See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html) for more details on the data model.
 
-```python
-post_reasoner_predict(request_body)
-```
-
-Get predicted associations for a given ReasonerAPI query.
-
-**Arguments**:
-
-- `request_body`: The ReasonerStdAPI query in JSON
-
-**Returns**:
-
-Predictions as a ReasonerStdAPI Message
-
-<a name=".openpredict.__main__"></a>
-# openpredict.\_\_main\_\_
-
-<a name=".openpredict.__main__.main"></a>
-#### main
-
-```python
-@click.group()
-main(args=None)
-```
-
-Command Line Interface to run OpenPredict
-
-<a name=".openpredict.openpredict_model"></a>
-# openpredict.openpredict\_model
-
-<a name=".openpredict.openpredict_model.adjcencydict2matrix"></a>
-#### adjcencydict2matrix
-
-```python
-adjcencydict2matrix(df, name1, name2)
-```
-
-Convert dict to matrix
-
-**Arguments**:
-
-- `df`: Dataframe
-- `name1`: index name
-- `name2`: columns name
-
-<a name=".openpredict.openpredict_model.addEmbedding"></a>
-#### addEmbedding
-
-```python
-addEmbedding(embedding_file, emb_name, types, description)
-```
-
-Add embedding to the drug similarity matrix dataframe
-
-**Arguments**:
-
-- `embedding_file`: JSON file containing records ('entity': id, 'embdding': array of numbers )
-- `emb_name`: new column name to be added
-- `types`: types in the embedding vector ['Drugs', 'Diseases', 'Both']
-- `description`: description of the embedding provenance
-
-<a name=".openpredict.openpredict_model.mergeFeatureMatrix"></a>
-#### mergeFeatureMatrix
-
-```python
-mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-```
-
-Merge the drug and disease feature matrix
-
-**Arguments**:
-
-- `drugfeatfiles`: Drug features files list
-- `diseasefeatfiles`: Disease features files list
-
-<a name=".openpredict.openpredict_model.generatePairs"></a>
-#### generatePairs
-
-```python
-generatePairs(drug_df, disease_df, drugDiseaseKnown)
-```
-
-Generate positive and negative pairs using the Drug dataframe,
-the Disease dataframe and known drug-disease associations dataframe
-
-**Arguments**:
-
-- `drug_df`: Drug dataframe
-- `disease_df`: Disease dataframe
-- `drugDiseaseKnown`: Known drug-disease association dataframe
-
-<a name=".openpredict.openpredict_model.balance_data"></a>
-#### balance\_data
-
-```python
-balance_data(pairs, classes, n_proportion)
-```
-
-Balance negative and positives samples
-
-**Arguments**:
-
-- `pairs`: Positive/negative pairs previously generated
-- `classes`: Classes corresponding to the pairs
-- `n_proportion`: Proportion number, e.g. 2
-
-<a name=".openpredict.openpredict_model.geometricMean"></a>
-#### geometricMean
-
-```python
-geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF)
-```
-
-Compute the geometric means of a drug-disease association using previously generated dataframes
-
-**Arguments**:
-
-- `drug`: Drug
-- `disease`: Disease
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDF`: Drug dataframe
-- `diseaseDF`: Disease dataframe
-
-<a name=".openpredict.openpredict_model.createFeatureArray"></a>
-#### createFeatureArray
-
-```python
-createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs)
-```
-
-Create the features dataframes for Spark.
-
-**Arguments**:
-
-- `drug`: Drug
-- `disease`: Disease
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDFs`: Drug dataframes
-- `diseaseDFs`: Disease dataframes
-
-**Returns**:
-
-The features dataframe
-
-<a name=".openpredict.openpredict_model.sparkBuildFeatures"></a>
-#### sparkBuildFeatures
-
-```python
-sparkBuildFeatures(sc, pairs, classes, knownDrugDis, drug_df, disease_df)
-```
-
-Create the feature matrix for Spark.
-
-**Arguments**:
-
-- `sc`: Spark context
-- `pairs`: Generated pairs
-- `classes`: Classes corresponding to the pairs
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDFs`: Drug dataframes
-- `diseaseDFs`: Disease dataframes
-
-**Returns**:
-
-The features dataframe
-
-<a name=".openpredict.openpredict_model.createFeatureDF"></a>
-#### createFeatureDF
-
-```python
-createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs)
-```
-
-Create the features dataframes.
-
-**Arguments**:
-
-- `pairs`: Generated pairs
-- `classes`: Classes corresponding to the pairs
-- `knownDrugDisease`: Known drug-disease associations
-- `drugDFs`: Drug dataframes
-- `diseaseDFs`: Disease dataframes
-
-**Returns**:
-
-The features dataframe
-
-<a name=".openpredict.openpredict_model.calculateCombinedSimilarity"></a>
-#### calculateCombinedSimilarity
-
-```python
-calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
-```
-
-Compute combined similarities
-
-**Arguments**:
-
-- `pairs_train`: Pairs used to train
-- `pairs_test`: Pairs used to test
-- `classes_train`: Classes corresponding to the pairs used to train
-- `classes_test`: Classes corresponding to the pairs used to test
-- `drug_df`: Drug dataframe
-- `disease_df`: Disease dataframe
-- `knownDrugDisease`: Known drug-disease associations
-
-<a name=".openpredict.openpredict_model.train_classifier"></a>
-#### train\_classifier
-
-```python
-train_classifier(train_df, clf)
-```
-
-Train classifier
-
-**Arguments**:
-
-- `train_df`: Train dataframe
-- `clf`: Classifier
-
-<a name=".openpredict.openpredict_model.multimetric_score"></a>
-#### multimetric\_score
-
-```python
-multimetric_score(estimator, X_test, y_test, scorers)
-```
-
-Return a dict of score for multimetric scoring
-
-**Arguments**:
-
-- `estimator`: Estimator
-- `X_test`: X test
-- `y_test`: Y test
-- `scorers`: Dict of scorers
-
-**Returns**:
-
-Multimetric scores
-
-<a name=".openpredict.openpredict_model.evaluate"></a>
-#### evaluate
-
-```python
-evaluate(test_df, clf)
-```
-
-Evaluate the trained classifier
-
-**Arguments**:
-
-- `test_df`: Test dataframe
-- `clf`: Classifier
-
-**Returns**:
-
-Scores
-
-<a name=".openpredict.openpredict_model.train_model"></a>
-#### train\_model
-
-```python
-train_model(from_scratch=True)
-```
-
-The main function to run the drug-disease similarities pipeline,
-and train the drug-disease classifier.
-It returns, and stores the generated classifier as a `.joblib` file
-in the `data/models` folder,
-
-**Returns**:
-
-Classifier of predicted similarities and scores
-
-<a name=".openpredict.openpredict_model.query_omim_drugbank_classifier"></a>
-#### query\_omim\_drugbank\_classifier
-
-```python
-query_omim_drugbank_classifier(input_curie)
-```
-
-The main function to query the drug-disease OpenPredict classifier,
-It queries the previously generated classifier a `.joblib` file
-in the `data/models` folder
-
-**Returns**:
-
-Predictions and scores
+![OpenPredict datamodel](https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/docs/OpenPREDICT_datamodel.jpg)
 

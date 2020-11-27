@@ -19,8 +19,6 @@ cd translator-openpredict
 git checkout -b my-branch
 ```
 
-3. See how to run the API in development at https://maastrichtu-ids.github.io/translator-openpredict/docs/dev 🔮🐍
-
 ## Development process
 
 Install `openpredict` from the source code, and update the package automatically when the files changes locally :arrows_counterclockwise:
@@ -63,7 +61,7 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 >
 > On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
-> See more **[documentation to deploy the OpenPredict API](docs/dev)** locally or with Docker.
+> See more **[documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs)** locally or with Docker.
 
 ## Pull Request process
 
