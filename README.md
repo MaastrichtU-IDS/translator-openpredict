@@ -2,7 +2,7 @@
 
 **OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). 
 
-Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
+Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (such as Ontotext GraphDB, or Virtuoso).
 
 # Deploy the OpenPredict API locally
 
@@ -27,13 +27,11 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Install `openpredict` from the source code, and update the package automatically when the files changes locally 🔃
+Install `openpredict` from the source code, and update the package automatically when the files changes locally :arrows_counterclockwise:
 
 ```bash
 pip3 install -e .
 ```
-
-> On Windows you might need to install [Visual Studio C++ 14 Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
 
 #### Optional: isolate with a Virtual Environment
 
@@ -46,15 +44,17 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### Start the OpenPredict API
+> On Windows you might also need to install [Visual Studio C++ 14 Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (required for `numpy`)
 
-Start the OpenPredict API and the Virtuoso database locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
+### Start the OpenPredict API :rocket:
+
+1. **Start the Virtuoso database** locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
 
 ```bash
 docker-compose up -d --force-recreate
 ```
 
-Start the API (wait 30s for the database to start):
+2. **Start the OpenPredict API** (wait 30s for the database to start) on http://localhost:8808:
 
 ```bash
 openpredict start-api
@@ -78,9 +78,11 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 >
 > On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
 
-> See more **[documentation to deploy the OpenPredict API](docs/dev)** locally or with Docker.
+> See [additional documentation to deploy the OpenPredict API](docs/dev) locally or with Docker.
 
-# Use the API​
+---
+
+# Use the API​ :mailbox_with_mail:
 
 
 The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented). 
@@ -182,6 +184,8 @@ The `/predicates` operation will return the entities and relations provided by t
 ### Notebook example
 
 You can find a Jupyter Notebook with [examples to query the OpenPredict API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
+
+---
 
 # Acknowledgments
 

@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20package/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) [![SonarCloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=alert_status)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-Documentation to deploy the **Translator OpenPredict API**.
+Additional documentation to develop the **Translator OpenPredict API**.
 
 > Contributions, [feedbacks](https://github.com/MaastrichtU-IDS/translator-openpredict/issues) and pull requests are welcomed!
 
@@ -27,9 +27,9 @@ Install the latest release published on [PyPI 🏷️](https://pypi.org/project/
 pip3 install openpredict
 ```
 
-### Install from the source code
+> It is currently recommended to install from the source code to get the latest version
 
-All contribution to OpenPredict are welcome!
+### Install from the source code
 
 Clone this repository:
 
