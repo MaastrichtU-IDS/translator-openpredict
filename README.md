@@ -74,9 +74,9 @@ Use the `reset_openpredict.sh` script to delete the folders where the OpenPredic
 ./reset_openpredict.sh
 ```
 
-> This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
->
-> On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
+This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
+
+On Windows: delete all files in the `data` folder, just keep the `initial-openpredict-metadata.ttl` file
 
 > If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs) locally or with Docker.
 
@@ -93,6 +93,13 @@ The API will return predicted targets for the given entity, such as:
 * The **potential diseases a given drug could treat**
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
+
+### Notebooks examples
+
+We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
+
+1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
+2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
 
 ### Add embedding
 
@@ -181,9 +188,15 @@ The `/predicates` operation will return the entities and relations provided by t
 
 > Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
 
-### Notebook example
+---
 
-You can find a Jupyter Notebook with [examples to query the OpenPredict API on GitHub](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
+# More about the data model
+
+Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
+
+> See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html) for more details on the data model.
+
+![OpenPredict datamodel](https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/docs/OpenPREDICT_datamodel.jpg)
 
 ---
 
