@@ -16,6 +16,7 @@ venv/
 .jupyter/
 .local/
 .npm/
+.bash_history
 
 docs/walks/
 docs/neurodkg_embedding.csv
