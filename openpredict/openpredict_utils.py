@@ -5,19 +5,20 @@ import requests
 import pkg_resources
 from openpredict.rdf_utils import init_triplestore
 
+global OPENPREDICT_DATA_DIR
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
+if not OPENPREDICT_DATA_DIR:
+    # Data folder in current dir if not provided via environment variable
+    OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
+else:
+    if not OPENPREDICT_DATA_DIR.endswith('/'):
+        OPENPREDICT_DATA_DIR += '/'
+
 
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
     Where models and features for runs are stored
     """
-    global OPENPREDICT_DATA_DIR
-    if not OPENPREDICT_DATA_DIR:
-        # Data folder in current dir if not provided via environment variable
-        OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
-    else:
-        if not OPENPREDICT_DATA_DIR.endswith('/'):
-            OPENPREDICT_DATA_DIR += '/'
     return OPENPREDICT_DATA_DIR + subfolder
 
 def init_openpredict_dir():

@@ -43,6 +43,34 @@ pip3 install openpredict
 
 See the main README.md if you just want to OpenPredict locally, this documentation is for people who wants to use a specific triplestore, or try out new way to run OpenPredict
 
+### Use Virtuoso as local triplestore
+
+1. Create the data folder:
+
+   ```bash
+   mkdir -p data
+   ```
+
+2. **Start the Virtuoso database** locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
+
+```bash
+docker-compose up -d --force-recreate
+```
+
+3. **Start the OpenPredict API** on http://localhost:8808 (wait 30s for the database to start first):
+
+```bash
+openpredict start-api
+```
+
+> Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
+
+Once you finished you can stop the Virtuoso container, and restart it later. The data will be stored in `data/virtuoso`
+
+```bash
+docker-compose down
+```
+
 ### Define environment variables locally
 
 OpenPredict can be configured using environment variables in your local terminal:

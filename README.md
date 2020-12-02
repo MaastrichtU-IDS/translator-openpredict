@@ -46,39 +46,23 @@ source .venv/bin/activate
 
 ### Start the OpenPredict API :rocket:
 
-1. **Start the Virtuoso database** locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
-
-```bash
-docker-compose up -d --force-recreate
-```
-
-2. **Start the OpenPredict API** on http://localhost:8808 (wait 30s for the database to start first):
+Start locally the OpenPredict API on http://localhost:8808
 
 ```bash
 openpredict start-api
 ```
 
+By default all data are stored in the `data/` folder in the directory were you used the `openpredict` command (RDF metadata, features and models of each run)
+
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
-
-Once you finished you can stop the Virtuoso container, and restart it later. The data will be stored in `data/virtuoso`
-
-```bash
-docker-compose down
-```
 
 ### Reset your local OpenPredict data :x:
 
-You can easily reset the data of your local OpenPredict deployment (virtuoso, features and models, stored in `data/`)
-
-Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored
+You can easily reset the data of your local OpenPredict deployment by deleting the `data/` folder and restarting the OpenPredict API:
 
 ```bash
-./reset_openpredict.sh
+rm -rf data/
 ```
-
-This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
-
-On Windows: delete all files in the `data/` folder, just keep the `initial-openpredict-metadata.ttl` file.
 
 > If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs) locally or with Docker.
 
