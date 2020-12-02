@@ -45,9 +45,9 @@ if not SPARQL_ENDPOINT_USERNAME:
     SPARQL_ENDPOINT_USERNAME='dba'
 if not SPARQL_ENDPOINT_PASSWORD:
     SPARQL_ENDPOINT_PASSWORD='dba'
-if not SPARQL_ENDPOINT_URL:
-    SPARQL_ENDPOINT_URL='http://localhost:8890/sparql'
-    # SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
+#if not SPARQL_ENDPOINT_URL:
+#    SPARQL_ENDPOINT_URL='http://localhost:8890/sparql'
+# SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
 if not SPARQL_ENDPOINT_UPDATE_URL:
     SPARQL_ENDPOINT_UPDATE_URL='http://localhost:8890/sparql'
     # SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
@@ -84,7 +84,7 @@ def insert_graph_in_sparql_endpoint(g):
         graph_from_file.serialize(RDF_DATA_PATH, format='turtle')
 
 
-def query_sparql_endpoint(query):
+def query_sparql_endpoint(query, parameters= []):
     """Run select SPARQL query against SPARQL endpoint
 
     :param query: SPARQL query as a string
@@ -108,12 +108,17 @@ def query_sparql_endpoint(query):
         g = Graph()
         g.parse(RDF_DATA_PATH, format="ttl")
         qres = g.query(query)
+        results = []
         for row in qres:
             print('row')
             print(row)
-            for variable in row:
+            result={}
+            for i,p in enumerate(parameters):
                 print('variable')
-                print(variable)
+                result[p] ={}
+                result[p]['value']= str(row[p])
+                #print(variable)
+            results.append(result)
             # How can we iterate over the variable defined in the SPARQL query?
             # It only returns the results, without the variables list
             # Does not seems possible: https://dokk.org/documentation/rdflib/3.2.0/gettingstarted/#run-a-query
@@ -122,7 +127,7 @@ def query_sparql_endpoint(query):
             # or row[rdflib.Variable("s")]
             # TODO: create an object similar to SPARQLWrapper
             # result[variable]['value']
-        return qres
+        return results
 
 
 def init_triplestore():
@@ -134,7 +139,7 @@ def init_triplestore():
         <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
     } LIMIT 10
     """
-    results = query_sparql_endpoint(check_baseline_run_query)
+    results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
     if (len(results) < 1):
         g = Graph()
         g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
@@ -257,7 +262,8 @@ def retrieve_features(type='All'):
         }}
         """.format(type_filter=type_filter)
 
-    results = query_sparql_endpoint(query)
+    results = query_sparql_endpoint(query, parameters =['id','description','embeddingType'])
+    print (results)
 
     features_json = {}
     for result in results:
@@ -311,7 +317,9 @@ def retrieve_models():
         }
         """
 
-    results = query_sparql_endpoint(sparql_get_scores)
+    results = query_sparql_endpoint(sparql_get_scores, 
+    parameters=['run','runId', 'generatedAtTime', 'featureId', 'accuracy', 
+    'average_precision', 'f1', 'precision' ,'recall', 'roc_auc'])
     models_json = {}
     for result in results:
         if result['run']['value'] in models_json:
