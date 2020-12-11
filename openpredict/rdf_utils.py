@@ -21,6 +21,7 @@ RDF_DATA_PATH = OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
 
 OPENPREDICT_GRAPH = 'https://w3id.org/openpredict/graph'
 OPENPREDICT_NAMESPACE = 'https://w3id.org/openpredict/'
+BIOLINK = Namespace("https://w3id.org/biolink/vocab/")
 
 RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -30,7 +31,6 @@ SCHEMA = Namespace("http://schema.org/")
 DCAT = Namespace("http://www.w3.org/ns/dcat#")
 PROV = Namespace("http://www.w3.org/ns/prov#")
 MLS = Namespace("http://www.w3.org/ns/mls#")
-BIOLINK = Namespace("https://w3.org/biolink/")
 OPENPREDICT = Namespace("https://w3id.org/openpredict/")
 
 # Get SPARQL endpoint credentials from environment variables

@@ -11,13 +11,13 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     query_graph = reasoner_query["message"]["query_graph"]
     # score = reasoner_query["message"]["query_options"]["has_confidence_level"]
     try:
-        min_score = float(reasoner_query["message"]["query_options"]["has_confidence_level"])
+        min_score = float(reasoner_query["message"]["query_options"]["min_score"])
     except:
         print('min score retrieve failed')
         min_score=None
     try:
         max_score = float(reasoner_query["message"]["query_options"]["max_score"])
-    except:
+    except: 
         print('max score retrieve failed')
         max_score=None
     query_plan = {}

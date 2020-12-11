@@ -176,6 +176,12 @@ The `/predicates` operation will return the entities and relations provided by t
 
 ---
 
+## More about the data
+
+Gold standard drug-disease indications retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
+
+---
+
 # More about the data model
 
 Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
