@@ -8,7 +8,7 @@ from openpredict.openpredict_model import addEmbedding, get_predictions
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
 
-def start_api(port=8808, server_url='/', debug=False, start_spark=True):
+def start_api(port=8808, debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
     :param port: Port of the OpenPredict API, defaults to 8808
@@ -32,18 +32,17 @@ def start_api(port=8808, server_url='/', debug=False, start_spark=True):
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
     # Define server URL based on nginx-proxy environment variables
-    if os.getenv('VIRTUAL_HOST'):
-        server_url='http://' + os.getenv('VIRTUAL_HOST')
-    if os.getenv('LETSENCRYPT_HOST'):
-        server_url='https://' + os.getenv('LETSENCRYPT_HOST')
+    # if os.getenv('VIRTUAL_HOST'):
+    #     server_url='http://' + os.getenv('VIRTUAL_HOST')
+    # if os.getenv('LETSENCRYPT_HOST'):
+    #     server_url='https://' + os.getenv('LETSENCRYPT_HOST')
         
-    print('Server URL: '+ server_url)
-    api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
+    api = connexion.App(__name__, options={"swagger_url": ""})
+    # api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
 
-    ## Server URL not taken into account when running in Docker
-    # api.add_api('openapi.yml', arguments={'server_url': 'https://openpredict.semanticscience.org'})
-    api.add_api('openapi.yml', arguments={'server_url': server_url})
+    api.add_api('openapi.yml')
     # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
+    ## Server URL not taken into account when running in Docker
 
     # Add CORS support
     CORS(api.app)

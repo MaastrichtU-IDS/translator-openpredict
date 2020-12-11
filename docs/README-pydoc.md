@@ -225,7 +225,7 @@ and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalizatio
 #### start\_api
 
 ```python
-start_api(port=8808, server_url='/', debug=False, start_spark=True)
+start_api(port=8808, debug=False, start_spark=True)
 ```
 
 Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition

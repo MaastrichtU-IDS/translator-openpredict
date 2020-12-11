@@ -15,8 +15,8 @@ from openpredict.rdf_utils import add_run_metadata, retrieve_features
     help='The URL the API will be deployed to.')
 @click.option('--debug', is_flag=True, help="Run in development mode with debugger enabled.")
 @click.option('--start-spark/--no-spark', default=True, help="Start local Spark cluster (default to yes).")
-def start_api(port, server_url, debug, start_spark):
-    start_openpredict_api(port, server_url, debug, start_spark)
+def start_api(port, debug, start_spark):
+    start_openpredict_api(port, debug, start_spark)
 
 # TODO: update this call to make it "addEmbeddings?"
 @click.command()
