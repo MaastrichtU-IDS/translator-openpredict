@@ -20,5 +20,4 @@ services:
       LETSENCRYPT_HOST: openpredict.semanticscience.org
       VIRTUAL_PORT: 8808
       # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
-    # command: start-api --server-url https://openpredict.semanticscience.org
 

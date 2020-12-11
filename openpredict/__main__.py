@@ -10,9 +10,6 @@ from openpredict.rdf_utils import add_run_metadata, retrieve_features
 @click.option(
     '-p', '--port', default=8808,
     help='Choose the port the API will run on.')
-@click.option(
-    '--server-url', default='/',
-    help='The URL the API will be deployed to.')
 @click.option('--debug', is_flag=True, help="Run in development mode with debugger enabled.")
 @click.option('--start-spark/--no-spark', default=True, help="Start local Spark cluster (default to yes).")
 def start_api(port, debug, start_spark):
