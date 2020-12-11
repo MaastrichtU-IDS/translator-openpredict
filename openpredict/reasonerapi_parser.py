@@ -9,7 +9,6 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     :return: Results as ReasonerAPI object
     """
     query_graph = reasoner_query["message"]["query_graph"]
-    # score = reasoner_query["message"]["query_options"]["has_confidence_level"]
     try:
         min_score = float(reasoner_query["message"]["query_options"]["min_score"])
     except:

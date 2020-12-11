@@ -48,7 +48,7 @@ def test_post_reasoner_predict(client):
                 ]
             }
             # "query_options": {
-            # "has_confidence_level": 0.5
+            # "min_score": 0.5
             # }
         }
     }
