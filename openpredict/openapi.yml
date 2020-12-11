@@ -25,7 +25,6 @@ servers:
   description: Local OpenPredict API
 - url: https://openpredict.semanticscience.org
   description: Production OpenPredict API
-# - url: "{{server_url}}"
 tags:
   # - name: predicates
   #   description: Get relationships supported by this API
