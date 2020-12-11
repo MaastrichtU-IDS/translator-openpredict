@@ -8,7 +8,6 @@ Metadata about runs, models evaluations, features are stored using the [ML Schem
 
 Requirements:
 
-* [Docker](https://docs.docker.com/get-docker/) installed (and `docker-compose`)
 * Python 3.6+ installed
 
 The OpenPredict API store its data using a  RDF triplestore database:

@@ -41,6 +41,11 @@ pip3 install openpredict
 
 # Alternatives to run OpenPredict
 
+Requirements: 
+
+* [Docker](https://docs.docker.com/get-docker/) installed (and `docker-compose`)
+* Python 3.6+
+
 See the main README.md if you just want to OpenPredict locally, this documentation is for people who wants to use a specific triplestore, or try out new way to run OpenPredict
 
 ### Use Virtuoso as local triplestore
@@ -54,7 +59,7 @@ See the main README.md if you just want to OpenPredict locally, this documentati
 2. **Start the Virtuoso database** locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
 
 ```bash
-docker-compose up -d --force-recreate
+docker-compose -f docker-compose.dev.yml up -d --force-recreate
 ```
 
 3. **Start the OpenPredict API** on http://localhost:8808 (wait 30s for the database to start first):
@@ -152,7 +157,7 @@ SPARQL_PASSWORD=password
 Start the API in production using GraphDB as backend:
 
 ```bash
-docker-compose up -f docker-compose.prod.yml up -d
+docker-compose up -d
 ```
 
 > We use a [nginx-proxy for Docker](https://github.com/nginx-proxy/nginx-proxy) and [docker-letsencrypt-nginx-proxy-companion](https://github.com/nginx-proxy/docker-letsencrypt-nginx-proxy-companion) as reverse proxy for HTTP and HTTPS in production. You can change the proxy URL and port via environment variables `VIRTUAL_HOST`, `VIRTUAL_PORT` and `LETSENCRYPT_HOST` in the [docker-compose.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docker-compose.yml) file.
