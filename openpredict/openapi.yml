@@ -21,10 +21,10 @@ externalDocs:
   description: Documentation for the NCATS Biomedical Translator ReasonerAPI
   url: 'https://github.com/NCATSTranslator/ReasonerAPI'
 servers:
-- url: /
-  description: Local OpenPredict API
-- url: https://openpredict.semanticscience.org
-  description: Production OpenPredict API
+  - url: /
+    description: Local OpenPredict API
+  - url: https://openpredict.semanticscience.org
+    description: Production OpenPredict API
 tags:
   # - name: predicates
   #   description: Get relationships supported by this API
