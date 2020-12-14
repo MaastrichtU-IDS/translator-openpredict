@@ -149,7 +149,8 @@ paths:
     get:
       operationId: openpredict.openpredict_api.get_predict
       summary: Get predicted targets for a given entity
-      description: "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores."
+      description: "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+        This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations."
       tags:
       - openpredict
       parameters:
