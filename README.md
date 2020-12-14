@@ -100,7 +100,8 @@ Once the embedding has been added you can find the existing models previously ge
 
 Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
 
-* A source Drug/Disease identifier as a CURIE, e.g. OMIM:246300 (required)
+* A `drug_id` to get predicted diseases it could treat (e.g. `DRUGBANK:DB00394`)
+  * **OR** a `disease_id` to get predicted drugs it could be treated with (e.g. `OMIM:246300`)
 * The prediction model to use (default to `Predict OMIM-DrugBank`)
 * The minimum score of the returned predictions, from 0 to 1 (optional)
 * The limit of results to return, starting from the higher score, e.g. 42 (optional)  
@@ -110,20 +111,12 @@ The API will return the list of predicted target for the given entity, the label
 ```json
 {
   "count": 300,
-  "relation": "biolink:treated_by",
   "results": [
     {
       "score": 0.8361061489249737,
-      "source": {
-        "id": "DRUGBANK:DB00394",
-        "label": "beclomethasone dipropionate",
-        "type": "drug"
-      },
-      "target": {
-        "id": "OMIM:246300",
-        "label": "leprosy, susceptibility to, 3",
-        "type": "disease"
-      }
+      "id": "OMIM:246300",
+      "label": "leprosy, susceptibility to, 3",
+      "type": "disease"
     }
   ]
 }
