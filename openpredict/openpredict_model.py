@@ -507,7 +507,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/  -omim-drug.csv'),delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())
@@ -705,29 +705,51 @@ def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_r
                 predicted_ids.add(value)
     labels_dict = get_entities_labels(predicted_ids)
 
+    # TODO: format using a model similar to BioThings:
+    # cf. at the end of this file
+
     # Add label for each ID, and reformat the dict using source/target
     labelled_predictions = []
+    # Second array with source and target info for the reasoner query resolution
+    source_target_predictions = []
     for prediction in predictions_array:
         labelled_prediction = {}
+        source_target_prediction = {}
         for key, value in prediction.items():
             if key == 'score':
                 labelled_prediction['score'] = value
+                source_target_prediction['score'] = value
             elif value == id_to_predict:
-                labelled_prediction['source'] = {
+                # Only for the source_target_prediction object
+                source_target_prediction['source'] = {
                     'id': id_to_predict,
                     'type': key
                 }
-                if id_to_predict in labels_dict and labels_dict[id_to_predict]:
-                    labelled_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
+                try:
+                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
+                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
+                except:
+                    print('No label found for ' + value)
             else:
-                # Then it is the target node
-                labelled_prediction['target'] = {
+                labelled_prediction['id'] = value
+                labelled_prediction['type'] = key
+                # Same for source_target object
+                source_target_prediction['target'] = {
                     'id': value,
                     'type': key
                 }
-                if value in labels_dict and labels_dict[value]:
-                    labelled_prediction['target']['label'] = labels_dict[value]['id']['label']
+                try:
+                    if value in labels_dict and labels_dict[value]:
+                        labelled_prediction['label'] = labels_dict[value]['id']['label']
+                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+                except:
+                    print('No label found for ' + value)
+                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
+                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
+                #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+
         labelled_predictions.append(labelled_prediction)
+        source_target_predictions.append(source_target_prediction)
         # returns
         # { score: 12,
         #  source: {
@@ -737,4 +759,66 @@ def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_r
         #  },
         #  target { .... }}
     
-    return labelled_predictions
+    return labelled_predictions, source_target_predictions
+
+
+    # {
+    # "took": 1,
+    # "total": 4,
+    # "max_score": 12.203629,
+    # "hits": [
+    #     {
+    #     "@type": "Gene",
+    #     "_id": "C0212166",
+    #     "_score": 12.203629,
+    #     "has_part": [
+    #         {
+    #         "@type": "ChemicalSubstance",
+    #         "name": "DNA",
+    #         "pmid": [
+    #             "7553674"
+    #         ],
+    #         "umls": "C0012854"
+    #         }
+    #     ],
+    #     "located_in": [
+    #         {
+    #         "@type": "AnatomicalEntity",
+    #         "name": "Plasma",
+    #         "pmid": [
+    #             "1473120"
+    #         ],
+    #         "umls": "C0032105"
+    #         },
+    #         {
+    #         "@type": "Cell",
+    #         "name": "Tumor cells, malignant",
+    #         "pmid": [
+    #             "7691406"
+    #         ],
+    #         "umls": "C0334227"
+    #         }
+    #     ],
+    #     "name": "cancer-recognition, immunedefense suppression, serine protease protection peptide",
+    #     "part_of": [
+    #         {
+    #         "@type": "Cell",
+    #         "name": "Lymphocyte",
+    #         "pmid": [
+    #             "7691405"
+    #         ],
+    #         "umls": "C0024264"
+    #         }
+    #     ],
+    #     "physically_interacts_with": [
+    #         {
+    #         "@type": "Gene",
+    #         "name": "Serine Endopeptidases",
+    #         "pmid": [
+    #             "7691406"
+    #         ],
+    #         "umls": "C0036734"
+    #         }
+    #     ],
+    #     "umls": "C0212166"
+    #     },

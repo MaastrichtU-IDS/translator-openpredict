@@ -40,7 +40,7 @@ def start_api(port=8808, debug=False, start_spark=True):
     api = connexion.App(__name__, options={"swagger_url": ""})
     # api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
 
-    api.add_api('openapi.yml')
+    api.add_api('openapi.yml', options={"disable_servers_overwrite": True})
     # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
     ## Server URL not taken into account when running in Docker
 
@@ -75,7 +75,7 @@ def post_embedding(types, emb_name, description, model_id):
     else:
         return { 'Forbidden': 403 }
 
-def get_predict(entity, model_id, min_score=None, max_score=None, n_results=None):
+def get_predict(model_id, drug_id=None, disease_id=None, min_score=None, max_score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
@@ -83,15 +83,23 @@ def get_predict(entity, model_id, min_score=None, max_score=None, n_results=None
     """
     time_start = datetime.now()
 
-    prediction_json = get_predictions(entity, model_id, min_score, max_score, n_results)
+    # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
+
+    if drug_id:
+        prediction_json, source_target_predictions = get_predictions(drug_id, model_id, min_score, max_score, n_results)
+    elif disease_id:
+        prediction_json, source_target_predictions = get_predictions(disease_id, model_id, min_score, max_score, n_results)
+    else:
+        return ('Bad request: provide a drugid or diseaseid', 400)
+
     # try:
     #     prediction_json = get_predictions(entity, model_id, score, n_results)
     # except:
     #     return "Not found", 404
 
-    relation = "biolink:treated_by"
+    # relation = "biolink:treated_by"
     logging.info('PredictRuntime: ' + str(datetime.now() - time_start))
-    return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)}
+    return {'hits': prediction_json, 'count': len(prediction_json)}
     # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
 def get_predicates():

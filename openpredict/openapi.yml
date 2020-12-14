@@ -153,13 +153,6 @@ paths:
       tags:
       - openpredict
       parameters:
-      - name: entity
-        in: query
-        description: CURIE of the entity to process (e.g. drug, disease, etc)
-        example: DRUGBANK:DB00394
-        required: true
-        schema:
-          type: string
       - name: model_id
         in: query
         description: Provide the ID of the run output you want to use as model to use to predict associations
@@ -169,6 +162,20 @@ paths:
           type: string
           # default: "Predict OMIM-DrugBank"
           # enum: ["Predict OMIM-DrugBank"]
+      - name: drug_id
+        in: query
+        description: CURIE of the drug to get prediction of diseases it could treat (e.g. DRUGBANK:DB00394)
+        example: DRUGBANK:DB00394
+        required: false
+        schema:
+          type: string
+      - name: disease_id
+        in: query
+        description: CURIE of the disease to get prediction of drugs it could be treated with (e.g. OMIM:246300)
+        # example: OMIM:246300
+        required: false
+        schema:
+          type: string
       - name: min_score
         in: query
         description: Minimum score of predictions to return (0 to 1)
@@ -204,6 +211,36 @@ paths:
             # application/ld+json: {}
             # text/csv: {}
             # text/tab-separated-values: {}
+      x-bte-kgs-operations:
+      - inputs:
+        - id: biolink:DRUGBANK
+          semantic: biolink:ChemicalSubstance
+        outputs:
+        - id: biolink:OMIM
+          semantic: biolink:Disease
+        parameters:
+          drug_id: "{inputs[0]}"
+        predicate: biolink:treats
+        supportBatch: 'False'
+        responseMapping:
+          OMIM: hits.id
+          # NCBIGene: matchedTerms.interactions.geneEntrezId
+          # publication: matchedTerms.interactions.pmids
+      - inputs:
+        - id: biolink:OMIM
+          semantic: biolink:Disease
+        outputs:
+        - id: biolink:DRUGBANK
+          semantic: biolink:ChemicalSubstance
+        parameters:
+          disease_id: "{inputs[0]}"
+        predicate: biolink:treated_by
+        supportBatch: 'False'
+        responseMapping:
+          DRUGBANK: hits.id
+          # CHEMBL.COMPOUND: matchedTerms.interactions.drugChemblId
+          # publication: results.source.id
+
 
   /predicates:
     get:

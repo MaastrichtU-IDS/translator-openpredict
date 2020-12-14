@@ -55,7 +55,7 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
         # Run get_predict!
         # TODO: pass score and limit from Reasoner query
         # TODO: add try catch and n_results
-        prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, min_score, max_score)
+        bte_response, prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, min_score, max_score)
 
         for association in prediction_json:
             edge_kg_id = 'e' + str(kg_edge_count)
