@@ -32,12 +32,7 @@ def start_api(port=8808, debug=False, start_spark=True):
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
     
-    # Define server URL based on nginx-proxy environment variables
-    # if os.getenv('VIRTUAL_HOST'):
-    #     server_url='http://' + os.getenv('VIRTUAL_HOST')
-    # if os.getenv('LETSENCRYPT_HOST'):
-    #     server_url='https://' + os.getenv('LETSENCRYPT_HOST')
-        
+    
     api = connexion.App(__name__, options={"swagger_url": ""})
     # api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
 
@@ -48,10 +43,17 @@ def start_api(port=8808, debug=False, start_spark=True):
     # Add CORS support
     CORS(api.app)
 
-    ## Fix to avoid empty list of servers
-    api.app.config['REVERSE_PROXY_PATH'] = '/api'
-    # api.app.config['REVERSE_PROXY_PATH'] = 'http://api.collaboratory.semantiscience.org'
-    ReverseProxyPrefixFix(api.app)
+    ## Fix to avoid empty list of servers for nginx-proxy deployments
+    if os.getenv('VIRTUAL_HOST'):
+        server_url='http://' + os.getenv('VIRTUAL_HOST')
+        api.app.config['REVERSE_PROXY_PATH'] = server_url
+        # api.app.config['REVERSE_PROXY_PATH'] = '/api'
+        ReverseProxyPrefixFix(api.app)
+    if os.getenv('LETSENCRYPT_HOST'):
+        server_url='https://' + os.getenv('LETSENCRYPT_HOST')
+        api.app.config['REVERSE_PROXY_PATH'] = server_url
+        # api.app.config['REVERSE_PROXY_PATH'] = '/api'
+        ReverseProxyPrefixFix(api.app)
 
     # logging.info('Start spark:' + str(start_spark))
     # if start_spark:
