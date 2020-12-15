@@ -507,7 +507,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/  -omim-drug.csv'),delimiter=',') 
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())

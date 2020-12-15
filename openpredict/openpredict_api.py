@@ -44,13 +44,13 @@ def start_api(port=8808, debug=False, start_spark=True):
     CORS(api.app)
 
     ## Fix to avoid empty list of servers for nginx-proxy deployments
-    if os.getenv('VIRTUAL_HOST'):
-        server_url='http://' + os.getenv('VIRTUAL_HOST')
+    if os.getenv('LETSENCRYPT_HOST'):
+        server_url='https://' + os.getenv('LETSENCRYPT_HOST')
         api.app.config['REVERSE_PROXY_PATH'] = server_url
         # api.app.config['REVERSE_PROXY_PATH'] = '/api'
         ReverseProxyPrefixFix(api.app)
-    if os.getenv('LETSENCRYPT_HOST'):
-        server_url='https://' + os.getenv('LETSENCRYPT_HOST')
+    elif os.getenv('VIRTUAL_HOST'):
+        server_url='http://' + os.getenv('VIRTUAL_HOST')
         api.app.config['REVERSE_PROXY_PATH'] = server_url
         # api.app.config['REVERSE_PROXY_PATH'] = '/api'
         ReverseProxyPrefixFix(api.app)
