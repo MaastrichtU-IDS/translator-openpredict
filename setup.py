@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    version='0.0.5',
+    version='0.0.6',
     name='openpredict',
     license='MIT License',
     description='An API to compute and serve predictions of biomedical concepts associations via OpenAPI for the NCATS Translator project',
