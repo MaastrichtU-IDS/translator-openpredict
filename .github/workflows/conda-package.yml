@@ -1,9 +1,8 @@
 name: Python Package using Conda
-# Publish to PyPI when new release on GitHub, if tests pass
 on:
   workflow_dispatch:
-  release:
-    types: [ created ]
+  # release:
+  #   types: [ created ]
   # push:
   #   branches: [ master ]
 
