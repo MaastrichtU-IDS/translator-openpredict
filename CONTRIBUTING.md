@@ -31,6 +31,15 @@ pip3 install -e .
 
 ### Start the OpenPredict API :rocket:
 
+
+Start the **OpenPredict API in debug mode** on http://localhost:8808 (the API will be reloaded automatically at each change to the code)
+
+```bash
+openpredict start-api --debug
+```
+
+### Start OpenPredict API with a local Virtuoso triplestore
+
 Start the Virtuoso database locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
 
 ```bash
@@ -48,6 +57,7 @@ openpredict start-api --debug
 > ```bash
 > docker-compose down
 > ```
+
 
 ### Reset your local OpenPredict data
 
