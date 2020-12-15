@@ -7,6 +7,7 @@ from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, get_predictions
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
+from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 
 def start_api(port=8808, debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -47,6 +48,11 @@ def start_api(port=8808, debug=False, start_spark=True):
     # Add CORS support
     CORS(api.app)
 
+    ## Fix to avoid empty list of servers
+    api.app.config['REVERSE_PROXY_PATH'] = '/api'
+    # api.app.config['REVERSE_PROXY_PATH'] = 'http://api.collaboratory.semantiscience.org'
+    ReverseProxyPrefixFix(api.app)
+
     # logging.info('Start spark:' + str(start_spark))
     # if start_spark:
     #     try:
@@ -56,7 +62,7 @@ def start_api(port=8808, debug=False, start_spark=True):
     #         logging.info("Could not start Spark locally")
 
     print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
-    api.run(port=port, debug=debug, server=deployment_server)
+    api.run(host='0.0.0.0', port=port, debug=debug, server=deployment_server)
 
 
 def post_embedding(types, emb_name, description, model_id):
