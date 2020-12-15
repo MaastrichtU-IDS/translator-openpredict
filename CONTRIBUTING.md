@@ -188,3 +188,22 @@ find docs/README-pydoc.md -type f -exec sed -i "s/# Table of Contents/# OpenPred
 The versioning scheme for new releases on GitHub used is [SemVer](http://semver.org/) (Semantic Versioning).
 
 Change version in `setup.py` before new release.
+
+## Publish a new Docker image
+
+When publishing a new version of OpenPredict we usually also publish an updated Docker image to the [MaastrichtU-IDS GitHub Container Registry](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api).
+
+> Replace the `latest` tag by your version number, e.g. `v0.0.7`
+
+Build the OpenPredict API Docker image:
+
+```bash
+docker build -t ghcr.io/maastrichtu-ids/openpredict-api:latest .
+```
+
+Push to the [MaastrichtU-IDS GitHub Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api)
+
+```bash
+docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
+```
+

@@ -4,6 +4,7 @@ FROM jupyter/all-spark-notebook
 
 # Required to be able to edit the .joblib model directly in the python package
 USER root
+WORKDIR /root
 
 ENV OPENPREDICT_DATA_DIR=/data/openpredict
 ENV PYSPARK_PYTHON=/opt/conda/bin/python3
@@ -16,11 +17,5 @@ COPY . .
 # Install from source code
 RUN pip install .
 
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
 EXPOSE 8808
-
-# ENTRYPOINT [ "sleep 60 && openpredict" ]
-# CMD [ "start-api" ]
+ENTRYPOINT [ "openpredict start-api" ]
