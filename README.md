@@ -4,16 +4,13 @@
 
 Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (such as Ontotext GraphDB, or Virtuoso).
 
+Access the **Translator OpenPredict API** at **[https://openpredict.semanticscience.org 🔮🐍](https://openpredict.semanticscience.org)**
+
 # Deploy the OpenPredict API locally :woman_technologist:
 
 Requirements:
 
-* Python 3.6+ installed
-
-The OpenPredict API store its data using a  RDF triplestore database:
-
-* We use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment
-* We also use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore!
+* Python 3.6+ and `pip` installed
 
 ### Install from the source code :inbox_tray:
 
@@ -111,7 +108,7 @@ The API will return the list of predicted target for the given entity, the label
 ```json
 {
   "count": 300,
-  "results": [
+  "hits": [
     {
       "score": 0.8361061489249737,
       "id": "OMIM:246300",
@@ -122,7 +119,7 @@ The API will return the list of predicted target for the given entity, the label
 }
 ```
 
-> Try it at [https://openpredict.semanticscience.org/predict?entity=DRUGBANK:DB00394](https://openpredict.semanticscience.org/predict?entity=DRUGBANK:DB00394)
+> Try it at [https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394](https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394)
 
 ### Query operation
 
@@ -168,15 +165,11 @@ The `/predicates` operation will return the entities and relations provided by t
 
 ---
 
-## More about the data
-
-Gold standard drug-disease indications retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
-
----
-
 # More about the data model
 
-Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
+* The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
+
+* Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
 
 > See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html) for more details on the data model.
 
