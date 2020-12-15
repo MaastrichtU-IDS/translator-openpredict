@@ -10,7 +10,7 @@ If you are part of the [MaastrichtU-IDS organization on GitHub](https://github.c
 
 To contribute:
 
-1. Clone the repository 📥
+1. Clone the repository (change the URL for your fork) 📥
 
 ```bash
 git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
@@ -33,7 +33,7 @@ pip3 install -e .
 
 > See the [main README](https://github.com/MaastrichtU-IDS/translator-openpredict) for more details on the package installation.
 
-The OpenPredict API store its metadata using RDF:
+The OpenPredict API stores its metadata using RDF:
 
 * We use a `.ttl` file in `data/` in local development
 * It can use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment with docker
@@ -56,9 +56,9 @@ Start the **OpenPredict API in productionn mode** with Tornado (the API will not
 openpredict start-api
 ```
 
-### Start OpenPredict API with a local Virtuoso triplestore 🗄️
+### Optional: start OpenPredict API with a local Virtuoso triplestore 🗄️
 
-To store OpenPredict metadata in a local triplestore:
+To test OpenPredict using a local triplestore to store metadata:
 
 1. **Start the Virtuoso triplestore** locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
 
@@ -83,7 +83,7 @@ docker-compose down
 
 If you want to reset the (meta)data used by OpenPredict locally:
 
-1. Stop OpenPredict API
+1. Stop OpenPredict API (and Virtuoso if used).
 2. Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored, in `data/virtuoso` and `data/openpredict`
 
 ```bash

@@ -71,21 +71,21 @@ rm -rf data/
 
 The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented). 
 
-The API will return predicted targets for the given entity, such as:
+The API will return predicted targets for the given drug or disease:
 
-* The **potential drugs treating a given disease**
-* The **potential diseases a given drug could treat**
+* The **potential drugs treating a given disease** :pill:
+* The **potential diseases a given drug could treat** :microbe:
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
-### Notebooks examples
+### Notebooks examples :notebook_with_decorative_cover:
 
 We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
 
 1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
 
-### Add embedding
+### Add embedding :station:
 
 The default baseline model is `openpredict-baseline-omim-drugbank`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
 
@@ -95,7 +95,7 @@ The default baseline model is `openpredict-baseline-omim-drugbank`. You can choo
 
 Once the embedding has been added you can find the existing models previously generated (including `openpredict-baseline-omim-drugbank`), and use them as base model when you ask the model for prediction or add new embeddings.
 
-### Predict operation
+### Predict operation :crystal_ball:
 
 Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
 
@@ -123,7 +123,7 @@ The API will return the list of predicted target for the given entity, the label
 
 > Try it at [https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394](https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394)
 
-### Query operation
+### Query operation :email:
 
 The `/query` operation will return the same predictions as the `/predict` operation, using the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
 
@@ -159,7 +159,7 @@ See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query exa
 }
 ```
 
-### Predicates operation
+### Predicates operation :world_map:
 
 The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
 
@@ -167,7 +167,7 @@ The `/predicates` operation will return the entities and relations provided by t
 
 ---
 
-# More about the data model
+# More about the data model :minidisc:
 
 * The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
 
