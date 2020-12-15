@@ -36,9 +36,8 @@ def start_api(port=8808, debug=False, start_spark=True):
     api = connexion.App(__name__, options={"swagger_url": ""})
     # api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
 
-    api.add_api('openapi.yml', options={"disable_servers_overwrite": True})
-    # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True)
-    ## Server URL not taken into account when running in Docker
+    api.add_api('openapi.yml')
+    # api.add_api('openapi.yml', arguments={'server_url': server_url}, validate_responses=True, options={"disable_servers_overwrite": True})
 
     # Add CORS support
     CORS(api.app)

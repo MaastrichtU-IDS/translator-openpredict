@@ -222,7 +222,7 @@ paths:
         parameters:
           drug_id: "{inputs[0]}"
         predicate: biolink:treats
-        supportBatch: 'False'
+        supportBatch: False
         responseMapping:
           OMIM: hits.id
           # NCBIGene: matchedTerms.interactions.geneEntrezId
@@ -236,7 +236,7 @@ paths:
         parameters:
           disease_id: "{inputs[0]}"
         predicate: biolink:treated_by
-        supportBatch: 'False'
+        supportBatch: False
         responseMapping:
           DRUGBANK: hits.id
           # CHEMBL.COMPOUND: matchedTerms.interactions.drugChemblId
