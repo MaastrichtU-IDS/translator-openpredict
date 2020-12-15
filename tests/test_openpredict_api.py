@@ -16,9 +16,9 @@ def test_get_predict(client):
     """Test predict API GET operation"""
     url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
     response = client.get(url)
-    assert len(response.json['results']) == 42
+    assert len(response.json['hits']) == 42
     assert response.json['count'] == 42
-    assert response.json['results'][0]['id'] == 'OMIM:246300'
+    assert response.json['hits'][0]['id'] == 'OMIM:246300'
 
 def test_post_reasoner_predict(client):
     """Test ReasonerAPI query POST operation to get predictions"""
