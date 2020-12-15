@@ -176,16 +176,16 @@ Stop the container:
 docker-compose down
 ```
 
-# Build the OpenPredict API Docker image
+## Generate Sphinx documentation
 
-Build, but make sure the tests passes first!
+> **❌ Currently not used** (done with pydoc which is much lighter)
 
-```bash
-docker build -t ghcr.io/maastrichtu-ids/openpredict-api:latest .
-```
-
-Push to the [MaastrichtU-IDS GitHub Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api)
+Documentation can be generated using [Sphinx doc](https://www.sphinx-doc.org/en/master/), see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
 
 ```bash
-docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
+pip3 install sphinx
+sphinx-quickstart sphinx-docs/ --project 'openpredict' --author 'Vincent Emonet'
+cd sphinx-docs/
+make html
 ```
+

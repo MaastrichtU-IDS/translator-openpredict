@@ -23,7 +23,7 @@ cd translator-openpredict
 git checkout -b my-branch
 ```
 
-## Development process
+## Development process 👩‍💻
 
 Install `openpredict` from the source code, and update the package automatically when the files changes locally :arrows_counterclockwise:
 
@@ -79,7 +79,7 @@ docker-compose down
 ```
 
 
-### Reset your local OpenPredict data
+### Reset your local OpenPredict data 🗑️
 
 If you want to reset the (meta)data used by OpenPredict locally:
 
@@ -128,11 +128,11 @@ def get_predict(entity='DB00001'):
 
 > The parameters provided in `openapi.yml` and the arguments of the function in `openpredict_api.py` need to match!
 
-## Run tests ✔️
+## Run tests 🧪
 
 [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
 
-Tests are automatically run by a [GitHub Action](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch. They are also run in the GitHub Action to publish a package.
+Tests are automatically run by a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch ✔️
 
 Run the **OpenPredict API** tests locally:
 
@@ -146,36 +146,7 @@ Run a specific test in a specific file, and display `print()` lines in the outpu
 pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
 
-## Generate pydoc for the code 📖
-
-Documentation in [docs/README-pydoc.md](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs/README-pydoc.md) generated from the Python source code docstrings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
-
-```bash
-pip3 install pydoc-markdown
-```
-
-Generate markdown documentation page for the `openpredict` package in `docs/`
-
-```bash
-pydoc-markdown --render-toc -p openpredict > docs/README-pydoc.md
-```
-
-Modify the generated page title:
-
-```bash
-find docs/README-pydoc.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Package documentation 🔮🐍/g" {} +
-```
-
-> **❌ Currently not used**: this can also be done using Sphinx, see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
->
-> ```bash
-> pip3 install sphinx
-> sphinx-quickstart sphinx-docs/ --project 'openpredict' --author 'Vincent Emonet'
-> cd sphinx-docs/
-> make html
-> ```
-
-## Pull Request process
+## Pull Request process 📬
 
 1. Ensure the tests are passing before sending a pull request 🧪
 
@@ -183,13 +154,21 @@ find docs/README-pydoc.md -type f -exec sed -i "s/# Table of Contents/# OpenPred
 3. [Send a pull request](https://github.com/MaastrichtU-IDS/translator-openpredict/compare) to the `master` branch, answer the questions in the pull request message 📤
 4. Project contributors will review your change as soon as they can ✔️
 
-## Versioning process
+---
+
+## Additional informations about releases ℹ️
+
+This part is not required to be completed if you are looking into contributing, it is purely informative on the release process of the OpenPredict API.
+
+### Release process 🏷️
 
 The versioning scheme for new releases on GitHub used is [SemVer](http://semver.org/) (Semantic Versioning).
 
-Change version in `setup.py` before new release.
+1. Change version in `setup.py` before new a release, e.g. `0.0.7`
+2. Create a new release in the [GitHub web UI](https:///github.com/MaastrichtU-IDS/translator-openpredict).Provide the version as tag, e.g. `v0.0.7`
+3. When you publish the new release, a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) will be automatically run to run the tests, and publish the `openpredict` package to [PyPI](https://pypi.org/project/openpredict/).
 
-## Publish a new Docker image
+### Publish a new Docker image 📦
 
 When publishing a new version of OpenPredict we usually also publish an updated Docker image to the [MaastrichtU-IDS GitHub Container Registry](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api).
 
@@ -201,9 +180,29 @@ Build the OpenPredict API Docker image:
 docker build -t ghcr.io/maastrichtu-ids/openpredict-api:latest .
 ```
 
-Push to the [MaastrichtU-IDS GitHub Container Registry 📦](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api)
+Push to the [MaastrichtU-IDS GitHub Container Registry](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api)
 
 ```bash
 docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
+```
+
+### Generate pydoc for the code 📖
+
+Documentation in [docs/README-pydoc.md](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs/README-pydoc.md) is generated from the Python source code doc strings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
+
+```bash
+pip3 install pydoc-markdown
+```
+
+Generate markdown documentation page for the `openpredict` package in `docs/`
+
+```bash
+pydoc-markdown --render-toc -p openpredict > docs/README-pydoc.md
+```
+
+Modify the generated page title automatically:
+
+```bash
+find docs/README-pydoc.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Package documentation 🔮🐍/g" {} +
 ```
 

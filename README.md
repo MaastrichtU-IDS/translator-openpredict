@@ -54,7 +54,7 @@ By default all data are stored in the `data/` folder in the directory were you u
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
 
-### Reset your local OpenPredict data :x:
+### Reset your local OpenPredict data :wastebasket:
 
 You can easily reset the data of your local OpenPredict deployment by deleting the `data/` folder and restarting the OpenPredict API:
 
