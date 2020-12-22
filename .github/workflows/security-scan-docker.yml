@@ -14,9 +14,18 @@ jobs:
     - name: Build the Docker image
       run: docker build . --tag openpredict-api:latest
     - uses: anchore/scan-action@v2.0.2
+      id: scan
       with:
-        image-reference: "openpredict-api:latest"
-        dockerfile-path: "Dockerfile"
-        # fail-build: true
+        image: "openpredict-api:latest"
+        fail-build: true
+        severity-cutoff: critical
+        acs-report-enable: true
+        # To produce a file formatted for GitHub security reports
+
     - name: anchore inline scan JSON results
       run: for j in `ls ./anchore-reports/*.json`; do echo "---- ${j} ----"; cat ${j}; echo; done
+
+    - name: upload Anchore scan SARIF report
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: ${{ steps.scan.outputs.sarif }}
