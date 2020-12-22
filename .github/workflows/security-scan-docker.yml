@@ -17,9 +17,9 @@ jobs:
       id: scan
       with:
         image: "openpredict-api:latest"
-        fail-build: true
-        severity-cutoff: critical
         acs-report-enable: true
+        fail-build: false
+        # severity-cutoff: critical
         # To produce a file formatted for GitHub security reports
 
     - name: anchore inline scan JSON results
