@@ -178,7 +178,7 @@ docker-compose down
 
 ## Generate Sphinx documentation 📖
 
-> **❌ Currently not used** (done with pydoc which is much lighter)
+> **❌ Currently not used** (done with pydoc which is much lighter, cf. `CONTRIBUTING.md`)
 
 Documentation can be generated using [Sphinx doc](https://www.sphinx-doc.org/en/master/), see this article on [deploying Sphinx to GitHub Pages](https://circleci.com/blog/deploying-documentation-to-github-pages-with-continuous-integration/)
 
