@@ -1,4 +1,4 @@
-name: Scan Docker image
+name: Security scan Docker
 on:
   workflow_dispatch:
   # push:
@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker build . --tag openpredict-api:latest
-    - uses: anchore/scan-action@master
+    - uses: anchore/scan-action@v2.0.2
       with:
         image-reference: "openpredict-api:latest"
         dockerfile-path: "Dockerfile"

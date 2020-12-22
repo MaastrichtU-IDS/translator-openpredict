@@ -1,4 +1,4 @@
-name: Website vulnerability scan
+name: Security scan website
 
 on:
   workflow_dispatch:
