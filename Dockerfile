@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y build-essential
 COPY . .
 
 # Install from source code
-# RUN python3 -m pip install -e .
 RUN pip install .
 
 EXPOSE 8808
