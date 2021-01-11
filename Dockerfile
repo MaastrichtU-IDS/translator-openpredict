@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y build-essential
 COPY . .
 
 # Install from source code
-RUN pip install .
+RUN pip install -e .
 
 EXPOSE 8808
 ENTRYPOINT [ "openpredict start-api" ]
