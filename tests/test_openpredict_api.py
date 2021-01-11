@@ -31,16 +31,16 @@ def test_post_reasoner_predict(client):
                     "e01": {
                         "subject": "n0",
                         "object": "n1",
-                        "type": "treated_by"
+                        "predicate": "treated_by"
                     }
                 },
                 "nodes": {
                     "n0": {
                         "curie": "DRUGBANK:DB00394",
-                        "type": "drug"
+                        "category": "drug"
                     },
                     "n1": {
-                        "type": "disease"
+                        "category": "disease"
                     }
                 }
             }
