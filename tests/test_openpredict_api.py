@@ -27,25 +27,22 @@ def test_post_reasoner_predict(client):
         "message": {
             # "n_results": 10,
             "query_graph": {
-                "edges": [
-                    {
-                    "id": "e00",
-                    "source_id": "n00",
-                    "target_id": "n01",
-                    "type": "treated_by"
+                "edges": {
+                    "e01": {
+                        "subject": "n0",
+                        "object": "n1",
+                        "type": "treated_by"
                     }
-                ],
-                "nodes": [
-                    {
-                    "curie": "DRUGBANK:DB00394",
-                    "id": "n00",
-                    "type": "drug"
+                },
+                "nodes": {
+                    "n0": {
+                        "curie": "DRUGBANK:DB00394",
+                        "type": "drug"
                     },
-                    {
-                    "id": "n01",
-                    "type": "disease"
+                    "n1": {
+                        "type": "disease"
                     }
-                ]
+                }
             }
             # "query_options": {
             # "min_score": 0.5
@@ -53,11 +50,11 @@ def test_post_reasoner_predict(client):
         }
     }
     response = client.post(url, 
-                           data=json.dumps(reasoner_query), 
-                           content_type='application/json')
-    edges = response.json['knowledge_graph']['edges']
+                            data=json.dumps(reasoner_query), 
+                            content_type='application/json')
+    # edges = response.json['knowledge_graph']['edges'].items()
     assert len(edges) == 300
-    assert edges[0]['target_id'] == 'OMIM:246300'
+    # assert edges[0]['object'] == 'OMIM:246300'
 
 # def test_post_embeddings():
 #     """Test post embeddings to add embeddings to the model and rebuild it"""
