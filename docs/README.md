@@ -88,7 +88,7 @@ OpenPredict can be configured using environment variables in your local terminal
 ```bash
 export SPARQL_ENDPOINT_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
 export SPARQL_ENDPOINT_UPDATE_URL=https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-export SPARQL_USER=import_user
+export SPARQL_USERNAME=import_user
 export SPARQL_PASSWORD=password
 export OPENPREDICT_APIKEY=myapikey
 export OPENPREDICT_DATA_DIR=/data/openpredict
@@ -152,7 +152,7 @@ Define the triplestore credentials and API key in the `.env` file 🔑
 
 ```bash
 nano .env
-SPARQL_USER=import_user
+SPARQL_USERNAME=import_user
 SPARQL_PASSWORD=password
 ```
 
