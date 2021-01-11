@@ -13,5 +13,6 @@ findspark
 scikit-learn==0.23.1
 rdflib<6.0.0,>=5.0.0
 SPARQLWrapper
-networkx==1.11
+networkx
+# networkx==1.11
 # kgx
