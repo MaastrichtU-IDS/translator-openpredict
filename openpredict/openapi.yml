@@ -17,6 +17,10 @@ info:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   termsOfService: "{{url}}"
+  x-translator:
+    component: KP
+    team:
+      - Clinical Data Provider
 externalDocs:
   description: Documentation for the NCATS Biomedical Translator ReasonerAPI
   url: 'https://github.com/NCATSTranslator/ReasonerAPI'
