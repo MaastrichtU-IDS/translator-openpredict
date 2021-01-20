@@ -137,6 +137,7 @@ Tests are automatically run by a [GitHub Action workflow](https://github.com/Maa
 Run the **OpenPredict API** tests locally:
 
 ```bash
+pip install pytest
 pytest tests
 ```
 
@@ -145,6 +146,14 @@ Run a specific test in a specific file, and display `print()` lines in the outpu
 ```bash
 pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
 ```
+
+> Facing issue with `pytest` install using virtual environments? Try this solution:
+>
+> ```bash
+> python3 -m pip install -e .
+> python3 -m pip install pytest
+> python3 -m pytest
+> ```
 
 ## Pull Request process 📬
 

@@ -31,16 +31,16 @@ def test_post_reasoner_predict(client):
                     "e01": {
                         "subject": "n0",
                         "object": "n1",
-                        "predicate": "treated_by"
+                        "predicate": "biolink:treated_by"
                     }
                 },
                 "nodes": {
                     "n0": {
                         "curie": "DRUGBANK:DB00394",
-                        "category": "drug"
+                        "category": "biolink:Drug"
                     },
                     "n1": {
-                        "category": "disease"
+                        "category": "biolink:Disease"
                     }
                 }
             }
