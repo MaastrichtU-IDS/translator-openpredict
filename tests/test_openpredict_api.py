@@ -52,7 +52,7 @@ def test_post_reasoner_predict(client):
     response = client.post(url, 
                             data=json.dumps(reasoner_query), 
                             content_type='application/json')
-    # edges = response.json['knowledge_graph']['edges'].items()
+    edges = response.json['knowledge_graph']['edges'].items()
     assert len(edges) == 300
     # assert edges[0]['object'] == 'OMIM:246300'
 
