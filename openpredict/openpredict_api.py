@@ -82,7 +82,7 @@ def post_embedding(types, emb_name, description, model_id):
     else:
         return { 'Forbidden': 403 }
 
-def get_predict(model_id, drug_id=None, disease_id=None, min_score=None, max_score=None, n_results=None):
+def get_predict(model_id='openpredict-baseline-omim-drugbank', drug_id=None, disease_id=None, min_score=None, max_score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
     
     :param entity: Search for predicted associations for this entity CURIE
