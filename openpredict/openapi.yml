@@ -154,19 +154,11 @@ paths:
       operationId: openpredict.openpredict_api.get_predict
       summary: Get predicted targets for a given entity
       description: "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+        Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
         This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations."
       tags:
       - openpredict
       parameters:
-      - name: model_id
-        in: query
-        description: Provide the ID of the run output you want to use as model to use to predict associations
-        required: false
-        example: openpredict-baseline-omim-drugbank
-        schema:
-          type: string
-          # default: "Predict OMIM-DrugBank"
-          # enum: ["Predict OMIM-DrugBank"]
       - name: drug_id
         in: query
         description: CURIE of the drug to get prediction of diseases it could treat (e.g. DRUGBANK:DB00394)
@@ -176,11 +168,20 @@ paths:
           type: string
       - name: disease_id
         in: query
-        description: CURIE of the disease to get prediction of drugs it could be treated with (e.g. OMIM:246300)
+        description: CURIE of the disease to get prediction of drugs it could be treated with (e.g. OMIM:246300). Ignored if drug_id provided.
         # example: OMIM:246300
         required: false
         schema:
           type: string
+      - name: model_id
+        in: query
+        description: Provide the ID of the run output you want to use as model to use to predict associations
+        required: false
+        example: openpredict-baseline-omim-drugbank
+        schema:
+          type: string
+          # default: "Predict OMIM-DrugBank"
+          # enum: ["Predict OMIM-DrugBank"]
       - name: min_score
         in: query
         description: Minimum score of predictions to return (0 to 1)
