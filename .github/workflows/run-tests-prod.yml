@@ -2,8 +2,9 @@ name: Run tests on production
 on:
   workflow_dispatch:
   schedule:
-    - 0 1 * * *
-  # Everyday at 1 am GMT+1
+    - cron:  '00 01 * * *'
+    # Everyday at 01:00am GMT+1
+
 
 jobs:
 
@@ -27,7 +28,6 @@ jobs:
         pip install pytest
         pip install .
 
-    - name: Test with pytest secrets.GRAPHDB_PASSWORD }}
+    - name: Test with pytest
       run: |
-        coverage erase
         pytest tests/integration
