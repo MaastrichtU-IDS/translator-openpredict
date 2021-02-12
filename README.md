@@ -68,6 +68,10 @@ rm -rf data/
 
 > If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs) locally or with Docker.
 
+### Test the OpenPredict API
+
+See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
+
 ---
 
 # Use the API​ :mailbox_with_mail:

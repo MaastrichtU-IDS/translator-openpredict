@@ -132,28 +132,7 @@ def get_predict(entity='DB00001'):
 
 [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
 
-Tests are automatically run by a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch ✔️
-
-Run the **OpenPredict API** tests locally:
-
-```bash
-pip install pytest
-pytest tests
-```
-
-Run a specific test in a specific file, and display `print()` lines in the output:
-
-```bash
-pytest tests/test_openpredict_api.py::test_post_trapi -s
-```
-
-> Facing issue with `pytest` install using virtual environments? Try this solution:
->
-> ```bash
-> python3 -m pip install -e .
-> python3 -m pip install pytest
-> python3 -m pytest
-> ```
+Check the [TESTING.md](/TESTING.md) documentation.
 
 ## Pull Request process 📬
 
