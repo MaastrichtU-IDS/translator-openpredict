@@ -50,7 +50,7 @@ jobs:
         SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
         coverage erase
-        pytest --cov openpredict --cov-report xml:coverage.xml tests/*
+        pytest --cov openpredict --cov-report xml:coverage.xml tests/unit/*
         cat coverage.xml
         coverage combine --append || true
         coverage report

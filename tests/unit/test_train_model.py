@@ -17,7 +17,7 @@ def test_train_model():
 
 def test_add_embeddings():
     """Test add embeddings to the model and rebuild it"""
-    embeddings_filepath = str(pathlib.Path(__file__).parent.joinpath("data/neurodkg_embedding.json"))
+    embeddings_filepath = str(pathlib.Path(__file__).parent.joinpath("../data/neurodkg_embedding.json"))
     
     with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
         run_id = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')

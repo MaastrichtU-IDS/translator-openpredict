@@ -144,7 +144,7 @@ pytest tests
 Run a specific test in a specific file, and display `print()` lines in the output:
 
 ```bash
-pytest tests/test_openpredict_api.py::test_post_reasoner_predict -s
+pytest tests/test_openpredict_api.py::test_post_trapi -s
 ```
 
 > Facing issue with `pytest` install using virtual environments? Try this solution:
