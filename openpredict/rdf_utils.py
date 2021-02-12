@@ -112,11 +112,12 @@ def query_sparql_endpoint(query, parameters= []):
         for row in qres:
             print('row')
             print(row)
+            # TODO: row.asdict()
             result={}
             for i,p in enumerate(parameters):
                 print('variable')
                 result[p] ={}
-                result[p]['value']= str(row[p])
+                result[p]['value'] = str(row[p])
                 #print(variable)
             results.append(result)
             # How can we iterate over the variable defined in the SPARQL query?
