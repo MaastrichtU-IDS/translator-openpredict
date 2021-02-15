@@ -104,7 +104,7 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
-        return ('Not found: ID ' + concept_id, 404)
+        return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 
     # try:
     #     prediction_json = get_predictions(entity, model_id, score, n_results)
