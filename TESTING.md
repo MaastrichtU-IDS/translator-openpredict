@@ -1,5 +1,3 @@
-[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Test%20production%20API/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Test+production+API%22) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) [![CodeQL analysis](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/CodeQL%20analysis/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22CodeQL+analysis%22)
-
 [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![CII Best  Practices](https://bestpractices.coreinfrastructure.org/projects/4382/badge)](https://bestpractices.coreinfrastructure.org/projects/4382)
 
 Testing plan for the OpenPredict API published at https://openpredict.semanticscience.org
@@ -17,6 +15,8 @@ pip install pytest
 ```
 
 ### Production tests
+
+[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Test%20production%20API/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Test+production+API%22)
 
 Integration tests are run automatically by the [GitHub Action workflow `.github/workflows/run-tests-prod.yml`](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) everyday at 01:00am GMT+1 on the [OpenPredict production API](https://openpredict.semanticscience.org)
 
@@ -37,6 +37,8 @@ pytest tests/production
 
 ### Integration tests
 
+ [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) 
+
 Integration tests on a local API are run automatically by the [GitHub Action workflow `.github/workflows/run-tests.yml`](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch.
 
 You can run the tests for the different components of OpenPredict locally:
@@ -53,7 +55,15 @@ pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 
 ## Docker tests
 
+[![Publish Docker image](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Publish%20Docker%20image/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+Docker+image%22)
+
 At each new release we run the GitHub Action workflow `.github/workflows/publish-docker.yml` to test the deployment of the OpenPredict API in a Docker container, and we publish a new image for each new version of the OpenPredict API.
+
+## Additional tests
+
+[![CodeQL analysis](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/CodeQL%20analysis/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22CodeQL+analysis%22)
+
+We run an additional workflow which to check for vulnerabilities using the [CodeQL analysis engine](https://securitylab.github.com/tools/codeql).
 
 ## Known issues
 
