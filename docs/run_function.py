@@ -1,9 +1,13 @@
 from joblib import load
-from openpredict.openpredict_api import get_predict, init_openpredict_dir
-from openpredict.openpredict_model import train_model
-from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, retrieve_features
 from datetime import datetime
 import pandas as pd
+# from openpredict.openpredict_api import get_predict, init_openpredict_dir
+# from openpredict.openpredict_model import train_model
+# from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, retrieve_features
+
+from openpredict.openpredict_utils import convert_baseline_features_ids
+
+convert_baseline_features_ids()
 
 ### Run it:
 # python3 tests/run_function.py
@@ -50,7 +54,7 @@ import pandas as pd
 # print(disease_features_df)
 
 # print(drug_df.index)
-# ## length=505 drugs
+# ## length=505 drugs7
 
 # print(disease_df.index)
 # ## length=300

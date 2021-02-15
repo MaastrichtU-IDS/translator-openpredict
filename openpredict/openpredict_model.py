@@ -511,13 +511,16 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # print(drugDiseaseKnown.head())
 
-    print ("📥 Loading the similarity tensor from " + get_openpredict_dir('features/' + from_model_id + '.joblib'))
-    (drug_df, disease_df)= load(get_openpredict_dir('features/' + from_model_id + '.joblib'))
-    
-    # Merge feature matrix to start from scratch
-    # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-    # dump((drug_df, disease_df), 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib')
+    if from_model_id == 'scratch':
+        print('Build the model from scratch')
+        # Start from scratch (merge feature matrixes)
+        drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
+        # dump((drug_df, disease_df), 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib')
+    else:
+        print ("📥 Loading the similarity tensor from " + get_openpredict_dir('features/' + from_model_id + '.joblib'))
+        (drug_df, disease_df)= load(get_openpredict_dir('features/' + from_model_id + '.joblib'))
 
+        
     print ("Drug Features ",drug_df.columns.levels[0])
     print ("Disease Features ",disease_df.columns.levels[0])
     # Generate positive and negative pairs

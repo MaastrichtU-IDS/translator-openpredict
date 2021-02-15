@@ -3,6 +3,7 @@ import shutil
 import logging
 import requests
 import pkg_resources
+import pandas as pd
 from openpredict.rdf_utils import init_triplestore
 
 global OPENPREDICT_DATA_DIR
@@ -79,3 +80,78 @@ def get_entities_labels(entity_list):
     #     "id": { "identifier": "MONDO:0004976",
     #       "label": "amyotrophic lateral sclerosis" },
     return get_label_result
+
+def normalize_id_to_translator(ids_list):
+    """Use Translator SRI NodeNormalization API to get the preferred Translator ID
+    for an ID https://nodenormalization-sri.renci.org/docs
+    """
+    converted_ids_obj = {}
+    resolve_curies = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
+                    params={'curie': ids_list})
+    # Get corresponding OMIM IDs for MONDO IDs if match
+    resp = resolve_curies.json()
+    for converted_id, translator_ids in resp.items():
+        pref_id = translator_ids['id']['identifier']
+        print(converted_id + ' > ' + pref_id)
+        converted_ids_obj[converted_id] = pref_id
+
+    return converted_ids_obj
+
+def convert_baseline_features_ids():
+    baseline_features_folder = "data/baseline_features/"
+    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
+                    'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
+    diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
+    drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
+    diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
+
+    # Prepare drug-disease dictionary
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
+    drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
+    # drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+
+    drugs_set = set()
+    diseases_set = set()
+    drugs_set.update(drugDiseaseKnown['Drug'].tolist())
+    diseases_set.update(drugDiseaseKnown['Disease'].tolist())
+
+    for csv_file in drugfeatfiles:
+        df = pd.read_csv(csv_file, delimiter=',')
+        drugs_set.update(df['Drug1'].tolist())
+        drugs_set.update(df['Drug2'].tolist())
+
+    for csv_file in diseasefeatfiles:
+        df = pd.read_csv(csv_file, delimiter=',')
+        diseases_set.update(df['Disease1'].tolist())
+        diseases_set.update(df['Disease2'].tolist())
+    
+    diseases_mappings = normalize_id_to_translator(diseases_set)
+    drugs_mappings = normalize_id_to_translator(drugs_set)
+
+    # Replace Ids with translator IDs in kown drug disease associations
+    drugDiseaseKnown["Drug"] = df["Drug"].apply (lambda row: drugs_mappings[row] )
+    drugDiseaseKnown["Disease"] = df["Disease"].apply (lambda row: diseases_mappings[row] )
+    df.to_csv('data/resources/known-drug-diseases.csv', index=False)
+
+    # Replace IDs in drugs baseline features files
+    for csv_file in drugfeatfiles:
+        df = pd.read_csv(csv_file, delimiter=',')
+        df["Drug1"] = df["Drug1"].apply (lambda row: drugs_mappings[row] )
+        df["Drug2"] = df["Drug2"].apply (lambda row: drugs_mappings[row] )
+        df.to_csv(csv_file.replace('/baseline_features/', '/translator_features/'), index=False)
+
+    # Replace IDs in diseases baseline features files
+    for csv_file in diseasefeatfiles:
+        df = pd.read_csv(csv_file, delimiter=',')
+        df["Disease1"] = df["Disease1"].apply (lambda row: diseases_mappings[row] )
+        df["Disease2"] = df["Disease2"].apply (lambda row: diseases_mappings[row] )
+        df.to_csv(csv_file.replace('/baseline_features/', '/translator_features/'), index=False)
+
+    # drugs_set.add(2)
+    # drugs_set.update([2, 3, 4])
+
+    # Extract the dataframes col1 and 2 to a unique list
+    # Add those list to the drugs and diseases sets
+    # Convert the set/list it using normalize_id_to_translator(ids_list)
+    # Update all dataframes using the created mappings
+    # And store to baseline_translator
