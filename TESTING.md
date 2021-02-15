@@ -2,13 +2,21 @@
 
 [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![CII Best  Practices](https://bestpractices.coreinfrastructure.org/projects/4382/badge)](https://bestpractices.coreinfrastructure.org/projects/4382)
 
+Tests for the OpenPredict API available at https://openpredict.semanticscience.org
+
+## Manual tests
+
+Use the [`docs/openpredict-examples.ipynb`](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb) Jupyter notebook to manually try queries against the OpenPredict API.
+
+## Automated tests
+
 Install the required dependency to run tests:
 
 ```bash
 pip install pytest
 ```
 
-## Integration tests
+### Integration tests
 
 Integration tests are run automatically by a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) everyday at 01:00am GMT+1 on the OpenPredict production API.
 
@@ -27,7 +35,7 @@ To run the tests of the OpenPredict production API locally:
 pytest tests/integration
 ```
 
-## Unit tests
+### Unit tests
 
 Unit tests on a local API are run automatically by a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch ✔️
 
