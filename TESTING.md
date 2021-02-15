@@ -16,9 +16,9 @@ Install the required dependency to run tests:
 pip install pytest
 ```
 
-### Integration tests
+### Production tests
 
-Integration tests are run automatically by a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) everyday at 01:00am GMT+1 on the OpenPredict production API.
+Integration tests are run automatically by the [GitHub Action workflow `.github/workflows/run-tests-prod.yml`](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) everyday at 01:00am GMT+1 on the [OpenPredict production API](https://openpredict.semanticscience.org)
 
 We test for an expected number of results and a few specific results.
 
@@ -35,17 +35,17 @@ To run the tests of the OpenPredict production API locally:
 pytest tests/production
 ```
 
-### Unit tests
+### Integration tests
 
-Unit tests on a local API are run automatically by a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch ✔️
+Integration tests on a local API are run automatically by the [GitHub Action workflow `.github/workflows/run-tests.yml`](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch.
 
-Run tests for the different components of OpenPredict locally:
+You can run the tests for the different components of OpenPredict locally:
 
 ```bash
 pytest tests/integration
 ```
 
-Run a specific test in a specific file, and display `print()` lines in the output:
+To run a specific test in a specific file, and display `print()` lines in the output:
 
 ```bash
 pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
@@ -53,7 +53,7 @@ pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 
 ## Docker tests
 
-At each new release we run a GitHub Action workflow to test the deployment of the OpenPredict API in a Docker container, and we publish a new image for each new version of the OpenPredict API.
+At each new release we run the GitHub Action workflow `.github/workflows/publish-docker.yml` to test the deployment of the OpenPredict API in a Docker container, and we publish a new image for each new version of the OpenPredict API.
 
 ## Known issues
 
