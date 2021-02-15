@@ -15,6 +15,7 @@ else:
     if not OPENPREDICT_DATA_DIR.endswith('/'):
         OPENPREDICT_DATA_DIR += '/'
 
+MISSING_IDS = set()
 
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
@@ -90,10 +91,14 @@ def normalize_id_to_translator(ids_list):
                     params={'curie': ids_list})
     # Get corresponding OMIM IDs for MONDO IDs if match
     resp = resolve_curies.json()
+    # print(resp)
     for converted_id, translator_ids in resp.items():
-        pref_id = translator_ids['id']['identifier']
-        print(converted_id + ' > ' + pref_id)
-        converted_ids_obj[converted_id] = pref_id
+        try:
+            pref_id = translator_ids['id']['identifier']
+            print(converted_id + ' > ' + pref_id)
+            converted_ids_obj[converted_id] = pref_id
+        except:
+            print('❌️ ' + converted_id + ' > ' + str(translator_ids))
 
     return converted_ids_obj
 
@@ -108,7 +113,7 @@ def convert_baseline_features_ids():
     # Prepare drug-disease dictionary
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
-    # drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+    drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
     drugs_set = set()
     diseases_set = set()
@@ -125,27 +130,36 @@ def convert_baseline_features_ids():
         diseases_set.update(df['Disease1'].tolist())
         diseases_set.update(df['Disease2'].tolist())
     
+    diseases_set = ['OMIM:{0}'.format(disease) for disease in diseases_set]
+    drugs_set = ['DRUGBANK:{0}'.format(drug) for drug in drugs_set]
+
     diseases_mappings = normalize_id_to_translator(diseases_set)
     drugs_mappings = normalize_id_to_translator(drugs_set)
 
+    print('Finished API queries')
     # Replace Ids with translator IDs in kown drug disease associations
-    drugDiseaseKnown["Drug"] = df["Drug"].apply (lambda row: drugs_mappings[row] )
-    drugDiseaseKnown["Disease"] = df["Disease"].apply (lambda row: diseases_mappings[row] )
-    df.to_csv('data/resources/known-drug-diseases.csv', index=False)
+    drugDiseaseKnown["Drug"] = drugDiseaseKnown["Drug"].apply (lambda row: map_id_to_translator(drugs_mappings, 'DRUGBANK:' + row)     )
+    drugDiseaseKnown["Disease"] = drugDiseaseKnown["Disease"].apply (lambda row: map_id_to_translator(diseases_mappings, 'OMIM:' + str(row)) )
+    drugDiseaseKnown.to_csv('openpredict/data/resources/known-drug-diseases.csv', index=False)
 
     # Replace IDs in drugs baseline features files
     for csv_file in drugfeatfiles:
         df = pd.read_csv(csv_file, delimiter=',')
-        df["Drug1"] = df["Drug1"].apply (lambda row: drugs_mappings[row] )
-        df["Drug2"] = df["Drug2"].apply (lambda row: drugs_mappings[row] )
+        df["Drug1"] = df["Drug1"].apply (lambda row: map_id_to_translator(drugs_mappings, 'DRUGBANK:' + row) )
+        df["Drug2"] = df["Drug2"].apply (lambda row: map_id_to_translator(drugs_mappings, 'DRUGBANK:' + row) )
         df.to_csv(csv_file.replace('/baseline_features/', '/translator_features/'), index=False)
 
     # Replace IDs in diseases baseline features files
     for csv_file in diseasefeatfiles:
         df = pd.read_csv(csv_file, delimiter=',')
-        df["Disease1"] = df["Disease1"].apply (lambda row: diseases_mappings[row] )
-        df["Disease2"] = df["Disease2"].apply (lambda row: diseases_mappings[row] )
+        df["Disease1"] = df["Disease1"].apply (lambda row: map_id_to_translator(diseases_mappings, 'OMIM:' + str(row)) )
+        df["Disease2"] = df["Disease2"].apply (lambda row: map_id_to_translator(diseases_mappings, 'OMIM:' + str(row)) )
         df.to_csv(csv_file.replace('/baseline_features/', '/translator_features/'), index=False)
+
+    print('❌️ Missing IDs: ')
+    for missing_id in MISSING_IDS:
+        print(missing_id)
+    
 
     # drugs_set.add(2)
     # drugs_set.update([2, 3, 4])
@@ -155,3 +169,10 @@ def convert_baseline_features_ids():
     # Convert the set/list it using normalize_id_to_translator(ids_list)
     # Update all dataframes using the created mappings
     # And store to baseline_translator
+
+def map_id_to_translator(mapping_obj, source_id):
+    try:
+        return mapping_obj[source_id]
+    except:
+        MISSING_IDS.add(source_id)
+        return source_id
