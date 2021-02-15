@@ -53,7 +53,7 @@ pytest tests/unit/test_openpredict_api.py::test_post_trapi -s
 
 ## Docker tests
 
-At each new release we run a GitHub Action workflow to test the deployment of the OpenPredict API in a Docker container, and we publish containers for each new version.
+At each new release we run a GitHub Action workflow to test the deployment of the OpenPredict API in a Docker container, and we publish a new image for each new version of the OpenPredict API.
 
 ## Known issues
 
