@@ -8,7 +8,9 @@ Use the [`docs/openpredict-examples.ipynb`](https://github.com/MaastrichtU-IDS/t
 
 ## Automated tests
 
-Install the required dependency to run tests:
+Requirements: Python 3.6+
+
+Install the required dependency if you want to run the tests locally:
 
 ```bash
 pip install pytest
@@ -40,6 +42,8 @@ pytest tests/production
  [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) 
 
 Integration tests on a local API are run automatically by the [GitHub Action workflow `.github/workflows/run-tests.yml`](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22) at each push to the `master` branch.
+
+We test the embeddings computation with a Spark local context ([setup with a GitHub Action](https://github.com/marketplace/actions/setup-apache-spark)), and without Spark context (using NumPy and pandas)
 
 You can run the tests for the different components of OpenPredict locally:
 
