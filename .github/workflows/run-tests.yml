@@ -50,7 +50,7 @@ jobs:
         SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
         coverage erase
-        pytest --cov openpredict --cov-report xml:coverage.xml tests/unit/*
+        pytest --cov openpredict --cov-report xml:coverage.xml tests/integration/*
         cat coverage.xml
         coverage combine --append || true
         coverage report
@@ -98,5 +98,5 @@ jobs:
         SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
         SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
         SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
-      run: pytest
+      run: pytest tests/integration/*
 

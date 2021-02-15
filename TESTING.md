@@ -32,7 +32,7 @@ We test for an expected number of results and a few specific results.
 To run the tests of the OpenPredict production API locally:
 
 ```bash
-pytest tests/integration
+pytest tests/production
 ```
 
 ### Unit tests
@@ -42,13 +42,13 @@ Unit tests on a local API are run automatically by a [GitHub Action workflow](ht
 Run tests for the different components of OpenPredict locally:
 
 ```bash
-pytest tests/unit
+pytest tests/integration
 ```
 
 Run a specific test in a specific file, and display `print()` lines in the output:
 
 ```bash
-pytest tests/unit/test_openpredict_api.py::test_post_trapi -s
+pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 ```
 
 ## Docker tests
