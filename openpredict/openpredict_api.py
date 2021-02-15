@@ -91,13 +91,18 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
     time_start = datetime.now()
 
     # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
-
+    concept_id = ''
     if drug_id:
-        prediction_json, source_target_predictions = get_predictions(drug_id, model_id, min_score, max_score, n_results)
+        concept_id  = drug_id
     elif disease_id:
-        prediction_json, source_target_predictions = get_predictions(disease_id, model_id, min_score, max_score, n_results)
+        concept_id = disease_id
     else:
         return ('Bad request: provide a drugid or diseaseid', 400)
+
+    try:
+        prediction_json, source_target_predictions = get_predictions(concept_id, model_id, min_score, max_score, n_results)
+    except KeyError as e:
+        return ('Not found: ID ' + concept_id, 404)
 
     # try:
     #     prediction_json = get_predictions(entity, model_id, score, n_results)

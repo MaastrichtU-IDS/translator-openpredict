@@ -149,7 +149,7 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     # train the model again
     clf, scores, hyper_params = train_model(from_model_id)
 
-     # TODO: How can we get the list of features directly from the built model?
+    # TODO: How can we get the list of features directly from the built model?
     # The baseline features are here, but not the one added 
     # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
     # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
@@ -383,7 +383,6 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
         disease_df_bc = spark_context.broadcast(disease_df)
         knownDrugDis_bc = spark_context.broadcast(knownDrugDisease)
         logging.info('Running Spark ✨')
-       
         train_df= sparkBuildFeatures(spark_context, pairs_train, classes_train, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
         test_df= sparkBuildFeatures(spark_context, pairs_test, classes_test, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
         logging.info("Finishing Spark jobs 🏁")
@@ -501,7 +500,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     time_start = datetime.now()
     baseline_features_folder = "data/baseline_features/"
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
-                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
+                    'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
     diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
     drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
     diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
