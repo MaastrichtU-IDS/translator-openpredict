@@ -16,9 +16,18 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     except:
         print('n_results retrieve failed')
         n_results = None
-
+    confidence_interval = None
     try:
         min_score = float(reasoner_query["message"]["query_options"]["min_score"])
+        # TODO: confidence_interval = {
+        #         "name": "confidence_interval",
+        #         "source": "OpenPredict",
+        #         "type": "EDAM:data_0951",
+        #         "value": [
+        #           7.374817270079623,
+        #           7.872219873513473
+        #         ]
+        #       },
     except:
         print('min score retrieve failed')
         min_score=None
@@ -93,14 +102,34 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
 
             # TODO: make it dynamic?
             edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
-            provided_by = 'Translator OpenPredict model ' + model_id
+            source = 'OpenPredict'
+            relation = 'RO:0002434'
+            # relation = 'OBOREL:0002606'
+            association_score = str(association['score'])
+            print('association_score')
+            print(association_score)
+            print(association)
 
             edge_dict = {
-                'association_type': edge_association_type,
+                # TODO: not required anymore? 'association_type': edge_association_type,
                 'predicate': query_plan[edge_qg_id]['predicate'],
-                'has_confidence_level': association['score'],
-                "provided_by": provided_by,
-                # "relation": "OBOREL:0002606",
+                'relation': relation,
+                'attributes': [
+                    {
+                        "name": "model_id",
+                        "source": source,
+                        "type": "EDAM:data_1048",
+                        "value": model_id
+                    },
+                    {
+                        # TODO: use has_confidence_level?
+                        "name": "score",
+                        "source": source,
+                        "type": "EDAM:data_0951",
+                        "value": association_score
+                        # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_0951&viewMode=All&siblings=false
+                    },
+                ]
             }
 
             # Map the source/target of query_graph to source/target of association
@@ -142,7 +171,7 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
     for node_id, properties in node_dict.items():
         node_to_add = {
-            'category': properties['type'],
+            'category': properties['type'].capitalize() ,
             }
         if 'label' in properties and properties['label']:
             node_to_add['name'] = properties['label']

@@ -18,8 +18,10 @@ def test_get_predict():
     assert get_predictions['count'] == 42
     assert get_predictions['hits'][0]['id'] == 'OMIM:246300'
 
+# TODO: add tests using TRAPI validation API 
 def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
+    # TODO: store TRAPI tests queries as .json files in a folder
     trapi_query = {
         "message": {
             # "n_results": 10,
@@ -53,3 +55,28 @@ def test_post_trapi():
     edges = trapi_results['knowledge_graph']['edges'].items()
     assert len(edges) == 300
     # assert edges[0]['object'] == 'OMIM:246300'
+
+
+# TODO: Check for this edge structure:
+#   "knowledge_graph": {
+#     "edges": {
+#       "e0": {
+#         "attributes": [
+#           {
+#             "name": "model_id",
+#             "source": "OpenPredict",
+#             "type": "EDAM:data_1048",
+#             "value": "openpredict-baseline-omim-drugbank"
+#           },
+#           {
+#             "name": "score",
+#             "source": "OpenPredict",
+#             "type": "EDAM:data_0951",
+#             "value": "0.8267106697312154"
+#           }
+#         ],
+#         "object": "DRUGBANK:DB00394",
+#         "predicate": "biolink:treated_by",
+#         "relation": "RO:0002434",
+#         "subject": "OMIM:246300"
+#       },
