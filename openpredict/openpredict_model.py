@@ -145,16 +145,20 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     elif types == "Diseases":
         disease_df= pd.concat([disease_df, df_sim_m],  axis=1)  
 
-    add_feature_metadata(emb_name, description, types)
-    # train the model again
-    clf, scores, hyper_params = train_model(from_model_id)
+    added_feature_uri = add_feature_metadata(emb_name, description, types)
+    # train the model 
+    clf, scores, hyper_params, features_df = train_model(from_model_id)
 
     # TODO: How can we get the list of features directly from the built model?
     # The baseline features are here, but not the one added 
     # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
     # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
     # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
-    model_features = retrieve_features('All').keys()
+    if from_model_id == 'scratch':
+        model_features = retrieve_features('All', 'openpredict-baseline-omim-drugbank').keys()
+    else:
+        model_features = retrieve_features('All', from_model_id).keys()
+    model_features.append(added_feature_uri)
 
     run_id = add_run_metadata(scores, model_features, hyper_params)
 
@@ -487,7 +491,7 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
         feature_df = createFeatureDF(pairs, classes, pairs[classes==1], drug_df, disease_df)
     return feature_df
 
-
+# def train_model(from_model_id='openpredict-translator-baseline'):
 def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     """The main function to run the drug-disease similarities pipeline, 
     and train the drug-disease classifier.
@@ -498,22 +502,28 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     :return: Classifier of predicted similarities and scores
     """
     time_start = datetime.now()
-    baseline_features_folder = "data/baseline_features/"
-    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
-                    'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
-    diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
-    drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
-    diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
-
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
-    drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
-    drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+    # drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
+    # drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
+    # drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+    # TODO: Translator IDs version (MONDO & CHEBI)
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/known-drug-diseases.csv'), delimiter=',') 
+
     # print(drugDiseaseKnown.head())
 
     if from_model_id == 'scratch':
-        print('Build the model from scratch')
+        print('🏗 Build the model from scratch')
         # Start from scratch (merge feature matrixes)
+        # baseline_features_folder = "data/baseline_features/"
+        # TODO: Translator IDs version (MONDO & CHEBI)
+        baseline_features_folder = "data/translator_features/"
+
+        drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
+                        'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
+        diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
+        drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
+        diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
+
         drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
         # dump((drug_df, disease_df), 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib')
     else:
@@ -582,7 +592,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
-    return clf, scores, hyper_params
+    return clf, scores, hyper_params, (drug_df, disease_df)
 
 
 def query_omim_drugbank_classifier(input_curie, model_id):

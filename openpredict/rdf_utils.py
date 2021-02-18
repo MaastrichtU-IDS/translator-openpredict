@@ -164,10 +164,10 @@ def add_feature_metadata(id, description, type):
     g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
 
     insert_graph_in_sparql_endpoint(g)
-    return g
+    return str(feature_uri)
 
 
-def add_run_metadata(scores, model_features, hyper_params):
+def add_run_metadata(scores, model_features, hyper_params, run_id=None):
     """Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
     https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
 
@@ -177,8 +177,9 @@ def add_run_metadata(scores, model_features, hyper_params):
     :return: Run id
     """
     g = Graph()
-    # Generate random UUID for the run ID
-    run_id = str(uuid.uuid1())
+    if not run_id:
+        # Generate random UUID for the run ID
+        run_id = str(uuid.uuid1())
 
     run_uri = URIRef(OPENPREDICT_NAMESPACE + 'run/' + run_id)
     run_prop_prefix = OPENPREDICT_NAMESPACE + run_id + "/"
@@ -219,7 +220,8 @@ def add_run_metadata(scores, model_features, hyper_params):
     
     # TODO: improve how we retrieve features
     for feature in model_features:
-        feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature)
+        feature_uri = URIRef(feature)
+        # feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature)
         # g.add((run_uri, OPENPREDICT['has_features'], feature_uri))
         g.add((run_uri, MLS['hasInput'], feature_uri))
 
@@ -243,35 +245,65 @@ def add_run_metadata(scores, model_features, hyper_params):
     return run_id
 
 
-def retrieve_features(type='All'):
+def retrieve_features(type='All', run_id=None):
     """Get features in the ML model
     
     :param type: type of the feature (All, Both, Drug, Disease)
     :return: JSON with features
     """
-    type_filter = ''
-    if (type != "All"):
-        type_filter = 'FILTER(?embeddingType = "' + type + '")'
+    if run_id:
+        sparql_feature_for_run = """PREFIX dct: <http://purl.org/dc/terms/>
+            PREFIX mls: <http://www.w3.org/ns/mls#>
+            PREFIX prov: <http://www.w3.org/ns/prov#>
+            PREFIX openpredict: <https://w3id.org/openpredict/>
+            PREFIX dc: <http://purl.org/dc/elements/1.1/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            SELECT DISTINCT ?feature ?featureId ?featureDescription ?embeddingType
+            WHERE {
+                ?run a mls:Run ;
+                    dc:identifier \"""" + run_id + """\" ;
+                    mls:hasInput ?feature .
+                ?feature dc:identifier ?featureId ;
+                    <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+                    dc:description ?featureDescription .
+            }"""
+        results = query_sparql_endpoint(sparql_feature_for_run, parameters =['feature','featureId','featureDescription', 'embeddingType'])
+        print (results)
 
-    query = """SELECT DISTINCT ?id ?description ?embeddingType
-        WHERE {{
-            ?feature a <http://www.w3.org/ns/mls#Feature> ;
-                <http://purl.org/dc/elements/1.1/identifier> ?id ;
-                <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
-                <http://purl.org/dc/elements/1.1/description> ?description .
-            {type_filter}
-        }}
-        """.format(type_filter=type_filter)
+        features_json = {}
+        for result in results:
+            features_json[result['feature']['value']] = {
+                "id": result['featureId']['value'],
+                "description": result['featureDescription']['value'],
+                "type": result['embeddingType']['value']
+            }
+        
+    else:
+        type_filter = ''
+        if (type != "All"):
+            type_filter = 'FILTER(?embeddingType = "' + type + '")'
 
-    results = query_sparql_endpoint(query, parameters =['id','description','embeddingType'])
-    print (results)
+        query = """SELECT DISTINCT ?id ?description ?embeddingType
+            WHERE {{
+                ?feature a <http://www.w3.org/ns/mls#Feature> ;
+                    <http://purl.org/dc/elements/1.1/identifier> ?id ;
+                    <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+                    <http://purl.org/dc/elements/1.1/description> ?description .
+                {type_filter}
+            }}
+            """.format(type_filter=type_filter)
 
-    features_json = {}
-    for result in results:
-        features_json[result['id']['value']] = {
-            "description": result['description']['value'],
-            "type": result['embeddingType']['value']
-        }
+        results = query_sparql_endpoint(query, parameters =['id','description','embeddingType'])
+        print (results)
+
+        features_json = {}
+        for result in results:
+            features_json[result['feature']['value']] = {
+                "id": result['id']['value'],
+                "description": result['description']['value'],
+                "type": result['embeddingType']['value']
+            }
     return features_json
 
 

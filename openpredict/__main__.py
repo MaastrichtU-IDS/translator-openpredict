@@ -3,7 +3,7 @@ import logging
 import sys
 
 from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.openpredict_model import train_model
+from openpredict.openpredict_model import train_model as train_openpredict_model
 from openpredict.rdf_utils import add_run_metadata, retrieve_features
 
 @click.command()
@@ -21,8 +21,8 @@ def start_api(port, debug, start_spark):
 def train_model(model):
     print ('Using model: ', model)
     model_features = retrieve_features('All').keys()
-    clf, scores, hyper_params = train_model(model)
-    add_run_metadata(scores, model_features, hyper_params)
+    clf, scores, hyper_params, features_df = train_openpredict_model(model)
+    # add_run_metadata(scores, model_features, hyper_params)
 
 
 @click.group()

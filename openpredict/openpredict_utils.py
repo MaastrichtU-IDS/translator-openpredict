@@ -9,7 +9,7 @@ from openpredict.rdf_utils import init_triplestore
 global OPENPREDICT_DATA_DIR
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
 if not OPENPREDICT_DATA_DIR:
-    # Data folder in current dir if not provided via environment variable
+    # Use data folder in current dir if not provided via environment variable
     OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
 else:
     if not OPENPREDICT_DATA_DIR.endswith('/'):

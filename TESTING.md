@@ -6,9 +6,17 @@ Testing plan for the OpenPredict API published at https://openpredict.semanticsc
 
 Use the [`docs/openpredict-examples.ipynb`](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb) Jupyter notebook to manually try queries against the [OpenPredict API](https://openpredict.semanticscience.org).
 
-## Automated tests
+## Automated testing plan
 
-Requirements: Python 3.6+
+Testing of the Translator OpenPredict API is separated in 3 parts:
+
+- **Integration**: the API is tested using integration tests, on a local API started for the tests, at every push to the `master` branch. This allows us to prevent deploying the OpenPredict API if the changes added broke some of its features
+- **Production**: the API hosted in production is tested by a workflow everyday at 1:00 GMT+1, so that we are quickly notified if the production API is having an issue
+- **Deployment**: a workflow tests and publish the OpenPredict API Docker image build process to insure the API can be redeployed easily
+
+When one of those 3 workflows fails we take action to fix the source of the problem.
+
+Requirementsm to run the tests: Python 3.6+
 
 Install the required dependency if you want to run the tests locally:
 
