@@ -1,6 +1,6 @@
 from openpredict.openpredict_model import get_predictions
 
-def typed_results_to_reasonerapi(reasoner_query, model_id):
+def typed_results_to_reasonerapi(reasoner_query):
     """Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
@@ -10,6 +10,8 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     """
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
+    model_id = 'openpredict-baseline-omim-drugbank'
+    
     if 'query_options' in reasoner_query.keys():
         query_options = reasoner_query["query_options"]
         try:
@@ -18,6 +20,10 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
             print('n_results retrieve failed')
             n_results = None
         confidence_interval = None
+        try:
+            model_id = str(query_options["model_id"])
+        except:
+            print("Use default model for predictions: " + model_id)
         try:
             min_score = float(query_options["min_score"])
             # TODO: confidence_interval = {

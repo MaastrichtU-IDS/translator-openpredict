@@ -152,14 +152,13 @@ def post_reasoner_predict(request_body):
     :return: Predictions as a ReasonerStdAPI Message
     """
     query_graph = request_body["message"]["query_graph"]
-    model_id = 'openpredict-baseline-omim-drugbank'
     print(query_graph)
     if len(query_graph["edges"]) == 0:
         return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
     if len(query_graph["edges"]) > 1:
         return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-    reasonerapi_response = typed_results_to_reasonerapi(request_body, model_id)
+    reasonerapi_response = typed_results_to_reasonerapi(request_body)
 
     # TODO: populate edges/nodes with association predictions    
     #  Edge: {

@@ -367,6 +367,25 @@ paths:
 
 components:
   schemas:
+    QueryOptions:
+      description: Additional query options that apply to OpenPredict
+      properties:
+        min_score:
+          description: 'The minimum score of predictions to be returned'
+          example: 0.99
+          type: number
+        max_score:
+          description: 'The minimum score of predictions to be returned'
+          example: 0.99
+          type: number
+        model_id:
+          description: The OpenPredict model to query
+          example: 3
+          type: integer
+        n_results:
+          description: The maximum number of results to be returned.
+          example: 2
+          type: integer
     Query:
       example:
         query_options:
