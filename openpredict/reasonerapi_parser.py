@@ -10,33 +10,35 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
     """
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
+    if 'query_options' in reasoner_query.keys():
+        query_options = reasoner_query["query_options"]
+        try:
+            n_results = query_options["n_results"]
+        except:
+            print('n_results retrieve failed')
+            n_results = None
+        confidence_interval = None
+        try:
+            min_score = float(query_options["min_score"])
+            # TODO: confidence_interval = {
+            #         "name": "confidence_interval",
+            #         "source": "OpenPredict",
+            #         "type": "EDAM:data_0951",
+            #         "value": [
+            #           7.374817270079623,
+            #           7.872219873513473
+            #         ]
+            #       },
+        except:
+            print('min score retrieve failed')
+            min_score=None
+            
+        try:
+            max_score = float(query_options["max_score"])
+        except: 
+            print('max score retrieve failed')
+            max_score=None
 
-    try:
-        n_results = reasoner_query["message"]["n_results"]
-    except:
-        print('n_results retrieve failed')
-        n_results = None
-    confidence_interval = None
-    try:
-        min_score = float(reasoner_query["message"]["query_options"]["min_score"])
-        # TODO: confidence_interval = {
-        #         "name": "confidence_interval",
-        #         "source": "OpenPredict",
-        #         "type": "EDAM:data_0951",
-        #         "value": [
-        #           7.374817270079623,
-        #           7.872219873513473
-        #         ]
-        #       },
-    except:
-        print('min score retrieve failed')
-        min_score=None
-        
-    try:
-        max_score = float(reasoner_query["message"]["query_options"]["max_score"])
-    except: 
-        print('max score retrieve failed')
-        max_score=None
     query_plan = {}
 
     # Parse the query_graph to build the query plan
