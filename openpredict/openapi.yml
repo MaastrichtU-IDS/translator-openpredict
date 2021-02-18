@@ -326,6 +326,45 @@ paths:
               schema:
                 type: string
       x-swagger-router-controller: swagger_server.controllers.query_controller
+      # TRAPI x-bte annotations for COHD
+      # x-bte-kgs-operations:
+      # - inputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Disease
+      #   outputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Disease
+      #   predicate: biolink:correlated_with
+      #   source: Columbia Open Health Data KP
+      #   supportBatch: false
+      # - inputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Disease
+      #   outputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Drug
+      #   predicate: biolink:correlated_with
+      #   source: Columbia Open Health Data KP
+      #   supportBatch: false
+      # - inputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Drug
+      #   outputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Disease
+      #   predicate: biolink:correlated_with
+      #   source: Columbia Open Health Data KP
+      #   supportBatch: false
+      # - inputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Drug
+      #   outputs:
+      #   - id: biolink:OMOP
+      #     semantic: biolink:Drug
+      #   predicate: biolink:correlated_with
+      #   source: Columbia Open Health Data KP
+      #   supportBatch: false
+
 components:
   schemas:
     Query:

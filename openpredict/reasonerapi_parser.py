@@ -110,6 +110,7 @@ def typed_results_to_reasonerapi(reasoner_query, model_id):
             print(association_score)
             print(association)
 
+            # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
             edge_dict = {
                 # TODO: not required anymore? 'association_type': edge_association_type,
                 'predicate': query_plan[edge_qg_id]['predicate'],

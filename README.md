@@ -167,6 +167,31 @@ See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query exa
 }
 ```
 
+The results provides the following attributes for the `knowledge_graph` edges:
+
+```python
+     "e0": {
+        "attributes": [
+          {
+            "name": "model_id",
+            "source": "OpenPredict",
+            "type": "EDAM:data_1048",
+            "value": "openpredict-baseline-omim-drugbank"
+          },
+          {
+            "name": "score",
+            "source": "OpenPredict",
+            "type": "EDAM:data_0951",
+            "value": "0.8267106697312154"
+          }
+        ],
+        "object": "DRUGBANK:DB00394",
+        "predicate": "biolink:treated_by",
+        "relation": "RO:0002434",
+        "subject": "OMIM:246300"
+      },
+```
+
 ### Predicates operation :world_map:
 
 The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
