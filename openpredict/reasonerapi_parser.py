@@ -10,41 +10,20 @@ def typed_results_to_reasonerapi(reasoner_query):
     """
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
+    # Default query_options
     model_id = 'openpredict-baseline-omim-drugbank'
-    
+    n_results = None
+    min_score = None
+    max_score = None
     if 'query_options' in reasoner_query.keys():
         query_options = reasoner_query["query_options"]
-        try:
-            n_results = query_options["n_results"]
-        except:
-            print('n_results retrieve failed')
-            n_results = None
-        confidence_interval = None
-        try:
-            model_id = str(query_options["model_id"])
-        except:
-            print("Use default model for predictions: " + model_id)
-        try:
-            min_score = float(query_options["min_score"])
-            # TODO: confidence_interval = {
-            #         "name": "confidence_interval",
-            #         "source": "OpenPredict",
-            #         "type": "EDAM:data_0951",
-            #         "value": [
-            #           7.374817270079623,
-            #           7.872219873513473
-            #         ]
-            #       },
-        except:
-            print('min score retrieve failed')
-            min_score=None
+        if 'n_results' in reasoner_query["query_options"]:
+            n_results = int(reasoner_query["query_options"]["n_results"])
+        if 'min_score' in reasoner_query["query_options"]:
+            min_score = float(reasoner_query["query_options"]["min_score"])
+        if 'max_score' in reasoner_query["query_options"]:
+            max_score = float(reasoner_query["query_options"]["max_score"])
             
-        try:
-            max_score = float(query_options["max_score"])
-        except: 
-            print('max score retrieve failed')
-            max_score=None
-
     query_plan = {}
 
     # Parse the query_graph to build the query plan
