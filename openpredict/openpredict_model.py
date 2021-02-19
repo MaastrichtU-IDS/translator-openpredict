@@ -502,33 +502,33 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     :return: Classifier of predicted similarities and scores
     """
     time_start = datetime.now()
+
     # Prepare drug-disease dictionary
     # drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
     # drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     # drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # TODO: Translator IDs version (MONDO & CHEBI)
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/known-drug-diseases.csv'), delimiter=',') 
+    # drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/known-drug-diseases.csv'), delimiter=',') 
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'), delimiter=',') 
 
     # print(drugDiseaseKnown.head())
 
     if from_model_id == 'scratch':
         print('🏗 Build the model from scratch')
         # Start from scratch (merge feature matrixes)
-        # baseline_features_folder = "data/baseline_features/"
-        # TODO: Translator IDs version (MONDO & CHEBI)
         baseline_features_folder = "data/translator_features/"
-
         drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
                         'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
         diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
         drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
         diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
-
+        # baseline_features_folder = "data/baseline_features/"
+        # TODO: Translator IDs version (MONDO & CHEBI)
         drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
         # dump((drug_df, disease_df), 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib')
     else:
         print ("📥 Loading the similarity tensor from " + get_openpredict_dir('features/' + from_model_id + '.joblib'))
-        (drug_df, disease_df)= load(get_openpredict_dir('features/' + from_model_id + '.joblib'))
+        (drug_df, disease_df) = load(get_openpredict_dir('features/' + from_model_id + '.joblib'))
 
         
     print ("Drug Features ",drug_df.columns.levels[0])

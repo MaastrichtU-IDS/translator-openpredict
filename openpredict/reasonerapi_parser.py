@@ -23,13 +23,11 @@ def typed_results_to_reasonerapi(reasoner_query):
             min_score = float(reasoner_query["query_options"]["min_score"])
         if 'max_score' in reasoner_query["query_options"]:
             max_score = float(reasoner_query["query_options"]["max_score"])
-            
+
     query_plan = {}
 
     # Parse the query_graph to build the query plan
-    # TODO: iterate object instead of array
     for edge_id, qg_edge in query_graph["edges"].items():
-    # for qg_edge in query_graph["edges"]:
         # Build dict with all infos of associations to predict 
         query_plan[edge_id] = {
             'predicate': qg_edge['predicate'],
