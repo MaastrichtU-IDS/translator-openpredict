@@ -103,6 +103,7 @@ def normalize_id_to_translator(ids_list):
     return converted_ids_obj
 
 def convert_baseline_features_ids():
+    """Convert IDs to use Translator preferred IDs when building the baseline model from scratch"""
     baseline_features_folder = "data/baseline_features/"
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']

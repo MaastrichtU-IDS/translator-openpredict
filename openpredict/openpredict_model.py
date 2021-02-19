@@ -504,12 +504,11 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     time_start = datetime.now()
 
     # Prepare drug-disease dictionary
-    # drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
-    # drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
-    # drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
+    drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
+    drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # TODO: Translator IDs version (MONDO & CHEBI)
     # drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/known-drug-diseases.csv'), delimiter=',') 
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'), delimiter=',') 
 
     # print(drugDiseaseKnown.head())
 
