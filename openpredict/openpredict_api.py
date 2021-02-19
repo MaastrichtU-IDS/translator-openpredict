@@ -75,10 +75,13 @@ def post_embedding(types, emb_name, description, model_id):
     if True:
         embedding_file = connexion.request.files['embedding_file']
         print (emb_name, types)
-        run_id = addEmbedding(embedding_file, emb_name, types, description, model_id)
+        run_id, scores = addEmbedding(embedding_file, emb_name, types, description, model_id)
         print ('Embeddings uploaded')
         # train_model(False)
-        return { 'Embeddings added for run ' + run_id: 200 }
+        return { 
+            'status': 200,
+            'message': 'Embeddings added for run ' + run_id + ', trained model has scores ' + str(scores)
+        }
     else:
         return { 'Forbidden': 403 }
 

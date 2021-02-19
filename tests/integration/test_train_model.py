@@ -2,7 +2,9 @@ import pytest
 import pandas as pd
 import numpy as np
 import pathlib
+from os import path
 from openpredict.openpredict_model import train_model, geometricMean, addEmbedding
+from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels
 
 def test_train_model():
     """Test to train from baseline model to get drug-disease similarities (drugbank-omim)"""
@@ -20,8 +22,9 @@ def test_add_embeddings():
     embeddings_filepath = str(pathlib.Path(__file__).parent.joinpath("../data/neurodkg_embedding.json"))
     
     with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
-        run_id = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
+        run_id, scores = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
         print(run_id)
+        assert path.exists(get_openpredict_dir('models/' + run_id + '.joblib'))
         assert len(run_id) > 10
 
 def test_calculate_combined():

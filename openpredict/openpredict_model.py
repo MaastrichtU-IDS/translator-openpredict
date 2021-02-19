@@ -172,7 +172,7 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
 
     #df_sim_m= df_sim.stack().reset_index(level=[0,1])
     #df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
-    return run_id 
+    return run_id, scores
 
 
 def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):

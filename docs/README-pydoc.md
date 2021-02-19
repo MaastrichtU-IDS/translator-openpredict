@@ -368,7 +368,7 @@ Convert dict to matrix
 #### addEmbedding
 
 ```python
-addEmbedding(embedding_file, emb_name, types, description, from_model_id)
+run_id, scores = addEmbedding(embedding_file, emb_name, types, description, from_model_id)
 ```
 
 Add embedding to the drug similarity matrix dataframe
