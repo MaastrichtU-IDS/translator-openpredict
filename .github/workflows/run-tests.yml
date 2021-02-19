@@ -98,5 +98,5 @@ jobs:
         SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
         SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
         SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
-      run: pytest tests/integration/* -s
+      run: pytest tests/integration/*
 

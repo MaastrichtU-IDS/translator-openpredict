@@ -23,9 +23,14 @@ def test_add_embeddings():
     
     with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
         run_id, scores = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
-        print(run_id)
         assert path.exists(get_openpredict_dir('models/' + run_id + '.joblib'))
         assert len(run_id) > 10
+        assert 0.80 < scores['precision'] < 0.95
+        assert 0.60 < scores['recall'] < 0.85
+        assert 0.80 < scores['accuracy'] < 0.95
+        assert 0.85 < scores['roc_auc'] < 0.95
+        assert 0.70 < scores['f1'] < 0.85
+        assert 0.75 < scores['average_precision'] < 0.95
 
 def test_calculate_combined():
   """Test geometric mean, a measure for drug-disease similarities (drugbank-omim)"""
