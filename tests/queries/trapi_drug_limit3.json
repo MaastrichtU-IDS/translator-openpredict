@@ -1,0 +1,25 @@
+{
+    "message": {
+        "query_graph": {
+            "edges": {
+                "e01": {
+                    "subject": "n0",
+                    "object": "n1",
+                    "predicate": "biolink:treated_by"
+                }
+            },
+            "nodes": {
+                "n0": {
+                    "curie": "DRUGBANK:DB00394",
+                    "category": "biolink:Drug"
+                },
+                "n1": {
+                    "category": "biolink:Disease"
+                }
+            }
+        }
+    },
+    "query_options": {
+        "n_results": 3
+    }
+}

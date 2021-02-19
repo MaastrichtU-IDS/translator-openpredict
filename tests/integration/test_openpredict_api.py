@@ -1,4 +1,5 @@
 import pytest
+import pkg_resources
 import connexion
 import json
 from openpredict.openpredict_utils import init_openpredict_dir
@@ -23,38 +24,25 @@ def test_get_predict(client):
 def test_post_trapi(client):
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     url = '/query'
-    reasoner_query = {
-        "message": {
-            # "n_results": 10,
-            "query_graph": {
-                "edges": {
-                    "e01": {
-                        "subject": "n0",
-                        "object": "n1",
-                        "predicate": "biolink:treated_by"
-                    }
-                },
-                "nodes": {
-                    "n0": {
-                        "curie": "DRUGBANK:DB00394",
-                        "category": "biolink:Drug"
-                    },
-                    "n1": {
-                        "category": "biolink:Disease"
-                    }
-                }
-            }
-            # "query_options": {
-            # "min_score": 0.5
-            # }
-        }
-    }
-    response = client.post(url, 
-                            data=json.dumps(reasoner_query), 
-                            content_type='application/json')
-    edges = response.json['knowledge_graph']['edges'].items()
-    assert len(edges) == 300
-    # assert edges[0]['object'] == 'OMIM:246300'
+    tests_list = [
+        {'limit': 3, 'class': 'drug'},
+        {'limit': 'no', 'class': 'drug'},
+        {'limit': 3, 'class': 'disease'},
+        {'limit': 'no', 'class': 'disease'},
+    ]
+    for trapi_test in tests_list:
+        trapi_filename = 'trapi_' + trapi_test['class'] + '_limit' + str(trapi_test['limit']) + '.json'
+        with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
+            reasoner_query = f.read()
+            response = client.post(url, 
+                                    data=reasoner_query, 
+                                    content_type='application/json')
+            edges = response.json['knowledge_graph']['edges'].items()
+            if trapi_test['limit'] == 'no':
+                assert len(edges) >= 300
+            else:
+                assert len(edges) == trapi_test['limit']
+
 
 # def test_post_embeddings():
 #     """Test post embeddings to add embeddings to the model and rebuild it"""

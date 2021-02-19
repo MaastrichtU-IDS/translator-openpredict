@@ -95,8 +95,8 @@ def query_sparql_endpoint(query, parameters= []):
         sparql.setReturnFormat(JSON)
         sparql.setQuery(query)
         results = sparql.query().convert()
-        print('SPARQLWrapper Results:')
-        print(results["results"]["bindings"])
+        # print('SPARQLWrapper Results:')
+        # print(results["results"]["bindings"])
         return results["results"]["bindings"]
     else:
         ## Trying to SPARQL query a RDF file directly, to avoid using triplestores in dev (not working)
@@ -110,15 +110,11 @@ def query_sparql_endpoint(query, parameters= []):
         qres = g.query(query)
         results = []
         for row in qres:
-            print('row')
-            print(row)
             # TODO: row.asdict()
             result={}
             for i,p in enumerate(parameters):
-                print('variable')
                 result[p] ={}
                 result[p]['value'] = str(row[p])
-                #print(variable)
             results.append(result)
             # How can we iterate over the variable defined in the SPARQL query?
             # It only returns the results, without the variables list

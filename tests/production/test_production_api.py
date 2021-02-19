@@ -1,5 +1,6 @@
 import pytest
 import json
+import pkg_resources
 import requests
 
 PROD_API_URL = 'https://openpredict.semanticscience.org'
@@ -18,43 +19,29 @@ def test_get_predict():
     assert get_predictions['count'] == 42
     assert get_predictions['hits'][0]['id'] == 'OMIM:246300'
 
-# TODO: add tests using TRAPI validation API 
+# TODO: add tests using a TRAPI validation API if possible?
 def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
-    # TODO: store TRAPI tests queries as .json files in a folder
-    trapi_query = {
-        "message": {
-            # "n_results": 10,
-            "query_graph": {
-                "edges": {
-                    "e01": {
-                        "subject": "n0",
-                        "object": "n1",
-                        "predicate": "biolink:treated_by"
-                    }
-                },
-                "nodes": {
-                    "n0": {
-                        "curie": "DRUGBANK:DB00394",
-                        "category": "biolink:Drug"
-                    },
-                    "n1": {
-                        "category": "biolink:Disease"
-                    }
-                }
-            }
-            # "query_options": {
-            # "min_score": 0.5
-            # }
-        }
-    }
     headers = {'Content-type': 'application/json'}
-    trapi_results = requests.post(PROD_API_URL + '/query',
+    tests_list = [
+        {'limit': 3, 'class': 'drug'},
+        {'limit': 'no', 'class': 'drug'},
+        {'limit': 3, 'class': 'disease'},
+        {'limit': 'no', 'class': 'disease'},
+    ]
+    for trapi_test in tests_list:
+        trapi_filename = 'trapi_' + trapi_test['class'] + '_limit' + str(trapi_test['limit']) + '.json'
+        with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
+            trapi_query = f.read()
+            trapi_results = requests.post(PROD_API_URL + '/query',
                         data=json.dumps(trapi_query), headers=headers).json()
+            edges = trapi_results['knowledge_graph']['edges'].items()
 
-    edges = trapi_results['knowledge_graph']['edges'].items()
-    assert len(edges) == 300
-    # assert edges[0]['object'] == 'OMIM:246300'
+            if trapi_test['limit'] == 'no':
+                assert len(edges) >= 300
+            else:
+                assert len(edges) == trapi_test['limit']
+
 
 
 # TODO: Check for this edge structure:
