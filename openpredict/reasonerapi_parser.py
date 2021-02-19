@@ -86,7 +86,7 @@ def typed_results_to_reasonerapi(reasoner_query):
                 node_dict[association['target']['id']]['label'] = association['target']['label']
 
             # TODO: make it dynamic?
-            edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
+            # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
             source = 'OpenPredict'
             relation = 'RO:0002434'
             # relation = 'OBOREL:0002606'

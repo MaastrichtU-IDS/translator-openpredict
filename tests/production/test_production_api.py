@@ -34,7 +34,7 @@ def test_post_trapi():
         with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
             trapi_query = f.read()
             trapi_results = requests.post(PROD_API_URL + '/query',
-                        data=json.dumps(trapi_query), headers=headers).json()
+                        data=trapi_query, headers=headers).json()
             edges = trapi_results['knowledge_graph']['edges'].items()
 
             if trapi_test['limit'] == 'no':
