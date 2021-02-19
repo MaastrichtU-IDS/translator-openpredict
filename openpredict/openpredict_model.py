@@ -154,10 +154,11 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
     # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
     # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
+    
     if from_model_id == 'scratch':
-        model_features = retrieve_features('All', 'openpredict-baseline-omim-drugbank').keys()
+        model_features = list(retrieve_features('All', 'openpredict-baseline-omim-drugbank').keys())
     else:
-        model_features = retrieve_features('All', from_model_id).keys()
+        model_features = list(retrieve_features('All', from_model_id).keys())
     model_features.append(added_feature_uri)
 
     run_id = add_run_metadata(scores, model_features, hyper_params)
