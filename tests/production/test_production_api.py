@@ -58,7 +58,7 @@ def test_post_trapi():
 #           {
 #             "name": "score",
 #             "source": "OpenPredict",
-#             "type": "EDAM:data_0951",
+#             "type": "EDAM:data_1772",
 #             "value": "0.8267106697312154"
 #           }
 #         ],
