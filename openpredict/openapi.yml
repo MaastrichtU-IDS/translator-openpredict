@@ -19,8 +19,9 @@ info:
   termsOfService: "{{url}}"
   x-translator:
     component: KP
-    team:
-      - Clinical Data Provider
+    team: Clinical Data Provider
+  x-trapi: 
+    version: "1.0.0"
 externalDocs:
   description: Documentation for the NCATS Biomedical Translator ReasonerAPI
   url: 'https://github.com/NCATSTranslator/ReasonerAPI'
@@ -43,8 +44,10 @@ tags:
     #   url: 'http://reasonerhost.ncats.io/overview.html#query'
   - name: translator
     description: Get relationships supported by this API
-  - name: reasoner
+  - name: trapi
     description: Query the models using the Reasoner API
+  - name: biothing
+    description: Query OpenPredict with operations complying with BioThings APIs
 paths:
   /features:
     get:
@@ -157,7 +160,7 @@ paths:
         Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
         This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations."
       tags:
-      - openpredict
+      - biothings
       parameters:
       - name: drug_id
         in: query
@@ -253,7 +256,7 @@ paths:
       # operationId: api.get_predicates
       operationId: openpredict.openpredict_api.get_predicates
       tags:
-        - predicates
+        - trapi
       summary: Get supported relationships by source and target
       responses:
         '200':
@@ -281,7 +284,7 @@ paths:
       # operationId: api.post_reasoner_query
       operationId: openpredict.openpredict_api.post_reasoner_predict
       tags:
-        - query
+        - trapi
       summary: Query reasoner via one of several inputs
       description: 'Send a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query 
         to request the predicted targets given: a source node, and the relation to predict. 
