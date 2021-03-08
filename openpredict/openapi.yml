@@ -19,7 +19,8 @@ info:
   termsOfService: "{{url}}"
   x-translator:
     component: KP
-    team: Clinical Data Provider
+    team: 
+     - Clinical Data Provider
   x-trapi: 
     version: "1.0.0"
 externalDocs:
