@@ -46,8 +46,6 @@ tags:
     description: Get relationships supported by this API
   - name: trapi
     description: Query the models using the Reasoner API
-  - name: biothing
-    description: Query OpenPredict with operations complying with BioThings APIs
 paths:
   /features:
     get:
