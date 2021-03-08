@@ -254,7 +254,7 @@ paths:
       # operationId: api.get_predicates
       operationId: openpredict.openpredict_api.get_predicates
       tags:
-        - trapi
+        - translator
       summary: Get supported relationships by source and target
       responses:
         '200':
