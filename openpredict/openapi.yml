@@ -398,10 +398,11 @@ components:
           query_graph:
             nodes:
               n0: 
-                category: "biolink:Drug"
-                id: DRUGBANK:DB00394
-              n1:
                 category: "biolink:Disease"
+                id: OMIM:246300
+              n1:
+                category: "biolink:Drug"
+                # id: DRUGBANK:DB00394
             edges:
               e01:
                 subject: n0

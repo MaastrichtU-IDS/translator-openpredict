@@ -160,4 +160,4 @@ def typed_results_to_reasonerapi(reasoner_query):
             node_to_add['name'] = properties['label']
 
         knowledge_graph['nodes'][node_id] = node_to_add
-    return {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}
+    return {"message": {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}}

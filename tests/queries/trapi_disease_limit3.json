@@ -1,25 +1,23 @@
-{
+
+curl -X POST "https://ars.transltr.io/ars/api/submit" -H  '{
     "message": {
         "query_graph": {
             "edges": {
                 "e01": {
                     "subject": "n0",
-                    "object": "n1",
-                    "predicate": "biolink:treats"
+                    "predicate": "biolink:treats",
+                    "object": "n1"
                 }
             },
             "nodes": {
                 "n0": {
-                    "category": "biolink:Drug"
+                    "category": "biolink:Drug",
+                    "id": "DRUGBANK:DB00394"
                 },
                 "n1": {
-                    "category": "biolink:Disease",
-                    "id": "OMIM:246300"
+                    "category": "biolink:Disease"
                 }
             }
         }
-    },
-    "query_options": {
-        "n_results": 3
     }
-}
+}'
