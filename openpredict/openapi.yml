@@ -399,7 +399,7 @@ components:
             nodes:
               n0: 
                 category: "biolink:Drug"
-                curie: DRUGBANK:DB00394
+                id: DRUGBANK:DB00394
               n1:
                 category: "biolink:Disease"
             edges:

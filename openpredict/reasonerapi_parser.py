@@ -39,9 +39,9 @@ def typed_results_to_reasonerapi(reasoner_query):
         for node_id, node in query_graph["nodes"].items():
         # for node in query_graph['nodes']:
             if node_id == qg_edge['subject'] or node_id == qg_edge['object']:
-                if 'curie' in node:
+                if 'id' in node:
                     # The node with curie is the association's "from"
-                    query_plan[edge_id]['from_kg_id'] = node['curie']
+                    query_plan[edge_id]['from_kg_id'] = node['id']
                     query_plan[edge_id]['from_qg_id'] = node_id
                     query_plan[edge_id]['from_type'] = node['category'].lower()
                 else:

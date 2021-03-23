@@ -10,7 +10,7 @@
             },
             "nodes": {
                 "n0": {
-                    "curie": "DRUGBANK:DB00394",
+                    "id": "DRUGBANK:DB00394",
                     "category": "biolink:Drug"
                 },
                 "n1": {

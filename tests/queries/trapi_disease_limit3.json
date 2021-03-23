@@ -14,7 +14,7 @@
                 },
                 "n1": {
                     "category": "biolink:Disease",
-                    "curie": "OMIM:246300"
+                    "id": "OMIM:246300"
                 }
             }
         }
