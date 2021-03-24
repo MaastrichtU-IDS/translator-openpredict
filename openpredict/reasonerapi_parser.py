@@ -98,10 +98,7 @@ def typed_results_to_reasonerapi(reasoner_query):
             source = 'OpenPredict'
             relation = 'RO:0002434'
             # relation = 'OBOREL:0002606'
-            association_score = str(association['score'])
-
-            if query_plan[edge_qg_id]['predicate'] != 'biolink:treats':
-                print('sss')
+            association_score = str(association['score'])   
 
             # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
             edge_dict = {

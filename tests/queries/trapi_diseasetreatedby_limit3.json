@@ -3,9 +3,9 @@
       "query_graph": {
           "edges": {
               "e01": {
-                  "subject": "n0",
-                  "object": "n1",
-                  "predicate": "biolink:treats"
+                  "subject": "n1",
+                  "object": "n0",
+                  "predicate": "biolink:treated_by"
               }
           },
           "nodes": {

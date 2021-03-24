@@ -37,6 +37,8 @@ def test_post_trapi(client):
             response = client.post(url, 
                                     data=reasoner_query, 
                                     content_type='application/json')
+
+            print(response.json)
             edges = response.json['message']['knowledge_graph']['edges'].items()
             if trapi_test['limit'] == 'no':
                 assert len(edges) >= 300
