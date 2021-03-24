@@ -8,6 +8,10 @@ def typed_results_to_reasonerapi(reasoner_query):
     :param: reasoner_query Query from Reasoner API
     :return: Results as ReasonerAPI object
     """
+    # TODO: note that the implementation is dirty with a lot of hardcoded tweaks.
+    # This is due to the ever changing nature of the Translator ecosystem
+    # There are no standards so all the reaoning and parsing system needs to be quickly implemented with no docs.
+
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
     # Default query_options
@@ -62,7 +66,11 @@ def typed_results_to_reasonerapi(reasoner_query):
         # Run get_predict!
         # TODO: pass score and limit from Reasoner query
         # TODO: add try catch and n_results
-        bte_response, prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, min_score, max_score)
+        
+        if query_plan[edge_qg_id]['predicate'] == 'biolink:treats' or query_plan[edge_qg_id]['predicate'] == 'biolink:treated_by':
+            bte_response, prediction_json = get_predictions(query_plan[edge_qg_id]['from_kg_id'], model_id, min_score, max_score)
+        else: 
+            prediction_json = []
 
         for association in prediction_json:
             edge_kg_id = 'e' + str(kg_edge_count)
@@ -91,6 +99,9 @@ def typed_results_to_reasonerapi(reasoner_query):
             relation = 'RO:0002434'
             # relation = 'OBOREL:0002606'
             association_score = str(association['score'])
+
+            if query_plan[edge_qg_id]['predicate'] != 'biolink:treats':
+                print('sss')
 
             # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
             edge_dict = {

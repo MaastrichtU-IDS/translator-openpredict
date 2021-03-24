@@ -8,7 +8,7 @@ info:
     \n\n[![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
     \n\nService supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about)"
   version: 1.0.0
-  title: OpenPredict API 🔮🐍 
+  title: OpenPredict API 
   contact:
     email: vincent.emonet@maastrichtuniversity.nl
     name: Institute of Data Science at Maastricht University
