@@ -127,7 +127,12 @@ def get_predicates():
     openpredict_predicates = {
         "disease": {
             "drug": [
-            "treated_by"
+                "treated_by"
+            ]
+        },
+        "drug": {
+            "disease": [
+                "treats"
             ]
         }
     }
