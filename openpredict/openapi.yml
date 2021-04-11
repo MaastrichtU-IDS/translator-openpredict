@@ -391,7 +391,7 @@ components:
     Query:
       example:
         query_options:
-          n_results: 2
+          # n_results: 2
           min_score: 0.5
           max_score: 1
         message:
@@ -402,6 +402,7 @@ components:
                   - "biolink:Disease"
                 id: 
                   - OMIM:246300
+                  - MONDO:0007190
               n1:
                 category: 
                   - "biolink:Drug"

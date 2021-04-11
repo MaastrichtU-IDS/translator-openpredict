@@ -1,7 +1,5 @@
 from openpredict.openpredict_model import get_predictions
 import requests
-import json
-
 
 def is_accepted_id(id_to_check):
     if id_to_check.lower().startswith('omim') or id_to_check.lower().startswith('drugbank'):
@@ -9,35 +7,34 @@ def is_accepted_id(id_to_check):
     else:
         return False
 
-def resolve_ids_with_nodenormalization_api(resolve_ids_list):
-    max_predictions_returned = 5
+def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object):
     resolved_ids_list = []
     ids_to_normalize = []
-
     for id_to_resolve in resolve_ids_list:
         if is_accepted_id(id_to_resolve):
             resolved_ids_list.append(id_to_resolve)
+            resolved_ids_object[id_to_resolve] = id_to_resolve
         else:
             ids_to_normalize.append(id_to_resolve)
     
-    # mondo_ids_list = ["MONDO:0018874", "MONDO:0008734", "MONDO:0004056", "MONDO:0005499", "MONDO:0006256", "MONDO:0006143", "MONDO:0019087", "MONDO:0002271", "MONDO:0003093", "MONDO:0018177", "MONDO:0010150", "MONDO:0017885", "MONDO:0005005", "MONDO:0017884", "MONDO:0007256", "MONDO:0005061", "MONDO:0005097", "MONDO:0018905", "MONDO:0005065", "MONDO:0006046", "MONDO:0006047", "MONDO:0004974", "MONDO:0005082", "MONDO:0002169", "MONDO:0005089", "MONDO:0005012", "MONDO:0005036", "MONDO:0010108", "MONDO:0006456", "MONDO:0015075", "MONDO:0006485", "MONDO:0000553", "MONDO:0006486", "MONDO:0004967", "MONDO:0005170", "MONDO:0005072", "MONDO:0008433", "MONDO:0004163", "MONDO:0000554", "MONDO:0005580", "MONDO:0004093", "MONDO:0000448"]
-    # OMIM:246300
-    # First query Translator NodeNormalization API to convert MONDO IDs to OMIM IDs
+    # Query Translator NodeNormalization API to convert IDs to OMIM/DrugBank IDs
     if len(ids_to_normalize) > 0:
         resolve_curies = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
                             params={'curie': ids_to_normalize})
-
-        print('RESOLVED')
-        print(resolve_curies.content)
         # Get corresponding OMIM IDs for MONDO IDs if match
         resp = resolve_curies.json()
-        for preferred_id, alt_ids in resp.items():
+        for resolved_id, alt_ids in resp.items():
             for alt_id in alt_ids['equivalent_identifiers']:
                 if is_accepted_id(str(alt_id['identifier'])):
                     resolved_ids_list.append(str(alt_id['identifier']))
-                    print('🗺 Mapped ' + preferred_id + ' - "' + alt_ids['id']['label'] + '" to ' + alt_id['identifier'])
-                
-    return resolved_ids_list
+                    resolved_ids_object[str(alt_id['identifier'])] = resolved_id
+                    # print('Mapped ' + resolved_id + ' - "' + alt_ids['id']['label'] + '" to ' + alt_id['identifier'])
+    return resolved_ids_list, resolved_ids_object
+
+def resolve_id(id_to_resolve, resolved_ids_object):
+    if id_to_resolve in resolved_ids_object.keys():
+        return resolved_ids_object[id_to_resolve]
+    return id_to_resolve
 
 def typed_results_to_reasonerapi(reasoner_query):
     """Convert an array of predictions objects to ReasonerAPI format
@@ -47,10 +44,6 @@ def typed_results_to_reasonerapi(reasoner_query):
     :param: reasoner_query Query from Reasoner API
     :return: Results as ReasonerAPI object
     """
-    # TODO: note that the implementation is dirty with a lot of hardcoded tweaks.
-    # This is due to the ever changing nature of the Translator ecosystem
-    # There are no standards so all the reaoning and parsing system needs to be quickly implemented with no docs.
-
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
     # Default query_options
@@ -68,6 +61,7 @@ def typed_results_to_reasonerapi(reasoner_query):
             max_score = float(reasoner_query["query_options"]["max_score"])
 
     query_plan = {}
+    resolved_ids_object = {}
 
     # Parse the query_graph to build the query plan
     for edge_id, qg_edge in query_graph["edges"].items():
@@ -88,16 +82,11 @@ def typed_results_to_reasonerapi(reasoner_query):
         # for node in query_graph['nodes']:
             if node_id == qg_edge['subject'] or node_id == qg_edge['object']:
                 if 'id' in node:
-                    # If IDs are not OMIM or DrugBank we use the NodeNormalization API
-                    # for node_id_to_check in node['id']:
-                    #     if not node_id_to_check.lower().startwith('omim') and not node_id_to_check.lower().startwith('drugbank'):
-                            # Call SRI API to resolve
-
                     # If single values provided for id or category: make it an array
                     if not isinstance(node['id'], list):
                         node['id'] = [ node['id'] ]
-                    # The node with curie is the association "from"
-                    query_plan[edge_id]['from_kg_id'] = resolve_ids_with_nodenormalization_api(node['id'])
+                    # Resolve the curie provided with the NodeNormalization API
+                    query_plan[edge_id]['from_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['id'], resolved_ids_object)
                     query_plan[edge_id]['from_qg_id'] = node_id
                     query_plan[edge_id]['from_type'] = node['category']
                     if not isinstance(query_plan[edge_id]['from_type'], list):
@@ -110,39 +99,25 @@ def typed_results_to_reasonerapi(reasoner_query):
                     if not isinstance(query_plan[edge_id]['to_type'], list):
                         query_plan[edge_id]['to_type'] = [ query_plan[edge_id]['to_type'] ]
 
-        # TODO: edge type should be required?
-
     knowledge_graph = {'nodes': {}, 'edges': {}}
     node_dict = {}
     query_results = []
     kg_edge_count = 0
 
-    print('QUERY PLAN:')
-    print(query_plan)
-
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
         
-        # TODO: Handle when single value OR array:
-        # QEdge predicate
-        # QNode id and category
-        # Node category
-
         # DIRTY: only query if the predicate is biolink:treats or biolink:treated_by
         if 'biolink:treats' in query_plan[edge_qg_id]['predicate'] or 'biolink:treated_by' in query_plan[edge_qg_id]['predicate']:
             
             # Iterate over the list of ids provided
             for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
-                print('ID to predict:')
-                print(id_to_predict)
                 try:
                     # Run OpenPredict to get predictions
                     bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score)
                 except:
                     # except KeyError: ?
                     prediction_json = []
-                print('PREDICTION JSON!')
-                print(prediction_json)
                 for association in prediction_json:
                     # TODO:if the target IDs is given, filter here 
                     
@@ -151,22 +126,23 @@ def typed_results_to_reasonerapi(reasoner_query):
                     # based on the type expected for the association "to" node
                     # node_dict[query_plan[edge_qg_id]['from_kg_id']] = query_plan[edge_qg_id]['from_type']
                     # node_dict[association[query_plan[edge_qg_id]['to_type']]] = query_plan[edge_qg_id]['to_type']
-                    
+
                     # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
                     # Build dict of node ID : label
-                    node_dict[association['source']['id']] = {
+                    source_node_id = resolve_id(association['source']['id'], resolved_ids_object)
+                    target_node_id = resolve_id(association['target']['id'], resolved_ids_object)
+                    node_dict[source_node_id] = {
                         'type': association['source']['type']
                     }
                     if 'label' in association['source'] and association['source']['label']:
-                        node_dict[association['source']['id']]['label'] = association['source']['label']
+                        node_dict[source_node_id]['label'] = association['source']['label']
 
-                    node_dict[association['target']['id']] = {
+                    node_dict[target_node_id] = {
                         'type': association['target']['type']
                     }
                     if 'label' in association['target'] and association['target']['label']:
-                        node_dict[association['target']['id']]['label'] = association['target']['label']
+                        node_dict[target_node_id]['label'] = association['target']['label']
 
-                    # TODO: make it dynamic?
                     # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
                     source = 'OpenPredict'
                     relation = 'RO:0002434'
@@ -197,18 +173,13 @@ def typed_results_to_reasonerapi(reasoner_query):
 
                     # Map the source/target of query_graph to source/target of association
                     # if association['source']['type'] == query_plan[edge_qg_id]['from_type']:
-                    edge_dict['subject'] = association['source']['id']
-                    edge_dict['object'] = association['target']['id']
+                    edge_dict['subject'] = source_node_id
+                    edge_dict['object'] = target_node_id
                     if association['source']['type'] == 'drug':
                         # and 'biolink:Drug' in query_plan[edge_qg_id]['predicate']: ?
                         edge_dict['predicate'] = 'biolink:treats'
                     else: 
                         edge_dict['predicate'] = 'biolink:treated_by'
-
-                    # if edge_dict['object'].lower().startswith('drugbank'):
-                    # else: 
-                    #     edge_dict['subject'] = association['target']['id']
-                    #     edge_dict['object'] = association['source']['id']    
 
                     # Add the association in the knowledge_graph as edge
                     # Use the type as key in the result association dict (for IDs)
@@ -223,12 +194,12 @@ def typed_results_to_reasonerapi(reasoner_query):
                     ]
                     result['node_bindings'][query_plan[edge_qg_id]['from_qg_id']] = [
                         {
-                            "id": association['source']['id']
+                            "id": source_node_id
                         }
                     ]
                     result['node_bindings'][query_plan[edge_qg_id]['to_qg_id']] = [
                         {
-                            "id": association['target']['id']
+                            "id": target_node_id
                         }
                     ]
                     query_results.append(result)
@@ -252,8 +223,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     return {"message": {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}}
 
 
-# Example
-
+# TOREMOVE: Example of TRAPI queries
 simple_json = {
   "message": {
     "query_graph": {
