@@ -36,7 +36,7 @@ def test_post_trapi(client):
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             else:
-                assert len(edges) >= 10
+                assert len(edges) >= 5
 
 
 # def test_post_embeddings():
