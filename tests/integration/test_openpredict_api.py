@@ -1,7 +1,7 @@
 import pytest
 import pkg_resources
 import connexion
-import json
+import os
 from openpredict.openpredict_utils import init_openpredict_dir
 
 # Create and start Flask from openapi.yml before running tests
@@ -24,14 +24,7 @@ def test_get_predict(client):
 def test_post_trapi(client):
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     url = '/query'
-    tests_list = [
-        {'limit': 3, 'class': 'drug'},
-        {'limit': 'no', 'class': 'drug'},
-        {'limit': 3, 'class': 'disease'},
-        {'limit': 'no', 'class': 'disease'},
-    ]
-    for trapi_test in tests_list:
-        trapi_filename = 'trapi_' + trapi_test['class'] + '_limit' + str(trapi_test['limit']) + '.json'
+    for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
         with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
             reasoner_query = f.read()
             response = client.post(url, 
@@ -40,10 +33,10 @@ def test_post_trapi(client):
 
             print(response.json)
             edges = response.json['message']['knowledge_graph']['edges'].items()
-            if trapi_test['limit'] == 'no':
-                assert len(edges) >= 300
+            if trapi_filename.endswith('limit3.json'):
+                assert len(edges) == 3
             else:
-                assert len(edges) == trapi_test['limit']
+                assert len(edges) >= 10
 
 
 # def test_post_embeddings():

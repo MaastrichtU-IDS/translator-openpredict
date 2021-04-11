@@ -24,17 +24,9 @@ def test_get_predict():
 def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     headers = {'Content-type': 'application/json'}
-    # tests_list = [
-    #     {'limit': 3, 'class': 'drug'},
-    #     {'limit': 'no', 'class': 'drug'},
-    #     {'limit': 3, 'class': 'disease'},
-    #     {'limit': 'no', 'class': 'disease'},
-    #     {'limit': 'no', 'class': 'disease'},
-    #     {'limit': 'no', 'class': 'disease'},
-    # ]
-    # for trapi_test in tests_list:
+
     for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
-        # trapi_filename = 'trapi_' + trapi_test['class'] + '_limit' + str(trapi_test['limit']) + '.json'
+
         with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
             trapi_query = f.read()
             trapi_results = requests.post(PROD_API_URL + '/query',
