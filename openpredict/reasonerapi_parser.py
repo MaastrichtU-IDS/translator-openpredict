@@ -107,8 +107,8 @@ def typed_results_to_reasonerapi(reasoner_query):
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
         
-        # DIRTY: only query if the predicate is biolink:treats or biolink:treated_by
-        if 'biolink:treats' in query_plan[edge_qg_id]['predicate'] or 'biolink:treated_by' in query_plan[edge_qg_id]['predicate']:
+        # DIRTY: only query if the predicate is biolink:treats or biolink:treated_by or biolink:ameliorates
+        if 'biolink:treats' in query_plan[edge_qg_id]['predicate'] or 'biolink:ameliorates' in query_plan[edge_qg_id]['predicate'] or 'biolink:treated_by' in query_plan[edge_qg_id]['predicate']:
             
             # Iterate over the list of ids provided
             for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:

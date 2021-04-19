@@ -85,7 +85,7 @@ jobs:
         java-version: '11' # The JDK version to make available on the path.
     - uses: vemonet/setup-spark@v1
       with:
-        spark-version: '3.0.1'
+        spark-version: '3.0.2'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
