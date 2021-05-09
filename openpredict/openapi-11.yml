@@ -46,12 +46,12 @@ tags:
     description: Get supported relationships by source and target
     externalDocs:
       description: Documentation for the reasoner predicates function
-      url: https://github.com/MaastrichtU-IDS/translator-openpredict#predicates-operation-
+      url: https://github.com/MaastrichtU-IDS/translator-openpredict#predicates-operation
   - name: query
     description: Query reasoner using a predefined question type
     externalDocs:
       description: Documentation for the reasoner query function
-      url: https://github.com/MaastrichtU-IDS/translator-openpredict#query-operation-
+      url: https://github.com/MaastrichtU-IDS/translator-openpredict#query-operation
   - name: translator
     description: Required for SmartAPI validation of x-translator
   - name: trapi
