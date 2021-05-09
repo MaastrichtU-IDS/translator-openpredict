@@ -86,6 +86,24 @@ The API will return predicted targets for the given drug or disease:
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
+## TRAPI operations
+
+Operations to query OpenPredict using the [Translator Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI) standards.
+
+### Query operation ✉️
+
+The `/query` operation will return the same predictions as the `/predict` operation, using the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
+
+The user sends a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query asking for the predicted targets given: a source, and the relation to predict. The query is a graph with nodes and edges defined in JSON, and uses classes from the [BioLink model](https://biolink.github.io/biolink-model).
+
+You can use the default TRAPI query of OpenPredict `/query` operation to try a working example.
+
+### Predicates operation 🗺️
+
+The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
+
+> Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
+
 ### Notebooks examples :notebook_with_decorative_cover:
 
 We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
@@ -130,73 +148,6 @@ The API will return the list of predicted target for the given entity, the label
 ```
 
 > Try it at [https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394](https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394)
-
-### Query operation :email:
-
-The `/query` operation will return the same predictions as the `/predict` operation, using the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
-
-The user sends a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query asking for the predicted targets given: a source, and the relation to predict. The query is a graph with nodes and edges defined in JSON, and uses classes from the [BioLink model](https://biolink.github.io/biolink-model).
-
-See this [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query example:
-
-```json
-{
-  "message": {
-    "query_graph": {
-      "edges": [
-        {
-          "id": "e00",
-          "source_id": "n00",
-          "target_id": "n01",
-          "type": "treated_by"
-        }
-      ],
-      "nodes": [
-        {
-          "curie": "DRUGBANK:DB00394",
-          "id": "n00",
-          "type": "drug"
-        },
-        {
-          "id": "n01",
-          "type": "disease"
-        }
-      ]
-    }
-  }
-}
-```
-
-The results provides the following attributes for the `knowledge_graph` edges:
-
-```python
-     "e0": {
-        "attributes": [
-          {
-            "name": "model_id",
-            "source": "OpenPredict",
-            "type": "EDAM:data_1048",
-            "value": "openpredict-baseline-omim-drugbank"
-          },
-          {
-            "name": "score",
-            "source": "OpenPredict",
-            "type": "EDAM:data_1772",
-            "value": "0.8267106697312154"
-          }
-        ],
-        "object": "DRUGBANK:DB00394",
-        "predicate": "biolink:treated_by",
-        "relation": "RO:0002434",
-        "subject": "OMIM:246300"
-      },
-```
-
-### Predicates operation :world_map:
-
-The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
-
-> Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
 
 ---
 

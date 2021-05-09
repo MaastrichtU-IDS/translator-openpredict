@@ -119,8 +119,28 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
     return {'hits': prediction_json, 'count': len(prediction_json)}
     # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
-def get_predicates():
+def get_meta_knowledge_graph():
     """Get predicates and entities provided by the API
+    
+    :return: JSON with biolink entities
+    """
+    openpredict_predicates = {
+        "disease": {
+            "drug": [
+                "treated_by"
+            ]
+        },
+        "drug": {
+            "disease": [
+                "treats"
+            ]
+        }
+    }
+    return openpredict_predicates
+
+def get_predicates():
+    """DEPRECATED since 3.1.0, replaced by meta_knowledge_graph
+    Get predicates and entities provided by the API
     
     :return: JSON with biolink entities
     """
