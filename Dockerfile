@@ -1,4 +1,5 @@
-FROM jupyter/all-spark-notebook:spark-3.1.1
+FROM jupyter/all-spark-notebook:python-3.8.8
+# FROM jupyter/all-spark-notebook:spark-3.1.1
 # FROM jupyter/pyspark-notebook
 # Without Spark: FROM python:3.7 
 
