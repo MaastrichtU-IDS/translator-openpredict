@@ -8,10 +8,10 @@ WORKDIR /root
 
 RUN apt-get update && apt-get install -y build-essential
 
-RUN fix-permissions $CONDA_DIR && \
-    fix-permissions /home/$NB_USER
+# RUN fix-permissions $CONDA_DIR && \
+#     fix-permissions /home/$NB_USER
 
-USER $NB_USER
+# USER $NB_USER
 
 ENV OPENPREDICT_DATA_DIR=/data/openpredict
 ENV PYSPARK_PYTHON=/opt/conda/bin/python3
