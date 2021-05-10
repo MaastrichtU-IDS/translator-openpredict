@@ -5,8 +5,10 @@ joblib
 flask-cors
 flask-reverse-proxy-fix
 werkzeug<1
-numpy==1.16.5
-pandas==1.2.4
+numpy==1.16.1
+# numpy==1.16.5
+pandas==1.1.1
+# pandas==1.2.4
 cython
 pyspark==3.1.1
 findspark
