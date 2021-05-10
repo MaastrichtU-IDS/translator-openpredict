@@ -51,7 +51,8 @@ def get_spark_context():
                 logging.info('SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
                 sc = pyspark.SparkContext.getOrCreate()
                 logging.info(sc)
-            except:
+            except Exception as e:
+                logging.warning(e)
                 logging.info("Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
     else:
         logging.info('SPARK_HOME not found, using pandas to handle dataframes 🐼')
