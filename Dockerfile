@@ -12,14 +12,13 @@ ENV PYSPARK_DRIVER_PYTHON=/opt/conda/bin/python3
 
 RUN apt-get update && apt-get install -y build-essential
 
-COPY . .
-
 RUN fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
 USER $NB_USER
 
 # Install from source code
+COPY . .
 RUN pip install .
 
 EXPOSE 8808
