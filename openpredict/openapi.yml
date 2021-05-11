@@ -387,12 +387,12 @@ components:
               n1:
                 categories: 
                   - "biolink:Drug"
-                # id: DRUGBANK:DB00394
+                # ids: DRUGBANK:DB00394
             edges:
               e01:
                 subject: n0
                 object: n1
-                predicate: 
+                predicates: 
                   - "biolink:treated_by"
                   
       description: >-

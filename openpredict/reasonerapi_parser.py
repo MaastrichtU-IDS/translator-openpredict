@@ -28,7 +28,6 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
                 if is_accepted_id(str(alt_id['identifier'])):
                     resolved_ids_list.append(str(alt_id['identifier']))
                     resolved_ids_object[str(alt_id['identifier'])] = resolved_id
-                    # print('Mapped ' + resolved_id + ' - "' + alt_ids['id']['label'] + '" to ' + alt_id['identifier'])
     return resolved_ids_list, resolved_ids_object
 
 def resolve_id(id_to_resolve, resolved_ids_object):
@@ -67,7 +66,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     for edge_id, qg_edge in query_graph["edges"].items():
         # Build dict with all infos of associations to predict 
         query_plan[edge_id] = {
-            'predicate': qg_edge['predicate'],
+            'predicates': qg_edge['predicates'],
             # 'qedge_subjects': qg_edge['subject'],
             'qg_source_id': qg_edge['subject'],
             'qg_target_id': qg_edge['object']
@@ -81,21 +80,22 @@ def typed_results_to_reasonerapi(reasoner_query):
         for node_id, node in query_graph["nodes"].items():
         # for node in query_graph['nodes']:
             if node_id == qg_edge['subject'] or node_id == qg_edge['object']:
-                if 'id' in node:
-                    # If single values provided for id or category: make it an array
-                    if not isinstance(node['id'], list):
-                        node['id'] = [ node['id'] ]
+                if 'ids' in node:
+                    # TOREMOVE: If single values provided for id or category: make it an array
+                    # if not isinstance(node['id'], list):
+                    #     node['id'] = [ node['id'] ]
                     # Resolve the curie provided with the NodeNormalization API
-                    query_plan[edge_id]['from_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['id'], resolved_ids_object)
+                    query_plan[edge_id]['from_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['ids'], resolved_ids_object)
                     query_plan[edge_id]['from_qg_id'] = node_id
-                    query_plan[edge_id]['from_type'] = node['category']
-                    if not isinstance(query_plan[edge_id]['from_type'], list):
-                        query_plan[edge_id]['from_type'] = [ query_plan[edge_id]['from_type'] ]
+                    query_plan[edge_id]['from_type'] = node['categories']
+                    # TOREMOVE: handling of single values
+                    # if not isinstance(query_plan[edge_id]['from_type'], list):
+                    #     query_plan[edge_id]['from_type'] = [ query_plan[edge_id]['from_type'] ]
 
                 else:
                     # The node without curie is the association's "to"
                     query_plan[edge_id]['to_qg_id'] = node_id
-                    query_plan[edge_id]['to_type'] = node['category']
+                    query_plan[edge_id]['to_type'] = node['categories']
                     if not isinstance(query_plan[edge_id]['to_type'], list):
                         query_plan[edge_id]['to_type'] = [ query_plan[edge_id]['to_type'] ]
 
@@ -108,7 +108,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     for edge_qg_id in query_plan.keys():
         
         # DIRTY: only query if the predicate is biolink:treats or biolink:treated_by or biolink:ameliorates
-        if 'biolink:treats' in query_plan[edge_qg_id]['predicate'] or 'biolink:ameliorates' in query_plan[edge_qg_id]['predicate'] or 'biolink:treated_by' in query_plan[edge_qg_id]['predicate']:
+        if 'biolink:treats' in query_plan[edge_qg_id]['predicates'] or 'biolink:ameliorates' in query_plan[edge_qg_id]['predicates'] or 'biolink:treated_by' in query_plan[edge_qg_id]['predicates']:
             
             # Iterate over the list of ids provided
             for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
@@ -129,8 +129,8 @@ def typed_results_to_reasonerapi(reasoner_query):
 
                     # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
                     # Build dict of node ID : label
-                    source_node_id = resolve_id(association['source']['id'], resolved_ids_object)
-                    target_node_id = resolve_id(association['target']['id'], resolved_ids_object)
+                    source_node_id = resolve_id(association['source']['ids'], resolved_ids_object)
+                    target_node_id = resolve_id(association['target']['ids'], resolved_ids_object)
                     node_dict[source_node_id] = {
                         'type': association['source']['type']
                     }
@@ -176,10 +176,10 @@ def typed_results_to_reasonerapi(reasoner_query):
                     edge_dict['subject'] = source_node_id
                     edge_dict['object'] = target_node_id
                     if association['source']['type'] == 'drug':
-                        # and 'biolink:Drug' in query_plan[edge_qg_id]['predicate']: ?
-                        edge_dict['predicate'] = 'biolink:treats'
+                        # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
+                        edge_dict['predicates'] = ['biolink:treats']
                     else: 
-                        edge_dict['predicate'] = 'biolink:treated_by'
+                        edge_dict['predicates'] = ['biolink:treated_by']
 
                     # Add the association in the knowledge_graph as edge
                     # Use the type as key in the result association dict (for IDs)
@@ -214,7 +214,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
     for node_id, properties in node_dict.items():
         node_to_add = {
-            'category': 'biolink:' + properties['type'].capitalize() ,
+            'categories': 'biolink:' + properties['type'].capitalize() ,
             }
         if 'label' in properties and properties['label']:
             node_to_add['name'] = properties['label']
@@ -223,52 +223,23 @@ def typed_results_to_reasonerapi(reasoner_query):
     return {"message": {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}}
 
 
-# TOREMOVE: Example of TRAPI queries
-simple_json = {
+example_trapi = {
   "message": {
     "query_graph": {
       "edges": {
         "e01": {
           "object": "n1",
-          "predicate": "biolink:treated_by",
+          "predicates": ["biolink:treated_by", "biolink:treats"],
           "subject": "n0"
         }
       },
       "nodes": {
         "n0": {
-          "category": "biolink:Disease",
-          "id": "OMIM:246300"
+          "categories": ["biolink:Disease", "biolink:Drug"],
+          "ids": ["OMIM:246300", "DRUGBANK:DB00394"]
         },
         "n1": {
-          "category": "biolink:Drug"
-        }
-      }
-    }
-  },
-  "query_options": {
-    "max_score": 1,
-    "min_score": 0.5,
-    "n_results": 2
-  }
-}
-
-array_json = {
-  "message": {
-    "query_graph": {
-      "edges": {
-        "e01": {
-          "object": "n1",
-          "predicate": ["biolink:treated_by", "biolink:treats"],
-          "subject": "n0"
-        }
-      },
-      "nodes": {
-        "n0": {
-          "category": ["biolink:Disease", "biolink:Drug"],
-          "id": ["OMIM:246300", "DRUGBANK:DB00394"]
-        },
-        "n1": {
-          "category": ["biolink:Drug", "biolink:Disease"]
+          "categories": ["biolink:Drug", "biolink:Disease"]
         }
       }
     }
