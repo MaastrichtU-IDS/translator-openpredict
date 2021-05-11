@@ -177,9 +177,9 @@ def typed_results_to_reasonerapi(reasoner_query):
                     edge_dict['object'] = target_node_id
                     if association['source']['type'] == 'drug':
                         # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
-                        edge_dict['predicates'] = ['biolink:treats']
+                        edge_dict['predicate'] = 'biolink:treats'
                     else: 
-                        edge_dict['predicates'] = ['biolink:treated_by']
+                        edge_dict['predicate'] = 'biolink:treated_by'
 
                     # Add the association in the knowledge_graph as edge
                     # Use the type as key in the result association dict (for IDs)
