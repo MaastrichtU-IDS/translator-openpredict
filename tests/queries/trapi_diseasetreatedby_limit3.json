@@ -5,16 +5,16 @@
               "e01": {
                   "subject": "n1",
                   "object": "n0",
-                  "predicate": "biolink:treated_by"
+                  "predicates": ["biolink:treated_by"]
               }
           },
           "nodes": {
               "n0": {
-                  "category": "biolink:Drug"
+                  "categories": ["biolink:Drug"]
               },
               "n1": {
-                  "id": "OMIM:246300",
-                  "category": "biolink:Disease"
+                  "ids": ["OMIM:246300"],
+                  "categories": ["biolink:Disease"]
               }
           }
       }

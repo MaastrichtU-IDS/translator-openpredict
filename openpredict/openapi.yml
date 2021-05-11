@@ -379,13 +379,13 @@ components:
           query_graph:
             nodes:
               n0: 
-                category: 
+                categories: 
                   - "biolink:Disease"
-                id: 
+                ids: 
                   - OMIM:246300
                   - MONDO:0007190
               n1:
-                category: 
+                categories: 
                   - "biolink:Drug"
                 # id: DRUGBANK:DB00394
             edges:
