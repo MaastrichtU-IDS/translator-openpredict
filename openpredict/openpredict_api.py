@@ -125,17 +125,38 @@ def get_meta_knowledge_graph():
     :return: JSON with biolink entities
     """
     openpredict_predicates = {
-        "disease": {
-            "drug": [
-                "treated_by"
-            ]
-        },
-        "drug": {
-            "disease": [
-                "treats"
-            ]
+        "edges": [
+            {
+                "object": "biolink:Disease",
+                "predicate": "biolink:treats",
+                "relations": [
+                    "RO:0002434"
+                ],
+                "subject": "biolink:Drug"
+            },
+            {
+                "object": "biolink:Drug",
+                "predicate": "biolink:treated_by",
+                "relations": [
+                    "RO:0002434"
+                ],
+                "subject": "biolink:Disease"
+            }
+        ],
+        "nodes": {
+            "biolink:Disease": {
+                "id_prefixes": [
+                    "OMIM"
+                ]
+            },
+            "biolink:Drug": {
+                "id_prefixes": [
+                    "DRUGBANK"
+                ]
+            }
         }
     }
+    
     return openpredict_predicates
 
 def get_predicates():
