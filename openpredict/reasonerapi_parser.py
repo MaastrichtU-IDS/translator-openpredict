@@ -66,15 +66,20 @@ def typed_results_to_reasonerapi(reasoner_query):
     for edge_id, qg_edge in query_graph["edges"].items():
         # Build dict with all infos of associations to predict 
         query_plan[edge_id] = {
-            'predicates': qg_edge['predicates'],
+            # 'predicates': qg_edge['predicates'],
             # 'qedge_subjects': qg_edge['subject'],
             'qg_source_id': qg_edge['subject'],
             'qg_target_id': qg_edge['object']
         }
+        if 'predicates' in qg_edge.keys():
+            query_plan[edge_id]['predicates'] = qg_edge['predicates']
+        else: 
+            # Quick fix: in case no relation is provided
+            query_plan[edge_id]['predicates'] = ['biolink:treats']
 
         # If single value provided for predicate: make it an array
-        if not isinstance(query_plan[edge_id]['predicate'], list):
-            query_plan[edge_id]['predicate'] = [ query_plan[edge_id]['predicate'] ]
+        # if not isinstance(query_plan[edge_id]['predicate'], list):
+        #     query_plan[edge_id]['predicate'] = [ query_plan[edge_id]['predicate'] ]
 
         # Get the nodes infos in the query plan object
         for node_id, node in query_graph["nodes"].items():
@@ -175,6 +180,8 @@ def typed_results_to_reasonerapi(reasoner_query):
                     # if association['source']['type'] == query_plan[edge_qg_id]['from_type']:
                     edge_dict['subject'] = source_node_id
                     edge_dict['object'] = target_node_id
+
+                    # Define the predicate depending on the association source type returned by OpenPredict classifier
                     if association['source']['type'] == 'drug':
                         # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
                         edge_dict['predicate'] = 'biolink:treats'
