@@ -134,8 +134,8 @@ def typed_results_to_reasonerapi(reasoner_query):
 
                     # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
                     # Build dict of node ID : label
-                    source_node_id = resolve_id(association['source']['ids'], resolved_ids_object)
-                    target_node_id = resolve_id(association['target']['ids'], resolved_ids_object)
+                    source_node_id = resolve_id(association['source']['id'], resolved_ids_object)
+                    target_node_id = resolve_id(association['target']['id'], resolved_ids_object)
                     node_dict[source_node_id] = {
                         'type': association['source']['type']
                     }
