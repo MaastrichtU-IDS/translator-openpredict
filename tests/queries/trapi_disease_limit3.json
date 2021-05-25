@@ -5,7 +5,7 @@
               "e01": {
                   "subject": "n0",
                   "object": "n1",
-                  "predicates": "biolink:treats"
+                  "predicates": ["biolink:treats"]
               }
           },
           "nodes": {
