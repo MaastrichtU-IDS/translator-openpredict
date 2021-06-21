@@ -19,15 +19,18 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
     
     # Query Translator NodeNormalization API to convert IDs to OMIM/DrugBank IDs
     if len(ids_to_normalize) > 0:
-        resolve_curies = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
-                            params={'curie': ids_to_normalize})
-        # Get corresponding OMIM IDs for MONDO IDs if match
-        resp = resolve_curies.json()
-        for resolved_id, alt_ids in resp.items():
-            for alt_id in alt_ids['equivalent_identifiers']:
-                if is_accepted_id(str(alt_id['identifier'])):
-                    resolved_ids_list.append(str(alt_id['identifier']))
-                    resolved_ids_object[str(alt_id['identifier'])] = resolved_id
+        try:
+            resolve_curies = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
+                                params={'curie': ids_to_normalize})
+            # Get corresponding OMIM IDs for MONDO IDs if match
+            resp = resolve_curies.json()
+            for resolved_id, alt_ids in resp.items():
+                for alt_id in alt_ids['equivalent_identifiers']:
+                    if is_accepted_id(str(alt_id['identifier'])):
+                        resolved_ids_list.append(str(alt_id['identifier']))
+                        resolved_ids_object[str(alt_id['identifier'])] = resolved_id
+        except Exception as e:
+            print('Error queryinbg the NodeNormalization API: ' + e)
     return resolved_ids_list, resolved_ids_object
 
 def resolve_id(id_to_resolve, resolved_ids_object):
@@ -89,8 +92,10 @@ def typed_results_to_reasonerapi(reasoner_query):
                     # TOREMOVE: If single values provided for id or category: make it an array
                     # if not isinstance(node['id'], list):
                     #     node['id'] = [ node['id'] ]
+                    
                     # Resolve the curie provided with the NodeNormalization API
                     query_plan[edge_id]['from_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['ids'], resolved_ids_object)
+                        
                     query_plan[edge_id]['from_qg_id'] = node_id
                     query_plan[edge_id]['from_type'] = node['categories']
                     # TOREMOVE: handling of single values
