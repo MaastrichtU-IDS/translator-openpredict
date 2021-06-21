@@ -30,7 +30,8 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
                         resolved_ids_list.append(str(alt_id['identifier']))
                         resolved_ids_object[str(alt_id['identifier'])] = resolved_id
         except Exception as e:
-            print('Error queryinbg the NodeNormalization API: ' + e)
+            print('Error querying the NodeNormalization API, using the original IDs')
+
     return resolved_ids_list, resolved_ids_object
 
 def resolve_id(id_to_resolve, resolved_ids_object):
