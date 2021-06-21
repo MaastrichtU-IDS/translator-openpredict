@@ -205,7 +205,9 @@ def post_reasoner_predict(request_body):
     if len(query_graph["edges"]) == 0:
         return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
     if len(query_graph["edges"]) > 1:
-        return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
+        # Currently just return a empty result if multi-edges query
+        return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
+        # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
     reasonerapi_response = typed_results_to_reasonerapi(request_body)
 
