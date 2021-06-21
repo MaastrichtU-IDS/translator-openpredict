@@ -20,7 +20,7 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
     # Query Translator NodeNormalization API to convert IDs to OMIM/DrugBank IDs
     if len(ids_to_normalize) > 0:
         try:
-            resolve_curies = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
+            resolve_curies = requests.get('https://nodenormalization-sri.renci.org/1.1/get_normalized_nodes',
                                 params={'curie': ids_to_normalize})
             # Get corresponding OMIM IDs for MONDO IDs if match
             resp = resolve_curies.json()
