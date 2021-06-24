@@ -6,7 +6,7 @@ projects:
     name: openpredict
     source:
       type: git
-      location: 'https://github.com/MaastrichtU-IDS/openpredict'
+      location: 'https://github.com/MaastrichtU-IDS/translator-openpredict'
 components:
   -
     type: chePlugin
