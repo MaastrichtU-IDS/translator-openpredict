@@ -127,8 +127,8 @@ def typed_results_to_reasonerapi(reasoner_query):
                     # Run OpenPredict to get predictions
                     bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score)
                 except:
-                    # except KeyError: ?
                     prediction_json = []
+                    
                 for association in prediction_json:
                     # TODO:if the target IDs is given, filter here 
                     

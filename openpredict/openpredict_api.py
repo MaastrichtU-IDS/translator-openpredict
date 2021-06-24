@@ -203,7 +203,8 @@ def post_reasoner_predict(request_body):
     query_graph = request_body["message"]["query_graph"]
     print(query_graph)
     if len(query_graph["edges"]) == 0:
-        return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
+        return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
+        # return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
     if len(query_graph["edges"]) > 1:
         # Currently just return a empty result if multi-edges query
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
