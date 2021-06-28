@@ -98,7 +98,10 @@ def typed_results_to_reasonerapi(reasoner_query):
                     query_plan[edge_id]['from_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['ids'], resolved_ids_object)
                         
                     query_plan[edge_id]['from_qg_id'] = node_id
-                    query_plan[edge_id]['from_type'] = node['categories']
+                    if 'categories' in node.keys():
+                        query_plan[edge_id]['from_type'] = node['categories']
+                    else:
+                        query_plan[edge_id]['from_type'] = 'biolink:Thing'
                     # TOREMOVE: handling of single values
                     # if not isinstance(query_plan[edge_id]['from_type'], list):
                     #     query_plan[edge_id]['from_type'] = [ query_plan[edge_id]['from_type'] ]
@@ -106,7 +109,10 @@ def typed_results_to_reasonerapi(reasoner_query):
                 else:
                     # The node without curie is the association's "to"
                     query_plan[edge_id]['to_qg_id'] = node_id
-                    query_plan[edge_id]['to_type'] = node['categories']
+                    if 'categories' in node.keys():
+                        query_plan[edge_id]['to_type'] = node['categories']
+                    else:
+                        query_plan[edge_id]['to_type'] = 'biolink:Thing'
                     if not isinstance(query_plan[edge_id]['to_type'], list):
                         query_plan[edge_id]['to_type'] = [ query_plan[edge_id]['to_type'] ]
 
@@ -164,18 +170,18 @@ def typed_results_to_reasonerapi(reasoner_query):
                     edge_dict = {
                         # TODO: not required anymore? 'association_type': edge_association_type,
                         'relation': relation,
+
+                        # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
                         'attributes': [
                             {
-                                "name": "model_id",
-                                "source": source,
-                                "type": "EDAM:data_1048",
+                                "description": "model_id",
+                                "attribute_type_id": "EDAM:data_1048",
                                 "value": model_id
                             },
                             {
                                 # TODO: use has_confidence_level?
-                                "name": "score",
-                                "source": source,
-                                "type": "EDAM:data_1772",
+                                "description": "score",
+                                "attribute_type_id": "EDAM:data_1772",
                                 "value": association_score
                                 # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
                             },

@@ -3,6 +3,7 @@ import pkg_resources
 import connexion
 import os
 from openpredict.openpredict_utils import init_openpredict_dir
+from reasoner_validator import validate
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
@@ -31,12 +32,50 @@ def test_post_trapi(client):
                                     data=reasoner_query, 
                                     content_type='application/json')
 
-            print(response.json)
+            # print(response.json)
             edges = response.json['message']['knowledge_graph']['edges'].items()
+            print(response)
+            
+            assert validate(response.json['message'], "Message", "1.1.0") == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             else:
                 assert len(edges) >= 5
+
+
+def test_trapi_empty_response(client):
+    # reasoner-validator
+    reasoner_query = {
+        "message": {
+            "query_graph": {
+                "edges": {
+                    "e00": {
+                        "subject": "n00",
+                        "object": "n01",
+                        "predicates": ["biolink:physically_interacts_with"]
+                    }
+                },
+                "nodes": {
+                    "n00": {
+                        "ids": ["CHEMBL.COMPOUND:CHEMBL112"]
+                    },
+                    "n01": {
+                        "categories": ["biolink:Protein"]
+                    }
+                }
+            }
+        }
+    }
+
+    response = client.post('/query',
+        data=reasoner_query,
+        content_type='application/json')
+
+    print(response.json['message'])
+    # try:
+    # validate(response.json['message'], "Message", "1.1.0")
+    # except ValidationError:
+    #     raise ValueError('Bad TRAPI component!')
 
 
 # def test_post_embeddings():

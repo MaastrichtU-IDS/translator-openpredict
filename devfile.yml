@@ -15,7 +15,7 @@ components:
     type: dockerimage
     alias: python
     image: quay.io/eclipse/che-python-3.8:next
-    memoryLimit: 4Gi
+    memoryLimit: 8Gi
     endpoints:
       - name: 'openpredict'
         port: 8808
@@ -30,7 +30,7 @@ commands:
       -
         type: exec
         component: python
-        command: '. ${HOME}/.venv/bin/activate && pip install . && pip install ptvsd'
+        command: 'pip install -e . && pip install ptvsd'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
   # - 
   #   name: migrate
@@ -46,7 +46,7 @@ commands:
       -
         type: exec
         component: python
-        command: '. ${HOME}/.venv/bin/activate && openpredict start-api'
+        command: 'openpredict start-api'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
   - 
     name: run server in debug mode
@@ -54,7 +54,7 @@ commands:
       -
         type: exec
         component: python
-        command: '. ${HOME}/.venv/bin/activate &&  export DEBUG_MODE=True && openpredict start-api --debug'
+        command: 'export DEBUG_MODE=True && openpredict start-api --debug'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
   - 
     name: debug
