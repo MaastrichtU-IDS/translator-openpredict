@@ -2,6 +2,7 @@ import pytest
 import pkg_resources
 import connexion
 import os
+import json
 from openpredict.openpredict_utils import init_openpredict_dir
 from reasoner_validator import validate
 
@@ -44,7 +45,6 @@ def test_post_trapi(client):
 
 
 def test_trapi_empty_response(client):
-    # reasoner-validator
     reasoner_query = {
         "message": {
             "query_graph": {
@@ -68,15 +68,12 @@ def test_trapi_empty_response(client):
     }
 
     response = client.post('/query',
-        data=reasoner_query,
+        data=json.dumps(reasoner_query),
         content_type='application/json')
 
-    print(response.json['message'])
-    # try:
-    # validate(response.json['message'], "Message", "1.1.0")
-    # except ValidationError:
-    #     raise ValueError('Bad TRAPI component!')
-
+    print(response.json)
+    assert validate(response.json['message'], "Message", "1.1.0") == None
+    assert len(response.json['message']['results']) == 0
 
 # def test_post_embeddings():
 #     """Test post embeddings to add embeddings to the model and rebuild it"""

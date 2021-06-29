@@ -15,7 +15,7 @@ components:
     type: dockerimage
     alias: python
     image: quay.io/eclipse/che-python-3.8:next
-    memoryLimit: 8Gi
+    memoryLimit: 16Gi
     endpoints:
       - name: 'openpredict'
         port: 8808

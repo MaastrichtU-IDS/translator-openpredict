@@ -3,6 +3,7 @@ import json
 import pkg_resources
 import requests
 import os
+from reasoner_validator import validate
 
 PROD_API_URL = 'https://openpredict.semanticscience.org'
 
@@ -33,6 +34,7 @@ def test_post_trapi():
                         data=trapi_query, headers=headers).json()
             edges = trapi_results['message']['knowledge_graph']['edges'].items()
 
+            assert validate(trapi_results['message'], "Message", "1.1.0") == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             else:
