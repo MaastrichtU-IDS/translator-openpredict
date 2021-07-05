@@ -185,6 +185,13 @@ def typed_results_to_reasonerapi(reasoner_query):
                                 "value": association_score
                                 # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
                             },
+                            {
+                                'attribute_type_id': 'biolink:aggregator_knowledge_source',
+                                'value': 'infores:openpredict',
+                                'value_type_id': 'biolink:InformationResource',
+                                'attribute_source': 'infores:openpredict',
+                                'value_url': 'https://openpredict.semanticscience.org/query'
+                            },
                         ]
                     }
 
