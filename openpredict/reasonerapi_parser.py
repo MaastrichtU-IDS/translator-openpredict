@@ -112,7 +112,7 @@ def typed_results_to_reasonerapi(reasoner_query):
                     if 'categories' in node.keys():
                         query_plan[edge_id]['to_type'] = node['categories']
                     else:
-                        query_plan[edge_id]['to_type'] = 'biolink:Thing'
+                        query_plan[edge_id]['to_type'] = ['biolink:Thing']
                     if not isinstance(query_plan[edge_id]['to_type'], list):
                         query_plan[edge_id]['to_type'] = [ query_plan[edge_id]['to_type'] ]
 
@@ -191,6 +191,13 @@ def typed_results_to_reasonerapi(reasoner_query):
                                 'value_type_id': 'biolink:InformationResource',
                                 'attribute_source': 'infores:openpredict',
                                 'value_url': 'https://openpredict.semanticscience.org/query'
+                            },
+                            {
+                                'attribute_type_id': 'biolink:supporting_data_source',
+                                'value': 'infores:cohd',
+                                'value_type_id': 'biolink:InformationResource',
+                                'attribute_source': 'infores:openpredict',
+                                'value_url': 'https://openpredict.semanticscience.org'
                             },
                         ]
                     }
