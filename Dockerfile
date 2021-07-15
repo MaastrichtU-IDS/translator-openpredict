@@ -28,5 +28,4 @@ RUN pip install .
 ## Indicate this will export the port 8808
 EXPOSE 8808
 
-## 
 ENTRYPOINT [ "openpredict", "start-api" ]
