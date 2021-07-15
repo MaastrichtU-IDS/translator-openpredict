@@ -59,7 +59,7 @@ def init_openpredict_dir():
             time.sleep(5)
             break
         except:
-            print('Failed to connect to the SPARQL endpoint, attempt ' + attempts)
+            print('Failed to connect to the SPARQL endpoint, attempt ' + str(attempts))
             attempts += 1
     # Check if https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank exist before iniating the triplestore
     # add_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")

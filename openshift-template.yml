@@ -23,7 +23,7 @@ parameters:
 - name: APPLICATION_NAME
   displayName: Application name
   description: Must be without spaces (use -), and unique in the project.
-  value: openpredict-api
+  value: api
   required: true
 - name: PASSWORD
   displayName: Triplestore admin password
@@ -40,6 +40,7 @@ parameters:
   displayName: Application Docker image
   description: Docker image to deploy the Virtuoso triplestore
   value: openlink/virtuoso-opensource-7:latest
+  # value: tenforce/virtuoso:latest
   required: true
 - name: DEFAULT_GRAPH
   displayName: Triplestore default graph
@@ -56,10 +57,10 @@ parameters:
   description: "Amount of log produced: 0 is minimum, 7 is maximum"
   value: "0"
   required: true
-- name: LOG_LEVEL
-  displayName: Triplestore log level
-  description: "Amount of log produced: 0 is minimum, 7 is maximum"
-  value: "0"
+- name: VIRTUOSO_MOUNT_PATH
+  displayName: Mount path for Virtuoso
+  description: "To store the database in a persistent volume"
+  value: "/database"
   required: true
 
 objects:
@@ -111,7 +112,7 @@ objects:
     name: "${APPLICATION_NAME}"
     labels:
       app: "${APPLICATION_NAME}"
-      template: custom-workspace
+      template: openpredict
   spec:
     replicas: 1
     strategy:
@@ -161,7 +162,7 @@ objects:
             value: "http://${APPLICATION_NAME}-virtuoso:8890/sparql"
           volumeMounts:
           - name: data
-            mountPath: "${WORKDIR}"
+            mountPath: "/data/openpredict"
             subPath: "openpredict"
           - name: dshm
             mountPath: /dev/shm
@@ -187,7 +188,7 @@ objects:
     name: "${APPLICATION_NAME}"
     labels:
       app: "${APPLICATION_NAME}"
-      template: custom-workspace
+      template: openpredict
   spec:
     ports:
     - name: 8808-tcp
@@ -204,7 +205,7 @@ objects:
     name: "${APPLICATION_NAME}"
     labels:
       app: "${APPLICATION_NAME}"
-      template: custom-workspace
+      template: openpredict
   spec:
     host: ''
     to:
@@ -261,7 +262,7 @@ objects:
     template:
       metadata:
         labels:
-          app: "${APPLICATION_NAME}-virtuoso"
+          app: "${APPLICATION_NAME}"
           deploymentconfig: "${APPLICATION_NAME}-virtuoso"
       spec:
         serviceAccountName: anyuid
@@ -289,7 +290,7 @@ objects:
           #     memory: 4Gi
           volumeMounts:
           - name: data
-            mountPath: "/database"
+            mountPath: "${VIRTUOSO_MOUNT_PATH}"
             subPath: "virtuoso"
           env:
           # http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFPerformanceTuning
@@ -347,7 +348,7 @@ objects:
           - name: VIRT_TempDatabase_MaxCheckpointRemap
             value: "125000"
           - name: VIRT_URIQA_DefaultHost
-            value: "w3id.org/um"
+            value: "https://w3id.org/um"
             # URL used as base for generated URI (e.g. graph in webDAV)
           # readinessProbe: 
           #   tcpSocket:
