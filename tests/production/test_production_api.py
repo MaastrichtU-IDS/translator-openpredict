@@ -34,10 +34,11 @@ def test_post_trapi():
                         data=trapi_query, headers=headers).json()
             edges = trapi_results['message']['knowledge_graph']['edges'].items()
 
+            print(trapi_filename)
             assert validate(trapi_results['message'], "Message", "1.1.0") == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
-            if trapi_filename.endswith('limit1.json'):
+            elif trapi_filename.endswith('limit1.json'):
                 assert len(edges) == 1
             else:
                 assert len(edges) >= 5

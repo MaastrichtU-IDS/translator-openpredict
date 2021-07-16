@@ -35,8 +35,8 @@ def test_post_trapi(client):
 
             # print(response.json)
             edges = response.json['message']['knowledge_graph']['edges'].items()
-            print(response)
-            
+            # print(response)
+            print(trapi_filename)
             assert validate(response.json['message'], "Message", "1.1.0") == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
