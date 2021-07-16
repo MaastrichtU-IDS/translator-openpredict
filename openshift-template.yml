@@ -1,19 +1,16 @@
 ---
 kind: Template
 apiVersion: template.openshift.io/v1
+# On DSRI with Virtuoso: 18s
+# On node2 with GraphDB 6s
 metadata:
   name: openpredict
   annotations:
     openshift.io/display-name: OpenPredict API
     description: |-
       Start an OpenPredict API with an OpenLink Virtuoso triplestore
-
-      📂 Use the `/database` folder in the container to store your data in the persistent storage
-
-      Visit https://github.com/openlink/virtuoso-opensource for more details about the Virtuoso triplestore
-      Visit https://hub.docker.com/r/openlink/virtuoso-opensource-7 for more details about the image
     iconClass: icon-python
-    tags: triplestore,graph,database,rdf,sparql
+    tags: api,triplestore,sparql
     openshift.io/provider-display-name: Institute of Data Science, UM
     openshift.io/documentation-url: https://maastrichtu-ids.github.io/dsri-documentation/docs
     openshift.io/support-url: https://maastrichtu-ids.github.io/dsri-documentation/help
@@ -320,8 +317,8 @@ objects:
             value: "1"
           - name: VIRT_SPARQL_ExternalXsltSource
             value: "1"
-          - name: VIRT_Parameters_DirsAllowed
-            value: "., /data, /usr/local/virtuoso-opensource/share/virtuoso/vad, /usr/local/virtuoso-opensource/var/lib/virtuoso/db"
+          # - name: VIRT_Parameters_DirsAllowed
+          #   value: "., /data, /usr/local/virtuoso-opensource/share/virtuoso/vad, /usr/local/virtuoso-opensource/var/lib/virtuoso/db"
           - name: VIRT_SPARQL_ResultSetMaxRows
             value: "1048576"
           - name: VIRT_SPARQL_MaxQueryCostEstimationTime

@@ -37,6 +37,8 @@ def test_post_trapi():
             assert validate(trapi_results['message'], "Message", "1.1.0") == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
+            if trapi_filename.endswith('limit1.json'):
+                assert len(edges) == 1
             else:
                 assert len(edges) >= 5
 
