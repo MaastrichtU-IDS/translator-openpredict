@@ -280,7 +280,7 @@ def retrieve_features(type='All', run_id=None):
         if (type != "All"):
             type_filter = 'FILTER(?embeddingType = "' + type + '")'
 
-        query = """SELECT DISTINCT ?id ?description ?embeddingType
+        query = """SELECT DISTINCT ?id ?description ?embeddingType ?feature
             WHERE {{
                 ?feature a <http://www.w3.org/ns/mls#Feature> ;
                     <http://purl.org/dc/elements/1.1/identifier> ?id ;
@@ -290,7 +290,7 @@ def retrieve_features(type='All', run_id=None):
             }}
             """.format(type_filter=type_filter)
 
-        results = query_sparql_endpoint(query, parameters =['id','description','embeddingType'])
+        results = query_sparql_endpoint(query, parameters =['id','description','embeddingType', 'feature'])
         print (results)
 
         features_json = {}
