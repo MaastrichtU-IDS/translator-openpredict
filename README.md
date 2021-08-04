@@ -160,24 +160,38 @@ Add new embeddings to improve the predictive models, with versioning and scoring
 **API component** 
 
 1. Component Name: **OpenPredict API**
+
 2. Component Description: Python API to serve pre-computed set of drug-disease pair predictions from graphs embeddings 
+
 3. GitHub Repository URL: https://github.com/MaastrichtU-IDS/translator-openpredict
-4. Component Framework: **TODO**
+
+4. Component Framework: **Knowledge Provider**
+
 5. System requirements
+
     5.1. Specific OS and version if required: **python 3.8**
+
     5.2. CPU/Memory (for CI, TEST and PROD):  **32 CPUs and 32 Go memory ?** 
+
     5.3. Disk size/IO throughput (for CI, TEST and PROD): **20 Go ?**
+
     5.4. Firewall policies 
+
         5.4.1. Are there external dependencies that needs to be whitelisted at the network for systems communication? See below
+        
         5.4.2. does the team need access to infrastructure components? **The NodeNormalization API** https://nodenormalization-sri.renci.org
 
 
 6. External Dependencies (any components other than current one)
+
     6.1. External storage solution
+
         6.1.1. What is it and how is it configured in this application? Models and database are stored in `/data/openpredict` in the Docker container.
 
 7. Docker application:
+
     7.1. Path to the Dockerfile: `Dockerfile`
+
     7.2. Docker build command:
 
     ```bash
@@ -187,11 +201,13 @@ Add new embeddings to improve the predictive models, with versioning and scoring
     7.3. Docker run command:
 
 	Replace `${PERSISTENT_STORAGE}` with the path to persistent storage on host:
+	
     ```bash
     docker run -d -v ${PERSISTENT_STORAGE}:/data/openpredict -p 8808:8808 ghcr.io/maastrichtu-ids/openpredict-api
     ```
 
-8. Logs of the application
+9. Logs of the application
+
     9.2. Format of the logs: **TODO**
 
 # Acknowledgments​
