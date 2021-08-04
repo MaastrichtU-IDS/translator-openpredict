@@ -172,6 +172,36 @@ Stop the container:
 docker-compose down
 ```
 
+### Option 4: run on the DSRI
+
+Go to the `openpredict` project:
+
+```bash
+oc project openpredict
+```
+
+Add the template to your project, if not already done (at the root of the repository)
+
+```bash
+oc apply -f openshift-template.yml
+```
+
+Start the application from the template:
+
+```bash
+oc new-app openpredict -p APPLICATION_NAME=api \
+  -p STORAGE_SIZE=300Gi \
+  -p APIKEY=mykey
+```
+
+Delete the application:
+
+```bash
+oc delete all,pvc,secret,configmaps,serviceaccount,rolebinding --selector app=api
+```
+
+
+
 ## Generate Sphinx documentation 📖
 
 > **❌ Currently not used** (done with pydoc which is much lighter, cf. `CONTRIBUTING.md`)

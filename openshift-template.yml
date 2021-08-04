@@ -22,9 +22,9 @@ parameters:
   description: Must be without spaces (use -), and unique in the project.
   value: api
   required: true
-- name: PASSWORD
-  displayName: Triplestore admin password
-  description: The password of the dba user.
+- name: APIKEY
+  displayName: OpenPredict API KEY 
+  description: To add new embeddings.
   # from: "[a-zA-Z0-9]{16}"
   # generate: expression
   required: true
@@ -70,7 +70,7 @@ objects:
     labels:
       app: "${APPLICATION_NAME}"
   stringData:
-    application-password: "${PASSWORD}"
+    application-password: "${APIKEY}"
     
 - apiVersion: "v1"
   kind: "PersistentVolumeClaim"
@@ -145,18 +145,24 @@ objects:
           - containerPort: 8808
             protocol: TCP
           env:
-          - name: SPARQL_USERNAME
-            value: ${SPARQL_USERNAME}
-          - name: SPARQL_PASSWORD
+          - name: APIKEY
             # For other apps like VSCode
             valueFrom:
               secretKeyRef:
                 key: application-password
                 name: "${APPLICATION_NAME}"
-          - name: SPARQL_ENDPOINT_URL
-            value: "http://${APPLICATION_NAME}-virtuoso:8890/sparql"
-          - name: SPARQL_ENDPOINT_UPDATE_URL
-            value: "http://${APPLICATION_NAME}-virtuoso:8890/sparql"
+          # - name: SPARQL_USERNAME
+          #   value: ${SPARQL_USERNAME}
+          # - name: SPARQL_PASSWORD
+          #   # For other apps like VSCode
+          #   valueFrom:
+          #     secretKeyRef:
+          #       key: application-password
+          #       name: "${APPLICATION_NAME}"
+          # - name: SPARQL_ENDPOINT_URL
+          #   value: "http://${APPLICATION_NAME}-virtuoso:8890/sparql"
+          # - name: SPARQL_ENDPOINT_UPDATE_URL
+          #   value: "http://${APPLICATION_NAME}-virtuoso:8890/sparql"
           volumeMounts:
           - name: data
             mountPath: "/data/openpredict"
@@ -211,183 +217,6 @@ objects:
       weight: 100
     port:
       targetPort: 8808-tcp
-    tls:
-      termination: edge
-      insecureEdgeTerminationPolicy: Redirect
-
-# Deploy Virtuoso triplestore
-- kind: ImageStream
-  apiVersion: image.openshift.io/v1
-  metadata:
-    name: ${APPLICATION_NAME}-virtuoso
-    labels:
-      app: "${APPLICATION_NAME}"
-  spec:
-    tags:
-    - name: latest
-      from:
-        kind: DockerImage
-        name: ${APPLICATION_IMAGE}
-      importPolicy:
-        scheduled: true
-    lookupPolicy:
-      local: true
-
-- kind: DeploymentConfig
-  apiVersion: apps.openshift.io/v1
-  metadata:
-    name: "${APPLICATION_NAME}-virtuoso"
-    labels:
-      app: "${APPLICATION_NAME}"
-  spec:
-    strategy:
-      type: Recreate
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - virtuoso-triplestore
-        from:
-          kind: ImageStreamTag
-          name: ${APPLICATION_NAME}-virtuoso:latest
-    replicas: 1
-    selector:
-      app: "${APPLICATION_NAME}"
-      deploymentconfig: "${APPLICATION_NAME}-virtuoso"
-    template:
-      metadata:
-        labels:
-          app: "${APPLICATION_NAME}"
-          deploymentconfig: "${APPLICATION_NAME}-virtuoso"
-      spec:
-        serviceAccountName: anyuid
-        # nodeSelector:
-        #   dsri.unimaas.nl/cpu: 'true'
-        volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: "${APPLICATION_NAME}"
-        containers:
-        - name: virtuoso-triplestore
-          image: ${APPLICATION_NAME}-virtuoso:latest
-          imagePullPolicy: IfNotPresent
-          ports:
-          - containerPort: 8890
-            protocol: TCP
-          - containerPort: 1111
-            protocol: TCP
-          # resources:
-          #   limits:
-          #     cpu: '64'
-          #     memory: 200Gi
-          #   requests:
-          #     cpu: '2'
-          #     memory: 4Gi
-          volumeMounts:
-          - name: data
-            mountPath: "${VIRTUOSO_MOUNT_PATH}"
-            subPath: "virtuoso"
-          env:
-          # http://vos.openlinksw.com/owiki/wiki/VOS/VirtRDFPerformanceTuning
-          # http://docs.openlinksw.com/virtuoso/rdfperfgeneral/
-          # https://github.com/tenforce/docker-virtuoso/blob/master/virtuoso.ini
-          - name: DBA_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: application-password
-                name: "${APPLICATION_NAME}"
-          - name: DAV_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: application-password
-                name: "${APPLICATION_NAME}"
-          - name: SPARQL_UPDATE
-            value: "true"
-          - name: DEFAULT_GRAPH
-            value: "${DEFAULT_GRAPH}"
-          - name: VIRT_Database_ErrorLogLevel
-            value: "${LOG_LEVEL}"
-          - name: VIRT_SPARQL_ShortenLongURIs
-            value: "1"
-          - name: VIRT_SPARQL_MaxCacheExpiration
-            value: "1"
-          - name: VIRT_SPARQL_ExternalQuerySource
-            value: "1"
-          - name: VIRT_SPARQL_ExternalXsltSource
-            value: "1"
-          # - name: VIRT_Parameters_DirsAllowed
-          #   value: "., /data, /usr/local/virtuoso-opensource/share/virtuoso/vad, /usr/local/virtuoso-opensource/var/lib/virtuoso/db"
-          - name: VIRT_SPARQL_ResultSetMaxRows
-            value: "1048576"
-          - name: VIRT_SPARQL_MaxQueryCostEstimationTime
-            value: "100000"
-          - name: VIRT_SPARQL_MaxQueryExecutionTime
-            value: "6000"
-          - name: VIRT_VDB_VDBDisconnectTimeout
-            value: "7200000"
-          - name: VIRT_Client_SQL_QUERY_TIMEOUT
-            value: "14400000"
-          - name: VIRT_CLient_SQL_TXN_TIMEOUT
-            value: "14400000"
-          - name: VIRT_Parameters_Timeout
-            value: "7200"
-          - name: VIRT_Parameters_TransactionAfterImageLimit
-            value: "5000000000"
-          - name: VIRT_Parameters_NumberOfBuffers
-            value: "493674"
-            # To use up to 4G of RAM according to documentation
-          - name: VIRT_Parameters_TempDBSize
-            value: "100000000"
-          - name: VIRT_Database_MaxCheckpointRemap
-            value: "125000"
-          - name: VIRT_TempDatabase_MaxCheckpointRemap
-            value: "125000"
-          - name: VIRT_URIQA_DefaultHost
-            value: "https://w3id.org/um"
-            # URL used as base for generated URI (e.g. graph in webDAV)
-          # readinessProbe: 
-          #   tcpSocket:
-          #     port: 8888
-          # livenessProbe: 
-          #   initialDelaySeconds: 15 
-          #   tcpSocket:  
-          #     port: 8888 
-          # failureThreshold: 40
-          # periodSeconds: 10
-          # timeoutSeconds: 2
-        automountServiceAccountToken: false
-
-- kind: Service
-  apiVersion: v1
-  metadata:
-    name: "${APPLICATION_NAME}-virtuoso"
-    labels:
-      app: "${APPLICATION_NAME}"
-  spec:
-    ports:
-    - name: 8890-tcp
-      protocol: TCP
-      port: 8890
-      targetPort: 8890
-    selector:
-      app: "${APPLICATION_NAME}"
-      deploymentconfig: "${APPLICATION_NAME}-virtuoso"
-- kind: Route
-  apiVersion: route.openshift.io/v1
-  metadata:
-    name: "${APPLICATION_NAME}-virtuoso"
-    labels:
-      app: "${APPLICATION_NAME}"
-  spec:
-    host: ''
-    to:
-      kind: Service
-      name: "${APPLICATION_NAME}-virtuoso"
-      weight: 100
-    port:
-      targetPort: 8890-tcp
     tls:
       termination: edge
       insecureEdgeTerminationPolicy: Redirect
