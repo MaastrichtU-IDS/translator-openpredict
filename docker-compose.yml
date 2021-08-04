@@ -10,10 +10,11 @@ services:
     volumes:
       - /data/openpredict:/data/openpredict
     environment: 
-      SPARQL_USERNAME: ${SPARQL_USERNAME}
-      SPARQL_PASSWORD: ${SPARQL_PASSWORD}
-      SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
-      SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
+      OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
+      # SPARQL_USERNAME: ${SPARQL_USERNAME}
+      # SPARQL_PASSWORD: ${SPARQL_PASSWORD}
+      # SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
+      # SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
 
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
       VIRTUAL_HOST: openpredict.semanticscience.org

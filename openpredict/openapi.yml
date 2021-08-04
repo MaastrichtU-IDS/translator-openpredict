@@ -127,6 +127,12 @@ paths:
                   type: string
                   format: binary
       parameters:
+        - name: apikey
+          in: query
+          description: API key
+          required: true
+          schema:
+            type: string
         - name: types
           in: query
           description: Types of the entities in the embedding

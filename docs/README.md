@@ -144,12 +144,10 @@ cd translator-openpredict
 
 > The docker-compose is currently configured to deploy on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) using a [nginx-proxy for Docker](https://github.com/nginx-proxy)
 
-Define the triplestore credentials and API key in the `.env` file 🔑
+Define the API key to authenticate when adding new embeddings in the `.env` file 🔑
 
 ```bash
-nano .env
-SPARQL_USERNAME=import_user
-SPARQL_PASSWORD=password
+echo "OPENPREDICT_APIKEY=yourapikey" > .env
 ```
 
 Start the API in production using GraphDB as backend:
@@ -174,6 +172,8 @@ docker-compose down
 
 ### Option 4: run on the DSRI
 
+Running on https://api-openpredict.apps.dsri2.unimaas.nl
+
 Go to the `openpredict` project:
 
 ```bash
@@ -190,7 +190,7 @@ Start the application from the template:
 
 ```bash
 oc new-app openpredict -p APPLICATION_NAME=api \
-  -p STORAGE_SIZE=300Gi \
+  -p STORAGE_SIZE=100Gi \
   -p APIKEY=mykey
 ```
 
@@ -199,8 +199,6 @@ Delete the application:
 ```bash
 oc delete all,pvc,secret,configmaps,serviceaccount,rolebinding --selector app=api
 ```
-
-
 
 ## Generate Sphinx documentation 📖
 

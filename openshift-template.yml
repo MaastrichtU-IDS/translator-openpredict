@@ -8,14 +8,14 @@ metadata:
   annotations:
     openshift.io/display-name: OpenPredict API
     description: |-
-      Start an OpenPredict API with an OpenLink Virtuoso triplestore
+      Start an OpenPredict API
     iconClass: icon-python
-    tags: api,triplestore,sparql
+    tags: translator,api,embeddings
     openshift.io/provider-display-name: Institute of Data Science, UM
     openshift.io/documentation-url: https://maastrichtu-ids.github.io/dsri-documentation/docs
     openshift.io/support-url: https://maastrichtu-ids.github.io/dsri-documentation/help
 labels:
-  template: virtuoso-triplestore
+  template: openpredict
 parameters:
 - name: APPLICATION_NAME
   displayName: Application name
@@ -24,7 +24,7 @@ parameters:
   required: true
 - name: APIKEY
   displayName: OpenPredict API KEY 
-  description: To add new embeddings.
+  description: Define the API key to authenticate when adding new embeddings.
   # from: "[a-zA-Z0-9]{16}"
   # generate: expression
   required: true
@@ -33,32 +33,16 @@ parameters:
   description: Size of the storage used for the notebook (approximate).
   value: 100Gi
   required: true
-- name: APPLICATION_IMAGE
-  displayName: Application Docker image
-  description: Docker image to deploy the Virtuoso triplestore
-  value: openlink/virtuoso-opensource-7:latest
-  # value: tenforce/virtuoso:latest
-  required: true
-- name: DEFAULT_GRAPH
-  displayName: Triplestore default graph
-  description: The default graph used by the Virtuoso triplestore
-  value: https://w3id.org/openpredict/graph
-  required: true
-- name: SPARQL_USERNAME
-  displayName: Triplestore username
-  description: "Always dba for default virtuoso"
-  value: "dba"
-  required: true
-- name: LOG_LEVEL
-  displayName: Triplestore log level
-  description: "Amount of log produced: 0 is minimum, 7 is maximum"
-  value: "0"
-  required: true
-- name: VIRTUOSO_MOUNT_PATH
-  displayName: Mount path for Virtuoso
-  description: "To store the database in a persistent volume"
-  value: "/database"
-  required: true
+# - name: DEFAULT_GRAPH
+#   displayName: Triplestore default graph
+#   description: The default graph used by the Virtuoso triplestore
+#   value: https://w3id.org/openpredict/graph
+#   required: true
+# - name: APPLICATION_IMAGE
+#   displayName: Application Docker image
+#   description: Docker image to deploy the Virtuoso triplestore
+#   value: openlink/virtuoso-opensource-7:latest
+#   required: true
 
 objects:
 - apiVersion: v1
@@ -98,7 +82,7 @@ objects:
         kind: DockerImage
         name: ghcr.io/maastrichtu-ids/openpredict-api:latest
       importPolicy:
-        scheduled: true
+        scheduled: false
     lookupPolicy:
       local: true
 
@@ -145,8 +129,7 @@ objects:
           - containerPort: 8808
             protocol: TCP
           env:
-          - name: APIKEY
-            # For other apps like VSCode
+          - name: OPENPREDICT_APIKEY
             valueFrom:
               secretKeyRef:
                 key: application-password
@@ -154,7 +137,6 @@ objects:
           # - name: SPARQL_USERNAME
           #   value: ${SPARQL_USERNAME}
           # - name: SPARQL_PASSWORD
-          #   # For other apps like VSCode
           #   valueFrom:
           #     secretKeyRef:
           #       key: application-password
@@ -166,7 +148,7 @@ objects:
           volumeMounts:
           - name: data
             mountPath: "/data/openpredict"
-            subPath: "openpredict"
+            # subPath: "openpredict"
           - name: dshm
             mountPath: /dev/shm
           # resources:

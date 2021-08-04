@@ -67,13 +67,13 @@ def start_api(port=8808, debug=False, start_spark=True):
     api.run(host='0.0.0.0', port=port, debug=debug, server=deployment_server)
 
 
-def post_embedding(types, emb_name, description, model_id):
+def post_embedding(apikey, types, emb_name, description, model_id):
     """Post JSON embeddings via the API, with simple APIKEY authentication 
     provided in environment variables 
     """
-    # if os.getenv('OPENPREDICT_APIKEY') == apikey:
-    print ('Post a new embeddings')
-    if True:
+    # Ignore the API key check if no env variable defined (for development)
+    print(os.getenv('OPENPREDICT_APIKEY'))
+    if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         embedding_file = connexion.request.files['embedding_file']
         print (emb_name, types)
         run_id, scores = addEmbedding(embedding_file, emb_name, types, description, model_id)
