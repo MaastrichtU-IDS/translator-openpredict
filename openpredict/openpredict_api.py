@@ -71,6 +71,7 @@ def post_embedding(apikey, types, emb_name, description, model_id):
     """Post JSON embeddings via the API, with simple APIKEY authentication 
     provided in environment variables 
     """
+    # TODO: implement GitHub OAuth? https://github-flask.readthedocs.io/en/latest/
     # Ignore the API key check if no env variable defined (for development)
     print(os.getenv('OPENPREDICT_APIKEY'))
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
