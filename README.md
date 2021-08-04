@@ -131,21 +131,7 @@ Use this operation if you just want to easily retrieve predictions for a given e
 * The minimum score of the returned predictions, from 0 to 1 (optional)
 * The limit of results to return, starting from the higher score, e.g. 42 (optional)  
 
-The API will return the list of predicted target for the given entity, the labels are resolved using the [Translator Name Resolver API](http://robokop.renci.org:2434/docs#/lookup/lookup_curies_lookup_post):
-
-```json
-{
-  "count": 300,
-  "hits": [
-    {
-      "score": 0.8361061489249737,
-      "id": "OMIM:246300",
-      "label": "leprosy, susceptibility to, 3",
-      "type": "disease"
-    }
-  ]
-}
-```
+The API will return the list of predicted target for the given entity, the labels are resolved using the [Translator Name Resolver API](https://nodenormalization-sri.renci.org)
 
 > Try it at [https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394](https://openpredict.semanticscience.org/predict?drug_id=DRUGBANK:DB00394)
 
@@ -162,6 +148,51 @@ Diagram of the data model used for OpenPredict, based on the ML Schema ontology 
 ![OpenPredict datamodel](https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/docs/OpenPREDICT_datamodel.jpg)
 
 ---
+
+# Translator application
+
+### Service Summary
+Query for drug-disease pairs predicted from pre-computed sets of graphs embeddings.
+
+Add new embeddings to improve the predictive models, with versioning and scoring of the models.
+
+### Component List
+**API component** 
+
+1. Component Name: **OpenPredict API**
+2. Component Description: Python API to serve pre-computed set of drug-disease pair predictions from graphs embeddings 
+3. GitHub Repository URL: https://github.com/MaastrichtU-IDS/translator-openpredict
+4. Component Framework: **TODO**
+5. System requirements
+    5.1. Specific OS and version if required: **python 3.8**
+    5.2. CPU/Memory (for CI, TEST and PROD):  **32 CPUs and 32 Go memory ?** 
+    5.3. Disk size/IO throughput (for CI, TEST and PROD): **20 Go ?**
+    5.4. Firewall policies 
+        5.4.1. Are there external dependencies that needs to be whitelisted at the network for systems communication? See below
+        5.4.2. does the team need access to infrastructure components? **The NodeNormalization API** https://nodenormalization-sri.renci.org
+
+
+6. External Dependencies (any components other than current one)
+    6.1. External storage solution
+        6.1.1. What is it and how is it configured in this application? Models and database are stored in `/data/openpredict` in the Docker container.
+
+7. Docker application:
+    7.1. Path to the Dockerfile: `Dockerfile`
+    7.2. Docker build command:
+
+    ```bash
+    docker build ghcr.io/maastrichtu-ids/openpredict-api .
+    ```
+
+    7.3. Docker run command:
+
+	Replace `${PERSISTENT_STORAGE}` with the path to persistent storage on host:
+    ```bash
+    docker run -d -v ${PERSISTENT_STORAGE}:/data/openpredict -p 8808:8808 ghcr.io/maastrichtu-ids/openpredict-api
+    ```
+
+8. Logs of the application
+    9.2. Format of the logs: **TODO**
 
 # Acknowledgments​
 
