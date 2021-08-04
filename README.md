@@ -175,17 +175,13 @@ Add new embeddings to improve the predictive models, with versioning and scoring
 
     5.3. Disk size/IO throughput (for CI, TEST and PROD): **20 Go ?**
 
-    5.4. Firewall policies 
-
-       5.4.1. Are there external dependencies that needs to be whitelisted at the network for systems communication? See below
-       5.4.2. does the team need access to infrastructure components? **The NodeNormalization API** https://nodenormalization-sri.renci.org
+    5.4. Firewall policies: does the team need access to infrastructure components? 
+    **The NodeNormalization API** https://nodenormalization-sri.renci.org
 
 
 6. External Dependencies (any components other than current one)
 
-    6.1. External storage solution
-
-       6.1.1. What is it and how is it configured in this application? Models and database are stored in `/data/openpredict` in the Docker container.
+    6.1. External storage solution: **Models and database are stored in `/data/openpredict` in the Docker container**
 
 7. Docker application:
 
