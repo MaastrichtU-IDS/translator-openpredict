@@ -73,8 +73,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
-        # python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.8]
+        # python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -94,11 +94,11 @@ jobs:
         pip install pytest reasoner-validator
         pip install .
       # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test with pytest
-      env:
-        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-        SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
-        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
+    - name: Test with embedded triplestore
+      # env:
+      #   SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+      #   SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+      #   SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
+      #   SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: pytest tests/integration/*
 

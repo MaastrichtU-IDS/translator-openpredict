@@ -1,13 +1,16 @@
+from openpredict.rdf_utils import init_triplestore
 import pytest
 import pkg_resources
 import connexion
 import os
 import json
 from openpredict.openpredict_utils import init_openpredict_dir
+from openpredict.rdf_utils import init_triplestore
 from reasoner_validator import validate
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
+init_triplestore()
 flask_app = connexion.FlaskApp(__name__)
 flask_app.add_api('../../openpredict/openapi.yml')
 @pytest.fixture(scope='module')
