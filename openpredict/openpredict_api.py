@@ -8,6 +8,9 @@ from openpredict.openpredict_model import addEmbedding, get_predictions
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
+# import asyncio
+# import aiohttp
+# from aiohttp import web
 
 def start_api(port=8808, debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
@@ -35,6 +38,8 @@ def start_api(port=8808, debug=False, start_spark=True):
     
     
     api = connexion.App(__name__, options={"swagger_url": ""})
+    # Try Aio for sync, cf. https://github.com/zalando/connexion/issues/1277
+    # api = connexion.AioHttpApp(__name__, options={"swagger_url": ""}, only_one_api=True)
     # api = connexion.App(__name__, options={"swagger_url": ""}, arguments={'server_url': server_url})
 
     api.add_api('openapi.yml')
@@ -65,6 +70,7 @@ def start_api(port=8808, debug=False, start_spark=True):
 
     print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(host='0.0.0.0', port=port, debug=debug, server=deployment_server)
+    # api.run(host='0.0.0.0', port=port, debug=debug)
 
 
 def post_embedding(apikey, types, emb_name, description, model_id):
@@ -194,6 +200,14 @@ def get_models():
     :return: JSON with models and features
     """
     return retrieve_models()
+
+async def async_reasoner_predict(request_body):
+    """Get predicted associations for a given ReasonerAPI query.
+    
+    :param request_body: The ReasonerStdAPI query in JSON
+    :return: Predictions as a ReasonerStdAPI Message
+    """
+    return post_reasoner_predict(request_body)
 
 # TODO: get_predict wrapped in ReasonerStdApi
 def post_reasoner_predict(request_body):

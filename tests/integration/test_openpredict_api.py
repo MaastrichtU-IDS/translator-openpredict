@@ -77,7 +77,7 @@ def test_trapi_empty_response(client):
         content_type='application/json')
 
     print(response.json)
-    assert validate(response.json['message'], "Message", "1.1.0") == None
+    assert validate(response.json['message'], "Message", "1.2.0") == None
     assert len(response.json['message']['results']) == 0
 
 # def test_post_embeddings():
