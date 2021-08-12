@@ -18,6 +18,8 @@ def client():
     with flask_app.app.test_client() as c:
         yield c
 
+VALIDATE_TRAPI_VERSION="1.1.0"
+
 def test_get_predict(client):
     """Test predict API GET operation"""
     url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
@@ -40,7 +42,7 @@ def test_post_trapi(client):
             edges = response.json['message']['knowledge_graph']['edges'].items()
             # print(response)
             print(trapi_filename)
-            assert validate(response.json['message'], "Message", "1.1.0") == None
+            assert validate(response.json['message'], "Message", VALIDATE_TRAPI_VERSION) == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):
@@ -77,7 +79,7 @@ def test_trapi_empty_response(client):
         content_type='application/json')
 
     print(response.json)
-    assert validate(response.json['message'], "Message", "1.2.0") == None
+    assert validate(response.json['message'], "Message", VALIDATE_TRAPI_VERSION) == None
     assert len(response.json['message']['results']) == 0
 
 # def test_post_embeddings():
