@@ -141,7 +141,7 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
 
     # add to the similarity tensor
 
-    if types =="Drugs":
+    if types == "Drugs":
         drug_df= pd.concat([drug_df, df_sim_m],  axis=1)
     elif types == "Diseases":
         disease_df= pd.concat([disease_df, df_sim_m],  axis=1)  
