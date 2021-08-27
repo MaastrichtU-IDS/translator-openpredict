@@ -23,3 +23,7 @@ docs/neurodkg_embedding.csv
 docs/neurodkg_embedding.json
 
 data/
+
+.odo/odo-file-index.json
+
+.odo
