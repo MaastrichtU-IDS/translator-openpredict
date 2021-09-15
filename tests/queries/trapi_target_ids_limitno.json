@@ -10,7 +10,7 @@
             },
             "nodes": {
                 "n00": {
-                    "categories": ["biolink:ChemicalSubstance"]
+                    "categories": ["biolink:ChemicalEntity"]
                 },
                 "n01": {
                     "categories": ["biolink:Disease"],
