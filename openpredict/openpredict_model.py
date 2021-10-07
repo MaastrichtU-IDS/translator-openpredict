@@ -34,26 +34,29 @@ def get_spark_context():
     """
     spark_master_url = os.getenv('SPARK_MASTER_URL')
 
-    sc = None
     if os.getenv('SPARK_HOME'):
         # Do not try to run Spark if SPARK_HOME env variable not set
         logging.info('SPARK env var found')
         # import findspark
         # findspark.init(os.getenv('SPARK_HOME'))
         import pyspark
-        if spark_master_url:
+
+          #sc = pyspark.SparkContext(appName="Pi", master='local[*]')
+        try:
+            logging.info('SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
+            sc = pyspark.SparkContext.getOrCreate()
+            logging.info(sc)
+        except Exception as e:
+            logging.warning(e)
+            logging.info("Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
+            sc=None
+
+        if spark_master_url and sc == None:
             logging.info('SPARK_MASTER_URL provided, connecting to the Spark cluster ✨')
             # e.g. spark://my-spark-spark-master:7077
             sc = pyspark.SparkContext(appName="Pi", master=spark_master_url)
             logging.info(sc)
-        else:
-            try:
-                logging.info('SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
-                sc = pyspark.SparkContext.getOrCreate()
-                logging.info(sc)
-            except Exception as e:
-                logging.warning(e)
-                logging.info("Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
+          
     else:
         logging.info('SPARK_HOME not found, using pandas to handle dataframes 🐼')
     return sc
@@ -208,7 +211,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
         cond = df.Disease1 > df.Disease2
         df.loc[cond, ['Disease1','Disease2']] = df.loc[cond, ['Disease2','Disease1']].values
         if i != 0:
-            disease_df = disease_df.merge(df,on=['Disease1','Disease2'], how='inner')
+            disease_df = disease_df.merge(df,on=['Disease1','Disease2'], how='outer')
             #drug_df=drug_df.merge(temp,how='outer',on='Drug')
         else:
             disease_df = df
@@ -295,6 +298,11 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     c = np.sqrt( np.multiply(a,b) )
     ix2 = (knownDrugDisease == [drug, disease])
     c[ix2[:,1]& ix2[:,0]]=0.0
+    print (drug, disease)
+    print (a,b)
+    print (c)
+    if len(c) ==0 :
+        print (diseaseDF)
     return float(max(c))
 
 
@@ -517,7 +525,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     if from_model_id == 'scratch':
         print('🏗 Build the model from scratch')
         # Start from scratch (merge feature matrixes)
-        baseline_features_folder = "data/translator_features/"
+        baseline_features_folder = "data/baseline_features/"
         drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
                         'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
         diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
@@ -588,8 +596,11 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     clf = train_classifier(train_df, clf)
     print('Final model training runtime 🕕  ' + str(datetime.now() - final_training))
 
-    # print('\nStore the model in a .joblib file 💾')
-    # dump(clf, models_folder + 'openpredict-baseline-omim-drugbank.joblib')
+    dump((drug_df, disease_df), get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
+    print ('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict-baseline-omim-drugbank.joblib')
+
+    dump(clf, get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib'))
+    print('\nStore the model in the file ' + get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib 💾'))
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
