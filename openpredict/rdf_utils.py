@@ -1,5 +1,5 @@
 import logging
-import uuid 
+import uuid
 import os
 import pkg_resources
 from datetime import datetime
@@ -7,7 +7,7 @@ from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
 from SPARQLWrapper import SPARQLWrapper, POST, JSON
 
-## Importing the data/openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
+# Importing the data/openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
 if not OPENPREDICT_DATA_DIR:
     # Data folder in current dir if not provided via environment variable
@@ -42,18 +42,19 @@ SPARQL_ENDPOINT_UPDATE_URL = os.getenv('SPARQL_ENDPOINT_UPDATE_URL')
 # Default credentials for dev (if no environment variables provided)
 if not SPARQL_ENDPOINT_USERNAME:
     # SPARQL_ENDPOINT_USERNAME='import_user'
-    SPARQL_ENDPOINT_USERNAME='dba'
+    SPARQL_ENDPOINT_USERNAME = 'dba'
 if not SPARQL_ENDPOINT_PASSWORD:
-    SPARQL_ENDPOINT_PASSWORD='dba'
-#if not SPARQL_ENDPOINT_URL:
+    SPARQL_ENDPOINT_PASSWORD = 'dba'
+# if not SPARQL_ENDPOINT_URL:
 #    SPARQL_ENDPOINT_URL='http://localhost:8890/sparql'
 # SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
-if not SPARQL_ENDPOINT_UPDATE_URL:
-    SPARQL_ENDPOINT_UPDATE_URL='http://localhost:8890/sparql'
+# if not SPARQL_ENDPOINT_UPDATE_URL:
+#    SPARQL_ENDPOINT_UPDATE_URL = 'http://localhost:8890/sparql'
     # SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
 
-## Uncomment this line to test OpenPredict in dev mode using a RDF file instead of a SPARQL endpoint
+# Uncomment this line to test OpenPredict in dev mode using a RDF file instead of a SPARQL endpoint
 # SPARQL_ENDPOINT_URL=None
+
 
 def insert_graph_in_sparql_endpoint(g):
     """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
@@ -65,7 +66,8 @@ def insert_graph_in_sparql_endpoint(g):
         sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
         sparql.setMethod(POST)
         # sparql.setHTTPAuth(BASIC)
-        sparql.setCredentials(SPARQL_ENDPOINT_USERNAME, SPARQL_ENDPOINT_PASSWORD)
+        sparql.setCredentials(SPARQL_ENDPOINT_USERNAME,
+                              SPARQL_ENDPOINT_PASSWORD)
         query = """INSERT DATA {{ GRAPH  <{graph}>
         {{
         {ntriples}
@@ -84,7 +86,7 @@ def insert_graph_in_sparql_endpoint(g):
         graph_from_file.serialize(RDF_DATA_PATH, format='turtle')
 
 
-def query_sparql_endpoint(query, parameters= []):
+def query_sparql_endpoint(query, parameters=[]):
     """Run select SPARQL query against SPARQL endpoint
 
     :param query: SPARQL query as a string
@@ -99,7 +101,7 @@ def query_sparql_endpoint(query, parameters= []):
         # print(results["results"]["bindings"])
         return results["results"]["bindings"]
     else:
-        ## Trying to SPARQL query a RDF file directly, to avoid using triplestores in dev (not working)
+        # Trying to SPARQL query a RDF file directly, to avoid using triplestores in dev (not working)
         # Docs: https://rdflib.readthedocs.io/en/stable/intro_to_sparql.html
         # Examples: https://github.com/RDFLib/rdflib/tree/master/examples
         # Use SPARQLStore? https://github.com/RDFLib/rdflib/blob/master/examples/sparqlstore_example.py
@@ -111,9 +113,9 @@ def query_sparql_endpoint(query, parameters= []):
         results = []
         for row in qres:
             # TODO: row.asdict()
-            result={}
-            for i,p in enumerate(parameters):
-                result[p] ={}
+            result = {}
+            for i, p in enumerate(parameters):
+                result[p] = {}
                 result[p]['value'] = str(row[p])
             results.append(result)
             # How can we iterate over the variable defined in the SPARQL query?
@@ -136,12 +138,15 @@ def init_triplestore():
         <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
     } LIMIT 10
     """
-    results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
+    results = query_sparql_endpoint(
+        check_baseline_run_query, parameters=['runType'])
     if (len(results) < 1):
         g = Graph()
-        g.parse(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), format="ttl")
+        g.parse(pkg_resources.resource_filename('openpredict',
+                'data/openpredict-metadata.ttl'), format="ttl")
         insert_graph_in_sparql_endpoint(g)
         print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
+
 
 def add_feature_metadata(id, description, type):
     """Generate RDF metadata for a feature
@@ -163,6 +168,13 @@ def add_feature_metadata(id, description, type):
     return str(feature_uri)
 
 
+def get_run_id(run_id=None):
+    if not run_id:
+        # Generate random UUID for the run ID
+        run_id = str(uuid.uuid1())
+    return run_id
+
+
 def add_run_metadata(scores, model_features, hyper_params, run_id=None):
     """Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
     https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
@@ -179,14 +191,17 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
 
     run_uri = URIRef(OPENPREDICT_NAMESPACE + 'run/' + run_id)
     run_prop_prefix = OPENPREDICT_NAMESPACE + run_id + "/"
-    evaluation_uri = URIRef(OPENPREDICT_NAMESPACE + 'run/' + run_id + '/ModelEvaluation')
+    evaluation_uri = URIRef(OPENPREDICT_NAMESPACE +
+                            'run/' + run_id + '/ModelEvaluation')
     # The same for all run:
-    implementation_uri = URIRef(OPENPREDICT_NAMESPACE + 'implementation/OpenPredict')
+    implementation_uri = URIRef(
+        OPENPREDICT_NAMESPACE + 'implementation/OpenPredict')
 
     # Add Run metadata
     g.add((run_uri, RDF.type, MLS['Run']))
     g.add((run_uri, DC.identifier, Literal(run_id)))
-    g.add((run_uri, PROV['generatedAtTime'], Literal(datetime.now(), datatype=XSD.dateTime)))
+    g.add((run_uri, PROV['generatedAtTime'], Literal(
+        datetime.now(), datatype=XSD.dateTime)))
     g.add((run_uri, MLS['realizes'], OPENPREDICT['LogisticRegression']))
     g.add((run_uri, MLS['executes'], implementation_uri))
     g.add((run_uri, MLS['hasOutput'], evaluation_uri))
@@ -198,22 +213,27 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
     # Add implementation metadata
     g.add((OPENPREDICT['LogisticRegression'], RDF.type, MLS['Algorithm']))
     g.add((implementation_uri, RDF.type, MLS['Implementation']))
-    g.add((implementation_uri, MLS['implements'], OPENPREDICT['LogisticRegression']))
+    g.add((implementation_uri, MLS['implements'],
+          OPENPREDICT['LogisticRegression']))
 
     # Add HyperParameters and their settings to implementation
     for hyperparam, hyperparam_setting in hyper_params.items():
-        hyperparam_uri = URIRef(OPENPREDICT_NAMESPACE + 'HyperParameter/' + hyperparam)
+        hyperparam_uri = URIRef(
+            OPENPREDICT_NAMESPACE + 'HyperParameter/' + hyperparam)
         g.add((implementation_uri, MLS['hasHyperParameter'], hyperparam_uri))
         g.add((hyperparam_uri, RDF.type, MLS['HyperParameter']))
         g.add((hyperparam_uri, RDFS.label, Literal(hyperparam)))
 
-        hyperparam_setting_uri = URIRef(OPENPREDICT_NAMESPACE + 'HyperParameterSetting/' + hyperparam)
-        g.add((implementation_uri, MLS['hasHyperParameter'], hyperparam_setting_uri))
+        hyperparam_setting_uri = URIRef(
+            OPENPREDICT_NAMESPACE + 'HyperParameterSetting/' + hyperparam)
+        g.add(
+            (implementation_uri, MLS['hasHyperParameter'], hyperparam_setting_uri))
         g.add((hyperparam_setting_uri, RDF.type, MLS['HyperParameterSetting']))
         g.add((hyperparam_setting_uri, MLS['specifiedBy'], hyperparam_uri))
-        g.add((hyperparam_setting_uri, MLS['hasValue'], Literal(hyperparam_setting)))
+        g.add((hyperparam_setting_uri,
+              MLS['hasValue'], Literal(hyperparam_setting)))
         g.add((run_uri, MLS['hasInput'], hyperparam_setting_uri))
-    
+
     # TODO: improve how we retrieve features
     for feature in model_features:
         feature_uri = URIRef(feature)
@@ -224,7 +244,7 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
     # TODO: those 2 triples are for the PLEX ontology
     g.add((evaluation_uri, RDF.type, PROV['Entity']))
     g.add((evaluation_uri, PROV['wasGeneratedBy'], run_uri))
-    
+
     # Add scores as EvaluationMeasures
     g.add((evaluation_uri, RDF.type, MLS['ModelEvaluation']))
     for key in scores.keys():
@@ -232,7 +252,8 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
         g.add((evaluation_uri, MLS['specifiedBy'], key_uri))
         g.add((key_uri, RDF.type, MLS['EvaluationMeasure']))
         g.add((key_uri, RDFS.label, Literal(key)))
-        g.add((key_uri, MLS['hasValue'], Literal(scores[key], datatype=XSD.double)))
+        g.add((key_uri, MLS['hasValue'], Literal(
+            scores[key], datatype=XSD.double)))
         # TODO: The Example 1 puts hasValue directly in the ModelEvaluation
         # but that prevents to provide multiple values for 1 evaluation
         # http://ml-schema.github.io/documentation/ML%20Schema.html#overview
@@ -243,7 +264,7 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
 
 def retrieve_features(type='All', run_id=None):
     """Get features in the ML model
-    
+
     :param type: type of the feature (All, Both, Drug, Disease)
     :return: JSON with features
     """
@@ -264,8 +285,9 @@ def retrieve_features(type='All', run_id=None):
                     <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
                     dc:description ?featureDescription .
             }"""
-        results = query_sparql_endpoint(sparql_feature_for_run, parameters =['feature','featureId','featureDescription', 'embeddingType'])
-        print (results)
+        results = query_sparql_endpoint(sparql_feature_for_run, parameters=[
+                                        'feature', 'featureId', 'featureDescription', 'embeddingType'])
+        print(results)
 
         features_json = {}
         for result in results:
@@ -274,7 +296,7 @@ def retrieve_features(type='All', run_id=None):
                 "description": result['featureDescription']['value'],
                 "type": result['embeddingType']['value']
             }
-        
+
     else:
         type_filter = ''
         if (type != "All"):
@@ -290,8 +312,9 @@ def retrieve_features(type='All', run_id=None):
             }}
             """.format(type_filter=type_filter)
 
-        results = query_sparql_endpoint(query, parameters =['id','description','embeddingType', 'feature'])
-        print (results)
+        results = query_sparql_endpoint(
+            query, parameters=['id', 'description', 'embeddingType', 'feature'])
+        print(results)
 
         features_json = {}
         for result in results:
@@ -305,7 +328,7 @@ def retrieve_features(type='All', run_id=None):
 
 def retrieve_models():
     """Get models with their scores and features
-    
+
     :return: JSON with models and features
     """
     sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
@@ -346,13 +369,14 @@ def retrieve_models():
         }
         """
 
-    results = query_sparql_endpoint(sparql_get_scores, 
-    parameters=['run','runId', 'generatedAtTime', 'featureId', 'accuracy', 
-    'average_precision', 'f1', 'precision' ,'recall', 'roc_auc'])
+    results = query_sparql_endpoint(sparql_get_scores,
+                                    parameters=['run', 'runId', 'generatedAtTime', 'featureId', 'accuracy',
+                                                'average_precision', 'f1', 'precision', 'recall', 'roc_auc'])
     models_json = {}
     for result in results:
         if result['run']['value'] in models_json:
-            models_json[result['run']['value']]['features'].append(result['featureId']['value'])
+            models_json[result['run']['value']]['features'].append(
+                result['featureId']['value'])
         else:
             models_json[result['run']['value']] = {
                 "id": result['runId']['value'],
@@ -366,7 +390,7 @@ def retrieve_models():
                 'roc_auc': result['roc_auc']['value']
             }
 
-        ## We could create an object with feature description instead of passing just the ID
+        # We could create an object with feature description instead of passing just the ID
         # features_json[result['id']['value']] = {
         #     "description": result['description']['value'],
         #     "type": result['embeddingType']['value']

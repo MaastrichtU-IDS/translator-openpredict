@@ -12,6 +12,7 @@ from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 # import aiohttp
 # from aiohttp import web
 
+
 def start_api(port=8808, debug=False, start_spark=True):
     """Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
 
@@ -26,17 +27,16 @@ def start_api(port=8808, debug=False, start_spark=True):
 
     if debug:
         # Run in development mode
-        deployment_server='flask'
+        deployment_server = 'flask'
         logging.basicConfig(level=logging.DEBUG)
         print("Development deployment using \033[1mFlask\033[0m 🧪")
         print("Debug enabled 🐞 - The API will reload automatically at each change 🔃")
     else:
         # Run in productiom with tornado (also available: gevent)
-        deployment_server='tornado'
+        deployment_server = 'tornado'
         logging.basicConfig(level=logging.INFO)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
-    
-    
+
     api = connexion.App(__name__, options={"swagger_url": ""})
     # Try Aio for sync, cf. https://github.com/zalando/connexion/issues/1277
     # api = connexion.AioHttpApp(__name__, options={"swagger_url": ""}, only_one_api=True)
@@ -48,14 +48,14 @@ def start_api(port=8808, debug=False, start_spark=True):
     # Add CORS support
     CORS(api.app)
 
-    ## Fix to avoid empty list of servers for nginx-proxy deployments
+    # Fix to avoid empty list of servers for nginx-proxy deployments
     if os.getenv('LETSENCRYPT_HOST'):
-        server_url='https://' + os.getenv('LETSENCRYPT_HOST')
+        server_url = 'https://' + os.getenv('LETSENCRYPT_HOST')
         api.app.config['REVERSE_PROXY_PATH'] = server_url
         # api.app.config['REVERSE_PROXY_PATH'] = '/api'
         ReverseProxyPrefixFix(api.app)
     elif os.getenv('VIRTUAL_HOST'):
-        server_url='http://' + os.getenv('VIRTUAL_HOST')
+        server_url = 'http://' + os.getenv('VIRTUAL_HOST')
         api.app.config['REVERSE_PROXY_PATH'] = server_url
         # api.app.config['REVERSE_PROXY_PATH'] = '/api'
         ReverseProxyPrefixFix(api.app)
@@ -68,7 +68,8 @@ def start_api(port=8808, debug=False, start_spark=True):
     #     except:
     #         logging.info("Could not start Spark locally")
 
-    print("Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
+    print(
+        "Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(host='0.0.0.0', port=port, debug=debug, server=deployment_server)
     # api.run(host='0.0.0.0', port=port, debug=debug)
 
@@ -82,20 +83,22 @@ def post_embedding(apikey, types, emb_name, description, model_id):
     print(os.getenv('OPENPREDICT_APIKEY'))
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         embedding_file = connexion.request.files['embedding_file']
-        print (emb_name, types)
-        run_id, scores = addEmbedding(embedding_file, emb_name, types, description, model_id)
-        print ('Embeddings uploaded')
+        print(emb_name, types)
+        run_id, scores = addEmbedding(
+            embedding_file, emb_name, types, description, model_id)
+        print('Embeddings uploaded')
         # train_model(False)
-        return { 
+        return {
             'status': 200,
             'message': 'Embeddings added for run ' + run_id + ', trained model has scores ' + str(scores)
         }
     else:
-        return { 'Forbidden': 403 }
+        return {'Forbidden': 403}
+
 
 def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-omim-drugbank', min_score=None, max_score=None, n_results=None):
     """Get predicted associations for a given entity CURIE.
-    
+
     :param entity: Search for predicted associations for this entity CURIE
     :return: Prediction results object with score
     """
@@ -104,14 +107,15 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
     # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
     concept_id = ''
     if drug_id:
-        concept_id  = drug_id
+        concept_id = drug_id
     elif disease_id:
         concept_id = disease_id
     else:
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        prediction_json, source_target_predictions = get_predictions(concept_id, model_id, min_score, max_score, n_results)
+        prediction_json, source_target_predictions = get_predictions(
+            concept_id, model_id, min_score, max_score, n_results)
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
@@ -127,9 +131,10 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
     return {'hits': prediction_json, 'count': len(prediction_json)}
     # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
+
 def get_meta_knowledge_graph():
     """Get predicates and entities provided by the API
-    
+
     :return: JSON with biolink entities
     """
     openpredict_predicates = {
@@ -164,13 +169,14 @@ def get_meta_knowledge_graph():
             }
         }
     }
-    
+
     return openpredict_predicates
+
 
 def get_predicates():
     """DEPRECATED since 3.1.0, replaced by meta_knowledge_graph
     Get predicates and entities provided by the API
-    
+
     :return: JSON with biolink entities
     """
     openpredict_predicates = {
@@ -187,32 +193,37 @@ def get_predicates():
     }
     return openpredict_predicates
 
+
 def get_features(type):
     """Get features in the model
-    
+
     :return: JSON with features
     """
     return retrieve_features(type)
 
+
 def get_models():
     """Get models with their scores and features
-    
+
     :return: JSON with models and features
     """
     return retrieve_models()
 
+
 async def async_reasoner_predict(request_body):
     """Get predicted associations for a given ReasonerAPI query.
-    
+
     :param request_body: The ReasonerStdAPI query in JSON
     :return: Predictions as a ReasonerStdAPI Message
     """
     return post_reasoner_predict(request_body)
 
 # TODO: get_predict wrapped in ReasonerStdApi
+
+
 def post_reasoner_predict(request_body):
     """Get predicted associations for a given ReasonerAPI query.
-    
+
     :param request_body: The ReasonerStdAPI query in JSON
     :return: Predictions as a ReasonerStdAPI Message
     """
@@ -228,7 +239,7 @@ def post_reasoner_predict(request_body):
 
     reasonerapi_response = typed_results_to_reasonerapi(request_body)
 
-    # TODO: populate edges/nodes with association predictions    
+    # TODO: populate edges/nodes with association predictions
     #  Edge: {
     #     "id": "e50",
     #     "source_id": "MONDO:0021668",
