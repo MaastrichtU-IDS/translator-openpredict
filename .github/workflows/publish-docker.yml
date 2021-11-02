@@ -49,7 +49,7 @@ jobs:
 
       - name: Log into GitHub Container Registry
         # TODO: Create a PAT with `read:packages` and `write:packages` scopes and save it as an Actions secret `CONTAINER_REGISTRY_GITHUB_TOKEN`
-        run: echo "${{ secrets.CONTAINER_REGISTRY_GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image to GitHub Container Registry
         run: |
