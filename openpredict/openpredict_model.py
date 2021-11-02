@@ -11,7 +11,7 @@ from sklearn.model_selection import GroupKFold, StratifiedKFold
 from sklearn.metrics.pairwise import cosine_similarity
 from joblib import dump, load
 import pkg_resources
-from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata
+from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata, get_run_id
 # from openpredict.openpredict_utils import get_spark_context
 # from openpredict.openpredict_utils import get_spark_context
 from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels
@@ -138,7 +138,7 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     print("Number of drugs that do not exist in the embedding ",
           len(names) - len(entity_exist))
     # Copy only drug entity embeddings
-    embedding_df = emb_df.loc[entity_exist].copy()
+    embedding_df = emb_df.copy()
     emb_matrix = np.empty(shape=(0, emb_size))
     for d in names:
         # add zeros values for drugs that do not exist in the embedding
@@ -170,9 +170,14 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
         df_sim_m.index = disease_df.index
         disease_df = pd.concat([disease_df, df_sim_m],  axis=1)
 
+    # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
+    run_id = get_run_id()
+    dump((drug_df, disease_df), get_openpredict_dir(
+        'features/' + run_id + '.joblib'))
+
     added_feature_uri = add_feature_metadata(emb_name, description, types)
     # train the model
-    clf, scores, hyper_params, features_df = train_model(from_model_id)
+    clf, scores, hyper_params, features_df = train_model(run_id)
 
     # TODO: How can we get the list of features directly from the built model?
     # The baseline features are here, but not the one added
@@ -187,11 +192,9 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
         model_features = list(retrieve_features('All', from_model_id).keys())
     model_features.append(added_feature_uri)
 
-    run_id = add_run_metadata(scores, model_features, hyper_params)
+    run_id = add_run_metadata(scores, model_features,
+                              hyper_params, run_id=run_id)
 
-    # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
-    dump((drug_df, disease_df), get_openpredict_dir(
-        'features/' + run_id + '.joblib'))
     print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/' + run_id + '.joblib')
 
     dump(clf, get_openpredict_dir('models/' + run_id + '.joblib'))
@@ -653,15 +656,16 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     print('Final model training runtime 🕕  ' +
           str(datetime.now() - final_training))
 
-    dump((drug_df, disease_df), get_openpredict_dir(
-        'features/openpredict-baseline-omim-drugbank.joblib'))
-    print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict-baseline-omim-drugbank.joblib')
+    if from_model_id == 'scratch':
+        dump((drug_df, disease_df), get_openpredict_dir(
+            'features/openpredict-baseline-omim-drugbank.joblib'))
+        print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict-baseline-omim-drugbank.joblib')
 
-    dump(clf, get_openpredict_dir(
-        'models/openpredict-baseline-omim-drugbank.joblib'))
-    print('\nStore the model in the file ' +
-          get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib 💾'))
-    # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
+        dump(clf, get_openpredict_dir(
+            'models/openpredict-baseline-omim-drugbank.joblib'))
+        print('\nStore the model in the file ' +
+              get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib 💾'))
+        # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
     return clf, scores, hyper_params, (drug_df, disease_df)
