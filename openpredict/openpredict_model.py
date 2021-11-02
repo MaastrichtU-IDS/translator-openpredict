@@ -7,7 +7,7 @@ import re
 import numpy as np
 import pandas as pd
 from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
-from sklearn.model_selection import GroupKFold, StratifiedKFold
+from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.metrics.pairwise import cosine_similarity
 from joblib import dump, load
 import pkg_resources
@@ -606,41 +606,65 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     pairs, classes = balance_data(pairs, classes, n_proportion)
 
     # Train-Test Splitting
-    pairs_train, pairs_test, classes_train, classes_test = model_selection.train_test_split(
-        pairs, classes, stratify=classes, test_size=0.2, shuffle=True)
-    # print(len(pairs_train), len(pairs_test))
+    n_fold = 5
+    n_seed = 101
+    if n_fold == 1:
+        rs = StratifiedShuffleSplit(
+            n_splits=1, test_size=.2, random_state=n_seed)
+        cv = rs.split(pairs, classes)
+    else:
+        skf = StratifiedKFold(
+            n_splits=n_fold, shuffle=True, random_state=n_seed)
+        cv = skf.split(pairs, classes)
+    cv_results = pd.DataFrame()
 
-    # Feature extraction (Best Combined similarity)
-    print('\nFeature extraction ⛏️')
-    knownDrugDisease = pairs_train[classes_train == 1]
-    time_pairs_train = datetime.now()
+    for i, (train, test) in enumerate(cv):
+        # pairs_train, pairs_test, classes_train, classes_test = model_selection.train_test_split(
+        #    pairs, classes, stratify=classes, test_size=0.2, shuffle=True)
+        # print(len(pairs_train), len(pairs_test))
 
-    print('Pairs train runtime 🕓  ' + str(time_pairs_train - time_start))
-    print('\nCalculate the combined similarity of the training pairs 🏳️‍🌈')
-    train_df, test_df = calculateCombinedSimilarity(
-        pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
-    time_calculate_similarity = datetime.now()
-    print('CalculateCombinedSimilarity runtime 🕓  ' +
-          str(time_calculate_similarity - time_pairs_train))
+        # Feature extraction (Best Combined similarity)
+        print('\nFeature extraction ⛏️')
+        print('Fold', i+1)
+        pairs_train = pairs[train]
+        classes_train = classes[train]
+        pairs_test = pairs[test]
+        classes_test = classes[test]
 
-    # Model Training, get classifier (clf)
-    print('\nModel training, getting the classifier 🏃')
-    clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
-                                          dual=hyper_params['dual'], tol=hyper_params['tol'],
-                                          C=hyper_params['C'], random_state=hyper_params['random_state'])
-    clf = train_classifier(train_df, clf)
-    time_training = datetime.now()
-    print('Model training runtime 🕕  ' +
-          str(time_training - time_calculate_similarity))
+        knownDrugDisease = pairs_train[classes_train == 1]
+        time_pairs_train = datetime.now()
 
-    # Evaluation of the trained model
-    print('\nRunning evaluation of the model 📝')
-    scores = evaluate(test_df, clf)
-    time_evaluate = datetime.now()
-    print('Evaluation runtime 🕗  ' + str(time_evaluate - time_training))
+        print('Pairs train runtime 🕓  ' + str(time_pairs_train - time_start))
+        print('\nCalculate the combined similarity of the training pairs 🏳️‍🌈')
+        train_df, test_df = calculateCombinedSimilarity(
+            pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease)
+        time_calculate_similarity = datetime.now()
+        print('CalculateCombinedSimilarity runtime 🕓  ' +
+              str(time_calculate_similarity - time_pairs_train))
 
-    # About 3min to run on a laptop
-    print("\nTest results 🏆")
+        # Model Training, get classifier (clf)
+        print('\nModel training, getting the classifier 🏃')
+        clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
+                                              dual=hyper_params['dual'], tol=hyper_params['tol'],
+                                              C=hyper_params['C'], random_state=hyper_params['random_state'])
+        clf = train_classifier(train_df, clf)
+        time_training = datetime.now()
+        print('Model training runtime 🕕  ' +
+              str(time_training - time_calculate_similarity))
+
+        # Evaluation of the trained model
+        print('\nRunning evaluation of the model 📝')
+        scores = evaluate(test_df, clf)
+        time_evaluate = datetime.now()
+        print('Evaluation runtime 🕗  ' + str(time_evaluate - time_training))
+
+        # About 3min to run on a laptop
+        print("\nTest results 🏆")
+        print(scores)
+        cv_results = cv_results.append(scores, ignore_index=True)
+
+    scores = cv_results.mean()
+    print("\n "+n_fold+"-fold CV - Avg Test results 🏆")
     print(scores)
 
     print("\n Train the final model using all dataset")
