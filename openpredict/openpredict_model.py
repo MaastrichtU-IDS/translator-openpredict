@@ -16,6 +16,7 @@ from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_featu
 # from openpredict.openpredict_utils import get_spark_context
 from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels
 
+
 # models_folder = 'openpredict/data/models/'
 
 hyper_params = {
@@ -796,6 +797,139 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # prediction_results=prediction_df.to_json(orient='records')
     prediction_results = prediction_df.to_dict(orient='records')
     return prediction_results
+
+def get_similar_for_entity(input_curie, emb_vectors, n_results):
+    print (input_curie)
+    parsed_curie = re.search('(.*?):(.*)', input_curie)
+    input_namespace = parsed_curie.group(1)
+    input_id = parsed_curie.group(2)
+
+    drug = None
+    disease = None
+    if input_namespace.lower() == "drugbank":
+        drug = input_id
+    else:
+        disease = input_id
+
+
+    #g= Graph()
+    if n_results == None:
+        n_results = len(emb_vectors.vocab)
+
+    similar_entites = []
+    if  drug is not None and drug in emb_vectors:
+        similarDrugs = emb_vectors.most_similar(drug,topn=n_results)
+        for en,sim in similarDrugs:
+            #g.add((DRUGB[dr],BIOLINK['treats'],OMIM[ds]))
+            #g.add((DRUGB[dr], BIOLINK['similar_to'],DRUGB[drug]))
+            similar_entites.append((drug,en,sim))
+    if  disease is not None and disease in emb_vectors:
+        similarDiseases = word_vectors.most_similar(disease,topn=n_results)
+        for en,sim in similarDiseases:
+            similar_entites.append((disease, en, sim))
+
+
+    
+    if drug is not None:  
+        similarity_df = pd.DataFrame(similar_entites, columns=['entity', 'drug', 'score'])
+        similarity_df["entity"] = "DRUGBANK:" + similarity_df["entity"]
+        similarity_df["drug"] = "DRUGBANK:" + similarity_df["drug"]
+
+    if disease is not None:
+        similarity_df = pd.DataFrame(similar_entites, columns=['entity', 'disease', 'score'])
+        similarity_df["entity"] = "OMIM:" + similarity_df["entity"]
+        similarity_df["disease"] = "OMIM:" + similarity_df["disease"]
+
+    # prediction_results=prediction_df.to_json(orient='records')
+    similarity_results = similarity_df.to_dict(orient='records')
+    return similarity_results
+
+def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_score=None, n_results=None):
+    """Run classifiers to get predictions
+
+    :param id_to_predict: Id of the entity to get prediction from
+    :param classifier: classifier used to get the predictions
+    :param score: score minimum of predictions
+    :param n_results: number of predictions to return
+    :return: predictions in array of JSON object
+    """
+    # model_id
+
+    predictions_array = get_similar_for_entity(id_to_predict, emb_vectors, n_results)
+
+    if min_score:
+        predictions_array = [
+            p for p in predictions_array if p['score'] >= min_score]
+    if max_score:
+        predictions_array = [
+            p for p in predictions_array if p['score'] <= max_score]
+    if n_results:
+        # Predictions are already sorted from higher score to lower
+        predictions_array = predictions_array[:n_results]
+
+    # Build lists of unique node IDs to retrieve label
+    predicted_ids = set([])
+    for prediction in predictions_array:
+        for key, value in prediction.items():
+            if key != 'score':
+                predicted_ids.add(value)
+    labels_dict = get_entities_labels(predicted_ids)
+
+    # TODO: format using a model similar to BioThings:
+    # cf. at the end of this file
+
+    # Add label for each ID, and reformat the dict using source/target
+    labelled_predictions = []
+    # Second array with source and target info for the reasoner query resolution
+    source_target_predictions = []
+    for prediction in predictions_array:
+        labelled_prediction = {}
+        source_target_prediction = {}
+        for key, value in prediction.items():
+            if key == 'score':
+                labelled_prediction['score'] = value
+                source_target_prediction['score'] = value
+            elif value == id_to_predict:
+                # Only for the source_target_prediction object
+                source_target_prediction['source'] = {
+                    'id': id_to_predict,
+                    'type': key
+                }
+                try:
+                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
+                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
+                except:
+                    print('No label found for ' + value)
+            else:
+                labelled_prediction['id'] = value
+                labelled_prediction['type'] = key
+                # Same for source_target object
+                source_target_prediction['target'] = {
+                    'id': value,
+                    'type': key
+                }
+                try:
+                    if value in labels_dict and labels_dict[value]:
+                        labelled_prediction['label'] = labels_dict[value]['id']['label']
+                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+                except:
+                    print('No label found for ' + value)
+                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
+                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
+                #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+
+        labelled_predictions.append(labelled_prediction)
+        source_target_predictions.append(source_target_prediction)
+        # returns
+        # { score: 12,
+        #  source: {
+        #      id: DB0001
+        #      type: drug,
+        #      label: a drug
+        #  },
+        #  target { .... }}
+
+    return labelled_predictions, source_target_predictions
 
 
 def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_results=None):

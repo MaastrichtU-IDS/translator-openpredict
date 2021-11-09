@@ -1,8 +1,9 @@
 openapi: 3.0.1
 info:
-  description: "Get predicted targets for a given entity: the **potential drugs treating a given disease**, or the **potential diseases a given drug could treat**.
+  description:
+    "Get predicted targets for a given entity: the **potential drugs treating a given disease**, or the **potential diseases a given drug could treat**.
     \n\n* Use the `/predict` operation to easily retrieve predictions for a given entity (operation annotated for the [BioThings Explorer](https://x-bte-extension.readthedocs.io/en/latest/x-bte-kgs-operations.html)).
-    \n\n* Predictions are currently produced using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project. 
+    \n\n* Predictions are currently produced using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
     \n\n* You can also install the [OpenPredict Python package](https://pypi.org/project/openpredict/) to train and serve a new model yourself.
     \n\n* More documentation available at [github.com/MaastrichtU-IDS/translator-openpredict](https://github.com/MaastrichtU-IDS/translator-openpredict)
     \n\n[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml)
@@ -63,7 +64,7 @@ paths:
       summary: Return the features trained in the models
       description: "Return the features trained in the model, for Drugs, Diseases or Both "
       tags:
-      - openpredict
+        - openpredict
       parameters:
         - name: type
           in: query
@@ -72,12 +73,12 @@ paths:
           schema:
             type: string
             enum: ["All", "Drugs", "Diseases", "Both"]
-            default: "All" 
+            default: "All"
       responses:
-        '200':
+        "200":
           description: OK
           content:
-              application/json: {}
+            application/json: {}
 
   /models:
     get:
@@ -85,7 +86,7 @@ paths:
       summary: Return the models with their training features and scores
       description: "Return the models with their training features and scores"
       tags:
-      - openpredict
+        - openpredict
       # parameters:
       #   - name: type
       #     in: query
@@ -94,13 +95,13 @@ paths:
       #     schema:
       #       type: string
       #       enum: ["All", "Drugs", "Diseases", "Both"]
-      #       default: "All" 
+      #       default: "All"
       responses:
-        '200':
+        "200":
           description: OK
           content:
-              application/json: {}
-  
+            application/json: {}
+
   /embedding:
     post:
       operationId: openpredict.openpredict_api.post_embedding
@@ -111,9 +112,9 @@ paths:
         2. the model will be retrained
         3. the model evaluation will be stored in a triplestore
       tags:
-      - openpredict
+        - openpredict
       responses:
-        '200':
+        "200":
           description: OK
       requestBody:
         content:
@@ -139,7 +140,7 @@ paths:
           schema:
             type: string
             enum: ["Drugs", "Diseases", "Both"]
-            default: "Both" 
+            default: "Both"
         - name: emb_name
           in: query
           description: Name of embedding (eg. TransE_DrugBank_Drug)
@@ -165,68 +166,138 @@ paths:
         #   required: true
         #   schema:
         #     type: string
+  /similarity:
+    get:
+      operationId: openpredict.openpredict_api.get_similarity
+      summary: Return similar entities for a given drug or diease
+      description: |-
+        select which type entities do you expect in the result, Drugs, Diseases
+        1. provide a drug or a disease
+        2. it will return most similar entities based on similarity model
+      tags:
+        - openpredict
+      responses:
+        "200":
+          description: OK
+      parameters:
+        - name: types
+          in: query
+          description: Types of the entities you want to return
+          required: true
+          schema:
+            type: string
+            enum: ["Drugs", "Diseases"]
+            default: "Drugs"
+        - name: drug_id
+          in: query
+          description: CURIE of the query drug to get similar entities (e.g. DRUGBANK:DB00394)
+          example: DRUGBANK:DB00394
+          required: false
+          schema:
+            type: string
+        - name: disease_id
+          in: query
+          description: CURIE of the query disease to get similar entities (e.g. OMIM:246300). Ignored if drug_id provided.
+          # example: OMIM:246300
+          required: false
+          schema:
+            type: string
+        - name: model_id
+          in: query
+          description: Provide the ID of the embedding model you want to use as base model to calculate the similarities
+          required: true
+          example: openpredict-baseline-omim-drugbank
+          schema:
+            type: string
+        - name: min_score
+          in: query
+          description: Minimum score of predictions to return (0 to 1)
+          required: false
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 1
+        - name: max_score
+          in: query
+          description: Maximum score of predictions to return (0 to 1)
+          required: false
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 1
+        - name: n_results
+          in: query
+          description: Maximum number of results to return, ordered from best score (e.g. 42)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
 
   /predict:
     get:
       operationId: openpredict.openpredict_api.get_predict
       summary: Get predicted targets for a given entity
-      description: "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+      description:
+        "Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
         Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
         This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations."
       tags:
-      - biothings
+        - biothings
       parameters:
-      - name: drug_id
-        in: query
-        description: CURIE of the drug to get prediction of diseases it could treat (e.g. DRUGBANK:DB00394)
-        example: DRUGBANK:DB00394
-        required: false
-        schema:
-          type: string
-      - name: disease_id
-        in: query
-        description: CURIE of the disease to get prediction of drugs it could be treated with (e.g. OMIM:246300). Ignored if drug_id provided.
-        # example: OMIM:246300
-        required: false
-        schema:
-          type: string
-      - name: model_id
-        in: query
-        description: Provide the ID of the run output you want to use as model to use to predict associations
-        required: false
-        example: openpredict-baseline-omim-drugbank
-        schema:
-          type: string
-          # default: "Predict OMIM-DrugBank"
-          # enum: ["Predict OMIM-DrugBank"]
-      - name: min_score
-        in: query
-        description: Minimum score of predictions to return (0 to 1)
-        required: false
-        schema:
-          type: number
-          format: double
-          minimum: 0
-          maximum: 1
-      - name: max_score
-        in: query
-        description: Maximum score of predictions to return (0 to 1)
-        required: false
-        schema:
-          type: number
-          format: double
-          minimum: 0
-          maximum: 1
-      - name: n_results
-        in: query
-        description: Maximum number of results to return, ordered from best score (e.g. 42)
-        required: false
-        schema:
-          type: integer
-          format: int32
-          minimum: 0
+        - name: drug_id
+          in: query
+          description: CURIE of the drug to get prediction of diseases it could treat (e.g. DRUGBANK:DB00394)
+          example: DRUGBANK:DB00394
+          required: false
+          schema:
+            type: string
+        - name: disease_id
+          in: query
+          description: CURIE of the disease to get prediction of drugs it could be treated with (e.g. OMIM:246300). Ignored if drug_id provided.
+          # example: OMIM:246300
+          required: false
+          schema:
+            type: string
+        - name: model_id
+          in: query
+          description: Provide the ID of the run output you want to use as model to use to predict associations
+          required: false
+          example: openpredict-baseline-omim-drugbank
+          schema:
+            type: string
+            # default: "Predict OMIM-DrugBank"
+            # enum: ["Predict OMIM-DrugBank"]
+        - name: min_score
+          in: query
+          description: Minimum score of predictions to return (0 to 1)
+          required: false
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 1
+        - name: max_score
+          in: query
+          description: Maximum score of predictions to return (0 to 1)
+          required: false
+          schema:
+            type: number
+            format: double
+            minimum: 0
+            maximum: 1
+        - name: n_results
+          in: query
+          description: Maximum number of results to return, ordered from best score (e.g. 42)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
       responses:
-        '200':
+        "200":
           description: Successful Operation
           content:
             application/json: {}
@@ -235,34 +306,34 @@ paths:
             # text/csv: {}
             # text/tab-separated-values: {}
       x-bte-kgs-operations:
-      - inputs:
-        - id: biolink:DRUGBANK
-          semantic: biolink:ChemicalSubstance
-        outputs:
-        - id: biolink:OMIM
-          semantic: biolink:Disease
-        parameters:
-          drug_id: "{inputs[0]}"
-        predicate: biolink:treats
-        supportBatch: False
-        responseMapping:
-          OMIM: hits.id
-          # NCBIGene: matchedTerms.interactions.geneEntrezId
-          # publication: matchedTerms.interactions.pmids
-      - inputs:
-        - id: biolink:OMIM
-          semantic: biolink:Disease
-        outputs:
-        - id: biolink:DRUGBANK
-          semantic: biolink:ChemicalSubstance
-        parameters:
-          disease_id: "{inputs[0]}"
-        predicate: biolink:treated_by
-        supportBatch: False
-        responseMapping:
-          DRUGBANK: hits.id
-          # CHEMBL.COMPOUND: matchedTerms.interactions.drugChemblId
-          # publication: results.source.id
+        - inputs:
+            - id: biolink:DRUGBANK
+              semantic: biolink:ChemicalSubstance
+          outputs:
+            - id: biolink:OMIM
+              semantic: biolink:Disease
+          parameters:
+            drug_id: "{inputs[0]}"
+          predicate: biolink:treats
+          supportBatch: False
+          responseMapping:
+            OMIM: hits.id
+            # NCBIGene: matchedTerms.interactions.geneEntrezId
+            # publication: matchedTerms.interactions.pmids
+        - inputs:
+            - id: biolink:OMIM
+              semantic: biolink:Disease
+          outputs:
+            - id: biolink:DRUGBANK
+              semantic: biolink:ChemicalSubstance
+          parameters:
+            disease_id: "{inputs[0]}"
+          predicate: biolink:treated_by
+          supportBatch: False
+          responseMapping:
+            DRUGBANK: hits.id
+            # CHEMBL.COMPOUND: matchedTerms.interactions.drugChemblId
+            # publication: results.source.id
 
   /meta_knowledge_graph:
     get:
@@ -271,21 +342,21 @@ paths:
         - meta_knowledge_graph
       summary: Meta knowledge graph representation of this TRAPI web service.
       responses:
-        '200':
+        "200":
           description: >-
             Returns meta knowledge graph representation of this TRAPI web
             service.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetaKnowledgeGraph'
+                $ref: "#/components/schemas/MetaKnowledgeGraph"
   /query:
     post:
       operationId: openpredict.openpredict_api.post_reasoner_predict
       tags:
         - query
       summary: Initiate a query and wait to receive a Response
-      description: ''
+      description: ""
       requestBody:
         description: Query information to be submitted
         required: true
@@ -293,17 +364,17 @@ paths:
           application/json:
             schema:
               # $ref: '#/definitions/RequestBody'
-              $ref: '#/components/schemas/Query'
+              $ref: "#/components/schemas/Query"
       responses:
-        '200':
+        "200":
           description: >-
             OK. There may or may not be results. Note that some of the provided
             identifiers may not have been recognized.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
-        '400':
+                $ref: "#/components/schemas/Response"
+        "400":
           description: >-
             Bad request. The request is invalid according to this OpenAPI
             schema OR a specific identifier is believed to be invalid somehow
@@ -312,14 +383,14 @@ paths:
             application/json:
               schema:
                 type: string
-        '500':
+        "500":
           description: >-
             Internal server error.
           content:
             application/json:
               schema:
                 type: string
-        '501':
+        "501":
           description: >-
             Not implemented.
           content:
@@ -378,11 +449,11 @@ components:
       description: Additional query options that apply to OpenPredict
       properties:
         min_score:
-          description: 'The minimum score of predictions to be returned'
+          description: "The minimum score of predictions to be returned"
           example: 0.99
           type: number
         max_score:
-          description: 'The minimum score of predictions to be returned'
+          description: "The minimum score of predictions to be returned"
           example: 0.99
           type: number
         model_id:
@@ -402,21 +473,21 @@ components:
         message:
           query_graph:
             nodes:
-              n0: 
-                categories: 
+              n0:
+                categories:
                   - "biolink:Disease"
-                ids: 
+                ids:
                   - OMIM:246300
                   - MONDO:0007190
               n1:
-                categories: 
+                categories:
                   - "biolink:Drug"
                 # ids: DRUGBANK:DB00394
             edges:
               e01:
                 subject: n0
                 object: n1
-                predicates: 
+                predicates:
                   - "biolink:treated_by"
       description: >-
         The Query class is used to package a user request for information. A
@@ -430,7 +501,7 @@ components:
       type: object
       properties:
         message:
-          $ref: '#/components/schemas/Message'
+          $ref: "#/components/schemas/Message"
           description: >-
             The query Message is a serialization of the user request. Content
             of the Message object depends on the intended TRAPI operation. For
@@ -440,7 +511,7 @@ components:
         log_level:
           description: The least critical level of logs to return
           allOf:
-            - $ref: '#/components/schemas/LogLevel'
+            - $ref: "#/components/schemas/LogLevel"
           nullable: true
         # workflow:
         #   description: List of workflow steps to be executed.
@@ -469,7 +540,7 @@ components:
             does not succeed, the server SHOULD retry the POST at least
             once.
         message:
-          $ref: '#/components/schemas/Message'
+          $ref: "#/components/schemas/Message"
           description: >-
             The query Message is a serialization of the user request. Content
             of the Message object depends on the intended TRAPI operation. For
@@ -479,7 +550,7 @@ components:
         log_level:
           description: The least critical level of logs to return
           allOf:
-            - $ref: '#/components/schemas/LogLevel'
+            - $ref: "#/components/schemas/LogLevel"
           nullable: true
         # workflow:
         #   description: List of workflow steps to be executed.
@@ -502,7 +573,7 @@ components:
           description: >-
             Contains the knowledge of the response (query graph, knowledge
             graph, and results).
-          $ref: '#/components/schemas/Message'
+          $ref: "#/components/schemas/Message"
         status:
           description: >-
             One of a standardized set of short codes,
@@ -520,7 +591,7 @@ components:
             Log entries containing errors, warnings, debugging information, etc
           type: array
           items:
-            $ref: '#/components/schemas/LogEntry'
+            $ref: "#/components/schemas/LogEntry"
           nullable: true
         # workflow:
         #   description: List of workflow steps that were executed.
@@ -547,21 +618,21 @@ components:
              if present, MAY be used to infer result rankings.
           type: array
           items:
-            $ref: '#/components/schemas/Result'
+            $ref: "#/components/schemas/Result"
           nullable: true
         query_graph:
           description: >-
             QueryGraph object that contains a serialization of a query in the
             form of a graph
           allOf:
-            - $ref: '#/components/schemas/QueryGraph'
+            - $ref: "#/components/schemas/QueryGraph"
           nullable: true
         knowledge_graph:
           description: >-
             KnowledgeGraph object that contains lists of nodes and edges
             in the thought graph corresponding to the message
           allOf:
-            - $ref: '#/components/schemas/KnowledgeGraph'
+            - $ref: "#/components/schemas/KnowledgeGraph"
           nullable: true
       additionalProperties: false
     LogEntry:
@@ -581,11 +652,11 @@ components:
           type: string
           format: date-time
           description: Timestamp in ISO 8601 format
-          example: '2020-09-03T18:13:49+00:00'
+          example: "2020-09-03T18:13:49+00:00"
           nullable: true
         level:
           allOf:
-            - $ref: '#/components/schemas/LogLevel'
+            - $ref: "#/components/schemas/LogLevel"
           nullable: true
         code:
           type: string
@@ -627,7 +698,7 @@ components:
           additionalProperties:
             type: array
             items:
-              $ref: '#/components/schemas/NodeBinding'
+              $ref: "#/components/schemas/NodeBinding"
         edge_bindings:
           type: object
           description: >-
@@ -640,7 +711,7 @@ components:
           additionalProperties:
             type: array
             items:
-              $ref: '#/components/schemas/EdgeBinding'
+              $ref: "#/components/schemas/EdgeBinding"
         score:
           type: number
           format: float
@@ -657,7 +728,7 @@ components:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/CURIE'
+          $ref: "#/components/schemas/CURIE"
           description: >-
             An instance of NodeBinding is a single KnowledgeGraph Node mapping,
             identified by the corresponding 'id' object key identifier of the
@@ -686,7 +757,7 @@ components:
             and should only be used for properties that vary from result to
             result.
           items:
-            $ref: '#/components/schemas/Attribute'
+            $ref: "#/components/schemas/Attribute"
           nullable: true
       additionalProperties: true
       required:
@@ -707,14 +778,14 @@ components:
             Dictionary of Node instances used in the KnowledgeGraph,
             referenced elsewhere in the TRAPI output by the dictionary key.
           additionalProperties:
-            $ref: '#/components/schemas/Node'
+            $ref: "#/components/schemas/Node"
         edges:
           type: object
           description: >-
             Dictionary of Edge instances used in the KnowledgeGraph,
             referenced elsewhere in the TRAPI output by the dictionary key.
           additionalProperties:
-            $ref: '#/components/schemas/Edge'
+            $ref: "#/components/schemas/Edge"
       additionalProperties: true
       required:
         - nodes
@@ -733,7 +804,7 @@ components:
             identifiers and the corresponding values include the constraints
             on bound nodes.
           additionalProperties:
-            $ref: '#/components/schemas/QNode'
+            $ref: "#/components/schemas/QNode"
         edges:
           type: object
           description: >-
@@ -742,7 +813,7 @@ components:
             on bound edges, in addition to specifying the subject and object
             QNodes.
           additionalProperties:
-            $ref: '#/components/schemas/QEdge'
+            $ref: "#/components/schemas/QEdge"
       additionalProperties: true
       required:
         - nodes
@@ -756,7 +827,7 @@ components:
         ids:
           type: array
           items:
-            $ref: '#/components/schemas/CURIE'
+            $ref: "#/components/schemas/CURIE"
           minItems: 1
           example: [OMIM:603903]
           description: CURIE identifier for this node
@@ -764,7 +835,7 @@ components:
         categories:
           type: array
           items:
-            $ref: '#/components/schemas/BiolinkEntity'
+            $ref: "#/components/schemas/BiolinkEntity"
           minItems: 1
           nullable: true
         is_set:
@@ -788,7 +859,7 @@ components:
             If there are multiple items, they must all be true (equivalent
             to AND)
           items:
-            $ref: '#/components/schemas/QueryConstraint'
+            $ref: "#/components/schemas/QueryConstraint"
           nullable: true
       additionalProperties: true
     QEdge:
@@ -805,7 +876,7 @@ components:
         predicates:
           type: array
           items:
-            $ref: '#/components/schemas/BiolinkPredicate'
+            $ref: "#/components/schemas/BiolinkPredicate"
           minItems: 1
           nullable: true
         subject:
@@ -829,7 +900,7 @@ components:
             If there are multiple items, they must all be true (equivalent
             to AND)
           items:
-            $ref: '#/components/schemas/QueryConstraint'
+            $ref: "#/components/schemas/QueryConstraint"
           nullable: true
       additionalProperties: true
       required:
@@ -850,13 +921,13 @@ components:
         categories:
           type: array
           items:
-            $ref: '#/components/schemas/BiolinkEntity'
+            $ref: "#/components/schemas/BiolinkEntity"
           nullable: true
         attributes:
           type: array
           description: A list of attributes describing the node
           items:
-            $ref: '#/components/schemas/Attribute'
+            $ref: "#/components/schemas/Attribute"
           nullable: true
       additionalProperties: false
     Attribute:
@@ -871,7 +942,7 @@ components:
         (for example to provide confidence intervals on a value).
       properties:
         attribute_type_id:
-          $ref: '#/components/schemas/CURIE'
+          $ref: "#/components/schemas/CURIE"
           description: >-
             The 'key' of the attribute object, holding a CURIE of an ontology
             property defining the attribute (preferably the CURIE of a
@@ -901,7 +972,7 @@ components:
           example: 0.000153
         value_type_id:
           allOf:
-            - $ref: '#/components/schemas/CURIE'
+            - $ref: "#/components/schemas/CURIE"
           description: >-
             CURIE describing the semantic type of an  attribute's value. Use
             a Biolink class if possible, otherwise a term from an external
@@ -939,7 +1010,7 @@ components:
             parent attribute (for example to provide provenance
             information about the parent attribute).
           items:
-            $ref: '#/components/schemas/SubAttribute'
+            $ref: "#/components/schemas/SubAttribute"
           nullable: true
       required:
         - attribute_type_id
@@ -952,7 +1023,7 @@ components:
         contained in a primary Attribute attached to a Node or Edge.
       properties:
         attribute_type_id:
-          $ref: '#/components/schemas/CURIE'
+          $ref: "#/components/schemas/CURIE"
           description: >-
             The 'key' of the attribute object, holding a CURIE of an ontology
             property defining the attribute (preferably the CURIE of a
@@ -982,7 +1053,7 @@ components:
           example: 0.000153
         value_type_id:
           allOf:
-            - $ref: '#/components/schemas/CURIE'
+            - $ref: "#/components/schemas/CURIE"
           description: >-
             CURIE describing the semantic type of an  attribute's value. Use
             a Biolink class if possible, otherwise a term from an external
@@ -1026,16 +1097,16 @@ components:
       properties:
         predicate:
           allOf:
-            - $ref: '#/components/schemas/BiolinkPredicate'
+            - $ref: "#/components/schemas/BiolinkPredicate"
           nullable: true
         subject:
-          $ref: '#/components/schemas/CURIE'
+          $ref: "#/components/schemas/CURIE"
           example: OMIM:603903
           description: >-
             Corresponds to the map key CURIE of the
             subject concept node of this relationship edge.
         object:
-          $ref: '#/components/schemas/CURIE'
+          $ref: "#/components/schemas/CURIE"
           example: UniProtKB:P00738
           description: >-
             Corresponds to the map key CURIE of the
@@ -1044,7 +1115,7 @@ components:
           type: array
           description: A list of additional attributes for this edge
           items:
-            $ref: '#/components/schemas/Attribute'
+            $ref: "#/components/schemas/Attribute"
           nullable: true
       additionalProperties: false
       required:
@@ -1098,7 +1169,7 @@ components:
             A node category is only exposed here if there is
             node for which that is the most specific category available.
           additionalProperties:
-            $ref: '#/components/schemas/MetaNode'
+            $ref: "#/components/schemas/MetaNode"
         edges:
           type: array
           description: >-
@@ -1106,7 +1177,7 @@ components:
             web service. A predicate is only exposed here if there is an edge
             for which the predicate is the most specific available.
           items:
-            $ref: '#/components/schemas/MetaEdge'
+            $ref: "#/components/schemas/MetaEdge"
           minItems: 1
     MetaNode:
       type: object
@@ -1127,7 +1198,7 @@ components:
           description: >-
             Node attributes provided by this TRAPI web service.
           items:
-            $ref: '#/components/schemas/MetaAttribute'
+            $ref: "#/components/schemas/MetaAttribute"
       required:
         - id_prefixes
       additionalProperties: false
@@ -1138,17 +1209,17 @@ components:
         Biolink class and an object Biolink class.
       properties:
         subject:
-          $ref: '#/components/schemas/BiolinkEntity'
+          $ref: "#/components/schemas/BiolinkEntity"
           description: >-
             Subject node category of this relationship edge.
           example: biolink:ChemicalSubstance
         predicate:
-          $ref: '#/components/schemas/BiolinkPredicate'
+          $ref: "#/components/schemas/BiolinkPredicate"
           description: >-
             Biolink relationship between the subject and object categories.
           example: biolink:affects
         object:
-          $ref: '#/components/schemas/BiolinkEntity'
+          $ref: "#/components/schemas/BiolinkEntity"
           description: >-
             Object node category of this relationship edge.
           example: biolink:Protein
@@ -1157,7 +1228,7 @@ components:
           description: >-
             Edge attributes provided by this TRAPI web service.
           items:
-            $ref: '#/components/schemas/MetaAttribute'
+            $ref: "#/components/schemas/MetaAttribute"
       required:
         - subject
         - predicate
@@ -1167,7 +1238,7 @@ components:
       type: object
       properties:
         attribute_type_id:
-          $ref: '#/components/schemas/CURIE'
+          $ref: "#/components/schemas/CURIE"
           description: >-
             Type of an attribute provided by this TRAPI web service
             (preferably the CURIE of a Biolink association slot)
@@ -1204,7 +1275,7 @@ components:
       properties:
         id:
           allOf:
-            - $ref: '#/components/schemas/CURIE'
+            - $ref: "#/components/schemas/CURIE"
           description: >-
             CURIE of the concept being constrained. For properties
             defined by the Biolink model this SHOULD be a biolink CURIE.
@@ -1243,7 +1314,7 @@ components:
             describes an "is a" subclass relationship for the parent QNode.
           enum:
             - ==
-            - '>'
+            - ">"
             - <
             - matches
         value:
