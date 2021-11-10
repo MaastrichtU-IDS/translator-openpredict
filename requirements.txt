@@ -23,6 +23,6 @@ scikit-learn==0.23.1
 rdflib<6.0.0,>=5.0.0
 SPARQLWrapper==1.8.5
 networkx
-gensim
+gensim==3.8.3
 # networkx==1.11
 # kgx
