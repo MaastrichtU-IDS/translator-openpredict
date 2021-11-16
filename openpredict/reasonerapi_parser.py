@@ -192,7 +192,7 @@ def typed_results_to_reasonerapi(reasoner_query):
                 #       "type": "drug"
                 #     },
 
-                    for hit in similarity_json['hits']:
+                    for hit in similarity_json:
                         source_node_id = resolve_id(id_to_predict, resolved_ids_object)
                         target_node_id = resolve_id(hit['id'], resolved_ids_object)
 

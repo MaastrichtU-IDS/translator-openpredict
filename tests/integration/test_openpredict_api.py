@@ -28,13 +28,13 @@ def test_get_predict(client):
     assert response.json['count'] == 42
 
 
-def test_get_similarity(client):
-    """Test prediction similarity API GET operation"""
-    n_results=5
-    url = '/similarity?drug_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
-    response = client.get(url)
-    assert len(response.json['hits']) == n_results
-    assert response.json['count'] == n_results
+# def test_get_similarity(client):
+#     """Test prediction similarity API GET operation"""
+#     n_results=5
+#     url = '/similarity?drug_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
+#     response = client.get(url)
+#     assert len(response.json['hits']) == n_results
+#     assert response.json['count'] == n_results
 
 
 def test_post_trapi(client):
@@ -43,9 +43,11 @@ def test_post_trapi(client):
     for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
         with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
             reasoner_query = f.read()
-            response = client.post(url, 
-                                    data=reasoner_query, 
-                                    content_type='application/json')
+            response = client.post(
+                url, 
+                data=reasoner_query, 
+                content_type='application/json'
+            )
 
             # print(response.json)
             edges = response.json['message']['knowledge_graph']['edges'].items()
