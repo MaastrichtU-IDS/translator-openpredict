@@ -19,6 +19,10 @@ ENV OPENPREDICT_DATA_DIR=/data/openpredict
 ENV PYSPARK_PYTHON=/opt/conda/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/opt/conda/bin/python3
 
+# Avoid to reinstall packages when no changes to requirements
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
