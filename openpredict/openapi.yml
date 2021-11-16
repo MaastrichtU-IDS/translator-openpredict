@@ -209,7 +209,7 @@ paths:
           in: query
           description: Provide the ID of the embedding model you want to use as base model to calculate the similarities
           required: true
-          example: openpredict-baseline-omim-drugbank
+          example: drugs_fp_embed.txt
           schema:
             type: string
         - name: min_score

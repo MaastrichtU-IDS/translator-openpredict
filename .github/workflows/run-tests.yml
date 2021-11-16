@@ -12,7 +12,7 @@ on:
 
 jobs:
 
-  tests:
+  tests-coverage:
     runs-on: ubuntu-latest
     strategy:
       matrix:
