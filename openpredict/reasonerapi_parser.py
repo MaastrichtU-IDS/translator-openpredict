@@ -295,7 +295,7 @@ def typed_results_to_reasonerapi(reasoner_query):
                 if any(i in drugdisease_parents for i in query_plan[edge_qg_id]['from_type']) and any(i in drugdisease_parents for i in query_plan[edge_qg_id]['to_type']):
 
                     # Iterate over the list of ids provided
-                    for id_to_predict in id_to_predict:
+                    for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
                         try:
                             # Run OpenPredict to get predictions
                             bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score)
@@ -425,7 +425,7 @@ def typed_results_to_reasonerapi(reasoner_query):
         if 'label' in properties and properties['label']:
             node_to_add['name'] = properties['label']
         knowledge_graph['nodes'][node_id] = node_to_add
-        
+
     return {"message": {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}}
 
 
