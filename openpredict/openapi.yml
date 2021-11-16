@@ -20,6 +20,7 @@ info:
     component: KP
     team:
       - Clinical Data Provider
+    infores: infores:openpredict
     biolink-version: 1.8.2
     externalDocs:
       description: >-
@@ -37,9 +38,11 @@ info:
       url: https://github.com/NCATSTranslator/translator_extensions/blob/production/x-trapi/
 servers:
   - url: /
-    description: Local OpenPredict API
+    description: Local OpenPredict TRAPI
+    x-maturity: development
   - url: https://openpredict.semanticscience.org
-    description: Production OpenPredict API
+    description: Production OpenPredict TRAPI
+    x-maturity: production
 externalDocs:
   description: >-
     Documentation for the NCATS Biomedical Translator Reasoners web services

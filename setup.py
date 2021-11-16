@@ -15,7 +15,7 @@ setup(
     # package_dir={'openpredict': 'openpredict'},
     package_data={'': ['openapi.yml', 'data/models/*', 'data/ontology/*', 'data/models/*', 
         'data/features/*', 'data/input/*', 'data/sparql/*', 'data/resources/*', 'data/*.ttl',
-        'tests/queries/*']},
+        'tests/queries/*', 'data/embedding/*']},
     include_package_data=True,
     entry_points={
         'console_scripts': [
