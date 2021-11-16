@@ -87,6 +87,9 @@ def typed_results_to_reasonerapi(reasoner_query):
     query_plan = {}
     resolved_ids_object = {}
 
+    # if not all_emb_vectors or all_emb_vectors == {}:
+    all_emb_vectors = load_similarity_embedding_models()
+
     # Parse the query_graph to build the query plan
     for edge_id, qg_edge in query_graph["edges"].items():
         # Build dict with all infos of associations to predict 
@@ -157,10 +160,10 @@ def typed_results_to_reasonerapi(reasoner_query):
             
             predicate_parents = get_biolink_parents('biolink:similar_to')
             if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):
-                if not all_emb_vectors or all_emb_vectors == {}:
-                    all_emb_vectors = load_similarity_embedding_models()
 
                 try:
+                    # TODO: make it dynamic, currently using default model for similarity
+                    model_id = 'drugs_fp_embed.txt'
                     emb_vectors = all_emb_vectors[model_id]
                     similarity_json = get_similarities(
                         query_plan[edge_qg_id]['from_type'],

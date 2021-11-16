@@ -98,6 +98,43 @@ The user sends a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) q
 
 You can use the default TRAPI query of OpenPredict `/query` operation to try a working example.
 
+Example of TRAPI query to retrieve drugs similar to a specific drug:
+
+```json
+{
+    "message": {
+        "query_graph": {
+        "edges": {
+            "e01": {
+            "object": "n1",
+            "predicates": [
+                "biolink:similar_to"
+            ],
+            "subject": "n0"
+            }
+        },
+        "nodes": {
+            "n0": {
+            "categories": [
+                "biolink:Drug"
+            ],
+            "ids": [
+                "DRUGBANK:DB00394"
+            ]
+            },
+            "n1": {
+            "categories": [
+                "biolink:Drug"
+            ]
+            }
+        }
+        }
+    }
+}
+```
+
+
+
 ### Predicates operation
 
 The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
