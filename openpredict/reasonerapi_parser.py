@@ -420,12 +420,12 @@ def typed_results_to_reasonerapi(reasoner_query):
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
     for node_id, properties in node_dict.items():
         node_to_add = {
-            'categories': ['biolink:' + properties['type'].capitalize()] ,
-            }
+            'categories': properties['type'] ,
+        }
         if 'label' in properties and properties['label']:
             node_to_add['name'] = properties['label']
-
         knowledge_graph['nodes'][node_id] = node_to_add
+        
     return {"message": {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}}
 
 
