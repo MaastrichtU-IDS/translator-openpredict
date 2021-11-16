@@ -168,7 +168,7 @@ def typed_results_to_reasonerapi(reasoner_query):
                     # TODO: make it dynamic, currently using default model for similarity
                     model_id = 'drugs_fp_embed.txt'
                     emb_vectors = all_emb_vectors[model_id]
-                    similarity_json = get_similarities(
+                    similarity_json, source_target_predictions = get_similarities(
                         query_plan[edge_qg_id]['from_type'],
                         id_to_predict, 
                         emb_vectors, min_score, max_score, n_results
