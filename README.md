@@ -129,11 +129,12 @@ Example of TRAPI query to retrieve drugs similar to a specific drug:
             }
         }
         }
+    },
+    "query_options": {
+        "n_results": 3
     }
 }
 ```
-
-
 
 ### Predicates operation
 

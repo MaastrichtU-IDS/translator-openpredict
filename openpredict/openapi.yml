@@ -470,7 +470,7 @@ components:
     Query:
       example:
         query_options:
-          # n_results: 2
+          n_results: 10
           min_score: 0.5
           max_score: 1
         message:
