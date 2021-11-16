@@ -10,7 +10,9 @@ from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbor
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 from sklearn.metrics.pairwise import cosine_similarity
 from joblib import dump, load
+from gensim.models import KeyedVectors
 import pkg_resources
+
 from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata, get_run_id
 # from openpredict.openpredict_utils import get_spark_context
 # from openpredict.openpredict_utils import get_spark_context
@@ -81,6 +83,22 @@ def get_spark_context():
     #     config.set("spark.memory.offHeap.enabled",True)
     #     config.set("spark.memory.offHeap.size","5g")
     #     sc = SparkContext(conf=config, appName="OpenPredict")
+
+
+def load_similarity_embedding_models():
+    """Load embeddings model for similarity"""
+    embedding_folder = 'data/embedding'
+    print (pkg_resources.resource_filename('openpredict', embedding_folder))
+    all_emb_vectors ={}
+    for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
+        if model_id.endswith('txt'):
+            print("📥 Loading features " +
+                pkg_resources.resource_filename('openpredict', os.path.join(
+                    embedding_folder, model_id)))
+            emb_vectors = KeyedVectors.load_word2vec_format( pkg_resources.resource_filename('openpredict', os.path.join(
+                    embedding_folder, model_id)))
+            all_emb_vectors[model_id]= emb_vectors
+    return all_emb_vectors
 
 
 def adjcencydict2matrix(df, name1, name2):

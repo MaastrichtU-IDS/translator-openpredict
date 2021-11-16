@@ -4,32 +4,17 @@ import logging
 from datetime import datetime
 from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
-from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities
+from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embedding_models
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 import pkg_resources
-from gensim.models import KeyedVectors
+# from gensim.models import KeyedVectors
 # import asyncio
 # import aiohttp
 # from aiohttp import web
 
 all_emb_vectors = {}
-
-def load_embedding_models():
-    global all_emb_vectors
-
-    emebedding_folder = 'data/embedding'
-    print (pkg_resources.resource_filename('openpredict', emebedding_folder))
-    all_emb_vectors ={}
-    for model_id in os.listdir(pkg_resources.resource_filename('openpredict', emebedding_folder)):
-        if model_id.endswith('txt'):
-            print("📥 Loading features " +
-                pkg_resources.resource_filename('openpredict', os.path.join(
-                    emebedding_folder, model_id)))
-            emb_vectors = KeyedVectors.load_word2vec_format( pkg_resources.resource_filename('openpredict', os.path.join(
-                    emebedding_folder, model_id)))
-            all_emb_vectors[model_id]= emb_vectors
 
 
 def start_api(port=8808, debug=False, start_spark=True):
@@ -43,7 +28,8 @@ def start_api(port=8808, debug=False, start_spark=True):
 
     init_openpredict_dir()
     init_triplestore()
-    load_embedding_models()
+    global all_emb_vectors
+    all_emb_vectors = load_similarity_embedding_models()
 
     if debug:
         # Run in development mode
@@ -133,11 +119,11 @@ def get_similarity(types='Both', drug_id=None, disease_id=None, model_id='openpr
     else:
         return ('Bad request: provide a drugid or diseaseid', 400)
 
-
     try:
         emb_vectors = all_emb_vectors[model_id]
-        prediction_json, source_target_predictions = get_similarities(types,
-            concept_id, emb_vectors, min_score, max_score, n_results)
+        prediction_json, source_target_predictions = get_similarities(
+            types, concept_id, emb_vectors, min_score, max_score, n_results
+        )
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)

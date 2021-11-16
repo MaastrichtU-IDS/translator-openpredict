@@ -27,6 +27,16 @@ def test_get_predict(client):
     assert len(response.json['hits']) == 42
     assert response.json['count'] == 42
 
+
+def test_get_similarity(client):
+    """Test prediction similarity API GET operation"""
+    n_results=5
+    url = '/similarity?drug_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
+    response = client.get(url)
+    assert len(response.json['hits']) == n_results
+    assert response.json['count'] == n_results
+
+
 def test_post_trapi(client):
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     url = '/query'
