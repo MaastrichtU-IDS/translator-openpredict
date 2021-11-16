@@ -40,7 +40,7 @@ def start_api(port=8808, debug=False, start_spark=True):
     else:
         # Run in productiom with tornado (also available: gevent)
         deployment_server = 'tornado'
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=logging.DEBUG)
         print("Production deployment using \033[1mTornado\033[0m 🌪️")
 
     api = connexion.App(__name__, options={"swagger_url": ""})

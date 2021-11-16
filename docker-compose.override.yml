@@ -1,9 +1,15 @@
-version: '3'
+version: "3"
+
 services:
+
   openpredict-api:
     container_name: openpredict-api
     build: .
     restart: unless-stopped
+    ports:
+      - 8808:8808
+    volumes:
+      - ./data:/data/openpredict
     environment: 
       OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
       SPARQL_USERNAME: ${SPARQL_USERNAME}
@@ -11,5 +17,16 @@ services:
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
       SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
 
-      # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
 
+  # openpredict-virtuoso:
+  #   container_name: openpredict-virtuoso
+  #   image: 'tenforce/virtuoso:latest'
+  #   environment:
+  #     DBA_PASSWORD: dba
+  #     SPARQL_UPDATE: 'true'
+  #     DEFAULT_GRAPH: 'https://w3id.org/openpredict/graph'
+  #   volumes:
+  #     - './data/virtuoso:/data'
+  #   ports:
+  #     - '8890:8890'
+  #     - '1111:1111'

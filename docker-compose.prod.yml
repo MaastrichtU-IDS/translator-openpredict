@@ -4,6 +4,8 @@ services:
     container_name: openpredict-api
     build: .
     restart: unless-stopped
+    volumes:
+      - /data/openpredict:/data/openpredict
     environment: 
       OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
       SPARQL_USERNAME: ${SPARQL_USERNAME}
@@ -11,5 +13,9 @@ services:
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
       SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
 
+      # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
+      VIRTUAL_HOST: openpredict.semanticscience.org
+      LETSENCRYPT_HOST: openpredict.semanticscience.org
+      VIRTUAL_PORT: 8808
       # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
 
