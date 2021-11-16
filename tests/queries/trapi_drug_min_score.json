@@ -20,6 +20,6 @@
         }
     },
     "query_options": {
-        "min_score": 0.7
+        "min_score": 0.1
     }
 }

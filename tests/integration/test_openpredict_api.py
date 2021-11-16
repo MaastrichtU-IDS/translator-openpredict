@@ -26,7 +26,6 @@ def test_get_predict(client):
     response = client.get(url)
     assert len(response.json['hits']) == 42
     assert response.json['count'] == 42
-    assert response.json['hits'][0]['id'] == 'OMIM:246300'
 
 def test_post_trapi(client):
     """Test Translator ReasonerAPI query POST operation to get predictions"""

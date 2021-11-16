@@ -665,7 +665,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
         cv_results = cv_results.append(scores, ignore_index=True)
 
     scores = cv_results.mean()
-    print("\n "+n_fold+"-fold CV - Avg Test results 🏆")
+    print("\n " + str(n_fold) + "-fold CV - Avg Test results 🏆")
     print(scores)
 
     print("\n Train the final model using all dataset")
