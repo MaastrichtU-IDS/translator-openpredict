@@ -88,7 +88,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     resolved_ids_object = {}
 
     # if not all_emb_vectors or all_emb_vectors == {}:
-    all_emb_vectors = load_similarity_embedding_models()
+    all_emb_vectors = None
 
     # Parse the query_graph to build the query plan
     for edge_id, qg_edge in query_graph["edges"].items():
@@ -161,6 +161,8 @@ def typed_results_to_reasonerapi(reasoner_query):
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
 
                     try:
+                        if not all_emb_vectors or all_emb_vectors == {}:
+                            all_emb_vectors = load_similarity_embedding_models()
 
                         # TODO: make it dynamic, currently using default model for similarity
                         similarity_model_id = 'drugs_fp_embed.txt'
@@ -417,8 +419,13 @@ def typed_results_to_reasonerapi(reasoner_query):
 
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
     for node_id, properties in node_dict.items():
+        node_category = properties['type']
+        if isinstance(node_category, str) and not node_category.startswith('biolink:'):
+            node_category = 'biolink:' + node_category.capitalize()
+        if isinstance(node_category, str):
+            node_category = [ node_category ]
         node_to_add = {
-            'categories': [properties['type']] ,
+            'categories': node_category ,
         }
         if 'label' in properties and properties['label']:
             node_to_add['name'] = properties['label']
