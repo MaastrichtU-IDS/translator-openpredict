@@ -18,6 +18,8 @@ from typing import Optional, List, Dict, Any
 class TRAPI(FastAPI):
     """Translator Reasoner API - wrapper for FastAPI."""
 
+    baseline_model_treats: str
+    baseline_model_similarity: str
     similarity_features = None
     treats_features = None
     treats_classifier = None
@@ -33,7 +35,8 @@ class TRAPI(FastAPI):
     def __init__(
         self,
         *args,
-        treats_model: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        baseline_model_treats: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
         # contact: Optional[Dict[str, Any]] = None,
         **kwargs,
     ):
@@ -42,9 +45,11 @@ class TRAPI(FastAPI):
             root_path_in_servers=False,
             **kwargs,
         )
+        self.baseline_model_treats = baseline_model_treats
+        self.baseline_model_similarity = baseline_model_similarity
         # Initialize embeddings features and classifiers to be used by the API
-        self.treats_features = load_treats_embedding_models(treats_model)
-        self.treats_classifier = load_treats_classifier(treats_model)
+        self.treats_features = load_treats_embedding_models(baseline_model_treats)
+        self.treats_classifier = load_treats_classifier(baseline_model_treats)
         self.similarity_features = load_similarity_embedding_models()
         
         self.add_middleware(

@@ -15,6 +15,9 @@ services:
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
       SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
 
+      # Show print() in logs:
+      PYTHONUNBUFFERED: '1'
+
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
       VIRTUAL_HOST: openpredict.137.120.31.148.sslip.io
       LETSENCRYPT_HOST: openpredict.137.120.31.148.sslip.io

@@ -25,13 +25,13 @@ from typing import Optional, Dict
 
 init_openpredict_dir()
 init_triplestore()
-# global all_emb_vectors
-# all_emb_vectors = load_similarity_embedding_models()
 
-# TODO: try using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
+# Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
-app = TRAPI(treats_model='openpredict-baseline-omim-drugbank')
-
+app = TRAPI(
+    baseline_model_treats='openpredict-baseline-omim-drugbank',
+    baseline_model_similarity='drugs_fp_embed.txt'
+)
 
 
 @app.post("/query", name="TRAPI query",
@@ -146,7 +146,10 @@ def get_meta_knowledge_graph():
     # response_model=dict,
     tags=["biothings"],
 )
-def get_predict(drug_id='DRUGBANK:DB00394', disease_id=None, model_id='openpredict-baseline-omim-drugbank', min_score=None, max_score=None, n_results=None):
+def get_predict(
+        drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
+        model_id: str ='openpredict-baseline-omim-drugbank', 
+        min_score: float =None, max_score: float =None, n_results: int =None):
     """Get predicted associations for a given entity CURIE.
 
     :param entity: Search for predicted associations for this entity CURIE
@@ -190,7 +193,10 @@ def get_predict(drug_id='DRUGBANK:DB00394', disease_id=None, model_id='openpredi
     # response_model=dict,
     tags=["openpredict"],
 )
-def get_similarity(types='Drugs', drug_id='DRUGBANK:DB00394', disease_id=None, model_id='drugs_fp_embed.txt', min_score=None, max_score=None, n_results=None):
+def get_similarity(
+        types: str ='Drugs', drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
+        model_id: str ='drugs_fp_embed.txt', 
+        min_score: float =None, max_score: float =None, n_results: int =None):
     """Get similar entites for a given entity CURIE.
 
     :param entity: Search for predicted associations for this entity CURIE
@@ -233,7 +239,7 @@ def get_similarity(types='Drugs', drug_id='DRUGBANK:DB00394', disease_id=None, m
     # response_model=dict,
     tags=["openpredict"],
 )
-def get_features(type='Drugs'):
+def get_features(type: str ='Drugs'):
     """Get features in the model
 
     :return: JSON with features
@@ -264,7 +270,11 @@ def get_models():
     response_model=dict,
     tags=["openpredict"],
 )
-def post_embedding(apikey, emb_name, description, types='Both', model_id='openpredict-baseline-omim-drugbank', uploaded_file: UploadFile = File(...)):
+def post_embedding(
+        apikey: str, emb_name: str, description: str, 
+        types: str ='Both', model_id: str ='openpredict-baseline-omim-drugbank', 
+        uploaded_file: UploadFile = File(...)
+    ):
     """Post JSON embeddings via the API, with simple APIKEY authentication 
     provided in environment variables 
     """

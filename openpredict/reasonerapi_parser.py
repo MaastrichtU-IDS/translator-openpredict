@@ -165,7 +165,8 @@ def typed_results_to_reasonerapi(reasoner_query, treats_features=None, all_emb_v
                             # Load the features once at the start
                             all_emb_vectors = load_similarity_embedding_models()
 
-                        # TODO: make it dynamic, currently using default model for similarity
+                        # TODO: make it dynamic by passing the TRAPI app object with all models
+                        # currently using default model for similarity
                         similarity_model_id = 'drugs_fp_embed.txt'
                         # similarity_model_id = model_id
                         emb_vectors = all_emb_vectors[similarity_model_id]
