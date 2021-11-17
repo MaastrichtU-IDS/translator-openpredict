@@ -5,7 +5,9 @@ import requests
 import os
 from reasoner_validator import validate
 
-PROD_API_URL = 'https://openpredict.semanticscience.org'
+# PROD_API_URL = 'https://openpredict.semanticscience.org'
+PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
+
 
 def test_get_predict():
     """Test predict API GET operation"""
@@ -20,6 +22,7 @@ def test_get_predict():
     assert len(get_predictions['hits']) == 42
     assert get_predictions['count'] == 42
     # assert get_predictions['hits'][0]['id'] == 'OMIM:246300'
+
 
 # TODO: add tests using a TRAPI validation API if possible?
 def test_post_trapi():
