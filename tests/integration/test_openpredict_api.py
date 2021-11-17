@@ -18,7 +18,7 @@ def client():
     with flask_app.app.test_client() as c:
         yield c
 
-VALIDATE_TRAPI_VERSION="1.1.0"
+VALIDATE_TRAPI_VERSION="1.2.0"
 
 def test_get_predict(client):
     """Test predict API GET operation"""
