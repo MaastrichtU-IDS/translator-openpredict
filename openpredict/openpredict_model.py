@@ -16,7 +16,7 @@ import pkg_resources
 from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata, get_run_id
 # from openpredict.openpredict_utils import get_spark_context
 # from openpredict.openpredict_utils import get_spark_context
-from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels
+from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels, log
 
 
 # models_folder = 'openpredict/data/models/'

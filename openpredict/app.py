@@ -14,7 +14,7 @@ from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, Similarity
 # import asyncio
 # import aiohttp
 # from aiohttp import web
-import logging
+# import logging
 
 from fastapi import FastAPI, Body, Request, Response, File, UploadFile
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -28,14 +28,46 @@ init_triplestore()
 
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
+debug = os.getenv('DEV_MODE', False)
+
 app = TRAPI(
     baseline_model_treatment='openpredict-baseline-omim-drugbank',
-    baseline_model_similarity='drugs_fp_embed.txt'
+    baseline_model_similarity='drugs_fp_embed.txt',
+    debug=debug
 )
 
 
 @app.post("/query", name="TRAPI query",
-    description="Get list of predicted associations for a given TRAPI query",
+    description="""The default example TRAPI query will give you a list of predicted potential drug treatments for a given disease
+
+You can also try this query to retrieve similar entities to a given drug:
+
+```json
+{
+    "message": {
+        "query_graph": {
+            "edges": {
+                "e01": {
+                    "object": "n1",
+                    "predicates": [ "biolink:similar_to" ],
+                    "subject": "n0"
+                }
+            },
+            "nodes": {
+                "n0": {
+                    "categories": [ "biolink:Drug" ],
+                    "ids": [ "DRUGBANK:DB00394" ]
+                },
+                "n1": {
+                    "categories": [ "biolink:Drug" ]
+                }
+            }
+        }
+    },
+    "query_options": { "n_results": 5 }
+}
+```
+""",
     response_model=Query,
     tags=["reasoner"],
 )
@@ -47,13 +79,12 @@ def post_reasoner_predict(
     :param request_body: The ReasonerStdAPI query in JSON
     :return: Predictions as a ReasonerStdAPI Message
     """
-    # request_body = request.body()
-    # query_graph = request_body["message"]["query_graph"]
     query_graph = request_body.message.query_graph.dict(exclude_none=True)
-    print(query_graph)
+    
     if len(query_graph["edges"]) == 0:
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)
+
     if len(query_graph["edges"]) > 1:
         # Currently just return a empty result if multi-edges query
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
@@ -198,7 +229,7 @@ def get_similarity(
     try:
         emb_vectors = app.similarity_embeddings[model_id]
         prediction_json, source_target_predictions = get_similarities(
-            types, concept_id, emb_vectors, min_score, max_score, n_results
+            types.value, concept_id, emb_vectors, min_score, max_score, n_results
         )
     except Exception as e:
         print('Error processing ID ' + concept_id)
@@ -226,7 +257,7 @@ def get_features(type: EmbeddingTypes ='Drugs') -> dict:
 
     :return: JSON with features
     """
-    return retrieve_features(type)
+    return retrieve_features(type.value)
 
 
 
@@ -253,8 +284,9 @@ def get_models() -> dict:
     tags=["openpredict"],
 )
 def post_embedding(
-        apikey: str, emb_name: str, description: str, 
+        emb_name: str, description: str, 
         types: EmbeddingTypes ='Both', model_id: str ='openpredict-baseline-omim-drugbank', 
+        apikey: str=None,
         uploaded_file: UploadFile = File(...)
     ) -> dict:
     """Post JSON embeddings via the API, with simple APIKEY authentication 
@@ -262,13 +294,12 @@ def post_embedding(
     """
     # TODO: implement GitHub OAuth? https://github-flask.readthedocs.io/en/latest/
     # Ignore the API key check if no env variable defined (for development)
-    print(os.getenv('OPENPREDICT_APIKEY'))
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         # embedding_file = connexion.request.files['embedding_file']
         embedding_file = uploaded_file.file
-        print(emb_name, types)
+        print(emb_name, types.value)
         run_id, scores = addEmbedding(
-            embedding_file, emb_name, types, description, model_id)
+            embedding_file, emb_name, types.value, description, model_id)
         print('Embeddings uploaded')
         # train_model(False)
         return {

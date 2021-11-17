@@ -19,6 +19,7 @@ services:
       - ./tests:/root/tests
     environment:
       - PYTHONUNBUFFERED=1
+      - DEV_MODE=true
     ## Use Connexion:
     # entrypoint: openpredict start-api --debug
     ## Use FastAPI:

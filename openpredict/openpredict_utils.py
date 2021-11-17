@@ -5,6 +5,7 @@ import requests
 import pkg_resources
 import pandas as pd
 import time
+import datetime
 from openpredict.rdf_utils import init_triplestore
 
 global OPENPREDICT_DATA_DIR
@@ -18,11 +19,21 @@ else:
 
 MISSING_IDS = set()
 
+
+def log(msg: str):
+    """Simple print with a timestamp"""
+    log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%d@%H:%M:%S")) + '] ' + msg 
+    # logging.info(log_msg)
+    print(log_msg)
+
+
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
     Where models and features for runs are stored
     """
     return OPENPREDICT_DATA_DIR + subfolder
+
+
 
 def init_openpredict_dir():
     """Create OpenPredict folder and initiate files if necessary.
