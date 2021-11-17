@@ -1,5 +1,4 @@
 import pytest
-import json
 import pkg_resources
 import requests
 import os

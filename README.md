@@ -18,7 +18,7 @@ You can install the `openpredict` python package with `pip` to run the OpenPredi
 
 We currently recommend to install from the source code `master` branch to get the latest version of OpenPredict. But we also regularly publish the `openpredict` package to PyPI: https://pypi.org/project/openpredict
 
-### Install from the source code :inbox_tray:
+### With Docker from the source code :whale:
 
 Clone the repository:
 
@@ -27,34 +27,7 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Install `openpredict` from the source code, the package will be automatically updated when the files changes locally :arrows_counterclockwise:
-
-```bash
-pip3 install -e .
-```
-
-#### Optional: isolate with a Virtual Environment
-
-If you face conflicts with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder before installing OpenPredict:
-
-```bash
-# Create the virtual environment folder in your workspace
-python3 -m venv .venv
-# Activate it using a script in the created folder
-source .venv/bin/activate
-```
-
-> On Windows you might also need to install [Visual Studio C++ 14 Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (required for `numpy`)
-
-### Start the OpenPredict API :rocket:
-
-Start locally the OpenPredict API on http://localhost:8808
-
-```bash
-openpredict start-api
-```
-
-Or you can start the API with `docker-compose`:
+Start the API in development mode on http://localhost:8808:
 
 ```bash
 docker-compose up

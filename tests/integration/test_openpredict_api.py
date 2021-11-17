@@ -1,7 +1,6 @@
 from openpredict.rdf_utils import init_triplestore
 import pytest
 import pkg_resources
-import connexion
 import os
 import json
 from openpredict.openpredict_utils import init_openpredict_dir
@@ -9,6 +8,7 @@ from openpredict.rdf_utils import init_triplestore
 from fastapi.testclient import TestClient
 from reasoner_validator import validate
 from openpredict.app import app
+# import connexion
 
 VALIDATE_TRAPI_VERSION="1.2.0"
 
@@ -18,7 +18,7 @@ init_triplestore()
 
 client = TestClient(app)
 
-
+## Test for Connexion API:
 # flask_app = connexion.FlaskApp(__name__)
 # flask_app.add_api('../../openpredict/openapi.yml')
 # @pytest.fixture(scope='module')
