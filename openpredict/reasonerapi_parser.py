@@ -67,7 +67,6 @@ def typed_results_to_reasonerapi(reasoner_query):
     :param: reasoner_query Query from Reasoner API
     :return: Results as ReasonerAPI object
     """
-    print('Start parsing TRAPI query')
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
     # Default query_options
@@ -154,7 +153,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
         
-        print('Resolve similar_to for ' + str(edge_qg_id))
+        # print('Resolve similar_to for ' + str(edge_qg_id))
         similar_parents = get_biolink_parents('biolink:similar_to')
         if any(i in similar_parents for i in query_plan[edge_qg_id]['predicates']):
             if 'from_kg_id' in query_plan[edge_qg_id]:
@@ -173,22 +172,19 @@ def typed_results_to_reasonerapi(reasoner_query):
                             id_to_predict, 
                             emb_vectors, min_score, max_score, n_results
                         )
-                        print('similarity_json!!')
-                        print(similarity_json)
-                    
-                    #  [
-                    #     {
-                    #       "id": "DRUGBANK:DB00390",
-                    #       "label": "Digoxin",
-                    #       "score": 0.9826133251190186,
-                    #       "type": "drug"
-                    #     },
-                    #     {
-                    #       "id": "DRUGBANK:DB00396",
-                    #       "label": "Progesterone",
-                    #       "score": 0.9735659956932068,
-                    #       "type": "drug"
-                    #     },
+                        #  [
+                        #     {
+                        #       "id": "DRUGBANK:DB00390",
+                        #       "label": "Digoxin",
+                        #       "score": 0.9826133251190186,
+                        #       "type": "drug"
+                        #     },
+                        #     {
+                        #       "id": "DRUGBANK:DB00396",
+                        #       "label": "Progesterone",
+                        #       "score": 0.9735659956932068,
+                        #       "type": "drug"
+                        #     },
 
                         for hit in similarity_json:
                             source_node_id = resolve_id(id_to_predict, resolved_ids_object)
@@ -272,33 +268,23 @@ def typed_results_to_reasonerapi(reasoner_query):
                             if kg_edge_count == n_results:
                                 break
 
-                    # prediction_json = []
-                    # print('SIMILARITY DONE')
-                    # print(similarity_json)
                     except Exception as e:
+                        print('Error running similarity search')
                         print(e)
-                        print('Error processing ID ')
-                        print(id_to_predict)
-                        return ('Not found: entry in OpenPredict for ID ' + str(id_to_predict), 404)
 
 
         ## Resolve treats/treated_by (slightly different object returned by get_predictions)
-        print('Resolve treats/treated_by')
+        # print('Resolve treats/treated_by')
         treats_parents = get_biolink_parents('biolink:treats') + get_biolink_parents('biolink:treated_by')
-        print('predicate_parents')
-        print(treats_parents)
         if any(i in treats_parents for i in query_plan[edge_qg_id]['predicates']):
             # Resolve when asking for treats prediction
             drugdisease_parents = get_biolink_parents('biolink:Drug') + get_biolink_parents('biolink:Disease')
             if any(i in drugdisease_parents for i in query_plan[edge_qg_id]['from_type']) and any(i in drugdisease_parents for i in query_plan[edge_qg_id]['to_type']):
-
                 # Iterate over the list of ids provided
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
                     try:
                         # Run OpenPredict to get predictions
                         bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score)
-                        # print('PREEDICTIONS')
-                        # print(prediction_json)
                     except:
                         prediction_json = []
                         
