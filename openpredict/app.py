@@ -1,27 +1,27 @@
 import os
 # import connexion
-import logging
 from datetime import datetime
 from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
-from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embedding_models
-from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
+from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embeddings
+from openpredict.reasonerapi_parser import resolve_trapi_query
 # from openpredict.openapi import TRAPI_EXAMPLE, custom_openapi
-from openpredict.openapi import TRAPI, TRAPI_EXAMPLE
+from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
 # from flask_cors import CORS
 # from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
-import pkg_resources
+# import pkg_resources
 # from gensim.models import KeyedVectors
 # import asyncio
 # import aiohttp
 # from aiohttp import web
+import logging
 
-from fastapi import FastAPI, Body, Request, Response, Query, File, UploadFile
-from fastapi.openapi.utils import get_openapi
+from fastapi import FastAPI, Body, Request, Response, File, UploadFile
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from reasoner_pydantic import Query, Message
 from typing import Optional, Dict
+
 
 init_openpredict_dir()
 init_triplestore()
@@ -29,19 +29,19 @@ init_triplestore()
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
 app = TRAPI(
-    baseline_model_treats='openpredict-baseline-omim-drugbank',
+    baseline_model_treatment='openpredict-baseline-omim-drugbank',
     baseline_model_similarity='drugs_fp_embed.txt'
 )
 
 
 @app.post("/query", name="TRAPI query",
     description="Get list of predicted associations for a given TRAPI query",
-    response_model=dict,
+    response_model=Query,
     tags=["reasoner"],
 )
 def post_reasoner_predict(
         request_body: Query = Body(..., example=TRAPI_EXAMPLE)
-    ):
+    ) -> Query:
     """Get predicted associations for a given ReasonerAPI query.
 
     :param request_body: The ReasonerStdAPI query in JSON
@@ -59,26 +59,13 @@ def post_reasoner_predict(
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-    # reasonerapi_response = typed_results_to_reasonerapi(request_body.dict(exclude_none=True))
-    reasonerapi_response = typed_results_to_reasonerapi(
+    # reasonerapi_response = resolve_trapi_query(request_body.dict(exclude_none=True), app=app)
+    reasonerapi_response = resolve_trapi_query(
         request_body.dict(exclude_none=True), 
-        app.treats_features,
-        app.similarity_features,
-        app.treats_classifier
+        app.treatment_embeddings,
+        app.similarity_embeddings,
+        app.treatment_classifier
     )
-
-    # TODO: populate edges/nodes with association predictions
-    #  Edge: {
-    #     "id": "e50",
-    #     "source_id": "MONDO:0021668",
-    #     "target_id": "ChEMBL:CHEMBL560511",
-    #     "type": "treated_by"
-    #   }
-    # Node: {
-    #     "id": "ChEMBL:CHEMBL2106966",
-    #     "name": "Piketoprofen",
-    #     "type": "chemical_substance"
-    #   },
 
     return JSONResponse(reasonerapi_response) or ('Not found', 404)
 
@@ -86,10 +73,10 @@ def post_reasoner_predict(
 
 @app.get("/meta_knowledge_graph", name="Get the meta knowledge graph",
     description="Get the meta knowledge graph",
-    # response_model=dict,
+    response_model=dict,
     tags=["trapi"],
 )
-def get_meta_knowledge_graph():
+def get_meta_knowledge_graph() -> dict:
     """Get predicates and entities provided by the API
 
     :return: JSON with biolink entities
@@ -143,13 +130,14 @@ def get_meta_knowledge_graph():
     description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
         Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
         This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.""",
-    # response_model=dict,
+    response_model=dict,
     tags=["biothings"],
 )
 def get_predict(
         drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
         model_id: str ='openpredict-baseline-omim-drugbank', 
-        min_score: float =None, max_score: float =None, n_results: int =None):
+        min_score: float =None, max_score: float =None, n_results: int =None
+    ) -> dict:
     """Get predicted associations for a given entity CURIE.
 
     :param entity: Search for predicted associations for this entity CURIE
@@ -169,34 +157,28 @@ def get_predict(
     try:
         prediction_json, source_target_predictions = get_predictions(
             concept_id, model_id, min_score, max_score, n_results, 
-            app.treats_features, app.treats_classifier
+            app.treatment_embeddings, app.treatment_classifier
         )
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 
-    # try:
-    #     prediction_json = get_predictions(entity, model_id, score, n_results)
-    # except:
-    #     return "Not found", 404
-
-    # relation = "biolink:treated_by"
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
-    # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
 
 
 @app.get("/similarity", name="Get similar entities",
     description="Get similar entites for a given entity CURIE.",
-    # response_model=dict,
+    response_model=dict,
     tags=["openpredict"],
 )
 def get_similarity(
-        types: str ='Drugs', drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
+        types: SimilarityTypes ='Drugs', drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
         model_id: str ='drugs_fp_embed.txt', 
-        min_score: float =None, max_score: float =None, n_results: int =None):
+        min_score: float =None, max_score: float =None, n_results: int =None
+    ) -> dict:
     """Get similar entites for a given entity CURIE.
 
     :param entity: Search for predicted associations for this entity CURIE
@@ -214,7 +196,7 @@ def get_similarity(
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        emb_vectors = app.similarity_features[model_id]
+        emb_vectors = app.similarity_embeddings[model_id]
         prediction_json, source_target_predictions = get_similarities(
             types, concept_id, emb_vectors, min_score, max_score, n_results
         )
@@ -236,10 +218,10 @@ def get_similarity(
 
 @app.get("/features", name="Return the features trained in the models",
     description="""Return the features trained in the model, for Drugs, Diseases or Both.""",
-    # response_model=dict,
+    response_model=dict,
     tags=["openpredict"],
 )
-def get_features(type: str ='Drugs'):
+def get_features(type: EmbeddingTypes ='Drugs') -> dict:
     """Get features in the model
 
     :return: JSON with features
@@ -250,10 +232,10 @@ def get_features(type: str ='Drugs'):
 
 @app.get("/models", name="Return the models with their training features and scores",
     description="""Return the models with their training features and scores""",
-    # response_model=dict,
+    response_model=dict,
     tags=["openpredict"],
 )
-def get_models():
+def get_models() -> dict:
     """Get models with their scores and features
 
     :return: JSON with models and features
@@ -272,9 +254,9 @@ def get_models():
 )
 def post_embedding(
         apikey: str, emb_name: str, description: str, 
-        types: str ='Both', model_id: str ='openpredict-baseline-omim-drugbank', 
+        types: EmbeddingTypes ='Both', model_id: str ='openpredict-baseline-omim-drugbank', 
         uploaded_file: UploadFile = File(...)
-    ):
+    ) -> dict:
     """Post JSON embeddings via the API, with simple APIKEY authentication 
     provided in environment variables 
     """
@@ -296,6 +278,12 @@ def post_embedding(
     else:
         return {'Forbidden': 403}
 
+
+
+@app.get("/", include_in_schema=False)
+def redirect_root_to_docs():
+    """Redirect the route / to /docs"""
+    return RedirectResponse(url='/docs')
 
 
 

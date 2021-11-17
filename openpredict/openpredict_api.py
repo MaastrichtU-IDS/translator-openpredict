@@ -5,8 +5,8 @@ from datetime import datetime
 from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities
-from openpredict.openpredict_model import load_similarity_embedding_models, load_treats_embedding_models, load_treats_classifier
-from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
+from openpredict.openpredict_model import load_similarity_embeddings, load_treatment_embeddings, load_treatment_classifier
+from openpredict.reasonerapi_parser import resolve_trapi_query
 from flask_cors import CORS
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 import pkg_resources
@@ -15,14 +15,13 @@ import pkg_resources
 # import aiohttp
 # from aiohttp import web
 
-# all_emb_vectors = None
-treats_features = None
-similarity_features = None
-treats_classifier = None
+treatment_embeddings = None
+similarity_embeddings = None
+treatment_classifier = None
 
-# self.treats_features = load_treats_embedding_models(treats_model)
-# self.treats_classifier = load_treats_classifier(treats_model)
-# self.similarity_features = load_similarity_embedding_models()
+# self.treatment_embeddings = load_treatment_embeddings(treats_model)
+# self.treatment_classifier = load_treatment_classifier(treats_model)
+# self.similarity_embeddings = load_similarity_embeddings()
 
 # TODO: check using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 def start_api(port=8808, debug=False, start_spark=True):
@@ -37,12 +36,12 @@ def start_api(port=8808, debug=False, start_spark=True):
     init_openpredict_dir()
     init_triplestore()
     baseline_model = 'openpredict-baseline-omim-drugbank'
-    global similarity_features
-    similarity_features = load_similarity_embedding_models()
-    global treats_features
-    treats_features = load_treats_embedding_models(baseline_model)
-    global treats_classifier
-    treats_classifier = load_treats_classifier(baseline_model)
+    global similarity_embeddings
+    similarity_embeddings = load_similarity_embeddings()
+    global treatment_embeddings
+    treatment_embeddings = load_treatment_embeddings(baseline_model)
+    global treatment_classifier
+    treatment_classifier = load_treatment_classifier(baseline_model)
 
     if debug:
         # Run in development mode
@@ -80,18 +79,9 @@ def start_api(port=8808, debug=False, start_spark=True):
         # api.app.config['REVERSE_PROXY_PATH'] = '/api'
         ReverseProxyPrefixFix(api.app)
 
-    # logging.info('Start spark:' + str(start_spark))
-    # if start_spark:
-    #     try:
-    #         start_spark()
-    #         logging.info('Started Spark locally')
-    #     except:
-    #         logging.info("Could not start Spark locally")
-
     print(
         "Access Swagger UI at \033[1mhttp://localhost:" + str(port) + "\033[1m 🔗")
     api.run(host='0.0.0.0', port=port, debug=debug, server=deployment_server)
-    # api.run(host='0.0.0.0', port=port, debug=debug)
 
 
 def post_embedding(apikey, types, emb_name, description, model_id):
@@ -134,7 +124,7 @@ def get_similarity(types='Both', drug_id=None, disease_id=None, model_id='drugs_
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        emb_vectors = similarity_features[model_id]
+        emb_vectors = similarity_embeddings[model_id]
         prediction_json, source_target_predictions = get_similarities(
             types, concept_id, emb_vectors, min_score, max_score, n_results
         )
@@ -176,7 +166,7 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
     try:
         prediction_json, source_target_predictions = get_predictions(
             concept_id, model_id, min_score, max_score, n_results, 
-            treats_features, treats_classifier
+            treatment_embeddings, treatment_classifier
         )
     except Exception as e:
         print('Error processing ID ' + concept_id)
@@ -307,7 +297,7 @@ def post_reasoner_predict(request_body):
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-    reasonerapi_response = typed_results_to_reasonerapi(request_body, treats_features, similarity_features, treats_classifier)
+    reasonerapi_response = resolve_trapi_query(request_body, treatment_embeddings, similarity_embeddings, treatment_classifier)
 
     # TODO: populate edges/nodes with association predictions
     #  Edge: {

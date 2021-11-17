@@ -1,28 +1,28 @@
 import os
-import logging
-from datetime import datetime
-from openpredict.openpredict_utils import init_openpredict_dir
-from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
-from openpredict.openpredict_model import load_similarity_embedding_models, load_treats_embedding_models, load_treats_classifier
-from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
-
-from fastapi import FastAPI, Body, Request, Response, Query
+from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-# from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from reasoner_pydantic import Query, Message
 from typing import Optional, List, Dict, Any
+from enum import Enum
 
+from openpredict.openpredict_model import load_similarity_embeddings, load_treatment_embeddings, load_treatment_classifier
+# from openpredict.openpredict_utils import init_openpredict_dir
+# from openpredict.rdf_utils import init_triplestore
+# import logging
+# from datetime import datetime
 
 
 class TRAPI(FastAPI):
     """Translator Reasoner API - wrapper for FastAPI."""
 
-    baseline_model_treats: str
+    # Embeddings and classifier are loaded here at the start of the API 
+    baseline_model_treatment: str
+    treatment_embeddings = None
+    treatment_classifier = None
+
     baseline_model_similarity: str
-    similarity_features = None
-    treats_features = None
-    treats_classifier = None
+    similarity_embeddings = None
 
     required_tags = [
         {"name": "reasoner"},
@@ -35,7 +35,7 @@ class TRAPI(FastAPI):
     def __init__(
         self,
         *args,
-        baseline_model_treats: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
         baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
         # contact: Optional[Dict[str, Any]] = None,
         **kwargs,
@@ -45,12 +45,12 @@ class TRAPI(FastAPI):
             root_path_in_servers=False,
             **kwargs,
         )
-        self.baseline_model_treats = baseline_model_treats
+        self.baseline_model_treatment = baseline_model_treatment
         self.baseline_model_similarity = baseline_model_similarity
         # Initialize embeddings features and classifiers to be used by the API
-        self.treats_features = load_treats_embedding_models(baseline_model_treats)
-        self.treats_classifier = load_treats_classifier(baseline_model_treats)
-        self.similarity_features = load_similarity_embedding_models()
+        self.treatment_embeddings = load_treatment_embeddings(baseline_model_treatment)
+        self.treatment_classifier = load_treatment_classifier(baseline_model_treatment)
+        self.similarity_embeddings = load_similarity_embeddings()
         
         self.add_middleware(
             CORSMiddleware,
@@ -85,6 +85,7 @@ class TRAPI(FastAPI):
         )
 
         if os.getenv('LETSENCRYPT_HOST'):
+            # Retrieving URL used for nginx reverse proxy
             openapi_schema["servers"] = [
                 {
                     "url": 'https://' + os.getenv('LETSENCRYPT_HOST'),
@@ -94,34 +95,25 @@ class TRAPI(FastAPI):
                 }
             ]
 
-        # if os.getenv('PRODUCTION_MODE') == 'true':
-        #     openapi_schema["servers"] = [
-        #         {
-        #             "url": 'https://openpredict.semanticscience.org',
-        #             "description": 'Production OpenPredict TRAPI',
-        #             "x-maturity": 'production',
-        #             "x-location": 'IDS'
-        #         }
-        #     ]
-
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',
             "team": "Clinical Data Provider",
+            "biolink-version": "1.8.2",
+            "infores": 'infores:openpredict',
             "externalDocs": {
                 "description": "The values for component and team are restricted according to this external JSON schema. See schema and examples at url",
                 "url": "https://github.com/NCATSTranslator/translator_extensions/blob/production/x-translator/",
             },
-            "infores": 'infores:openpredict',
         }
         openapi_schema["info"]["x-trapi"] = {
             "version": "1.2.0",
+            "operations": [
+                "lookup",
+            ],
             "externalDocs": {
                 "description": "The values for version are restricted according to the regex in this external JSON schema. See schema and examples at url",
                 "url": "https://github.com/NCATSTranslator/translator_extensions/blob/production/x-trapi/",
             },
-            "operations": [
-                "lookup",
-            ],
         }
 
         openapi_schema["info"]["contact"] = {
@@ -131,6 +123,10 @@ class TRAPI(FastAPI):
             "x-role": "responsible developer",
         }
         openapi_schema["info"]["termsOfService"] = 'https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/LICENSE'
+        openapi_schema["info"]["license"] = {
+            "name": "MIT license",
+            "url": "https://opensource.org/licenses/MIT",
+        }
 
         # To make the /predict call compatible with the BioThings Explorer:
         openapi_schema["paths"]["/predict"]["x-bte-kgs-operations"] = [
@@ -182,12 +178,23 @@ class TRAPI(FastAPI):
         
         # From fastapi:
         openapi_schema["info"]["x-logo"] = {
-            "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+            # "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+            "url": "https://raw.githubusercontent.com/MaastrichtU-IDS/dsri-documentation/master/website/static/img/um_logo.png"
         }
 
         self.openapi_schema = openapi_schema
         return self.openapi_schema
 
+
+class EmbeddingTypes(str, Enum):
+    Both = "Both"
+    Drugs = "Drugs"
+    Diseases = "Diseases"
+
+
+class SimilarityTypes(str, Enum):
+    Drugs = "Drugs"
+    Diseases = "Diseases"
 
 
 TRAPI_EXAMPLE = {
@@ -209,7 +216,7 @@ TRAPI_EXAMPLE = {
           ],
           "ids": [
             "OMIM:246300",
-            "MONDO:0007190"
+            # "MONDO:0007190"
           ]
         },
         "n1": {

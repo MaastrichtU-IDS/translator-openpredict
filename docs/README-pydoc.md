@@ -2,7 +2,7 @@
 
 * [openpredict](#.openpredict)
 * [openpredict.reasonerapi\_parser](#.openpredict.reasonerapi_parser)
-  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_parser.typed_results_to_reasonerapi)
+  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_parser.resolve_trapi_query)
 * [openpredict.rdf\_utils](#.openpredict.rdf_utils)
   * [insert\_graph\_in\_sparql\_endpoint](#.openpredict.rdf_utils.insert_graph_in_sparql_endpoint)
   * [query\_sparql\_endpoint](#.openpredict.rdf_utils.query_sparql_endpoint)
@@ -51,11 +51,11 @@
 <a name=".openpredict.reasonerapi_parser"></a>
 # openpredict.reasonerapi\_parser
 
-<a name=".openpredict.reasonerapi_parser.typed_results_to_reasonerapi"></a>
+<a name=".openpredict.reasonerapi_parser.resolve_trapi_query"></a>
 #### typed\_results\_to\_reasonerapi
 
 ```python
-typed_results_to_reasonerapi(reasoner_query, model_id)
+resolve_trapi_query(reasoner_query, model_id)
 ```
 
 Convert an array of predictions objects to ReasonerAPI format

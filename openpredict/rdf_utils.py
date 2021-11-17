@@ -262,10 +262,10 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
     return run_id
 
 
-def retrieve_features(type='All', run_id=None):
+def retrieve_features(type='Both', run_id=None):
     """Get features in the ML model
 
-    :param type: type of the feature (All, Both, Drug, Disease)
+    :param type: type of the feature (Both, Drug, Disease)
     :return: JSON with features
     """
     if run_id:
@@ -299,7 +299,7 @@ def retrieve_features(type='All', run_id=None):
 
     else:
         type_filter = ''
-        if (type != "All"):
+        if (type != "Both"):
             type_filter = 'FILTER(?embeddingType = "' + type + '")'
 
         query = """SELECT DISTINCT ?id ?description ?embeddingType ?feature

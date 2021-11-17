@@ -28,10 +28,7 @@ hyper_params = {
     'C': 1.0,
     'random_state': 100
 }
-
 sc = None
-
-
 def get_spark_context():
     """Get Spark context, either from Spark Master URL to a Spark cluster
     If not URL is provided, then it will try to run Spark locally
@@ -85,33 +82,33 @@ def get_spark_context():
     #     sc = SparkContext(conf=config, appName="OpenPredict")
 
 
-def load_similarity_embedding_models():
+def load_similarity_embeddings():
     """Load embeddings model for similarity"""
     embedding_folder = 'data/embedding'
-    print (pkg_resources.resource_filename('openpredict', embedding_folder))
-    all_emb_vectors ={}
+    print(pkg_resources.resource_filename('openpredict', embedding_folder))
+    similarity_embeddings = {}
     for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
         if model_id.endswith('txt'):
-            print("📥 Loading features " +
-                pkg_resources.resource_filename('openpredict', os.path.join(
-                    embedding_folder, model_id)))
-            emb_vectors = KeyedVectors.load_word2vec_format( pkg_resources.resource_filename('openpredict', os.path.join(
-                    embedding_folder, model_id)))
-            all_emb_vectors[model_id]= emb_vectors
-    return all_emb_vectors
+            feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
+            print("📥 Loading features " + feature_path)
+            emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
+            similarity_embeddings[model_id]= emb_vectors
+    return similarity_embeddings
 
 
-def load_treats_classifier(model_id):
+def load_treatment_classifier(model_id):
     """Load embeddings model for treats and treated_by"""
     print("📥 Loading treats classifier from joblib for model " + str(model_id))
     return load(get_openpredict_dir('models/' + str(model_id) + '.joblib'))
 
-def load_treats_embedding_models(model_id):
+
+def load_treatment_embeddings(model_id):
     """Load embeddings model for treats and treated_by"""
     print("📥 Loading treats/treated_by features for model " + str(model_id))
     (drug_df, disease_df) = load(get_openpredict_dir(
         'features/' + str(model_id) + '.joblib'))
     return (drug_df, disease_df)
+
 
 
 def adjcencydict2matrix(df, name1, name2):
@@ -783,7 +780,7 @@ def query_omim_drugbank_classifier(input_curie, model_id, loaded_features=None, 
     # clf = load('data/models/openpredict-baseline-omim-drugbank.joblib')
     clf = loaded_classifier
     if not clf:
-        clf = load_treats_classifier(model_id)
+        clf = load_treatment_classifier(model_id)
 
     # print("📥 Loading classifier " +
     #       get_openpredict_dir('models/' + model_id + '.joblib'))

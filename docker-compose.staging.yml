@@ -8,8 +8,6 @@ services:
       - /data/openpredict:/data/openpredict
     entrypoint: uvicorn openpredict.app:app --host 0.0.0.0 --port 8808
     environment: 
-      OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
-      PRODUCTION_MODE: 'true'
       SPARQL_USERNAME: ${SPARQL_USERNAME}
       SPARQL_PASSWORD: ${SPARQL_PASSWORD}
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
@@ -22,5 +20,8 @@ services:
       VIRTUAL_HOST: openpredict.137.120.31.148.sslip.io
       LETSENCRYPT_HOST: openpredict.137.120.31.148.sslip.io
       VIRTUAL_PORT: 8808
+
+      # OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
+      # PRODUCTION_MODE: 'true'
       # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
 

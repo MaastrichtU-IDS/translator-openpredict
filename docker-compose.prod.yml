@@ -8,7 +8,6 @@ services:
       - /data/openpredict:/data/openpredict
     environment: 
       OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
-      PRODUCTION_MODE: 'true'
       SPARQL_USERNAME: ${SPARQL_USERNAME}
       SPARQL_PASSWORD: ${SPARQL_PASSWORD}
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
@@ -18,5 +17,7 @@ services:
       VIRTUAL_HOST: openpredict.semanticscience.org
       LETSENCRYPT_HOST: openpredict.semanticscience.org
       VIRTUAL_PORT: 8808
+
       # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
+      # PRODUCTION_MODE: 'true'
 

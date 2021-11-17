@@ -1,4 +1,4 @@
-from openpredict.openpredict_model import get_predictions, get_similarities, load_similarity_embedding_models, load_treats_classifier, load_treats_embedding_models
+from openpredict.openpredict_model import get_predictions, get_similarities, load_similarity_embeddings, load_treatment_classifier, load_treatment_embeddings
 import requests
 import os
 import re
@@ -59,7 +59,7 @@ def resolve_id(id_to_resolve, resolved_ids_object):
         return resolved_ids_object[id_to_resolve]
     return id_to_resolve
 
-def typed_results_to_reasonerapi(reasoner_query, treats_features=None, all_emb_vectors=None, treats_classifier=None):
+def resolve_trapi_query(reasoner_query, treatment_embeddings=None, similarity_embeddings=None, treatment_classifier=None):
     """Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
@@ -86,9 +86,9 @@ def typed_results_to_reasonerapi(reasoner_query, treats_features=None, all_emb_v
     query_plan = {}
     resolved_ids_object = {}
 
-    # if not all_emb_vectors or all_emb_vectors == {}:
-    # all_emb_vectors = None
-    # treats_features = None
+    # if not similarity_embeddings or similarity_embeddings == {}:
+    # similarity_embeddings = None
+    # treatment_embeddings = None
 
     # Parse the query_graph to build the query plan
     for edge_id, qg_edge in query_graph["edges"].items():
@@ -161,15 +161,15 @@ def typed_results_to_reasonerapi(reasoner_query, treats_features=None, all_emb_v
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
 
                     try:
-                        if not all_emb_vectors or all_emb_vectors == {}:
+                        if not similarity_embeddings or similarity_embeddings == {}:
                             # Load the features once at the start
-                            all_emb_vectors = load_similarity_embedding_models()
+                            similarity_embeddings = load_similarity_embeddings()
 
                         # TODO: make it dynamic by passing the TRAPI app object with all models
                         # currently using default model for similarity
                         similarity_model_id = 'drugs_fp_embed.txt'
                         # similarity_model_id = model_id
-                        emb_vectors = all_emb_vectors[similarity_model_id]
+                        emb_vectors = similarity_embeddings[similarity_model_id]
                         similarity_json, source_target_predictions = get_similarities(
                             query_plan[edge_qg_id]['from_type'],
                             id_to_predict, 
@@ -286,16 +286,16 @@ def typed_results_to_reasonerapi(reasoner_query, treats_features=None, all_emb_v
                 # Iterate over the list of ids provided
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
                     try:
-                        if not treats_features or treats_features == {}:
+                        if not treatment_embeddings or treatment_embeddings == {}:
                             # Load the features once at the start
-                            treats_features = load_treats_embedding_models(model_id)
-                        if not treats_classifier or treats_classifier == {}:
+                            treatment_embeddings = load_treatment_embeddings(model_id)
+                        if not treatment_classifier or treatment_classifier == {}:
                             # Load the features once at the start
-                            treats_classifier = load_treats_classifier(model_id)
+                            treatment_classifier = load_treatment_classifier(model_id)
                         
                         # Run OpenPredict to get predictions
                         bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score, None, 
-                            loaded_features=treats_features, loaded_classifier=treats_classifier)
+                            loaded_features=treatment_embeddings, loaded_classifier=treatment_classifier)
                     except:
                         prediction_json = []
                         
