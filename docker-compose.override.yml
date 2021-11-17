@@ -19,9 +19,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     ## Use Connexion:
-    entrypoint: openpredict start-api --debug
+    # entrypoint: openpredict start-api --debug
     ## Use FastAPI:
-    # entrypoint: uvicorn openpredict.app:app --host 0.0.0.0 --reload
+    entrypoint: uvicorn openpredict.app:app --host 0.0.0.0 --reload
 
 
     #   SPARQL_USERNAME: ${SPARQL_USERNAME}

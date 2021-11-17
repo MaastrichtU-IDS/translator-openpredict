@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
-from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embedding_models, load_treats_embedding_models, load_treats_classifier
+from openpredict.openpredict_model import load_similarity_embedding_models, load_treats_embedding_models, load_treats_classifier
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 
 from fastapi import FastAPI, Body, Request, Response, Query
@@ -23,9 +23,11 @@ class TRAPI(FastAPI):
     treats_classifier = None
 
     required_tags = [
-        {"name": "translator"},
+        {"name": "reasoner"},
         {"name": "trapi"},
-        {"name": "query"},
+        {"name": "biothings"},
+        {"name": "openpredict"},
+        {"name": "translator"},
     ]
 
     def __init__(
@@ -33,11 +35,6 @@ class TRAPI(FastAPI):
         *args,
         treats_model: Optional[str] = 'openpredict-baseline-omim-drugbank',
         # contact: Optional[Dict[str, Any]] = None,
-        # terms_of_service: Optional[str] = None,
-        # translator_component: Optional[str] = None,
-        # translator_teams: Optional[List[str]] = None,
-        # trapi_operations: Optional[List[str]] = None,
-        # infores: Optional[str] = None,
         **kwargs,
     ):
         super().__init__(
@@ -45,16 +42,11 @@ class TRAPI(FastAPI):
             root_path_in_servers=False,
             **kwargs,
         )
+        # Initialize embeddings features and classifiers to be used by the API
         self.treats_features = load_treats_embedding_models(treats_model)
         self.treats_classifier = load_treats_classifier(treats_model)
         self.similarity_features = load_similarity_embedding_models()
-        # self.contact = contact
-        # self.terms_of_service = terms_of_service
-        # self.translator_component = translator_component
-        # self.translator_teams = translator_teams
-        # self.trapi_operations = trapi_operations
-        # self.infores = infores
-
+        
         self.add_middleware(
             CORSMiddleware,
             allow_origins=["*"],
@@ -84,13 +76,10 @@ class TRAPI(FastAPI):
             \n\n[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml)
             \n\nService supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about)""",
             routes=self.routes,
-            tags=[
-                {"name": "translator"},
-                {"name": "trapi"},
-                {"name": "reasoner"},
-            ],
+            tags=tags,
         )
-        if os.getenv('PRODUCTION') == 'true':
+
+        if os.getenv('PRODUCTION_MODE') == 'true':
             openapi_schema["servers"] = [
                 {
                     "url": 'https://openpredict.semanticscience.org',
@@ -119,8 +108,7 @@ class TRAPI(FastAPI):
                 "lookup",
             ],
         }
-        # if self.trapi_operations:
-        #     openapi_schema["info"]["x-trapi"]["operations"] = self.trapi_operations
+
         openapi_schema["info"]["contact"] = {
             "name": "Vincent Emonet",
             "email": "vincent.emonet@maastrichtuniversity.nl",
@@ -129,7 +117,54 @@ class TRAPI(FastAPI):
         }
         openapi_schema["info"]["termsOfService"] = 'https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/LICENSE'
 
-
+        # To make the /predict call compatible with the BioThings Explorer:
+        openapi_schema["paths"]["/predict"]["x-bte-kgs-operations"] = [
+          {
+            "inputs": [
+              {
+                "id": "biolink:DRUGBANK",
+                "semantic": "biolink:ChemicalSubstance"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "biolink:OMIM",
+                "semantic": "biolink:Disease"
+              }
+            ],
+            "parameters": {
+              "drug_id": "{inputs[0]}"
+            },
+            "predicate": "biolink:treats",
+            "supportBatch": False,
+            "responseMapping": {
+              "OMIM": "hits.id"
+            }
+          },
+          {
+            "inputs": [
+              {
+                "id": "biolink:OMIM",
+                "semantic": "biolink:Disease"
+              }
+            ],
+            "outputs": [
+              {
+                "id": "biolink:DRUGBANK",
+                "semantic": "biolink:ChemicalSubstance"
+              }
+            ],
+            "parameters": {
+              "disease_id": "{inputs[0]}"
+            },
+            "predicate": "biolink:treated_by",
+            "supportBatch": False,
+            "responseMapping": {
+              "DRUGBANK": "hits.id"
+            }
+          }
+        ]
+        
         # From fastapi:
         openapi_schema["info"]["x-logo"] = {
             "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
