@@ -79,15 +79,25 @@ class TRAPI(FastAPI):
             tags=tags,
         )
 
-        if os.getenv('PRODUCTION_MODE') == 'true':
+        if os.getenv('LETSENCRYPT_HOST'):
             openapi_schema["servers"] = [
                 {
-                    "url": 'https://openpredict.semanticscience.org',
+                    "url": 'https://' + os.getenv('LETSENCRYPT_HOST'),
                     "description": 'Production OpenPredict TRAPI',
                     "x-maturity": 'production',
                     "x-location": 'IDS'
                 }
             ]
+
+        # if os.getenv('PRODUCTION_MODE') == 'true':
+        #     openapi_schema["servers"] = [
+        #         {
+        #             "url": 'https://openpredict.semanticscience.org',
+        #             "description": 'Production OpenPredict TRAPI',
+        #             "x-maturity": 'production',
+        #             "x-location": 'IDS'
+        #         }
+        #     ]
 
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',
