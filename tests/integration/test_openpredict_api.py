@@ -8,6 +8,7 @@ from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore
 from fastapi.testclient import TestClient
 from reasoner_validator import validate
+from openpredict.app import app
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
@@ -22,21 +23,23 @@ init_triplestore()
 
 
 # @pytest.fixture(scope="session")
-@pytest.fixture(scope="module")
-def client():
-    from openpredict.app import app
-    with TestClient(app) as test_client:
-        yield test_client
+# @pytest.fixture(scope="module")
+# def client():
+#     from openpredict.app import app
+#     with TestClient(app) as test_client:
+#         yield test_client
 
+client = TestClient(app)
 
 VALIDATE_TRAPI_VERSION="1.2.0"
 
-def test_get_predict(client):
+# def test_get_predict(client):
+def test_get_predict():
     """Test predict API GET operation"""
     url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
     response = client.get(url)
-    assert len(response.json['hits']) == 42
-    assert response.json['count'] == 42
+    assert len(response.json()['hits']) == 42
+    assert response.json()['count'] == 42
 
 
 # def test_get_similarity(client):
@@ -48,7 +51,7 @@ def test_get_predict(client):
 #     assert response.json['count'] == n_results
 
 
-def test_post_trapi(client):
+def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     url = '/query'
     for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
@@ -57,14 +60,15 @@ def test_post_trapi(client):
             response = client.post(
                 url, 
                 data=reasoner_query, 
-                content_type='application/json'
+                headers={"Content-Type": "application/json"},
+                # content_type='application/json'
             )
 
             # print(response.json)
-            edges = response.json['message']['knowledge_graph']['edges'].items()
+            edges = response.json()['message']['knowledge_graph']['edges'].items()
             # print(response)
             print(trapi_filename)
-            assert validate(response.json['message'], "Message", VALIDATE_TRAPI_VERSION) == None
+            assert validate(response.json()['message'], "Message", VALIDATE_TRAPI_VERSION) == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):
@@ -73,7 +77,7 @@ def test_post_trapi(client):
                 assert len(edges) >= 5
 
 
-def test_trapi_empty_response(client):
+def test_trapi_empty_response():
     reasoner_query = {
         "message": {
             "query_graph": {
@@ -98,11 +102,13 @@ def test_trapi_empty_response(client):
 
     response = client.post('/query',
         data=json.dumps(reasoner_query),
-        content_type='application/json')
+        headers={"Content-Type": "application/json"},
+        # content_type='application/json'
+    )
 
     print(response.json)
-    assert validate(response.json['message'], "Message", VALIDATE_TRAPI_VERSION) == None
-    assert len(response.json['message']['results']) == 0
+    assert validate(response.json()['message'], "Message", VALIDATE_TRAPI_VERSION) == None
+    assert len(response.json()['message']['results']) == 0
 
 # def test_post_embeddings():
 #     """Test post embeddings to add embeddings to the model and rebuild it"""

@@ -16,6 +16,7 @@ services:
     volumes:
       - ./data:/data/openpredict
       - ./openpredict:/root/openpredict
+      - ./tests:/root/tests
     environment:
       - PYTHONUNBUFFERED=1
     ## Use Connexion:
