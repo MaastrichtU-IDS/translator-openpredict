@@ -8,6 +8,7 @@ from reasoner_validator import validate
 # PROD_API_URL = 'https://openpredict.semanticscience.org'
 PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
 
+VALIDATE_TRAPI_VERSION="1.2.0"
 
 def test_get_predict():
     """Test predict API GET operation"""
@@ -38,7 +39,7 @@ def test_post_trapi():
             edges = trapi_results['message']['knowledge_graph']['edges'].items()
 
             print(trapi_filename)
-            assert validate(trapi_results['message'], "Message", "1.1.0") == None
+            assert validate(trapi_results['message'], "Message", VALIDATE_TRAPI_VERSION) == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):

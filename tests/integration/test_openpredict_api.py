@@ -10,9 +10,14 @@ from fastapi.testclient import TestClient
 from reasoner_validator import validate
 from openpredict.app import app
 
+VALIDATE_TRAPI_VERSION="1.2.0"
+
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
 init_triplestore()
+
+client = TestClient(app)
+
 
 # flask_app = connexion.FlaskApp(__name__)
 # flask_app.add_api('../../openpredict/openapi.yml')
@@ -21,17 +26,6 @@ init_triplestore()
 #     with flask_app.app.test_client() as c:
 #         yield c
 
-
-# @pytest.fixture(scope="session")
-# @pytest.fixture(scope="module")
-# def client():
-#     from openpredict.app import app
-#     with TestClient(app) as test_client:
-#         yield test_client
-
-client = TestClient(app)
-
-VALIDATE_TRAPI_VERSION="1.2.0"
 
 # def test_get_predict(client):
 def test_get_predict():
