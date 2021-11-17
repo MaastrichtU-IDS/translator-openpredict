@@ -12,7 +12,7 @@ on:
 
 jobs:
 
-  tests-coverage:
+  tests-graphdb-coverage:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -38,7 +38,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest-cov reasoner-validator
+        pip install -r requirements-dev.txt
         pip install .
     - name: Check code style with flake8 (lint)
       run: |
@@ -76,7 +76,7 @@ jobs:
     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
-  tests-spark:
+  tests-embedded-triplestore:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -98,7 +98,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest reasoner-validator
+        pip install -r requirements-dev.txt
         pip install .
       # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with embedded triplestore

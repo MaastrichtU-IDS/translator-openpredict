@@ -339,7 +339,7 @@ def typed_results_to_reasonerapi(reasoner_query):
                             # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
                             edge_dict = {
                                 # TODO: not required anymore? 'association_type': edge_association_type,
-                                'relation': relation,
+                                # 'relation': relation,
 
                                 # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
                                 'attributes': [
