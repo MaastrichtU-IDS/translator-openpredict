@@ -23,7 +23,7 @@ init_triplestore()
 
 # @pytest.fixture(scope="session")
 @pytest.fixture(scope="module")
-def test_client():
+def client():
     from openpredict.app import app
     with TestClient(app) as test_client:
         yield test_client
