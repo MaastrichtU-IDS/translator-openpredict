@@ -67,7 +67,7 @@ def typed_results_to_reasonerapi(reasoner_query):
     :param: reasoner_query Query from Reasoner API
     :return: Results as ReasonerAPI object
     """
-
+    print('Start parsing TRAPI query')
     # Example TRAPI message: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/examples/Message/simple.json
     query_graph = reasoner_query["message"]["query_graph"]
     # Default query_options
@@ -154,139 +154,138 @@ def typed_results_to_reasonerapi(reasoner_query):
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
         
-            # DIRTY: only query if the predicate is biolink:treats or biolink:treated_by or biolink:ameliorates
-            # if 'biolink:treats' in query_plan[edge_qg_id]['predicates'] or 'biolink:ameliorates' in query_plan[edge_qg_id]['predicates'] or 'biolink:treated_by' in query_plan[edge_qg_id]['predicates'] or 'biolink:related_to' in query_plan[edge_qg_id]['predicates']:
-            
-        predicate_parents = get_biolink_parents('biolink:similar_to')
-        if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):
+        print('Resolve similar_to for ' + str(edge_qg_id))
+        similar_parents = get_biolink_parents('biolink:similar_to')
+        if any(i in similar_parents for i in query_plan[edge_qg_id]['predicates']):
             if 'from_kg_id' in query_plan[edge_qg_id]:
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
 
-                    # try:
+                    try:
 
-                    # TODO: make it dynamic, currently using default model for similarity
-                    model_id = 'drugs_fp_embed.txt'
-                    emb_vectors = all_emb_vectors[model_id]
-                    similarity_json, source_target_predictions = get_similarities(
-                        query_plan[edge_qg_id]['from_type'],
-                        id_to_predict, 
-                        emb_vectors, min_score, max_score, n_results
-                    )
-                    print('similarity_json!!')
-                    print(similarity_json)
-                
-                #  [
-                #     {
-                #       "id": "DRUGBANK:DB00390",
-                #       "label": "Digoxin",
-                #       "score": 0.9826133251190186,
-                #       "type": "drug"
-                #     },
-                #     {
-                #       "id": "DRUGBANK:DB00396",
-                #       "label": "Progesterone",
-                #       "score": 0.9735659956932068,
-                #       "type": "drug"
-                #     },
+                        # TODO: make it dynamic, currently using default model for similarity
+                        similarity_model_id = 'drugs_fp_embed.txt'
+                        # similarity_model_id = model_id
+                        emb_vectors = all_emb_vectors[similarity_model_id]
+                        similarity_json, source_target_predictions = get_similarities(
+                            query_plan[edge_qg_id]['from_type'],
+                            id_to_predict, 
+                            emb_vectors, min_score, max_score, n_results
+                        )
+                        print('similarity_json!!')
+                        print(similarity_json)
+                    
+                    #  [
+                    #     {
+                    #       "id": "DRUGBANK:DB00390",
+                    #       "label": "Digoxin",
+                    #       "score": 0.9826133251190186,
+                    #       "type": "drug"
+                    #     },
+                    #     {
+                    #       "id": "DRUGBANK:DB00396",
+                    #       "label": "Progesterone",
+                    #       "score": 0.9735659956932068,
+                    #       "type": "drug"
+                    #     },
 
-                    for hit in similarity_json:
-                        source_node_id = resolve_id(id_to_predict, resolved_ids_object)
-                        target_node_id = resolve_id(hit['id'], resolved_ids_object)
+                        for hit in similarity_json:
+                            source_node_id = resolve_id(id_to_predict, resolved_ids_object)
+                            target_node_id = resolve_id(hit['id'], resolved_ids_object)
 
-                        node_dict[source_node_id] = {
-                            'type': query_plan[edge_qg_id]['from_type']
-                        }
-                        node_dict[target_node_id] = {
-                            'type': hit['type']
-                        }
+                            node_dict[source_node_id] = {
+                                'type': query_plan[edge_qg_id]['from_type']
+                            }
+                            node_dict[target_node_id] = {
+                                'type': hit['type']
+                            }
 
-                        if 'label' in hit.keys():
-                            node_dict[target_node_id]['label'] = hit['label']
+                            if 'label' in hit.keys():
+                                node_dict[target_node_id]['label'] = hit['label']
 
-                        edge_kg_id = 'e' + str(kg_edge_count)
+                            edge_kg_id = 'e' + str(kg_edge_count)
 
-                        association_score = str(hit['score'])
+                            association_score = str(hit['score'])
 
-                        # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
-                        edge_dict = {
-                            # TODO: not required anymore? 'association_type': edge_association_type,
-                            # 'relation': relation,
+                            # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
+                            edge_dict = {
+                                # TODO: not required anymore? 'association_type': edge_association_type,
+                                # 'relation': relation,
 
-                            # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
-                            'attributes': [
+                                # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
+                                'attributes': [
+                                    {
+                                        "description": "model_id",
+                                        "attribute_type_id": "EDAM:data_1048",
+                                        "value": similarity_model_id
+                                    },
+                                    {
+                                        # TODO: use has_confidence_level?
+                                        "description": "score",
+                                        "attribute_type_id": "EDAM:data_1772",
+                                        "value": association_score
+                                        # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
+                                    },
+                                    {
+                                        'attribute_type_id': 'biolink:aggregator_knowledge_source',
+                                        'value': 'infores:openpredict',
+                                        'value_type_id': 'biolink:InformationResource',
+                                        'attribute_source': 'infores:openpredict',
+                                        'value_url': 'https://openpredict.semanticscience.org/query'
+                                    },
+                                    {
+                                        'attribute_type_id': 'biolink:supporting_data_source',
+                                        'value': 'infores:cohd',
+                                        'value_type_id': 'biolink:InformationResource',
+                                        'attribute_source': 'infores:openpredict',
+                                        'value_url': 'https://openpredict.semanticscience.org'
+                                    },
+                                ]
+                            }
+                            edge_dict['subject'] = source_node_id
+                            edge_dict['object'] = target_node_id
+                            edge_dict['predicate'] = 'biolink:similar_to'
+
+                            knowledge_graph['edges'][edge_kg_id] = edge_dict
+
+                            # Add the bindings to the results object
+                            result = {'edge_bindings': {}, 'node_bindings': {}}
+                            result['edge_bindings'][edge_qg_id] = [
                                 {
-                                    "description": "model_id",
-                                    "attribute_type_id": "EDAM:data_1048",
-                                    "value": model_id
-                                },
-                                {
-                                    # TODO: use has_confidence_level?
-                                    "description": "score",
-                                    "attribute_type_id": "EDAM:data_1772",
-                                    "value": association_score
-                                    # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
-                                },
-                                {
-                                    'attribute_type_id': 'biolink:aggregator_knowledge_source',
-                                    'value': 'infores:openpredict',
-                                    'value_type_id': 'biolink:InformationResource',
-                                    'attribute_source': 'infores:openpredict',
-                                    'value_url': 'https://openpredict.semanticscience.org/query'
-                                },
-                                {
-                                    'attribute_type_id': 'biolink:supporting_data_source',
-                                    'value': 'infores:cohd',
-                                    'value_type_id': 'biolink:InformationResource',
-                                    'attribute_source': 'infores:openpredict',
-                                    'value_url': 'https://openpredict.semanticscience.org'
-                                },
+                                    "id": edge_kg_id
+                                }
                             ]
-                        }
-                        edge_dict['subject'] = source_node_id
-                        edge_dict['object'] = target_node_id
-                        edge_dict['predicate'] = 'biolink:similar_to'
+                            result['node_bindings'][query_plan[edge_qg_id]['from_qg_id']] = [
+                                {
+                                    "id": source_node_id
+                                }
+                            ]
+                            result['node_bindings'][query_plan[edge_qg_id]['to_qg_id']] = [
+                                {
+                                    "id": target_node_id
+                                }
+                            ]
+                            query_results.append(result)
 
-                        knowledge_graph['edges'][edge_kg_id] = edge_dict
+                            kg_edge_count += 1
+                            if kg_edge_count == n_results:
+                                break
 
-                        # Add the bindings to the results object
-                        result = {'edge_bindings': {}, 'node_bindings': {}}
-                        result['edge_bindings'][edge_qg_id] = [
-                            {
-                                "id": edge_kg_id
-                            }
-                        ]
-                        result['node_bindings'][query_plan[edge_qg_id]['from_qg_id']] = [
-                            {
-                                "id": source_node_id
-                            }
-                        ]
-                        result['node_bindings'][query_plan[edge_qg_id]['to_qg_id']] = [
-                            {
-                                "id": target_node_id
-                            }
-                        ]
-                        query_results.append(result)
-
-                        kg_edge_count += 1
-                        if kg_edge_count == n_results:
-                            break
-
-
-
-                    prediction_json = []
-                    print('SIMILARITY DONE')
-                    print(similarity_json)
-                    # except Exception as e:
-                    #     print(e)
-                    #     print('Error processing ID ')
-                    #     print(id_to_predict)
-                    #     return ('Not found: entry in OpenPredict for ID ' + str(id_to_predict), 404)
+                    # prediction_json = []
+                    # print('SIMILARITY DONE')
+                    # print(similarity_json)
+                    except Exception as e:
+                        print(e)
+                        print('Error processing ID ')
+                        print(id_to_predict)
+                        return ('Not found: entry in OpenPredict for ID ' + str(id_to_predict), 404)
 
 
         ## Resolve treats/treated_by (slightly different object returned by get_predictions)
         print('Resolve treats/treated_by')
-        predicate_parents = get_biolink_parents('biolink:treats') + get_biolink_parents('biolink:treated_by')
-        if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):
+        treats_parents = get_biolink_parents('biolink:treats') + get_biolink_parents('biolink:treated_by')
+        print('predicate_parents')
+        print(treats_parents)
+        if any(i in treats_parents for i in query_plan[edge_qg_id]['predicates']):
             # Resolve when asking for treats prediction
             drugdisease_parents = get_biolink_parents('biolink:Drug') + get_biolink_parents('biolink:Disease')
             if any(i in drugdisease_parents for i in query_plan[edge_qg_id]['from_type']) and any(i in drugdisease_parents for i in query_plan[edge_qg_id]['to_type']):
@@ -296,6 +295,8 @@ def typed_results_to_reasonerapi(reasoner_query):
                     try:
                         # Run OpenPredict to get predictions
                         bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score)
+                        # print('PREEDICTIONS')
+                        # print(prediction_json)
                     except:
                         prediction_json = []
                         

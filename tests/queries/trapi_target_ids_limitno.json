@@ -18,5 +18,8 @@
                 }
             }
         }
+    },
+    "query_options": {
+        "n_results": 50
     }
 }

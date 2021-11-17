@@ -24,12 +24,6 @@ Install the required dependency if you want to run the tests locally:
 pip install pytest
 ```
 
-Or in a running docker-compose:
-
-```bash
-docker-compose exec openpredict-api pip install pytest reasoner_validator
-```
-
 ### Production tests
 
 [![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml)
@@ -74,7 +68,7 @@ pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 Or in a running docker-compose:
 
 ```bash
-docker-compose exec openpredict-api pytest
+docker-compose exec openpredict-api pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 ```
 
 ## Docker tests

@@ -23,11 +23,17 @@ ENV PYSPARK_DRIVER_PYTHON=/opt/conda/bin/python3
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+ARG INSTALL_DEV=false
+COPY requirements-dev.txt .
+RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -r requirements-dev.txt ; fi"
+
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
 ## Install the pip package based on the source code
-RUN pip install .
+
+RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e . ; else pip install . ; fi"
+
 
 ## Indicate this will export the port 8808
 EXPOSE 8808
