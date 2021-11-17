@@ -8,9 +8,11 @@ services:
     restart: unless-stopped
     ports:
       - 8808:8808
+      - 8000:8000
     volumes:
       - ./data:/data/openpredict
-    # environment: 
+      - ./openpredict:/root/openpredict
+    entrypoint: uvicorn openpredict.app:app --host 0.0.0.0 --reload
     #   SPARQL_USERNAME: ${SPARQL_USERNAME}
     #   SPARQL_PASSWORD: ${SPARQL_PASSWORD}
     #   SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev

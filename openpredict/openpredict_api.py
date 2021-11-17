@@ -201,7 +201,15 @@ def get_meta_knowledge_graph():
                     "RO:0002434"
                 ],
                 "subject": "biolink:Disease"
-            }
+            },
+            {
+                "object": "biolink:Entity",
+                "predicate": "biolink:similar_to",
+                # "relations": [
+                #     "RO:0002434"
+                # ],
+                "subject": "biolink:Entity"
+            },
         ],
         "nodes": {
             "biolink:Disease": {

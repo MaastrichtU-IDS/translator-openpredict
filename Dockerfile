@@ -33,3 +33,5 @@ RUN pip install .
 EXPOSE 8808
 
 ENTRYPOINT [ "openpredict", "start-api" ]
+
+# ENTRYPOINT ["uvicorn", "api.main:app",  "--host", "0.0.0.0", "--port", "8808"]

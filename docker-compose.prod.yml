@@ -8,6 +8,7 @@ services:
       - /data/openpredict:/data/openpredict
     environment: 
       OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
+      PRODUCTION: 'true'
       SPARQL_USERNAME: ${SPARQL_USERNAME}
       SPARQL_PASSWORD: ${SPARQL_PASSWORD}
       SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
