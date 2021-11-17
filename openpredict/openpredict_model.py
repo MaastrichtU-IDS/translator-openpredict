@@ -101,6 +101,19 @@ def load_similarity_embedding_models():
     return all_emb_vectors
 
 
+def load_treats_classifier(model_id):
+    """Load embeddings model for treats and treated_by"""
+    print("📥 Loading treats classifier from joblib for model " + str(model_id))
+    return load(get_openpredict_dir('models/' + str(model_id) + '.joblib'))
+
+def load_treats_embedding_models(model_id):
+    """Load embeddings model for treats and treated_by"""
+    print("📥 Loading treats/treated_by features for model " + str(model_id))
+    (drug_df, disease_df) = load(get_openpredict_dir(
+        'features/' + str(model_id) + '.joblib'))
+    return (drug_df, disease_df)
+
+
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
 
@@ -714,7 +727,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     return clf, scores, hyper_params, (drug_df, disease_df)
 
 
-def query_omim_drugbank_classifier(input_curie, model_id):
+def query_omim_drugbank_classifier(input_curie, model_id, loaded_features=None, loaded_classifier=None):
     """The main function to query the drug-disease OpenPredict classifier, 
     It queries the previously generated classifier a `.joblib` file 
     in the `data/models` folder
@@ -739,10 +752,13 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    print("📥 Loading features " +
-          get_openpredict_dir('features/' + model_id + '.joblib'))
-    (drug_df, disease_df) = load(get_openpredict_dir(
-        'features/' + model_id + '.joblib'))
+    if not loaded_features:
+        print("📥 Loading features " +
+            get_openpredict_dir('features/' + model_id + '.joblib'))
+        (drug_df, disease_df) = load(get_openpredict_dir(
+            'features/' + model_id + '.joblib'))
+    else:
+        (drug_df, disease_df) = loaded_features
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename(
@@ -765,9 +781,13 @@ def query_omim_drugbank_classifier(input_curie, model_id):
         drugDiseaseKnown.Disease.unique())
 
     # clf = load('data/models/openpredict-baseline-omim-drugbank.joblib')
-    print("📥 Loading classifier " +
-          get_openpredict_dir('models/' + model_id + '.joblib'))
-    clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
+    clf = loaded_classifier
+    if not clf:
+        clf = load_treats_classifier(model_id)
+
+    # print("📥 Loading classifier " +
+    #       get_openpredict_dir('models/' + model_id + '.joblib'))
+    # clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
 
     pairs = []
     classes = []
@@ -950,7 +970,7 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
     return labelled_predictions, source_target_predictions
 
 
-def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_results=None):
+def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_results=None, loaded_features=None, loaded_classifier=None):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
@@ -961,7 +981,7 @@ def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_r
     """
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id, loaded_features, loaded_classifier)
 
     if min_score:
         predictions_array = [

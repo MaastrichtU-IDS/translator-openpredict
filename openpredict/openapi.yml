@@ -172,7 +172,7 @@ paths:
   /similarity:
     get:
       operationId: openpredict.openpredict_api.get_similarity
-      summary: Return similar entities for a given drug or diease
+      summary: Return similar entities for a given drug or disease
       description: |-
         select which type entities do you expect in the result, Drugs, Diseases
         1. provide a drug or a disease

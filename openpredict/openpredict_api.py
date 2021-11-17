@@ -4,7 +4,8 @@ import logging
 from datetime import datetime
 from openpredict.openpredict_utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
-from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embedding_models
+from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities
+from openpredict.openpredict_model import load_similarity_embedding_models, load_treats_embedding_models, load_treats_classifier
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
 from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
@@ -14,7 +15,14 @@ import pkg_resources
 # import aiohttp
 # from aiohttp import web
 
-all_emb_vectors = {}
+# all_emb_vectors = None
+treats_features = None
+similarity_features = None
+treats_classifier = None
+
+# self.treats_features = load_treats_embedding_models(treats_model)
+# self.treats_classifier = load_treats_classifier(treats_model)
+# self.similarity_features = load_similarity_embedding_models()
 
 # TODO: check using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 def start_api(port=8808, debug=False, start_spark=True):
@@ -28,8 +36,13 @@ def start_api(port=8808, debug=False, start_spark=True):
 
     init_openpredict_dir()
     init_triplestore()
-    global all_emb_vectors
-    all_emb_vectors = load_similarity_embedding_models()
+    baseline_model = 'openpredict-baseline-omim-drugbank'
+    global similarity_features
+    similarity_features = load_similarity_embedding_models()
+    global treats_features
+    treats_features = load_treats_embedding_models(baseline_model)
+    global treats_classifier
+    treats_classifier = load_treats_classifier(baseline_model)
 
     if debug:
         # Run in development mode
@@ -103,7 +116,7 @@ def post_embedding(apikey, types, emb_name, description, model_id):
         return {'Forbidden': 403}
 
 
-def get_similarity(types='Both', drug_id=None, disease_id=None, model_id='openpredict-baseline-omim-drugbank', min_score=None, max_score=None, n_results=None):
+def get_similarity(types='Both', drug_id=None, disease_id=None, model_id='drugs_fp_embed.txt', min_score=None, max_score=None, n_results=None):
     """Get similar entites for a given entity CURIE.
 
     :param entity: Search for predicted associations for this entity CURIE
@@ -121,7 +134,7 @@ def get_similarity(types='Both', drug_id=None, disease_id=None, model_id='openpr
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        emb_vectors = all_emb_vectors[model_id]
+        emb_vectors = similarity_features[model_id]
         prediction_json, source_target_predictions = get_similarities(
             types, concept_id, emb_vectors, min_score, max_score, n_results
         )
@@ -162,7 +175,9 @@ def get_predict(drug_id=None, disease_id=None, model_id='openpredict-baseline-om
 
     try:
         prediction_json, source_target_predictions = get_predictions(
-            concept_id, model_id, min_score, max_score, n_results)
+            concept_id, model_id, min_score, max_score, n_results, 
+            treats_features, treats_classifier
+        )
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
@@ -292,7 +307,7 @@ def post_reasoner_predict(request_body):
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-    reasonerapi_response = typed_results_to_reasonerapi(request_body)
+    reasonerapi_response = typed_results_to_reasonerapi(request_body, treats_features, similarity_features, treats_classifier)
 
     # TODO: populate edges/nodes with association predictions
     #  Edge: {

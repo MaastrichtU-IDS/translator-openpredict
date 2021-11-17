@@ -1,4 +1,4 @@
-from openpredict.openpredict_model import get_predictions, get_similarities, load_similarity_embedding_models
+from openpredict.openpredict_model import get_predictions, get_similarities, load_similarity_embedding_models, load_treats_classifier, load_treats_embedding_models
 import requests
 import os
 import re
@@ -59,7 +59,7 @@ def resolve_id(id_to_resolve, resolved_ids_object):
         return resolved_ids_object[id_to_resolve]
     return id_to_resolve
 
-def typed_results_to_reasonerapi(reasoner_query):
+def typed_results_to_reasonerapi(reasoner_query, treats_features=None, all_emb_vectors=None, treats_classifier=None):
     """Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
@@ -87,7 +87,8 @@ def typed_results_to_reasonerapi(reasoner_query):
     resolved_ids_object = {}
 
     # if not all_emb_vectors or all_emb_vectors == {}:
-    all_emb_vectors = None
+    # all_emb_vectors = None
+    # treats_features = None
 
     # Parse the query_graph to build the query plan
     for edge_id, qg_edge in query_graph["edges"].items():
@@ -161,6 +162,7 @@ def typed_results_to_reasonerapi(reasoner_query):
 
                     try:
                         if not all_emb_vectors or all_emb_vectors == {}:
+                            # Load the features once at the start
                             all_emb_vectors = load_similarity_embedding_models()
 
                         # TODO: make it dynamic, currently using default model for similarity
@@ -283,8 +285,16 @@ def typed_results_to_reasonerapi(reasoner_query):
                 # Iterate over the list of ids provided
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
                     try:
+                        if not treats_features or treats_features == {}:
+                            # Load the features once at the start
+                            treats_features = load_treats_embedding_models(model_id)
+                        if not treats_classifier or treats_classifier == {}:
+                            # Load the features once at the start
+                            treats_classifier = load_treats_classifier(model_id)
+                        
                         # Run OpenPredict to get predictions
-                        bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score)
+                        bte_response, prediction_json = get_predictions(id_to_predict, model_id, min_score, max_score, None, 
+                            loaded_features=treats_features, loaded_classifier=treats_classifier)
                     except:
                         prediction_json = []
                         
