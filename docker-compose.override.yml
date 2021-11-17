@@ -10,13 +10,13 @@ services:
       - 8808:8808
     volumes:
       - ./data:/data/openpredict
-    environment: 
-      OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
-      SPARQL_USERNAME: ${SPARQL_USERNAME}
-      SPARQL_PASSWORD: ${SPARQL_PASSWORD}
-      SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
-      SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
+    # environment: 
+    #   SPARQL_USERNAME: ${SPARQL_USERNAME}
+    #   SPARQL_PASSWORD: ${SPARQL_PASSWORD}
+    #   SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+    #   SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
 
+      # OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
 
   # openpredict-virtuoso:
   #   container_name: openpredict-virtuoso

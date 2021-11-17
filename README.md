@@ -54,6 +54,12 @@ Start locally the OpenPredict API on http://localhost:8808
 openpredict start-api
 ```
 
+Or you can start the API with `docker-compose`:
+
+```bash
+docker-compose up
+```
+
 By default all data are stored in the `data/` folder in the directory were you used the `openpredict` command (RDF metadata, features and models of each run)
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)

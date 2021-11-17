@@ -4,12 +4,12 @@ services:
     container_name: openpredict-api
     build: .
     restart: unless-stopped
-    environment: 
-      OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
-      SPARQL_USERNAME: ${SPARQL_USERNAME}
-      SPARQL_PASSWORD: ${SPARQL_PASSWORD}
-      SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
-      SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
+    # environment: 
+    #   SPARQL_USERNAME: ${SPARQL_USERNAME}
+    #   SPARQL_PASSWORD: ${SPARQL_PASSWORD}
+    #   SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
+    #   SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
 
+      # OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
       # SPARK_MASTER_URL: spark://my-spark-spark-master:7077
 

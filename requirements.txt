@@ -5,8 +5,9 @@ tornado
 joblib
 flask==1.1.4
 flask-cors==3.0.10
-flask-reverse-proxy-fix
-werkzeug<1
+# flask-reverse-proxy-fix
+# werkzeug<1
+werkzeug
 numpy==1.16.1
 scipy==1.5.4
 # scipy==0.19.1
