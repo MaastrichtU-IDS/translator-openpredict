@@ -7,8 +7,7 @@ from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_
 from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embedding_models
 from openpredict.reasonerapi_parser import typed_results_to_reasonerapi
 from flask_cors import CORS
-# from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
-from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
 import pkg_resources
 # from gensim.models import KeyedVectors
 # import asyncio
@@ -58,16 +57,15 @@ def start_api(port=8808, debug=False, start_spark=True):
 
     # Fix to avoid empty list of servers for nginx-proxy deployments
     if os.getenv('LETSENCRYPT_HOST'):
-        # server_url = 'https://' + os.getenv('LETSENCRYPT_HOST')
-        # api.app.config['REVERSE_PROXY_PATH'] = server_url
-        # # api.app.config['REVERSE_PROXY_PATH'] = '/api'
-        # ReverseProxyPrefixFix(api.app)
-        api = ProxyFix(api, x_for=1, x_host=1)
+        server_url = 'https://' + os.getenv('LETSENCRYPT_HOST')
+        api.app.config['REVERSE_PROXY_PATH'] = server_url
+        # api.app.config['REVERSE_PROXY_PATH'] = '/api'
+        ReverseProxyPrefixFix(api.app)
     elif os.getenv('VIRTUAL_HOST'):
         server_url = 'http://' + os.getenv('VIRTUAL_HOST')
         api.app.config['REVERSE_PROXY_PATH'] = server_url
         # api.app.config['REVERSE_PROXY_PATH'] = '/api'
-        # ReverseProxyPrefixFix(api.app)
+        ReverseProxyPrefixFix(api.app)
 
     # logging.info('Start spark:' + str(start_spark))
     # if start_spark:
