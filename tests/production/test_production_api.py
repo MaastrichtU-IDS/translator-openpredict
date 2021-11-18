@@ -4,8 +4,8 @@ import requests
 import os
 from reasoner_validator import validate
 
-# PROD_API_URL = 'https://openpredict.semanticscience.org'
-PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
+PROD_API_URL = 'https://openpredict.semanticscience.org'
+# PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
 
 VALIDATE_TRAPI_VERSION="1.2.0"
 
