@@ -143,14 +143,11 @@ def init_triplestore():
         <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
     } LIMIT 10
     """
-    results = query_sparql_endpoint(
-        check_baseline_run_query, parameters=['runType'])
-    print(results)
+    results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
     if (len(results) < 1):
         g = Graph()
         g.parse(pkg_resources.resource_filename('openpredict',
                 'data/openpredict-metadata.ttl'), format="ttl")
-        print(len(g))
         insert_graph_in_sparql_endpoint(g)
         print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
@@ -294,7 +291,7 @@ def retrieve_features(type='Both', run_id=None):
             }"""
         results = query_sparql_endpoint(sparql_feature_for_run, parameters=[
                                         'feature', 'featureId', 'featureDescription', 'embeddingType'])
-        print(results)
+        # print(results)
 
         features_json = {}
         for result in results:
@@ -321,7 +318,7 @@ def retrieve_features(type='Both', run_id=None):
 
         results = query_sparql_endpoint(
             query, parameters=['id', 'description', 'embeddingType', 'feature'])
-        print(results)
+        # print(results)
 
         features_json = {}
         for result in results:

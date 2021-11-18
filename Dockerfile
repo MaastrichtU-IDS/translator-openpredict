@@ -1,18 +1,19 @@
-FROM jupyter/all-spark-notebook:python-3.8.8
+FROM jupyter/pyspark-notebook:python-3.8.8
+# FROM jupyter/all-spark-notebook:python-3.8.8
 ## We use Jupyter to get Spark already installed
 
 # FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
-
 # Gunicorn image: https://github.com/tiangolo/uvicorn-gunicorn-docker/tree/master/docker-images
 
 ## Change the current user to root and the working directory to /root
 USER root
-WORKDIR /root
-# WORKDIR /app
+# WORKDIR /root
+WORKDIR /app
 
-RUN apt-get update && apt-get install -y build-essential wget curl vim python3-dev
+RUN apt-get update && apt-get install -y build-essential curl vim
+# openjdk-11-jdk wget
 
-## Install Spark for standalone context in /opt
+# ## Install Spark for standalone context in /opt
 # ENV APACHE_SPARK_VERSION=3.2.0
 # ENV HADOOP_VERSION=3.2
 # ENV SPARK_HOME=/opt/spark
@@ -23,11 +24,6 @@ RUN apt-get update && apt-get install -y build-essential wget curl vim python3-d
 #     rm "spark.tgz" && \
 #     ln -s "/opt/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" $SPARK_HOME
 
-
-
-# RUN fix-permissions $CONDA_DIR && \
-#     fix-permissions /home/$NB_USER
-# USER $NB_USER
 
 ## Define some environment variables
 ENV OPENPREDICT_DATA_DIR=/data/openpredict
@@ -48,6 +44,7 @@ RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -r requirements-de
 COPY . .
 # COPY openpredict /app/app
 
+## Gunicorn config
 # ENV MODULE_NAME=openpredict.main
 # ENV VARIABLE_NAME=app
 # ENV PORT=8808
@@ -60,5 +57,5 @@ EXPOSE 8808
 
 ENTRYPOINT ["uvicorn", "openpredict.main:app",  "--host", "0.0.0.0", "--port", "8808"]
 
-# ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "openpredict.main:app"]
+# ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8808", "openpredict.main:app"]
 # ENTRYPOINT [ "openpredict", "start-api" ]

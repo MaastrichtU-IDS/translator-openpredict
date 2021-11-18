@@ -85,12 +85,12 @@ def get_spark_context():
 def load_similarity_embeddings():
     """Load embeddings model for similarity"""
     embedding_folder = 'data/embedding'
-    print(pkg_resources.resource_filename('openpredict', embedding_folder))
+    # print(pkg_resources.resource_filename('openpredict', embedding_folder))
     similarity_embeddings = {}
     for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
         if model_id.endswith('txt'):
             feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
-            print("📥 Loading features " + feature_path)
+            print("📥 Loading similarity features from " + feature_path)
             emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
             similarity_embeddings[model_id]= emb_vectors
     return similarity_embeddings
