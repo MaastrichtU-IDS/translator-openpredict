@@ -3,12 +3,12 @@ import pytest
 import pkg_resources
 import os
 import json
-from openpredict.openpredict_utils import init_openpredict_dir
+from openpredict.utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore
 from fastapi.testclient import TestClient
 from reasoner_validator import validate
-from openpredict.app import app
-# import connexion
+from openpredict.main import app
+
 
 VALIDATE_TRAPI_VERSION="1.2.0"
 
@@ -18,16 +18,7 @@ init_triplestore()
 
 client = TestClient(app)
 
-## Test for Connexion API:
-# flask_app = connexion.FlaskApp(__name__)
-# flask_app.add_api('../../openpredict/openapi.yml')
-# @pytest.fixture(scope='module')
-# def client():
-#     with flask_app.app.test_client() as c:
-#         yield c
 
-
-# def test_get_predict(client):
 def test_get_predict():
     """Test predict API GET operation"""
     url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
@@ -36,7 +27,7 @@ def test_get_predict():
     assert response.json()['count'] == 42
 
 
-# def test_get_similarity(client):
+# def test_get_similarity():
 #     """Test prediction similarity API GET operation"""
 #     n_results=5
 #     url = '/similarity?drug_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)

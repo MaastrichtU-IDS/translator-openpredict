@@ -1,9 +1,8 @@
 version: '3'
 services:
-  openpredict-api:
-    container_name: openpredict-api
+  api:
     build: .
-    restart: unless-stopped
+    
     # environment: 
     #   SPARQL_USERNAME: ${SPARQL_USERNAME}
     #   SPARQL_PASSWORD: ${SPARQL_PASSWORD}

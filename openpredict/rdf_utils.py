@@ -109,7 +109,11 @@ def query_sparql_endpoint(query, parameters=[]):
         # Which miss the informations about which SPARQL variables (just returns rows of results without variable bind)
         g = Graph()
         g.parse(RDF_DATA_PATH, format="ttl")
+        print('RDF data len')
+        print(len(g))
         qres = g.query(query)
+        print('query done')
+        print(qres)
         results = []
         for row in qres:
             # TODO: row.asdict()
@@ -126,6 +130,7 @@ def query_sparql_endpoint(query, parameters=[]):
             # or row[rdflib.Variable("s")]
             # TODO: create an object similar to SPARQLWrapper
             # result[variable]['value']
+        print(results)
         return results
 
 
@@ -140,10 +145,12 @@ def init_triplestore():
     """
     results = query_sparql_endpoint(
         check_baseline_run_query, parameters=['runType'])
+    print(results)
     if (len(results) < 1):
         g = Graph()
         g.parse(pkg_resources.resource_filename('openpredict',
                 'data/openpredict-metadata.ttl'), format="ttl")
+        print(len(g))
         insert_graph_in_sparql_endpoint(g)
         print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 

@@ -1,11 +1,12 @@
 version: '3'
 services:
-  openpredict-api:
-    container_name: openpredict-api
+  api:
     build: .
     restart: unless-stopped
     volumes:
       - /data/openpredict:/data/openpredict
+    entrypoint: gunicorn -w 8 -k uvicorn.workers.UvicornWorker openpredict.main:app
+
     environment: 
       OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
       SPARQL_USERNAME: ${SPARQL_USERNAME}

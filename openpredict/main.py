@@ -1,15 +1,11 @@
 import os
-# import connexion
 from datetime import datetime
-from openpredict.openpredict_utils import init_openpredict_dir
+from openpredict.utils import init_openpredict_dir
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
 from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embeddings
-from openpredict.reasonerapi_parser import resolve_trapi_query
-# from openpredict.openapi import TRAPI_EXAMPLE, custom_openapi
+from openpredict.trapi_parser import resolve_trapi_query
 from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
-# from flask_cors import CORS
-# from flask_reverse_proxy_fix.middleware import ReverseProxyPrefixFix
-# import pkg_resources
+
 # from gensim.models import KeyedVectors
 # import asyncio
 # import aiohttp
@@ -28,12 +24,11 @@ init_triplestore()
 
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
-debug = os.getenv('DEV_MODE', False)
+# debug = os.getenv('DEV_MODE', False)
 
 app = TRAPI(
     baseline_model_treatment='openpredict-baseline-omim-drugbank',
     baseline_model_similarity='drugs_fp_embed.txt',
-    debug=debug
 )
 
 
@@ -90,12 +85,11 @@ def post_reasoner_predict(
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
+
     # reasonerapi_response = resolve_trapi_query(request_body.dict(exclude_none=True), app=app)
     reasonerapi_response = resolve_trapi_query(
-        request_body.dict(exclude_none=True), 
-        app.treatment_embeddings,
-        app.similarity_embeddings,
-        app.treatment_classifier
+        request_body.dict(exclude_none=True),
+        app
     )
 
     return JSONResponse(reasonerapi_response) or ('Not found', 404)
@@ -187,8 +181,7 @@ def get_predict(
 
     try:
         prediction_json, source_target_predictions = get_predictions(
-            concept_id, model_id, min_score, max_score, n_results, 
-            app.treatment_embeddings, app.treatment_classifier
+            concept_id, model_id, app, min_score, max_score, n_results
         )
     except Exception as e:
         print('Error processing ID ' + concept_id)
@@ -235,11 +228,6 @@ def get_similarity(
         print('Error processing ID ' + concept_id)
         print(e)
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
-
-    # try:
-    #     prediction_json = get_predictions(entity, model_id, score, n_results)
-    # except:
-    #     return "Not found", 404
 
     # relation = "biolink:treated_by"
     print('PredictRuntime: ' + str(datetime.now() - time_start))
@@ -295,7 +283,6 @@ def post_embedding(
     # TODO: implement GitHub OAuth? https://github-flask.readthedocs.io/en/latest/
     # Ignore the API key check if no env variable defined (for development)
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
-        # embedding_file = connexion.request.files['embedding_file']
         embedding_file = uploaded_file.file
         print(emb_name, types.value)
         run_id, scores = addEmbedding(
@@ -316,6 +303,10 @@ def redirect_root_to_docs():
     """Redirect the route / to /docs"""
     return RedirectResponse(url='/docs')
 
+
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
 # async def async_reasoner_predict(request_body):

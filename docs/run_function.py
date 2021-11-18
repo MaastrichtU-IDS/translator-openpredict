@@ -5,7 +5,7 @@ import pandas as pd
 # from openpredict.openpredict_model import train_model
 
 from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, retrieve_features
-from openpredict.openpredict_utils import convert_baseline_features_ids
+from openpredict.utils import convert_baseline_features_ids
 
 convert_baseline_features_ids()
 

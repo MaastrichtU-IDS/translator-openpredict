@@ -37,6 +37,12 @@ By default all data are stored in the `data/` folder in the directory were you u
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
 
+You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
+
+```bash
+docker-compose exec api openpredict train-model --model openpredict-baseline-omim-drugbank
+```
+
 ### Reset your local OpenPredict data :wastebasket:
 
 You can easily reset the data of your local OpenPredict deployment by deleting the `data/` folder and restarting the OpenPredict API:

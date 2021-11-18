@@ -42,7 +42,7 @@ We test for an expected number of results and a few specific results.
 Run the tests of the OpenPredict production API locally:
 
 ```bash
-docker-compose exec openpredict-api pytest tests/production
+docker-compose exec api pytest tests/production
 ```
 
 ### Integration tests
@@ -56,13 +56,13 @@ We test the embeddings computation with a Spark local context ([setup with a Git
 You can run the tests for the different components of OpenPredict locally:
 
 ```bash
-docker-compose exec openpredict-api pytest tests/integration
+docker-compose exec api pytest tests/integration
 ```
 
 To run a specific test in a specific file, and display `print()` lines in the output:
 
 ```bash
-docker-compose exec openpredict-api pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
+docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 ```
 
 ## Docker tests

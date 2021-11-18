@@ -7,7 +7,7 @@ from typing import Optional, List, Dict, Any
 from enum import Enum
 
 from openpredict.openpredict_model import load_similarity_embeddings, load_treatment_embeddings, load_treatment_classifier
-# from openpredict.openpredict_utils import init_openpredict_dir
+# from openpredict.utils import init_openpredict_dir
 # from openpredict.rdf_utils import init_triplestore
 # import logging
 # from datetime import datetime
