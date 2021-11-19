@@ -15,10 +15,7 @@ from openpredict.main import app
 @click.option('--debug', is_flag=True, help="Run in development mode with debugger enabled.")
 @click.option('--start-spark/--no-spark', default=True, help="Start local Spark cluster (default to yes).")
 def start_api(port, debug, start_spark):
-    if debug:
-        uvicorn.run(app, host="0.0.0.0", port=port,)
-    else:
-        uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=debug)
     # start_openpredict_api(port, debug, start_spark)
 
 # TODO: update this call to make it "addEmbeddings?"

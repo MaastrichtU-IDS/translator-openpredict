@@ -44,6 +44,7 @@ class TRAPI(FastAPI):
     ):
         super().__init__(
             *args,
+            title='OpenPredict API',
             root_path_in_servers=False,
             **kwargs,
         )
@@ -76,10 +77,9 @@ class TRAPI(FastAPI):
             version='1.0.0',
             openapi_version='3.0.1',
             description="""Get predicted targets for a given entity: the **potential drugs treating a given disease**, or the **potential diseases a given drug could treat**.
-            \n\n* Use the `/predict` operation to easily retrieve predictions for a given entity (operation annotated for the [BioThings Explorer](https://x-bte-extension.readthedocs.io/en/latest/x-bte-kgs-operations.html)).
-            \n\n* Predictions are currently produced using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
-            \n\n* You can also install the [OpenPredict Python package](https://pypi.org/project/openpredict/) to train and serve a new model yourself.
-            \n\n* More documentation available at [github.com/MaastrichtU-IDS/translator-openpredict](https://github.com/MaastrichtU-IDS/translator-openpredict)
+            \n\nUse the **predict** and **similarity** operations to easily retrieve predictions for a given entity (output format complying with the [BioThings Explorer](https://x-bte-extension.readthedocs.io/en/latest/x-bte-kgs-operations.html)).
+            \n\nPredictions are currently produced using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/) from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
+            \n\nMore documentation available at [github.com/MaastrichtU-IDS/translator-openpredict](https://github.com/MaastrichtU-IDS/translator-openpredict)
             \n\n[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml)
             \n\nService supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about)""",
             routes=self.routes,
