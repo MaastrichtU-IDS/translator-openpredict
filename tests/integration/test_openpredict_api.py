@@ -27,6 +27,7 @@ def test_get_predict_drug():
     assert response['count'] == 42
     assert response['hits'][0]['type'] == 'disease'
 
+
 def test_get_predict_disease():
     """Test predict API GET operation for a disease"""
     url = '/predict?disease_id=OMIM:246300&model_id=openpredict-baseline-omim-drugbank&n_results=42'
@@ -35,16 +36,26 @@ def test_get_predict_disease():
     assert response['count'] == 42
     assert response['hits'][0]['type'] == 'drug'
 
-# url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
 
+# docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_get_similarity_drug -s
+def test_get_similarity_drug():
+    """Test prediction similarity API GET operation for a drug"""
+    n_results=5
+    url = '/similarity?drug_id=DRUGBANK:DB00394&types=Drugs&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
+    response = client.get(url).json()
+    assert len(response['hits']) == n_results
+    assert response['count'] == n_results
+    assert response['hits'][0]['type'] == 'drug'
 
-# def test_get_similarity():
-#     """Test prediction similarity API GET operation"""
-#     n_results=5
-#     url = '/similarity?drug_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
-#     response = client.get(url)
-#     assert len(response.json['hits']) == n_results
-#     assert response.json['count'] == n_results
+# docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_get_similarity_disease -s
+def test_get_similarity_disease():
+    """Test prediction similarity API GET operation for a disease"""
+    n_results=5
+    url = '/similarity?disease_id=OMIM:246300&types=Diseases&model_id=disease_hp_embed.txt&n_results=' + str(n_results)
+    response = client.get(url).json()
+    assert len(response['hits']) == n_results
+    assert response['count'] == n_results
+    assert response['hits'][0]['type'] == 'disease'
 
 
 def test_post_trapi():

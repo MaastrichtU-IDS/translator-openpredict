@@ -206,9 +206,10 @@ def get_predict(
     
 You can try:
 
-| disease_id: `OMIM:246300` | drug_id: `DRUGBANK:DB00394` |
+| drug_id: `DRUGBANK:DB00394` | disease_id: `OMIM:246300` |
 | ------- | ---- |
-| to check the diseases similar to a given disease   | to check the drugs similar to a given drug |
+|  drugs_fp_embed.txt | disease_hp_embed.txt |
+| to check the drugs similar to a given drug | to check the diseases similar to a given disease   |
 """,
     response_model=dict,
     tags=["openpredict"],
@@ -226,6 +227,8 @@ def get_similarity(
     :return: Prediction results object with score
     """
     time_start = datetime.now()
+    if type(types) is SimilarityTypes:
+        types = types.value
 
     # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
     concept_id = ''
@@ -239,7 +242,7 @@ def get_similarity(
     try:
         emb_vectors = app.similarity_embeddings[model_id]
         prediction_json, source_target_predictions = get_similarities(
-            types.value, concept_id, emb_vectors, min_score, max_score, n_results
+            types, concept_id, emb_vectors, min_score, max_score, n_results
         )
     except Exception as e:
         print('Error processing ID ' + concept_id)
@@ -257,12 +260,14 @@ def get_similarity(
     response_model=dict,
     tags=["openpredict"],
 )
-def get_features(type: EmbeddingTypes ='Drugs') -> dict:
+def get_features(embedding_type: EmbeddingTypes ='Drugs') -> dict:
     """Get features in the model
 
     :return: JSON with features
     """
-    return retrieve_features(type.value)
+    if type(embedding_type) is EmbeddingTypes:
+        embedding_type = embedding_type.value
+    return retrieve_features(embedding_type)
 
 
 
@@ -297,13 +302,15 @@ def post_embedding(
     """Post JSON embeddings via the API, with simple APIKEY authentication 
     provided in environment variables 
     """
-    # TODO: implement GitHub OAuth? https://github-flask.readthedocs.io/en/latest/
+    if type(types) is EmbeddingTypes:
+        types = types.value
+
     # Ignore the API key check if no env variable defined (for development)
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         embedding_file = uploaded_file.file
-        print(emb_name, types.value)
+        print(emb_name, types)
         run_id, scores = addEmbedding(
-            embedding_file, emb_name, types.value, description, model_id)
+            embedding_file, emb_name, types, description, model_id)
         print('Embeddings uploaded')
         # train_model(False)
         return {
