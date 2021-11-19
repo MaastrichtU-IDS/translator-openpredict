@@ -13,9 +13,7 @@ services:
     volumes:
       - ./data:/data/openpredict
       - ./openpredict:/app/openpredict
-      # - ./tests:/app/tests
-      ## Using root in all-spark notebook
-      # - ./openpredict:/root/openpredict
+      - ./tests:/app/tests
     environment:
       # Show print() in logs:
       PYTHONUNBUFFERED: '1'

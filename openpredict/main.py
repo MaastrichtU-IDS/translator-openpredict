@@ -153,13 +153,21 @@ def get_meta_knowledge_graph() -> dict:
 
 @app.get("/predict", name="Get predicted targets for a given entity",
     description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
-        Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
-        This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.""",
+Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
+This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
+
+You can try:
+
+| disease_id: `OMIM:246300` | drug_id: `DRUGBANK:DB00394` |
+| ------- | ---- |
+| to check the drug prediction for a disease   | to check the disease predictions for a drug |
+""",
     response_model=dict,
     tags=["biothings"],
 )
 def get_predict(
-        drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
+        drug_id: Optional[str] =None, 
+        disease_id: Optional[str] =None, 
         model_id: str ='openpredict-baseline-omim-drugbank', 
         min_score: float =None, max_score: float =None, n_results: int =None
     ) -> dict:
@@ -194,12 +202,21 @@ def get_predict(
 
 
 @app.get("/similarity", name="Get similar entities",
-    description="Get similar entites for a given entity CURIE.",
+    description="""Get similar entites for a given entity CURIE.
+    
+You can try:
+
+| disease_id: `OMIM:246300` | drug_id: `DRUGBANK:DB00394` |
+| ------- | ---- |
+| to check the diseases similar to a given disease   | to check the drugs similar to a given drug |
+""",
     response_model=dict,
     tags=["openpredict"],
 )
 def get_similarity(
-        types: SimilarityTypes ='Drugs', drug_id: str ='DRUGBANK:DB00394', disease_id: str =None, 
+        types: SimilarityTypes ='Drugs', 
+        drug_id: Optional[str] =None, 
+        disease_id: Optional[str] =None, 
         model_id: str ='drugs_fp_embed.txt', 
         min_score: float =None, max_score: float =None, n_results: int =None
     ) -> dict:

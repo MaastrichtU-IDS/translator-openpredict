@@ -28,10 +28,10 @@ class TRAPI(FastAPI):
 
     required_tags = [
         {"name": "reasoner"},
-        {"name": "trapi"},
         {"name": "biothings"},
         {"name": "openpredict"},
         {"name": "translator"},
+        # {"name": "trapi"},
     ]
 
     def __init__(

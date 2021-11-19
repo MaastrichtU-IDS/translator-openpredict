@@ -19,12 +19,21 @@ init_triplestore()
 client = TestClient(app)
 
 
-def test_get_predict():
-    """Test predict API GET operation"""
+def test_get_predict_drug():
+    """Test predict API GET operation for a drug"""
     url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
-    response = client.get(url)
-    assert len(response.json()['hits']) == 42
-    assert response.json()['count'] == 42
+    response = client.get(url).json()
+    assert len(response['hits']) == 42
+    assert response['count'] == 42
+    assert response['hits'][0]['type'] == 'disease'
+
+def test_get_predict_disease():
+    """Test predict API GET operation for a disease"""
+    url = '/predict?disease_id=OMIM:246300&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+    response = client.get(url).json()
+    assert len(response['hits']) == 42
+    assert response['count'] == 42
+    assert response['hits'][0]['type'] == 'drug'
 
 # url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
 
