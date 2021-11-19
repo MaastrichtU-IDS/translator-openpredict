@@ -26,6 +26,8 @@ def test_get_predict():
     assert len(response.json()['hits']) == 42
     assert response.json()['count'] == 42
 
+# url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+
 
 # def test_get_similarity():
 #     """Test prediction similarity API GET operation"""

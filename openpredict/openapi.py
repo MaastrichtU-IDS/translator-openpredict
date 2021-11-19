@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from reasoner_pydantic import Query, Message
 from typing import Optional, List, Dict, Any
 from enum import Enum
+# from rdflib_endpoint import SparqlEndpoint
 
 from openpredict.openpredict_model import load_similarity_embeddings, load_treatment_embeddings, load_treatment_classifier
 # from openpredict.utils import init_openpredict_dir
@@ -13,6 +14,7 @@ from openpredict.openpredict_model import load_similarity_embeddings, load_treat
 # from datetime import datetime
 
 
+# class TRAPI(SparqlEndpoint):
 class TRAPI(FastAPI):
     """Translator Reasoner API - wrapper for FastAPI."""
 
