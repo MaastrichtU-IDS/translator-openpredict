@@ -155,7 +155,7 @@ def resolve_trapi_query(reasoner_query, app):
 
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
-        
+
         # print('Resolve similar_to for ' + str(edge_qg_id))
         similar_parents = get_biolink_parents('biolink:similar_to')
         if any(i in similar_parents for i in query_plan[edge_qg_id]['predicates']):
@@ -164,8 +164,10 @@ def resolve_trapi_query(reasoner_query, app):
 
                     try:
                         # TODO: make it dynamic by passing the TRAPI app object with all models
-                        # currently using default model for similarity
+                        # currently using default models for drug and disease similarity
                         similarity_model_id = 'drugs_fp_embed.txt'
+                        if 'biolink:Disease' in query_plan[edge_qg_id]['from_type'] or query_plan[edge_qg_id]['from_type'] == 'biolink:Disease':
+                            similarity_model_id = 'disease_hp_embed.txt'
                         # similarity_model_id = model_id
                         emb_vectors = app.similarity_embeddings[similarity_model_id]
                         similarity_json, source_target_predictions = get_similarities(

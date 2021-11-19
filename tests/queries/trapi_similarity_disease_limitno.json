@@ -1,0 +1,23 @@
+{
+    "message": {
+        "query_graph": {
+            "edges": {
+                "e01": {
+                    "object": "n1",
+                    "predicates": [ "biolink:similar_to" ],
+                    "subject": "n0"
+                }
+            },
+            "nodes": {
+                "n0": {
+                    "categories": [ "biolink:Disease" ],
+                    "ids": [ "OMIM:246300" ]
+                },
+                "n1": {
+                    "categories": [ "biolink:Disease" ]
+                }
+            }
+        }
+    },
+    "query_options": { "n_results": 50 }
+}

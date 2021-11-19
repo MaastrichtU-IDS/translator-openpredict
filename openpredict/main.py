@@ -160,7 +160,7 @@ You can try:
 
 | disease_id: `OMIM:246300` | drug_id: `DRUGBANK:DB00394` |
 | ------- | ---- |
-| to check the drug prediction for a disease   | to check the disease predictions for a drug |
+| to check the drug predictions for a disease   | to check the disease predictions for a drug |
 """,
     response_model=dict,
     tags=["biothings"],
@@ -208,7 +208,7 @@ You can try:
 
 | drug_id: `DRUGBANK:DB00394` | disease_id: `OMIM:246300` |
 | ------- | ---- |
-|  drugs_fp_embed.txt | disease_hp_embed.txt |
+| model_id: `drugs_fp_embed.txt` | model_id: `disease_hp_embed.txt` |
 | to check the drugs similar to a given drug | to check the diseases similar to a given disease   |
 """,
     response_model=dict,
