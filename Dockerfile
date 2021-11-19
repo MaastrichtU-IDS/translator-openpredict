@@ -4,6 +4,8 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 # FROM jupyter/pyspark-notebook:python-3.8.8
 ## Jupyter with Spark already installed 4.31GB
 
+LABEL org.opencontainers.image.source="https://github.com/MaastrichtU-IDS/translator-openpredict"
+
 ## Change the current user to root and the working directory to /app
 USER root
 WORKDIR /app
