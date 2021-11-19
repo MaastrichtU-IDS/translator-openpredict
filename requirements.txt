@@ -21,5 +21,6 @@ rdflib<6.0.0,>=5.0.0
 SPARQLWrapper==1.8.5
 networkx
 gensim==3.8.3
+requests
 # networkx==1.11
 # kgx
