@@ -28,10 +28,10 @@ class TRAPI(FastAPI):
 
     required_tags = [
         {"name": "reasoner"},
+        {"name": "trapi"},
         {"name": "biothings"},
         {"name": "openpredict"},
         {"name": "translator"},
-        # {"name": "trapi"},
     ]
 
     def __init__(
@@ -91,7 +91,7 @@ class TRAPI(FastAPI):
             openapi_schema["servers"] = [
                 {
                     "url": 'https://' + os.getenv('LETSENCRYPT_HOST'),
-                    "description": 'Production OpenPredict TRAPI',
+                    "description": 'Production OpenPredict API',
                     "x-maturity": 'production',
                     "x-location": 'IDS'
                 }
