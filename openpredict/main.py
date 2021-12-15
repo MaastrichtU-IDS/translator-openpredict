@@ -286,10 +286,14 @@ def get_models() -> dict:
 
 
 @app.post("/embedding", name="Upload your embedding for drugs or diseases",
-    description="""Upload your embedding file:  select which types do you have in the embeddings, Drugs, Diseases or Both. 
-        1. provided embeddings will be added to the model
-        2. the model will be retrained
-        3. the model evaluation will be stored in a triplestore""",
+    description="""Upload your embedding file:  
+
+1. Select which types do you have in the embeddings: Drugs, Diseases or Both. 
+
+2. Define the base `model_id`: use the `/models` call to see the list of trained models with their characteristics, and pick the ID of the model you will use as base to add your embedding
+
+3. The model will be retrained and evaluation will be stored in a triplestore (available in `/models`)
+""",
     response_model=dict,
     tags=["openpredict"],
 )
