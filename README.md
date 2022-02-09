@@ -4,7 +4,7 @@
 
 **OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). 
 
-Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (such as Ontotext GraphDB, or Virtuoso).
+Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) as RDF.
 
 Access the **Translator OpenPredict API** at **[https://openpredict.semanticscience.org 🔮🐍](https://openpredict.semanticscience.org)**
 
@@ -163,7 +163,7 @@ The API will return the list of predicted target for the given entity, the label
 # More about the data model :minidisc:
 
 * The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
-* Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
+* Metadata about runs, models evaluations, features are stored as RDF using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
   * See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html) for more details on the data model.
 
 Diagram of the data model used for OpenPredict, based on the ML Schema ontology (`mls`):
