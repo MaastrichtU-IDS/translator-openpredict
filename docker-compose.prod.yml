@@ -8,10 +8,10 @@ services:
     # entrypoint: gunicorn -w 8 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8808 openpredict.main:app
 
     environment: 
-      SPARQL_USERNAME: ${SPARQL_USERNAME}
-      SPARQL_PASSWORD: ${SPARQL_PASSWORD}
-      SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
-      SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
+      # SPARQL_USERNAME: ${SPARQL_USERNAME}
+      # SPARQL_PASSWORD: ${SPARQL_PASSWORD}
+      # SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
+      # SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
 
       # Variable for nginx-proxy routing. See https://github.com/nginx-proxy/
       VIRTUAL_HOST: openpredict.semanticscience.org
