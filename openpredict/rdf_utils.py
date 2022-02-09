@@ -138,18 +138,18 @@ def init_triplestore():
     """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
     Init using the data/openpredict-metadata.ttl RDF file
     """
-    check_baseline_run_query = """SELECT DISTINCT ?runType
-    WHERE {
-        <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
-    } LIMIT 10
-    """
-    results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
-    if (len(results) < 1):
-        g = Graph()
-        g.parse(pkg_resources.resource_filename('openpredict',
-                'data/openpredict-metadata.ttl'), format="ttl")
-        insert_graph_in_sparql_endpoint(g)
-        print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
+    # check_baseline_run_query = """SELECT DISTINCT ?runType
+    # WHERE {
+    #     <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
+    # } LIMIT 10
+    # """
+    # results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
+    # if (len(results) < 1):
+    g = Graph()
+    g.parse(pkg_resources.resource_filename('openpredict',
+            'data/openpredict-metadata.ttl'), format="ttl")
+    insert_graph_in_sparql_endpoint(g)
+    print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
 
 def add_feature_metadata(id, description, type):
