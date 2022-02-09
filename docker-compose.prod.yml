@@ -5,7 +5,8 @@ services:
     restart: unless-stopped
     volumes:
       - /data/openpredict:/data/openpredict
-    entrypoint: gunicorn -w 8 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8808 openpredict.main:app
+    # entrypoint: gunicorn -w 8 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8808 openpredict.main:app
+    entrypoint: uvicorn openpredict.main:app --host 0.0.0.0 --port 8808
 
     environment: 
       # SPARQL_USERNAME: ${SPARQL_USERNAME}
