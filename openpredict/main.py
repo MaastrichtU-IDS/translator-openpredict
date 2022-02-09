@@ -20,7 +20,7 @@ from typing import Optional, Dict
 
 
 init_openpredict_dir()
-init_triplestore()
+# init_triplestore()
 
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
