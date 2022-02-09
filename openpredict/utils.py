@@ -7,6 +7,7 @@ import pandas as pd
 import time
 import datetime
 from openpredict.rdf_utils import init_triplestore
+from pathlib import Path
 
 global OPENPREDICT_DATA_DIR
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
@@ -40,15 +41,13 @@ def init_openpredict_dir():
     Also create baseline features in the triplestore
     """
     print('Using directory: ' + OPENPREDICT_DATA_DIR)
-    if not os.path.exists(get_openpredict_dir()):
-        print('Creating ' + get_openpredict_dir())
-        os.makedirs(get_openpredict_dir())
-    if not os.path.exists(get_openpredict_dir('features')):
-        print('Creating ' + get_openpredict_dir('features'))
-        os.makedirs(get_openpredict_dir('features'))
-    if not os.path.exists(get_openpredict_dir('models')):
-        print('Creating ' + get_openpredict_dir('models'))
-        os.makedirs(get_openpredict_dir('models'))
+    print('Creating if does not exist: ' + get_openpredict_dir())
+    Path(get_openpredict_dir()).mkdir(parents=True, exist_ok=True)
+    print('Creating if does not exist: ' + get_openpredict_dir('features'))
+    Path(get_openpredict_dir('features')).mkdir(parents=True, exist_ok=True)
+    print('Creating if does not exist: ' + get_openpredict_dir('models'))
+    Path(get_openpredict_dir('models')).mkdir(parents=True, exist_ok=True)
+
     if not os.path.exists(get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
         shutil.copy(pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
