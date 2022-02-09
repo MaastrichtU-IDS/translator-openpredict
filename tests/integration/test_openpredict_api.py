@@ -14,7 +14,7 @@ VALIDATE_TRAPI_VERSION="1.2.0"
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
-init_triplestore()
+# init_triplestore()
 
 client = TestClient(app)
 
