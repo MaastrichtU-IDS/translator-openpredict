@@ -53,7 +53,7 @@ if not SPARQL_ENDPOINT_PASSWORD:
     # SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
 
 # Uncomment this line to test OpenPredict in dev mode using a RDF file instead of a SPARQL endpoint
-# SPARQL_ENDPOINT_URL=None
+SPARQL_ENDPOINT_URL=None
 
 
 def insert_graph_in_sparql_endpoint(g):
