@@ -62,16 +62,16 @@ def init_openpredict_dir():
         shutil.copy(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), 
             get_openpredict_dir('openpredict-metadata.ttl'))
     
-    attempts = 0
-    while attempts < 30:
-        try:
-            init_triplestore()
-            break
-        except Exception as e:
-            print(e)
-            print('Failed to connect to the SPARQL endpoint, attempt ' + str(attempts))
-            time.sleep(5)
-            attempts += 1
+    # attempts = 0
+    # while attempts < 30:
+    #     try:
+    #         init_triplestore()
+    #         break
+    #     except Exception as e:
+    #         print(e)
+    #         print('Failed to connect to the SPARQL endpoint, attempt ' + str(attempts))
+    #         time.sleep(5)
+    #         attempts += 1
     # Check if https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank exist before iniating the triplestore
     # add_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
     # add_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "Drugs")
