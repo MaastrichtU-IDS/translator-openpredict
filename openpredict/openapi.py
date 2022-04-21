@@ -99,7 +99,7 @@ class TRAPI(FastAPI):
 
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',
-            "team": "Clinical Data Provider",
+            "team": ["Clinical Data Provider"],
             "biolink-version": "1.8.2",
             "infores": 'infores:openpredict',
             "externalDocs": {
