@@ -166,10 +166,10 @@ You can try:
     tags=["biothings"],
 )
 def get_predict(
-        drug_id: Optional[str] =None, 
-        disease_id: Optional[str] =None, 
+        drug_id: Optional[str] = None, 
+        disease_id: Optional[str] = 'OMIM:246300', 
         model_id: str ='openpredict-baseline-omim-drugbank', 
-        min_score: float =None, max_score: float =None, n_results: int =None
+        min_score: float = None, max_score: float = None, n_results: int = None
     ) -> dict:
     """Get predicted associations for a given entity CURIE.
 
@@ -216,7 +216,7 @@ You can try:
 )
 def get_similarity(
         types: SimilarityTypes ='Drugs', 
-        drug_id: Optional[str] =None, 
+        drug_id: Optional[str] = 'DRUGBANK:DB00394', 
         disease_id: Optional[str] =None, 
         model_id: str ='drugs_fp_embed.txt', 
         min_score: float =None, max_score: float =None, n_results: int =None

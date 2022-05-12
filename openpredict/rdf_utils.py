@@ -109,11 +109,12 @@ def query_sparql_endpoint(query, parameters=[]):
         # Which miss the informations about which SPARQL variables (just returns rows of results without variable bind)
         g = Graph()
         g.parse(RDF_DATA_PATH, format="ttl")
-        print('RDF data len')
-        print(len(g))
+        # print('RDF data len')
+        # print(len(g))
+        # print(query)
         qres = g.query(query)
-        print('query done')
-        print(qres)
+        # print('query done')
+        # print(qres)
         results = []
         for row in qres:
             # TODO: row.asdict()
