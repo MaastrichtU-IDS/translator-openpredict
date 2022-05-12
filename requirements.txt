@@ -17,8 +17,8 @@ cython
 pyspark==3.1.1
 findspark
 scikit-learn==0.23.1
-rdflib>=6.0.0
-SPARQLWrapper>=2.0.0
+rdflib>=6.0.0,<7.0.0
+SPARQLWrapper>=2.0.0,<3.0.0
 networkx
 gensim==3.8.3
 requests
