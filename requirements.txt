@@ -14,7 +14,7 @@ scipy==1.5.4
 pandas==1.1.1
 # pandas==1.2.4
 cython
-pyspark==3.1.1
+pyspark==3.1.3
 findspark
 scikit-learn==0.23.1
 rdflib>=6.0.0,<7.0.0
