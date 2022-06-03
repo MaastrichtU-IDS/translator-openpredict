@@ -1,22 +1,27 @@
 import os
 from datetime import datetime
-from openpredict.utils import init_openpredict_dir
-from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
-from openpredict.openpredict_model import addEmbedding, get_predictions, get_similarities, load_similarity_embeddings
-from openpredict.trapi_parser import resolve_trapi_query
+from typing import Dict, Optional
+
+from fastapi import Body, FastAPI, File, Request, Response, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, RedirectResponse
 from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
+from openpredict.openpredict_model import (
+    addEmbedding,
+    get_predictions,
+    get_similarities,
+    load_similarity_embeddings,
+)
+from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
+from openpredict.trapi_parser import resolve_trapi_query
+from openpredict.utils import init_openpredict_dir
+from reasoner_pydantic import Message, Query
 
 # from gensim.models import KeyedVectors
 # import asyncio
 # import aiohttp
 # from aiohttp import web
 # import logging
-
-from fastapi import FastAPI, Body, Request, Response, File, UploadFile
-from fastapi.responses import JSONResponse, RedirectResponse
-from fastapi.middleware.cors import CORSMiddleware
-from reasoner_pydantic import Query, Message
-from typing import Optional, Dict
 
 
 init_openpredict_dir()
@@ -215,10 +220,10 @@ You can try:
     tags=["openpredict"],
 )
 def get_similarity(
-        types: SimilarityTypes ='Drugs', 
-        drug_id: Optional[str] = 'DRUGBANK:DB00394', 
-        disease_id: Optional[str] =None, 
-        model_id: str ='drugs_fp_embed.txt', 
+        types: SimilarityTypes ='Diseases', 
+        drug_id: Optional[str] = None, 
+        disease_id: Optional[str] = 'OMIM:246300', 
+        model_id: str ='disease_hp_embed.txt', 
         min_score: float =None, max_score: float =None, n_results: int =None
     ) -> dict:
     """Get similar entites for a given entity CURIE.

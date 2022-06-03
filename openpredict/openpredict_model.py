@@ -1,23 +1,35 @@
-
 import logging
-import os
-from datetime import datetime
 import numbers
+import os
 import re
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
-from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
-from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
-from sklearn.metrics.pairwise import cosine_similarity
-from joblib import dump, load
-from gensim.models import KeyedVectors
 import pkg_resources
+from gensim.models import KeyedVectors
+from joblib import dump, load
+from openpredict.rdf_utils import (
+    add_feature_metadata,
+    add_run_metadata,
+    get_run_id,
+    retrieve_features,
+)
 
-from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata, get_run_id
 # from openpredict.utils import get_spark_context
 # from openpredict.utils import get_spark_context
-from openpredict.utils import get_openpredict_dir, get_entities_labels, log
-
+from openpredict.utils import get_entities_labels, get_openpredict_dir, log
+from sklearn import (
+    ensemble,
+    linear_model,
+    metrics,
+    model_selection,
+    neighbors,
+    svm,
+    tree,
+)
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
 # models_folder = 'openpredict/data/models/'
 
