@@ -15,7 +15,7 @@ pipeline {
         pollSCM('H/5 * * * *')
     }
     environment {
-        DOCKER_REPO_NAME = "translator-cdskp-openpredict-api"
+        DOCKER_REPO_NAME = "translator-cdskp-openpredict"
         KUBERNETES_BLUE_CLUSTER_NAME = "translator-eks-ci-blue-cluster"
     }
     stages {
