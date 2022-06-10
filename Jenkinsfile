@@ -54,8 +54,7 @@ pipeline {
            when { expression { return env.BUILD == 'true' }}
             steps {
                 script {
-                    sh 'git clone git@github.com:pahmadi8740/translator-openpredict.git'
-                    docker.build(env.DOCKER_REPO_NAME, "--no-cache ./openpredict_api")
+                    docker.build(env.DOCKER_REPO_NAME, "--no-cache .")
                     docker.withRegistry('https://853771734544.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-ifx-deploy') {
                         docker.image(env.DOCKER_REPO_NAME).push("${BUILD_VERSION}")
                     }
@@ -64,6 +63,7 @@ pipeline {
         }
         stage('Deploy to AWS EKS Blue') {
             steps {
+                sh 'git clone git@github.com:Sphinx-Automation/translator-ops.git'
                 dir('translator-ops/ops/cdskp/openpredict_api/') {
                     configFileProvider([
                         configFile(fileId: 'values-ci.yaml', targetLocation: 'values-ncats.yaml')
