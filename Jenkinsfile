@@ -64,7 +64,9 @@ pipeline {
         }
         stage('Deploy to AWS EKS Blue') {
             steps {
-                sh 'git clone -b openpredict git@github.com:Sphinx-Automation/translator-ops.git'
+                sshagent (credentials: ['labshare-svc']) {
+                   sh 'git clone -b openpredict git@github.com:Sphinx-Automation/translator-ops.git'
+                }
                 dir('translator-ops/ops/cdskp/openpredict/') {
                     configFileProvider([
                         configFile(fileId: 'values-ci.yaml', targetLocation: 'values-ci.yaml')
