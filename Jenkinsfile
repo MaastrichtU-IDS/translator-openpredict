@@ -17,6 +17,7 @@ pipeline {
     environment {
         DOCKER_REPO_NAME = "translator-cdskp-openpredict"
         KUBERNETES_BLUE_CLUSTER_NAME = "translator-eks-ci-blue-cluster"
+        NAMESPACE = "cdskp"
     }
     stages {
         stage('Checkout source code') {
@@ -32,7 +33,7 @@ pipeline {
                         return !params.BUILD_VERSION
                     }
                     anyOf {
-                        changeset "translator-ops/cdskp/openpredict_api/*"
+                        changeset "translator-ops/cdskp/openpredict/*"
                         triggeredBy 'UserIdCause'
                     }
                 }
@@ -64,9 +65,9 @@ pipeline {
         stage('Deploy to AWS EKS Blue') {
             steps {
                 sh 'git clone git@github.com:Sphinx-Automation/translator-ops.git'
-                dir('translator-ops/ops/cdskp/openpredict_api/') {
+                dir('translator-ops/ops/cdskp/openpredict/') {
                     configFileProvider([
-                        configFile(fileId: 'values-ci.yaml', targetLocation: 'values-ncats.yaml')
+                        configFile(fileId: 'values-ci.yaml', targetLocation: 'values-ci.yaml')
                     ]){
                         withAWS(credentials:'aws-ifx-deploy') {
                             sh '''
