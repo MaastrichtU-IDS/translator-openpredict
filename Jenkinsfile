@@ -69,7 +69,7 @@ pipeline {
                 }
                 dir('translator-ops/ops/cdskp/openpredict/') {
                     configFileProvider([
-                        configFile(fileId: 'values-ci.yaml', targetLocation: 'values-ci.yaml')
+                        configFile(fileId: 'values-ncats.yaml', targetLocation: 'values-ncats.yaml')
                     ]){
                         withAWS(credentials:'aws-ifx-deploy') {
                             sh '''
