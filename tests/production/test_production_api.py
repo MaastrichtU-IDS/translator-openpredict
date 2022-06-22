@@ -1,7 +1,8 @@
-import pytest
-import pkg_resources
-import requests
 import os
+
+import pkg_resources
+import pytest
+import requests
 from reasoner_validator import validate
 
 PROD_API_URL = 'https://openpredict.semanticscience.org'
