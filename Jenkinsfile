@@ -33,7 +33,7 @@ pipeline {
                         return !params.BUILD_VERSION
                     }
                     anyOf {
-                        changeset "translator-ops/cdskp/openpredict/*"
+                        changeset "*"
                         triggeredBy 'UserIdCause'
                     }
                 }
@@ -63,6 +63,12 @@ pipeline {
             }
         }
         stage('Deploy to AWS EKS Blue') {
+            when {
+                anyOf {
+                    changeset "*"
+                    triggeredBy 'UserIdCause'
+                }
+            }
             steps {
                 sshagent (credentials: ['labshare-svc']) {
                    sh 'git clone git@github.com:Sphinx-Automation/translator-ops.git'
