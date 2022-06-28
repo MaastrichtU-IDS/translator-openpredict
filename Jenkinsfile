@@ -27,18 +27,8 @@ pipeline {
             }
         }
         stage('Build Version'){
-            when {
-                allOf {
-                    expression {
-                        return !params.BUILD_VERSION
-                    }
-                    anyOf {
-                        changeset "*"
-                        triggeredBy 'UserIdCause'
-                    }
-                }
-            }
-            steps{
+            when {expression {return !params.BUILD_VERSION}}
+             steps{
                 script {
                     BUILD_VERSION_GENERATED = VersionNumber(
                         versionNumberString: 'v${BUILD_YEAR, XX}.${BUILD_MONTH, XX}${BUILD_DAY, XX}.${BUILDS_TODAY}',
@@ -63,12 +53,6 @@ pipeline {
             }
         }
         stage('Deploy to AWS EKS Blue') {
-            when {
-                anyOf {
-                    changeset "*"
-                    triggeredBy 'UserIdCause'
-                }
-            }
             steps {
                 sshagent (credentials: ['labshare-svc']) {
                    sh 'git clone git@github.com:Sphinx-Automation/translator-ops.git'
