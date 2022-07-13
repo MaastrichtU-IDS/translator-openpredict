@@ -8,6 +8,7 @@ from enum import Enum
 # from rdflib_endpoint import SparqlEndpoint
 
 from openpredict.openpredict_model import load_similarity_embeddings, load_treatment_embeddings, load_treatment_classifier
+from openpredict.config import settings
 # from openpredict.utils import init_openpredict_dir
 # from openpredict.rdf_utils import init_triplestore
 # import logging
@@ -86,16 +87,29 @@ class TRAPI(FastAPI):
             tags=tags,
         )
 
-        if os.getenv('LETSENCRYPT_HOST'):
-            # Retrieving URL used for nginx reverse proxy
-            openapi_schema["servers"] = [
-                {
-                    "url": 'https://' + os.getenv('LETSENCRYPT_HOST'),
-                    "description": 'Production OpenPredict API',
-                    "x-maturity": 'production',
-                    "x-location": 'IDS'
-                }
-            ]
+        openapi_schema["servers"] = [
+            {
+                "url": settings.PROD_URL,
+                "description": 'OpenPredict TRAPI ITRB Production Server',
+                "x-maturity": 'production'
+            },
+            {
+                "url": settings.TEST_URL,
+                "description": 'OpenPredict TRAPI ITRB Test Server',
+                "x-maturity": 'testing'
+            },
+            {
+                "url": settings.STAGING_URL,
+                "description": 'OpenPredict TRAPI ITRB CI Server',
+                "x-maturity": 'staging'
+            },
+            {
+                "url": settings.DEV_URL,
+                "description": 'OpenPredict TRAPI ITRB Development Server',
+                "x-maturity": 'development',
+                "x-location": 'IDS'
+            },
+        ]
 
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',

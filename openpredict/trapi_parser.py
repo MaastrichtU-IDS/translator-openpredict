@@ -231,14 +231,14 @@ def resolve_trapi_query(reasoner_query, app):
                                         'value': 'infores:openpredict',
                                         'value_type_id': 'biolink:InformationResource',
                                         'attribute_source': 'infores:openpredict',
-                                        'value_url': 'https://openpredict.semanticscience.org/query'
+                                        # 'value_url': 'https://openpredict.semanticscience.org/query'
                                     },
                                     {
                                         'attribute_type_id': 'biolink:supporting_data_source',
                                         'value': 'infores:cohd',
                                         'value_type_id': 'biolink:InformationResource',
                                         'attribute_source': 'infores:openpredict',
-                                        'value_url': 'https://openpredict.semanticscience.org'
+                                        # 'value_url': 'https://openpredict.semanticscience.org'
                                     },
                                 ]
                             }
@@ -352,14 +352,14 @@ def resolve_trapi_query(reasoner_query, app):
                                         'value': 'infores:openpredict',
                                         'value_type_id': 'biolink:InformationResource',
                                         'attribute_source': 'infores:openpredict',
-                                        'value_url': 'https://openpredict.semanticscience.org/query'
+                                        # 'value_url': 'https://openpredict.semanticscience.org/query'
                                     },
                                     {
                                         'attribute_type_id': 'biolink:supporting_data_source',
                                         'value': 'infores:cohd',
                                         'value_type_id': 'biolink:InformationResource',
                                         'attribute_source': 'infores:openpredict',
-                                        'value_url': 'https://openpredict.semanticscience.org'
+                                        # 'value_url': 'https://openpredict.semanticscience.org'
                                     },
                                 ]
                             }
