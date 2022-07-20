@@ -129,6 +129,8 @@ class TRAPI(FastAPI):
         openapi_schema["info"]["x-trapi"] = {
             "version": settings.TRAPI_VERSION,
             "asyncquery": False,
+            # TODO: cf. https://github.com/NCATSTranslator/ReasonerAPI/pull/339
+            # "test_data_location": "",
             "operations": [
                 "lookup",
             ],

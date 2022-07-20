@@ -21,14 +21,15 @@ def is_accepted_id(id_to_check):
 def get_biolink_parents(concept):
     concept_snakecase = concept.replace('biolink:', '')
     concept_snakecase = re.sub(r'(?<!^)(?=[A-Z])', '_', concept_snakecase).lower()
+    query_url = f'https://bl-lookup-sri.renci.org/bl/{concept_snakecase}/ancestors'
     try:
-        resolve_curies = requests.get('https://bl-lookup-sri.renci.org/bl/' + concept_snakecase + '/ancestors',
+        resolve_curies = requests.get(query_url,
                             params={'version': settings.BIOLINK_VERSION})
         resp = resolve_curies.json()
         resp.append(concept)
         return resp
     except Exception as e:
-        print('Error querying https://bl-lookup-sri.renci.org, using the original IDs')
+        print(f'Error querying {query_url}, using the original IDs')
         return [concept]
 
 

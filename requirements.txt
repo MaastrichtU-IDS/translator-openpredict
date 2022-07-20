@@ -3,7 +3,8 @@ fastapi>=0.51.0
 uvicorn[standard]>=0.12.0
 gunicorn>=20.1.0
 python-multipart
-reasoner-pydantic>=1.2.0.4
+reasoner-pydantic>=2.2.3
+reasoner-validator>=2.2.5
 joblib
 numpy==1.16.1
 scipy==1.5.4

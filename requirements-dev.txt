@@ -1,4 +1,3 @@
 pytest==5.2.0
 pytest-cov
 flake8
-reasoner-validator>=2.1.0
