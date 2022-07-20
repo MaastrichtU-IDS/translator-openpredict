@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     DEV_URL: str = 'https://openpredict.semanticscience.org'
 
     BIOLINK_VERSION: str = '2.4.4'
-    TRAPI_VERSION: str = "1.3.0"
+    TRAPI_VERSION: str = "1.2.0"
 
     # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
 
