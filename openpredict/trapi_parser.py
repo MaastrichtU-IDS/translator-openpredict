@@ -24,7 +24,7 @@ def get_biolink_parents(concept):
     query_url = f'https://bl-lookup-sri.renci.org/bl/{concept_snakecase}/ancestors'
     try:
         resolve_curies = requests.get(query_url,
-                            params={'version': settings.BIOLINK_VERSION})
+                            params={'version': f'v{settings.BIOLINK_VERSION}'})
         resp = resolve_curies.json()
         resp.append(concept)
         return resp
