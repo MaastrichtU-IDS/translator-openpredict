@@ -1,7 +1,14 @@
-from openpredict.openpredict_model import get_predictions, get_similarities, load_similarity_embeddings, load_treatment_classifier, load_treatment_embeddings
-import requests
-import os
 import re
+
+import requests
+from openpredict.config import settings
+from openpredict.openpredict_model import (
+    get_predictions,
+    get_similarities,
+    load_similarity_embeddings,
+    load_treatment_classifier,
+    load_treatment_embeddings,
+)
 
 
 def is_accepted_id(id_to_check):
@@ -10,15 +17,13 @@ def is_accepted_id(id_to_check):
     else:
         return False
 
-biolinkVersion = os.getenv('BIOLINK_VERSION', '2.2.3')
-
 
 def get_biolink_parents(concept):
     concept_snakecase = concept.replace('biolink:', '')
     concept_snakecase = re.sub(r'(?<!^)(?=[A-Z])', '_', concept_snakecase).lower()
     try:
         resolve_curies = requests.get('https://bl-lookup-sri.renci.org/bl/' + concept_snakecase + '/ancestors',
-                            params={'version': biolinkVersion})
+                            params={'version': settings.BIOLINK_VERSION})
         resp = resolve_curies.json()
         resp.append(concept)
         return resp

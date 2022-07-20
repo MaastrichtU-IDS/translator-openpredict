@@ -1,14 +1,19 @@
-import os
-from fastapi import FastAPI
-from fastapi.openapi.utils import get_openapi
-from fastapi.middleware.cors import CORSMiddleware
-from reasoner_pydantic import Query, Message
-from typing import Optional, List, Dict, Any
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
+from openpredict.config import settings
+from openpredict.openpredict_model import (
+    load_similarity_embeddings,
+    load_treatment_classifier,
+    load_treatment_embeddings,
+)
+from reasoner_pydantic import Message, Query
+
 # from rdflib_endpoint import SparqlEndpoint
 
-from openpredict.openpredict_model import load_similarity_embeddings, load_treatment_embeddings, load_treatment_classifier
-from openpredict.config import settings
 # from openpredict.utils import init_openpredict_dir
 # from openpredict.rdf_utils import init_triplestore
 # import logging
@@ -114,7 +119,7 @@ class TRAPI(FastAPI):
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',
             "team": ["Clinical Data Provider"],
-            "biolink-version": "1.8.2",
+            "biolink-version": settings.BIOLINK_VERSION,
             "infores": 'infores:openpredict',
             "externalDocs": {
                 "description": "The values for component and team are restricted according to this external JSON schema. See schema and examples at url",
@@ -122,7 +127,8 @@ class TRAPI(FastAPI):
             },
         }
         openapi_schema["info"]["x-trapi"] = {
-            "version": "1.2.0",
+            "version": settings.TRAPI_VERSION,
+            "asyncquery": False,
             "operations": [
                 "lookup",
             ],

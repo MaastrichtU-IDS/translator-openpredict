@@ -1,16 +1,14 @@
-from openpredict.rdf_utils import init_triplestore
-import pytest
-import pkg_resources
-import os
 import json
-from openpredict.utils import init_openpredict_dir
-from openpredict.rdf_utils import init_triplestore
+import os
+
+import pkg_resources
+import pytest
 from fastapi.testclient import TestClient
-from reasoner_validator import validate
+from openpredict.config import settings
 from openpredict.main import app
-
-
-VALIDATE_TRAPI_VERSION="1.2.0"
+from openpredict.rdf_utils import init_triplestore
+from openpredict.utils import init_openpredict_dir
+from reasoner_validator import validate
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
@@ -75,7 +73,7 @@ def test_post_trapi():
             edges = response.json()['message']['knowledge_graph']['edges'].items()
             # print(response)
             print(trapi_filename)
-            assert validate(response.json()['message'], "Message", VALIDATE_TRAPI_VERSION) == None
+            assert validate(response.json()['message'], "Message", settings.TRAPI_VERSION) == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):
@@ -114,7 +112,7 @@ def test_trapi_empty_response():
     )
 
     print(response.json)
-    assert validate(response.json()['message'], "Message", VALIDATE_TRAPI_VERSION) == None
+    assert validate(response.json()['message'], "Message", settings.TRAPI_VERSION) == None
     assert len(response.json()['message']['results']) == 0
 
 # def test_post_embeddings():

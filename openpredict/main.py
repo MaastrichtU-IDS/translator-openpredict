@@ -120,6 +120,8 @@ def get_meta_knowledge_graph() -> dict:
                     "RO:0002434"
                 ],
                 "subject": "biolink:Drug"
+                # TODO: https://github.com/NCATSTranslator/ReasonerAPI/pull/331/files
+                # "knowledge_types": ['inferred', 'lookup']
             },
             {
                 "object": "biolink:Drug",
