@@ -68,7 +68,8 @@ def resolve_id(id_to_resolve, resolved_ids_object):
 
 
 def resolve_trapi_query(reasoner_query, app):
-    """Convert an array of predictions objects to ReasonerAPI format
+    """Main function for TRAPI
+    Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
     {disease: OMIM:1567, drug: DRUGBANK:DB0001, score: 0.9}
 
@@ -305,6 +306,8 @@ def resolve_trapi_query(reasoner_query, app):
                         # Build dict of node ID : label
                         source_node_id = resolve_id(association['source']['id'], resolved_ids_object)
                         target_node_id = resolve_id(association['target']['id'], resolved_ids_object)
+
+                        # TODO: XAI get path between source and target nodes (first create the function for this)
 
                         # If the target ID is given, we filter here from the predictions
                         if 'to_kg_id' in query_plan[edge_qg_id] and target_node_id not in query_plan[edge_qg_id]['to_kg_id']:

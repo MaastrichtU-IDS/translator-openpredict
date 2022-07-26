@@ -743,6 +743,7 @@ def query_omim_drugbank_classifier(input_curie, model_id, app):
 
     :return: Predictions and scores
     """
+    # TODO: XAI add the additional scores from SHAP here
 
     parsed_curie = re.search('(.*?):(.*)', input_curie)
     input_namespace = parsed_curie.group(1)
