@@ -53,7 +53,7 @@ if not SPARQL_ENDPOINT_PASSWORD:
     # SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
 
 # Uncomment this line to test OpenPredict in dev mode using a RDF file instead of a SPARQL endpoint
-# SPARQL_ENDPOINT_URL=None
+SPARQL_ENDPOINT_URL=None
 
 
 def insert_graph_in_sparql_endpoint(g):
@@ -109,7 +109,12 @@ def query_sparql_endpoint(query, parameters=[]):
         # Which miss the informations about which SPARQL variables (just returns rows of results without variable bind)
         g = Graph()
         g.parse(RDF_DATA_PATH, format="ttl")
+        # print('RDF data len')
+        # print(len(g))
+        # print(query)
         qres = g.query(query)
+        # print('query done')
+        # print(qres)
         results = []
         for row in qres:
             # TODO: row.asdict()
@@ -126,6 +131,7 @@ def query_sparql_endpoint(query, parameters=[]):
             # or row[rdflib.Variable("s")]
             # TODO: create an object similar to SPARQLWrapper
             # result[variable]['value']
+        print(results)
         return results
 
 
@@ -133,19 +139,18 @@ def init_triplestore():
     """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
     Init using the data/openpredict-metadata.ttl RDF file
     """
-    check_baseline_run_query = """SELECT DISTINCT ?runType
-    WHERE {
-        <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
-    } LIMIT 10
-    """
-    results = query_sparql_endpoint(
-        check_baseline_run_query, parameters=['runType'])
-    if (len(results) < 1):
-        g = Graph()
-        g.parse(pkg_resources.resource_filename('openpredict',
-                'data/openpredict-metadata.ttl'), format="ttl")
-        insert_graph_in_sparql_endpoint(g)
-        print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
+    # check_baseline_run_query = """SELECT DISTINCT ?runType
+    # WHERE {
+    #     <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
+    # } LIMIT 10
+    # """
+    # results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
+    # if (len(results) < 1):
+    g = Graph()
+    g.parse(pkg_resources.resource_filename('openpredict',
+            'data/openpredict-metadata.ttl'), format="ttl")
+    insert_graph_in_sparql_endpoint(g)
+    print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
 
 def add_feature_metadata(id, description, type):
@@ -262,10 +267,10 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
     return run_id
 
 
-def retrieve_features(type='All', run_id=None):
+def retrieve_features(type='Both', run_id=None):
     """Get features in the ML model
 
-    :param type: type of the feature (All, Both, Drug, Disease)
+    :param type: type of the feature (Both, Drug, Disease)
     :return: JSON with features
     """
     if run_id:
@@ -287,7 +292,7 @@ def retrieve_features(type='All', run_id=None):
             }"""
         results = query_sparql_endpoint(sparql_feature_for_run, parameters=[
                                         'feature', 'featureId', 'featureDescription', 'embeddingType'])
-        print(results)
+        # print(results)
 
         features_json = {}
         for result in results:
@@ -299,7 +304,7 @@ def retrieve_features(type='All', run_id=None):
 
     else:
         type_filter = ''
-        if (type != "All"):
+        if (type != "Both"):
             type_filter = 'FILTER(?embeddingType = "' + type + '")'
 
         query = """SELECT DISTINCT ?id ?description ?embeddingType ?feature
@@ -314,7 +319,7 @@ def retrieve_features(type='All', run_id=None):
 
         results = query_sparql_endpoint(
             query, parameters=['id', 'description', 'embeddingType', 'feature'])
-        print(results)
+        # print(results)
 
         features_json = {}
         for result in results:

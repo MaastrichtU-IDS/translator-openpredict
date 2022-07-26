@@ -4,7 +4,7 @@
 
 **OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). 
 
-Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (such as Ontotext GraphDB, or Virtuoso).
+Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) as RDF.
 
 Access the **Translator OpenPredict API** at **[https://openpredict.semanticscience.org 🔮🐍](https://openpredict.semanticscience.org)**
 
@@ -18,7 +18,7 @@ You can install the `openpredict` python package with `pip` to run the OpenPredi
 
 We currently recommend to install from the source code `master` branch to get the latest version of OpenPredict. But we also regularly publish the `openpredict` package to PyPI: https://pypi.org/project/openpredict
 
-### Install from the source code :inbox_tray:
+### With Docker from the source code :whale:
 
 Clone the repository:
 
@@ -27,36 +27,21 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-Install `openpredict` from the source code, the package will be automatically updated when the files changes locally :arrows_counterclockwise:
+Start the API in development mode on http://localhost:8808:
 
 ```bash
-pip3 install -e .
-```
-
-#### Optional: isolate with a Virtual Environment
-
-If you face conflicts with already installed packages, then you might want to use a [Virtual Environment](https://docs.python.org/3/tutorial/venv.html) to isolate the installation in the current folder before installing OpenPredict:
-
-```bash
-# Create the virtual environment folder in your workspace
-python3 -m venv .venv
-# Activate it using a script in the created folder
-source .venv/bin/activate
-```
-
-> On Windows you might also need to install [Visual Studio C++ 14 Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (required for `numpy`)
-
-### Start the OpenPredict API :rocket:
-
-Start locally the OpenPredict API on http://localhost:8808
-
-```bash
-openpredict start-api
+docker-compose up
 ```
 
 By default all data are stored in the `data/` folder in the directory were you used the `openpredict` command (RDF metadata, features and models of each run)
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
+
+You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
+
+```bash
+docker-compose exec api openpredict train-model --model openpredict-baseline-omim-drugbank
+```
 
 ### Reset your local OpenPredict data :wastebasket:
 
@@ -97,6 +82,44 @@ The `/query` operation will return the same predictions as the `/predict` operat
 The user sends a [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) query asking for the predicted targets given: a source, and the relation to predict. The query is a graph with nodes and edges defined in JSON, and uses classes from the [BioLink model](https://biolink.github.io/biolink-model).
 
 You can use the default TRAPI query of OpenPredict `/query` operation to try a working example.
+
+Example of TRAPI query to retrieve drugs similar to a specific drug:
+
+```json
+{
+    "message": {
+        "query_graph": {
+        "edges": {
+            "e01": {
+            "object": "n1",
+            "predicates": [
+                "biolink:similar_to"
+            ],
+            "subject": "n0"
+            }
+        },
+        "nodes": {
+            "n0": {
+            "categories": [
+                "biolink:Drug"
+            ],
+            "ids": [
+                "DRUGBANK:DB00394"
+            ]
+            },
+            "n1": {
+            "categories": [
+                "biolink:Drug"
+            ]
+            }
+        }
+        }
+    },
+    "query_options": {
+        "n_results": 3
+    }
+}
+```
 
 ### Predicates operation
 
@@ -140,7 +163,7 @@ The API will return the list of predicted target for the given entity, the label
 # More about the data model :minidisc:
 
 * The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
-* Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) in a RDF triplestore (Ontotext GraphDB).
+* Metadata about runs, models evaluations, features are stored as RDF using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
   * See the [ML Schema documentation](http://ml-schema.github.io/documentation/ML%20Schema.html) for more details on the data model.
 
 Diagram of the data model used for OpenPredict, based on the ML Schema ontology (`mls`):

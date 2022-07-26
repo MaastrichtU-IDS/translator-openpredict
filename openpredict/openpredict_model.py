@@ -1,23 +1,35 @@
-
 import logging
-import os
-from datetime import datetime
 import numbers
+import os
 import re
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
-from sklearn import model_selection, tree, ensemble, svm, linear_model, neighbors, metrics
-from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
-from sklearn.metrics.pairwise import cosine_similarity
-from joblib import dump, load
 import pkg_resources
-from openpredict.rdf_utils import add_run_metadata, retrieve_features, add_feature_metadata, get_run_id
-# from openpredict.openpredict_utils import get_spark_context
-# from openpredict.openpredict_utils import get_spark_context
-from openpredict.openpredict_utils import get_openpredict_dir, get_entities_labels
+from gensim.models import KeyedVectors
+from joblib import dump, load
+from openpredict.rdf_utils import (
+    add_feature_metadata,
+    add_run_metadata,
+    get_run_id,
+    retrieve_features,
+)
 
+# from openpredict.utils import get_spark_context
+from openpredict.utils import get_entities_labels, get_openpredict_dir, log
+from sklearn import (
+    ensemble,
+    linear_model,
+    metrics,
+    model_selection,
+    neighbors,
+    svm,
+    tree,
+)
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
-# models_folder = 'openpredict/data/models/'
 
 hyper_params = {
     'penalty': 'l2',
@@ -26,10 +38,7 @@ hyper_params = {
     'C': 1.0,
     'random_state': 100
 }
-
 sc = None
-
-
 def get_spark_context():
     """Get Spark context, either from Spark Master URL to a Spark cluster
     If not URL is provided, then it will try to run Spark locally
@@ -81,6 +90,35 @@ def get_spark_context():
     #     config.set("spark.memory.offHeap.enabled",True)
     #     config.set("spark.memory.offHeap.size","5g")
     #     sc = SparkContext(conf=config, appName="OpenPredict")
+
+
+def load_similarity_embeddings():
+    """Load embeddings model for similarity"""
+    embedding_folder = 'data/embedding'
+    # print(pkg_resources.resource_filename('openpredict', embedding_folder))
+    similarity_embeddings = {}
+    for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
+        if model_id.endswith('txt'):
+            feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
+            print("📥 Loading similarity features from " + feature_path)
+            emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
+            similarity_embeddings[model_id]= emb_vectors
+    return similarity_embeddings
+
+
+def load_treatment_classifier(model_id):
+    """Load embeddings model for treats and treated_by"""
+    print("📥 Loading treatment classifier from joblib for model " + str(model_id))
+    return load(get_openpredict_dir('models/' + str(model_id) + '.joblib'))
+
+
+def load_treatment_embeddings(model_id):
+    """Load embeddings model for treats and treated_by"""
+    print("📥 Loading treatment features for model " + str(model_id))
+    (drug_df, disease_df) = load(get_openpredict_dir(
+        'features/' + str(model_id) + '.joblib'))
+    return (drug_df, disease_df)
+
 
 
 def adjcencydict2matrix(df, name1, name2):
@@ -665,7 +703,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
         cv_results = cv_results.append(scores, ignore_index=True)
 
     scores = cv_results.mean()
-    print("\n "+n_fold+"-fold CV - Avg Test results 🏆")
+    print("\n " + str(n_fold) + "-fold CV - Avg Test results 🏆")
     print(scores)
 
     print("\n Train the final model using all dataset")
@@ -696,13 +734,14 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     return clf, scores, hyper_params, (drug_df, disease_df)
 
 
-def query_omim_drugbank_classifier(input_curie, model_id):
+def query_omim_drugbank_classifier(input_curie, model_id, app):
     """The main function to query the drug-disease OpenPredict classifier, 
     It queries the previously generated classifier a `.joblib` file 
     in the `data/models` folder
 
     :return: Predictions and scores
     """
+    # TODO: XAI add the additional scores from SHAP here
 
     parsed_curie = re.search('(.*?):(.*)', input_curie)
     input_namespace = parsed_curie.group(1)
@@ -721,10 +760,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    print("📥 Loading features " +
-          get_openpredict_dir('features/' + model_id + '.joblib'))
-    (drug_df, disease_df) = load(get_openpredict_dir(
-        'features/' + model_id + '.joblib'))
+    (drug_df, disease_df) = app.treatment_embeddings
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename(
@@ -746,10 +782,13 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     commonDiseases = diseaseswithfeatures.intersection(
         drugDiseaseKnown.Disease.unique())
 
-    # clf = load('data/models/openpredict-baseline-omim-drugbank.joblib')
-    print("📥 Loading classifier " +
-          get_openpredict_dir('models/' + model_id + '.joblib'))
-    clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
+    clf = app.treatment_classifier
+    # if not clf:
+    #     clf = load_treatment_classifier(model_id)
+
+    # print("📥 Loading classifier " +
+    #       get_openpredict_dir('models/' + model_id + '.joblib'))
+    # clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
 
     pairs = []
     classes = []
@@ -798,6 +837,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     prediction_results = prediction_df.to_dict(orient='records')
     return prediction_results
 
+
 def get_similar_for_entity(input_curie, emb_vectors, n_results):
     print (input_curie)
     parsed_curie = re.search('(.*?):(.*)', input_curie)
@@ -811,7 +851,6 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
     else:
         disease = input_id
 
-
     #g= Graph()
     if n_results == None:
         n_results = len(emb_vectors.vocab)
@@ -824,7 +863,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
             #g.add((DRUGB[dr], BIOLINK['similar_to'],DRUGB[drug]))
             similar_entites.append((drug,en,sim))
     if  disease is not None and disease in emb_vectors:
-        similarDiseases = word_vectors.most_similar(disease,topn=n_results)
+        similarDiseases = emb_vectors.most_similar(disease,topn=n_results)
         for en,sim in similarDiseases:
             similar_entites.append((disease, en, sim))
 
@@ -844,6 +883,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
     similarity_results = similarity_df.to_dict(orient='records')
     return similarity_results
 
+
 def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_score=None, n_results=None):
     """Run classifiers to get predictions
 
@@ -853,8 +893,6 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
     :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
-    # model_id
-
     predictions_array = get_similar_for_entity(id_to_predict, emb_vectors, n_results)
 
     if min_score:
@@ -932,7 +970,10 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
     return labelled_predictions, source_target_predictions
 
 
-def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_results=None):
+def get_predictions(
+        id_to_predict, model_id, app,
+        min_score=None, max_score=None, n_results=None, 
+    ):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
@@ -943,7 +984,7 @@ def get_predictions(id_to_predict, model_id, min_score=None, max_score=None, n_r
     """
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id, app)
 
     if min_score:
         predictions_array = [

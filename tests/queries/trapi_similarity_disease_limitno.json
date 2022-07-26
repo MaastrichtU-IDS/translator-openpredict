@@ -3,23 +3,21 @@
         "query_graph": {
             "edges": {
                 "e01": {
-                    "subject": "n0",
                     "object": "n1",
-                    "predicates": ["biolink:treats"]
+                    "predicates": [ "biolink:similar_to" ],
+                    "subject": "n0"
                 }
             },
             "nodes": {
                 "n0": {
-                    "ids": ["DRUGBANK:DB00394"],
-                    "categories": ["biolink:Drug"]
+                    "categories": [ "biolink:Disease" ],
+                    "ids": [ "OMIM:246300" ]
                 },
                 "n1": {
-                    "categories": ["biolink:Disease"]
+                    "categories": [ "biolink:Disease" ]
                 }
             }
         }
     },
-    "query_options": {
-        "min_score": 0.1
-    }
+    "query_options": { "n_results": 50 }
 }

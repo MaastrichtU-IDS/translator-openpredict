@@ -1,8 +1,8 @@
 # Table of Contents
 
 * [openpredict](#.openpredict)
-* [openpredict.reasonerapi\_parser](#.openpredict.reasonerapi_parser)
-  * [typed\_results\_to\_reasonerapi](#.openpredict.reasonerapi_parser.typed_results_to_reasonerapi)
+* [openpredict.reasonerapi\_parser](#.openpredict.trapi_parser)
+  * [typed\_results\_to\_reasonerapi](#.openpredict.trapi_parser.resolve_trapi_query)
 * [openpredict.rdf\_utils](#.openpredict.rdf_utils)
   * [insert\_graph\_in\_sparql\_endpoint](#.openpredict.rdf_utils.insert_graph_in_sparql_endpoint)
   * [query\_sparql\_endpoint](#.openpredict.rdf_utils.query_sparql_endpoint)
@@ -11,10 +11,10 @@
   * [add\_run\_metadata](#.openpredict.rdf_utils.add_run_metadata)
   * [retrieve\_features](#.openpredict.rdf_utils.retrieve_features)
   * [retrieve\_models](#.openpredict.rdf_utils.retrieve_models)
-* [openpredict.openpredict\_utils](#.openpredict.openpredict_utils)
-  * [get\_openpredict\_dir](#.openpredict.openpredict_utils.get_openpredict_dir)
-  * [init\_openpredict\_dir](#.openpredict.openpredict_utils.init_openpredict_dir)
-  * [get\_entities\_labels](#.openpredict.openpredict_utils.get_entities_labels)
+* [openpredict.openpredict\_utils](#.openpredict.utils)
+  * [get\_openpredict\_dir](#.openpredict.utils.get_openpredict_dir)
+  * [init\_openpredict\_dir](#.openpredict.utils.init_openpredict_dir)
+  * [get\_entities\_labels](#.openpredict.utils.get_entities_labels)
 * [openpredict.openpredict\_api](#.openpredict.openpredict_api)
   * [start\_api](#.openpredict.openpredict_api.start_api)
   * [post\_embedding](#.openpredict.openpredict_api.post_embedding)
@@ -48,14 +48,14 @@
 <a name=".openpredict"></a>
 # openpredict
 
-<a name=".openpredict.reasonerapi_parser"></a>
+<a name=".openpredict.trapi_parser"></a>
 # openpredict.reasonerapi\_parser
 
-<a name=".openpredict.reasonerapi_parser.typed_results_to_reasonerapi"></a>
+<a name=".openpredict.trapi_parser.resolve_trapi_query"></a>
 #### typed\_results\_to\_reasonerapi
 
 ```python
-typed_results_to_reasonerapi(reasoner_query, model_id)
+resolve_trapi_query(reasoner_query, model_id)
 ```
 
 Convert an array of predictions objects to ReasonerAPI format
@@ -184,10 +184,10 @@ Get models with their scores and features
 
 JSON with models and features
 
-<a name=".openpredict.openpredict_utils"></a>
+<a name=".openpredict.utils"></a>
 # openpredict.openpredict\_utils
 
-<a name=".openpredict.openpredict_utils.get_openpredict_dir"></a>
+<a name=".openpredict.utils.get_openpredict_dir"></a>
 #### get\_openpredict\_dir
 
 ```python
@@ -197,7 +197,7 @@ get_openpredict_dir(subfolder='')
 Return the full path to the provided files in the OpenPredict data folder
 Where models and features for runs are stored
 
-<a name=".openpredict.openpredict_utils.init_openpredict_dir"></a>
+<a name=".openpredict.utils.init_openpredict_dir"></a>
 #### init\_openpredict\_dir
 
 ```python
@@ -207,7 +207,7 @@ init_openpredict_dir()
 Create OpenPredict folder and initiatite files if necessary.
 Also create baseline features in the triplestore
 
-<a name=".openpredict.openpredict_utils.get_entities_labels"></a>
+<a name=".openpredict.utils.get_entities_labels"></a>
 #### get\_entities\_labels
 
 ```python
@@ -228,7 +228,7 @@ and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalizatio
 start_api(port=8808, debug=False, start_spark=True)
 ```
 
-Start the Translator OpenPredict API using [zalando/connexion](https://github.com/zalando/connexion) and the `openapi.yml` definition
+Start the Translator OpenPredict API 
 
 **Arguments**:
 

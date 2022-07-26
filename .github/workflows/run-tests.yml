@@ -12,7 +12,7 @@ on:
 
 jobs:
 
-  tests:
+  tests-coverage:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,10 +28,17 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '11' # The JDK version to make available on the path.
+    - uses: vemonet/setup-spark@v1
+      with:
+        spark-version: '3.0.2'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest-cov reasoner-validator
+        pip install -r requirements-dev.txt
         pip install .
     - name: Check code style with flake8 (lint)
       run: |
@@ -69,36 +76,36 @@ jobs:
     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
-  tests-spark:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
-        # python-version: [3.6, 3.7, 3.8]
+  # tests-embedded-triplestore:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.8]
+  #       # python-version: [3.6, 3.7, 3.8]
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '11' # The JDK version to make available on the path.
-    - uses: vemonet/setup-spark@v1
-      with:
-        spark-version: '3.0.2'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest reasoner-validator
-        pip install .
-      # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Test with embedded triplestore
-      # env:
-      #   SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-      #   SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-      #   SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
-      #   SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
-      run: pytest tests/integration/*
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - uses: actions/setup-java@v1
+  #     with:
+  #       java-version: '11' # The JDK version to make available on the path.
+  #   - uses: vemonet/setup-spark@v1
+  #     with:
+  #       spark-version: '3.0.2'
+  #   - name: Install dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install -r requirements-dev.txt
+  #       pip install .
+  #     # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+  #   - name: Test with embedded triplestore
+  #     # env:
+  #     #   SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
+  #     #   SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
+  #     #   SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
+  #     #   SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
+  #     run: pytest tests/integration/*
 

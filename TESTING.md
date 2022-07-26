@@ -16,12 +16,12 @@ Testing of the Translator OpenPredict API is separated in 3 parts:
 
 When one of those 3 workflows fails we take action to fix the source of the problem.
 
-Requirementsm to run the tests: Python 3.6+
+Requirements to run the tests: Docker
 
-Install the required dependency if you want to run the tests locally:
+To run the test locally, you will need to first start the OpenPredict API with docker:
 
 ```bash
-pip install pytest
+docker-compose up
 ```
 
 ### Production tests
@@ -39,10 +39,10 @@ We test for an expected number of results and a few specific results.
   * Predicted drugs for a given disease
   * Predicted diseases for a given drug
 
-To run the tests of the OpenPredict production API locally:
+Run the tests of the OpenPredict production API locally:
 
 ```bash
-pytest tests/production
+docker-compose exec api pytest tests/production
 ```
 
 ### Integration tests
@@ -56,13 +56,13 @@ We test the embeddings computation with a Spark local context ([setup with a Git
 You can run the tests for the different components of OpenPredict locally:
 
 ```bash
-pytest tests/integration
+docker-compose exec api pytest tests/integration
 ```
 
 To run a specific test in a specific file, and display `print()` lines in the output:
 
 ```bash
-pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
+docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 ```
 
 ## Docker tests
@@ -76,13 +76,3 @@ At each new release we run the GitHub Action workflow `.github/workflows/publish
 [![CodeQL analysis](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml)
 
 We run an additional workflow which to check for vulnerabilities using the [CodeQL analysis engine](https://securitylab.github.com/tools/codeql).
-
-## Known issues
-
-Facing issue with `pytest` install even using virtual environments? Try this solution:
-
-```bash
-python3 -m pip install -e .
-python3 -m pip install pytest
-python3 -m pytest
-```

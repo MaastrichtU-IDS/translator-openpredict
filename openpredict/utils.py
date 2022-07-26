@@ -5,7 +5,9 @@ import requests
 import pkg_resources
 import pandas as pd
 import time
+import datetime
 from openpredict.rdf_utils import init_triplestore
+from pathlib import Path
 
 global OPENPREDICT_DATA_DIR
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
@@ -18,26 +20,34 @@ else:
 
 MISSING_IDS = set()
 
+
+def log(msg: str):
+    """Simple print with a timestamp"""
+    log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%d@%H:%M:%S")) + '] ' + msg 
+    # logging.info(log_msg)
+    print(log_msg)
+
+
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
     Where models and features for runs are stored
     """
     return OPENPREDICT_DATA_DIR + subfolder
 
+
+
 def init_openpredict_dir():
     """Create OpenPredict folder and initiate files if necessary.
     Also create baseline features in the triplestore
     """
     print('Using directory: ' + OPENPREDICT_DATA_DIR)
-    if not os.path.exists(get_openpredict_dir()):
-        print('Creating ' + get_openpredict_dir())
-        os.makedirs(get_openpredict_dir())
-    if not os.path.exists(get_openpredict_dir('features')):
-        print('Creating ' + get_openpredict_dir('features'))
-        os.makedirs(get_openpredict_dir('features'))
-    if not os.path.exists(get_openpredict_dir('models')):
-        print('Creating ' + get_openpredict_dir('models'))
-        os.makedirs(get_openpredict_dir('models'))
+    print('Creating if does not exist: ' + get_openpredict_dir())
+    Path(get_openpredict_dir()).mkdir(parents=True, exist_ok=True)
+    print('Creating if does not exist: ' + get_openpredict_dir('features'))
+    Path(get_openpredict_dir('features')).mkdir(parents=True, exist_ok=True)
+    print('Creating if does not exist: ' + get_openpredict_dir('models'))
+    Path(get_openpredict_dir('models')).mkdir(parents=True, exist_ok=True)
+
     if not os.path.exists(get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
         shutil.copy(pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
@@ -51,16 +61,17 @@ def init_openpredict_dir():
         # shutil.copy(get_openpredict_dir('initial-openpredict-metadata.ttl'), 
         shutil.copy(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), 
             get_openpredict_dir('openpredict-metadata.ttl'))
-    # 
-    attempts = 0
-    while attempts < 30:
-        try:
-            init_triplestore()
-            time.sleep(5)
-            break
-        except:
-            print('Failed to connect to the SPARQL endpoint, attempt ' + str(attempts))
-            attempts += 1
+    
+    # attempts = 0
+    # while attempts < 30:
+    #     try:
+    #         init_triplestore()
+    #         break
+    #     except Exception as e:
+    #         print(e)
+    #         print('Failed to connect to the SPARQL endpoint, attempt ' + str(attempts))
+    #         time.sleep(5)
+    #         attempts += 1
     # Check if https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank exist before iniating the triplestore
     # add_feature_metadata("GO-SIM", "GO based drug-drug similarity", "Drugs")
     # add_feature_metadata("TARGETSEQ-SIM", "Drug target sequence similarity: calculation of SmithWaterman sequence alignment scores", "Drugs")
