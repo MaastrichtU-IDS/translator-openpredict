@@ -17,7 +17,6 @@ from openpredict.rdf_utils import (
 )
 
 # from openpredict.utils import get_spark_context
-# from openpredict.utils import get_spark_context
 from openpredict.utils import get_entities_labels, get_openpredict_dir, log
 from sklearn import (
     ensemble,
@@ -31,7 +30,6 @@ from sklearn import (
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
-# models_folder = 'openpredict/data/models/'
 
 hyper_params = {
     'penalty': 'l2',
@@ -885,6 +883,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
     similarity_results = similarity_df.to_dict(orient='records')
     return similarity_results
 
+
 def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_score=None, n_results=None):
     """Run classifiers to get predictions
 
@@ -894,8 +893,6 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
     :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
-    # model_id
-
     predictions_array = get_similar_for_entity(id_to_predict, emb_vectors, n_results)
 
     if min_score:
