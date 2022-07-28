@@ -2,9 +2,14 @@ import os
 from datetime import datetime
 from typing import Dict, Optional
 
-from fastapi import Body, FastAPI, File, Request, Response, UploadFile
+from fastapi import Body, FastAPI, File, Query, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
+from pydantic import Field
+from reasoner_pydantic import Message
+from reasoner_pydantic import Query as TrapiQuery
+
+from openpredict.evidence_path import do_evidence_path
 from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
 from openpredict.openpredict_model import (
     addEmbedding,
@@ -15,7 +20,6 @@ from openpredict.openpredict_model import (
 from openpredict.rdf_utils import init_triplestore, retrieve_features, retrieve_models
 from openpredict.trapi_parser import resolve_trapi_query
 from openpredict.utils import init_openpredict_dir
-from reasoner_pydantic import Message, Query
 
 # from gensim.models import KeyedVectors
 # import asyncio
@@ -68,12 +72,12 @@ You can also try this query to retrieve similar entities to a given drug:
 }
 ```
 """,
-    response_model=Query,
+    response_model=TrapiQuery,
     tags=["reasoner"],
 )
 def post_reasoner_predict(
-        request_body: Query = Body(..., example=TRAPI_EXAMPLE)
-    ) -> Query:
+        request_body: TrapiQuery = Body(..., example=TRAPI_EXAMPLE)
+    ) -> TrapiQuery:
     """Get predicted associations for a given ReasonerAPI query.
 
     :param request_body: The ReasonerStdAPI query in JSON
@@ -330,6 +334,37 @@ def post_embedding(
         }
     else:
         return {'Forbidden': 403}
+
+
+@app.get("/evidence_path", name="Get the evidence path between two entities",
+    description="""Get the evidence path for a relation between two entities.""",
+    response_model=dict,
+    tags=["openpredict"],
+)
+def get_evidence_path(
+        drug_id: str = Query(default=..., example="DRUGBANK:DB00915"),
+        disease_id: str = Query(default=..., example="OMIM:104300"),
+        # model_id: str ='disease_hp_embed.txt', 
+        min_score: float =None, max_score: float =None, n_results: int =None
+    ) -> dict:
+    """Get similar entites for a given entity CURIE.
+
+    :param entity: Search for predicted associations for this entity CURIE
+    :return: Prediction results object with score
+    """
+    time_start = datetime.now() 
+
+    try:
+        path_json = do_evidence_path(drug_id, disease_id)
+    except Exception as e:
+        print(f'Error getting evidence path between {drug_id} and {disease_id}')
+        print(e)
+        return (f'Evidence path between {drug_id} and {disease_id} not found', 404)
+    
+    # relation = "biolink:treated_by"
+    print('EvidencePathRuntime: ' + str(datetime.now() - time_start))
+    return {'hits': path_json, 'count': len(path_json)}
+    # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
 
 @app.get("/health", include_in_schema=False)
