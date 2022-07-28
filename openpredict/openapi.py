@@ -4,13 +4,14 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from reasoner_pydantic import Message, Query
+
 from openpredict.config import settings
 from openpredict.openpredict_model import (
     load_similarity_embeddings,
     load_treatment_classifier,
     load_treatment_embeddings,
 )
-from reasoner_pydantic import Message, Query
 
 # from rdflib_endpoint import SparqlEndpoint
 
@@ -92,29 +93,30 @@ class TRAPI(FastAPI):
             tags=tags,
         )
 
-        openapi_schema["servers"] = [
-            {
-                "url": settings.PROD_URL,
-                "description": 'OpenPredict TRAPI ITRB Production Server',
-                "x-maturity": 'production'
-            },
-            {
-                "url": settings.TEST_URL,
-                "description": 'OpenPredict TRAPI ITRB Test Server',
-                "x-maturity": 'testing'
-            },
-            {
-                "url": settings.STAGING_URL,
-                "description": 'OpenPredict TRAPI ITRB CI Server',
-                "x-maturity": 'staging'
-            },
-            {
-                "url": settings.DEV_URL,
-                "description": 'OpenPredict TRAPI ITRB Development Server',
-                "x-maturity": 'development',
-                "x-location": 'IDS'
-            },
-        ]
+        if not settings.DEV_MODE:
+          openapi_schema["servers"] = [
+              {
+                  "url": settings.PROD_URL,
+                  "description": 'OpenPredict TRAPI ITRB Production Server',
+                  "x-maturity": 'production'
+              },
+              {
+                  "url": settings.TEST_URL,
+                  "description": 'OpenPredict TRAPI ITRB Test Server',
+                  "x-maturity": 'testing'
+              },
+              {
+                  "url": settings.STAGING_URL,
+                  "description": 'OpenPredict TRAPI ITRB CI Server',
+                  "x-maturity": 'staging'
+              },
+              {
+                  "url": settings.DEV_URL,
+                  "description": 'OpenPredict TRAPI ITRB Development Server',
+                  "x-maturity": 'development',
+                  "x-location": 'IDS'
+              },
+          ]
 
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',

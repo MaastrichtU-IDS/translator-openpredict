@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     BIOLINK_VERSION: str = '2.3.0'
     TRAPI_VERSION: str = "1.2.0"
 
+    DEV_MODE: bool = False
+
     # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
 
     # CONTEXT = 'https://raw.githubusercontent.com/MaastrichtU-IDS/knowledge-collaboratory/main/context.jsonld'
