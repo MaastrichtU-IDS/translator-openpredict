@@ -342,8 +342,9 @@ def post_embedding(
     tags=["openpredict"],
 )
 def get_evidence_path(
-        drug_id: str = Query(default=..., example="DRUGBANK:DB00915"),
-        disease_id: str = Query(default=..., example="OMIM:104300"),
+        drug_id: str = Query(default=..., example="DB00915"),
+        disease_id: str = Query(default=..., example="104300"),
+        top_K : int = None,
         # model_id: str ='disease_hp_embed.txt', 
         min_score: float =None, max_score: float =None, n_results: int =None
     ) -> dict:
@@ -355,7 +356,7 @@ def get_evidence_path(
     time_start = datetime.now() 
 
     try:
-        path_json = do_evidence_path(drug_id, disease_id)
+        path_json = do_evidence_path(drug_id, disease_id,top_K)
     except Exception as e:
         print(f'Error getting evidence path between {drug_id} and {disease_id}')
         print(e)
@@ -363,7 +364,7 @@ def get_evidence_path(
     
     # relation = "biolink:treated_by"
     print('EvidencePathRuntime: ' + str(datetime.now() - time_start))
-    return {'hits': path_json, 'count': len(path_json)}
+    return {"output" : path_json,'count': len(path_json)}
     # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
 
 
