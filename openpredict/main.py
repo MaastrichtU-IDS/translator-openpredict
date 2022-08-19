@@ -337,7 +337,16 @@ def post_embedding(
 
 
 @app.get("/evidence_path", name="Get the evidence path between two entities",
-    description="""Get the evidence path for a relation between two entities.""",
+    description="""Get the evidence path between two entities. The evidence path is generated using the overall similarity score by default. You could change the 
+    included features by defining the names of the features.
+    
+You can try:
+
+| drug_id: `DRUGBANK:DB00915` | disease_id: `OMIM:104300` |
+| ------- | ---- |
+| top_K = `2` | features_drug: `PPI-SIM, SE-SIM` | features_disease : `HPO-SIM` |
+| to get the top k paths | to select specific features for drugs   | to select specific features for diseases | 
+""",
     response_model=dict,
     tags=["openpredict"],
 )
@@ -345,8 +354,10 @@ def get_evidence_path(
         drug_id: str = Query(default=..., example="DB00915"),
         disease_id: str = Query(default=..., example="104300"),
         top_K : int = None,
+        features_drug : Optional[str] = None,
+        features_disease : Optional[str] = None
         # model_id: str ='disease_hp_embed.txt', 
-        min_score: float =None, max_score: float =None, n_results: int =None
+        
     ) -> dict:
     """Get similar entites for a given entity CURIE.
 
@@ -356,7 +367,17 @@ def get_evidence_path(
     time_start = datetime.now() 
 
     try:
-        path_json = do_evidence_path(drug_id, disease_id,top_K)
+        # if features_of_interest is not None: 
+        #     features_of_interest.upper()
+        #     features_of_interest = features_of_interest.split(", ")
+        #     path_json = do_evidence_path(drug_id, disease_id,top_K,features_drug, features_disease)
+        # else: 
+        if features_drug is not None : 
+            features_drug = features_drug.split(", ")
+        if features_disease is not None: 
+            features_disease = features_disease.split(", ")
+
+        path_json = do_evidence_path(drug_id, disease_id, top_K, features_drug, features_disease)
     except Exception as e:
         print(f'Error getting evidence path between {drug_id} and {disease_id}')
         print(e)

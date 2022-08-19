@@ -222,6 +222,17 @@ class SimilarityTypes(str, Enum):
     Drugs = "Drugs"
     Diseases = "Diseases"
 
+class FeatureTypes(str,Enum):
+    TC_HPO = 'TC_HPO-SIM'
+    TC_PHENO ='TC_PHENO-SIM'
+    SE_HPO = 'SE-SIM_HPO-SIM'
+    SE_PHENO = 'SE-SIM_PHENO-SIM'
+    PPI_HPO = 'PPI-SIM_HPO-SIM'
+    PPI_PHENO = 'PPI-SIM_PHENO-SIM'
+    GO_HPO = 'GO-SIM_HPO-SIM'
+    GO_PHENO = 'GO-SIM_PHENO-SIM'
+    TARGETSEQ_HPO = 'TARGETSEQ-SIM_HPO-SIM'
+    TARGETSEQ_PHENO = 'TARGETSEQ-SIM_PHENO-SIM'
 
 TRAPI_EXAMPLE = {
   "message": {

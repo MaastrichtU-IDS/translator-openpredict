@@ -27,3 +27,4 @@ data/
 .odo/odo-file-index.json
 
 .odo
+.idea/workspace.xml

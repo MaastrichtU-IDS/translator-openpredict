@@ -9,15 +9,6 @@ import pandas as pd
 import pkg_resources
 from gensim.models import KeyedVectors
 from joblib import dump, load
-from openpredict.rdf_utils import (
-    add_feature_metadata,
-    add_run_metadata,
-    get_run_id,
-    retrieve_features,
-)
-
-# from openpredict.utils import get_spark_context
-from openpredict.utils import get_entities_labels, get_openpredict_dir, log
 from sklearn import (
     ensemble,
     linear_model,
@@ -30,6 +21,15 @@ from sklearn import (
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
+from openpredict.rdf_utils import (
+    add_feature_metadata,
+    add_run_metadata,
+    get_run_id,
+    retrieve_features,
+)
+
+# from openpredict.utils import get_spark_context
+from openpredict.utils import get_entities_labels, get_openpredict_dir, log
 
 hyper_params = {
     'penalty': 'l2',
@@ -103,6 +103,7 @@ def load_similarity_embeddings():
             print("📥 Loading similarity features from " + feature_path)
             emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
             similarity_embeddings[model_id]= emb_vectors
+
     return similarity_embeddings
 
 
@@ -117,6 +118,7 @@ def load_treatment_embeddings(model_id):
     print("📥 Loading treatment features for model " + str(model_id))
     (drug_df, disease_df) = load(get_openpredict_dir(
         'features/' + str(model_id) + '.joblib'))
+    print(disease_df.columns)
     return (drug_df, disease_df)
 
 

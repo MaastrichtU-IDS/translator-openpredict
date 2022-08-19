@@ -4,11 +4,12 @@ import os
 import pkg_resources
 import pytest
 from fastapi.testclient import TestClient
+from reasoner_validator import validate
+
 from openpredict.config import settings
 from openpredict.main import app
 from openpredict.rdf_utils import init_triplestore
 from openpredict.utils import init_openpredict_dir
-from reasoner_validator import validate
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
