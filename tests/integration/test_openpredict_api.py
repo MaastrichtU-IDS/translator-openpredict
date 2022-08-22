@@ -73,7 +73,7 @@ def test_post_trapi():
             edges = response.json()['message']['knowledge_graph']['edges'].items()
             # print(response)
             print(trapi_filename)
-            assert validate(response.json()['message'], "Message", settings.TRAPI_VERSION) == None
+            assert validate(response.json()['message'], "Message", settings.TRAPI_VERSION_TEST) == None
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):
@@ -112,7 +112,7 @@ def test_trapi_empty_response():
     )
 
     print(response.json)
-    assert validate(response.json()['message'], "Message", settings.TRAPI_VERSION) == None
+    assert validate(response.json()['message'], "Message", settings.TRAPI_VERSION_TEST) == None
     assert len(response.json()['message']['results']) == 0
 
 # def test_post_embeddings():
