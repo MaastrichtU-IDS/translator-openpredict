@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional,Union
 
 from fastapi import Body, FastAPI, File, Query, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,7 +10,7 @@ from reasoner_pydantic import Message
 from reasoner_pydantic import Query as TrapiQuery
 
 from openpredict.evidence_path import do_evidence_path
-from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
+from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, FeatureTypesDiseases, FeatureTypesDrugs, SimilarityTypes
 from openpredict.openpredict_model import (
     addEmbedding,
     get_predictions,
@@ -344,8 +344,8 @@ You can try:
 
 | drug_id: `DRUGBANK:DB00915` | disease_id: `OMIM:104300` |
 | ------- | ---- |
-| top_K = `2` | features_drug: `PPI-SIM, SE-SIM` | features_disease : `HPO-SIM` |
-| to get the top k paths | to select specific features for drugs   | to select specific features for diseases | 
+| min_similarity_threshold_drugs/disease : `0.1` | features_drug: `PPI-SIM` | features_disease : `HPO-SIM` |
+| (Between 0-1) to include the drugs/diseases which have similarity below the threshold | to select a specific similarity feature for drugs   | to select a specific similarity feature for diseases | 
 """,
     response_model=dict,
     tags=["openpredict"],
@@ -353,9 +353,11 @@ You can try:
 def get_evidence_path(
         drug_id: str = Query(default=..., example="DB00915"),
         disease_id: str = Query(default=..., example="104300"),
-        top_K : int = None,
-        features_drug : Optional[str] = None,
-        features_disease : Optional[str] = None
+        min_similarity_threshold_drugs: float = 1.0,
+        min_similarity_threshold_disease : float = 1.0, 
+        features_drug: FeatureTypesDrugs = None,
+        features_disease : FeatureTypesDiseases = None
+
         # model_id: str ='disease_hp_embed.txt', 
         
     ) -> dict:
@@ -371,13 +373,14 @@ def get_evidence_path(
         #     features_of_interest.upper()
         #     features_of_interest = features_of_interest.split(", ")
         #     path_json = do_evidence_path(drug_id, disease_id,top_K,features_drug, features_disease)
-        # else: 
-        if features_drug is not None : 
-            features_drug = features_drug.split(", ")
-        if features_disease is not None: 
-            features_disease = features_disease.split(", ")
+        # else:
 
-        path_json = do_evidence_path(drug_id, disease_id, top_K, features_drug, features_disease)
+        # if features_drug is not None : 
+        #     features_drug = features_drug.split(", ")
+        # if features_disease is not None: 
+        #     features_disease = features_disease.split(", ")
+
+        path_json = do_evidence_path(drug_id, disease_id, min_similarity_threshold_drugs,min_similarity_threshold_disease, features_drug, features_disease)
     except Exception as e:
         print(f'Error getting evidence path between {drug_id} and {disease_id}')
         print(e)
