@@ -25,3 +25,9 @@ gensim==3.8.3
 requests
 # networkx==1.11
 # kgx
+shap
+matplotlib
+shap
+matplotlib
+torch
+

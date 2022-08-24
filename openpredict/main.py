@@ -8,7 +8,9 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
 from openpredict.openpredict_model import (
     addEmbedding,
-    get_predictions,
+    get_predictions, 
+    get_explanations,
+    get_drugrepositioningresults,
     get_similarities,
     load_similarity_embeddings,
 )
@@ -201,6 +203,114 @@ def get_predict(
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
+        return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
+
+    print('PredictRuntime: ' + str(datetime.now() - time_start))
+    return {'hits': prediction_json, 'count': len(prediction_json)}
+
+@app.get("/explain", name="Get calculated shap explanations for  predicted drug targets for a given disease",
+    description="""Return the predicted targets  for a given disease  with SHAP values for feature importances: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+a disease_id can be provided,
+This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
+
+You can try:
+
+| disease_id: `OMIM:246300` | 
+
+| to check the drug prediction explanations  for a disease  |
+""",
+    response_model=dict,
+    tags=["biothings"],
+)
+def get_explanation(
+        #drug_id: Optional[str] = None, 
+        disease_id: Optional[str] = 'OMIM:246300', 
+        #model_id: str ='openpredict-baseline-omim-drugbank', 
+        n_results: int = 100
+    ) -> dict:
+    """Get explanations for a given entity CURIE disease and predicted drugs.
+
+    :param entity: Get explanations associations for this entity CURIE
+    :return: Prediction results with shap values for all features  in the  ML model with score
+    """
+    time_start = datetime.now()
+    #return ('test: provide a drugid or diseaseid', 400)
+    # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
+    concept_id = ''
+    drug_id= None
+    model_id=None
+    min_score=None
+    max_score=None
+    if drug_id:
+        concept_id = drug_id
+    elif disease_id:
+        concept_id = disease_id
+    else:
+        return ('Bad request: provide a drugid or diseaseid', 400)
+
+    try:
+        
+        prediction_json, source_target_predictions = get_explanations(
+            concept_id, model_id, app, min_score, max_score, n_results
+        )
+        
+    except Exception as e:
+        print('Error processing ID ' + concept_id)
+        print(e)
+        print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+
+        return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
+
+    print('PredictRuntime: ' + str(datetime.now() - time_start))
+    return {'hits': prediction_json, 'count': len(prediction_json)}
+import sys
+@app.get("/drugrepositioning", name="Get  predicted drug targets for a given disease",
+    description="""Return the predicted targets for a given disease (such as MESHID or OMIMID), with confidence scores.
+Only disease_id can be provided, the disease_id will be ignored if drug_id is provided
+This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
+
+You can try:
+
+| disease_id: `MESH:D000544` | 
+
+| to check the drug prediction explanations  for a disease  |
+""",
+    response_model=dict,
+    tags=["biothings"],
+)
+
+def get_drugrepositioning(
+        #drug_id: Optional[str] = None, 
+        disease_id: Optional[str] = 'MESH:D000544', 
+        #model_id: str ='openpredict-baseline-omim-drugbank', 
+        n_results: int = 100
+    ) -> dict:
+    """Get drug repositioning predictions for a given entity CURIE disease  .
+
+    :param entity: Get predictions associations for this entity CURIE
+    :return: Prediction results 
+    """
+    time_start = datetime.now()
+    #return ('test: provide a drugid or diseaseid', 400)
+    # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
+    concept_id = ''
+
+    if disease_id:
+        concept_id = disease_id
+    else:
+        return ('Bad request: provide a drugid or diseaseid', 400)
+
+    try:
+        print('concept' + concept_id)
+        prediction_json, source_target_predictions = get_drugrepositioningresults(
+            concept_id , n_results
+        )
+        
+    except Exception as e:
+        print('Error processing ID ' + concept_id)
+        print(str(e) )
+        print('Error on linex {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 
     print('PredictRuntime: ' + str(datetime.now() - time_start))
