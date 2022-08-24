@@ -69,10 +69,14 @@ def getXPREDICTExplanation(datasetFile="deepdrug_repurposingpredictiondataset.cs
     drid=strx[strx.rfind(":")+1:]
     #print("DRID:"+ str( drid))
     #print("DURGLIST:"+str(deepdrug_dataset_df.loc[deepdrug_dataset_df.Drug==drid]))
-    shapx=deepdrug_dataset_df.loc[deepdrug_dataset_df.Drug==drid].iloc[0]
-    shapjson=shapx.to_json()
+    if deepdrug_dataset_df.shape[0] >0:
+        shapx=deepdrug_dataset_df.loc[deepdrug_dataset_df.Drug==drid].iloc[0] #test
+        shapjson=shapx.to_json()
+        return shapjson
+    else:
+        return pd.DataFrame() #return null DF
+        
     
-    return shapjson
 
     #return deepdrug_dataset_df.iloc[4548]['Drug']
     

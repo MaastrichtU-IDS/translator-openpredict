@@ -9,6 +9,7 @@ import torch as th
 import torch.nn.functional as fn
 import pdb
 import os
+import sys
 
 
 alz_diseaselist= ['Disease::MESH:D000544']
@@ -17,10 +18,12 @@ uterinecancerdisease=['Disease::DOID:363']
 diseaselist=uterinecancerdisease
 
 def predictDrugRepositioning(diseaseCURIElist,noofResults):
+  try:
+    #cwd = os.getcwd() + "/translator-openpredict/drugrepositioningfilesmodels"
     cwd = os.getcwd() + "/drugrepositioningfilesmodels"
     #pdb.set_trace()
     diseaselist= [diseaseCURIElist]
-    print("DISLIST:"+str(diseaselist))
+    #print("DISLIST:"+str(diseaselist))
     drug_list = []
     with open(cwd+"/infer_drug.tsv", newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile, delimiter='\t', fieldnames=['drug','ids'])
@@ -62,7 +65,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
     #pdb.set_trace()
     # Load embeddings
     pth=cwd+'/entity_embeddings.npy'
-    print("DISLIST3:"+str(pth))  
+    #print("DISLIST3:"+str(pth))  
     entity_emb = np.load(pth)
     #np.savez_compressed("entity_embeddings.npz", entity_emb=entity_emb)
     rel_emb = np.load(cwd+'/relation_embeddings.npy')
@@ -109,7 +112,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
     for i in range(topk):
         drug = int(proposed_dids[i])
         score = proposed_scores[i]
-    print("teststst")    
+      
     proposed_drugnames={}
     
     for row_val in range(topk):
@@ -128,7 +131,13 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
 
     # prediction_results=prediction_df.to_json(orient='records')
     prediction_results = prediction_df.to_dict(orient='records')
-    return prediction_results
+    
+  except Exception as e:
+     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+     
+  return prediction_results
+
+
 
 
    

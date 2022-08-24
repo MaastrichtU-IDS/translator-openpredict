@@ -257,28 +257,31 @@ def get_explanation(
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
+        print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
 import sys
 @app.get("/drugrepositioning", name="Get calculated shap explanations for  predicted drug targets for a given disease",
-    description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
-Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
+    description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (such as MESHID or OMIMID), with confidence scores.
+Only disease_id can be provided, the disease_id will be ignored if drug_id is provided
 This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
 
 You can try:
 
-| disease_id: `MESH:MESH:D000544` | 
+| disease_id: `MESH:D000544` | 
 
 | to check the drug prediction explanations  for a disease  |
 """,
     response_model=dict,
     tags=["biothings"],
 )
+
 def get_drugrepositioning(
         #drug_id: Optional[str] = None, 
-        disease_id: Optional[str] = 'OMIM:246300', 
+        disease_id: Optional[str] = 'MESH:D000544', 
         #model_id: str ='openpredict-baseline-omim-drugbank', 
         n_results: int = 100
     ) -> dict:
@@ -291,8 +294,6 @@ def get_drugrepositioning(
     #return ('test: provide a drugid or diseaseid', 400)
     # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
     concept_id = ''
-
-    
 
     if disease_id:
         concept_id = disease_id
@@ -308,11 +309,14 @@ def get_drugrepositioning(
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(str(e) )
-        print(sys.exc_info())
+        print('Error on linex {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
+
+
 
 @app.get("/similarity", name="Get similar entities",
     description="""Get similar entites for a given entity CURIE.

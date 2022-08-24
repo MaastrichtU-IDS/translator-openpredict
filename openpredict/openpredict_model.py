@@ -1334,14 +1334,14 @@ def get_drugrepositioningresults(
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
                 #print("SHAPX:"+value)
-                shaps=xp.getXPREDICTExplanation(drugId=value)
+                #SHAPDISABLE shaps=xp.getXPREDICTExplanation(drugId=value)
              
-                labelled_prediction['shap'] = shaps
+                #SHAPDISABLE labelled_prediction['shap'] = shaps
                 # Same for source_target object
                 source_target_prediction['target'] = {
                     'id': value,
                     'type': key,
-                    'shap' : shaps
+                    #SHAPDISABLE shap' : shaps
                 }
                 try:
                     if value in labels_dict and labels_dict[value]:
@@ -1368,4 +1368,5 @@ def get_drugrepositioningresults(
     
     
     return labelled_predictions,source_target_predictions
+
 
