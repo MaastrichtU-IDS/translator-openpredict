@@ -209,8 +209,8 @@ def get_predict(
     return {'hits': prediction_json, 'count': len(prediction_json)}
 
 @app.get("/explain", name="Get calculated shap explanations for  predicted drug targets for a given disease",
-    description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
-Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
+    description="""Return the predicted targets  for a given disease  with SHAP values for feature importances: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+a disease_id can be provided,
 This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
 
 You can try:
@@ -264,8 +264,8 @@ def get_explanation(
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
 import sys
-@app.get("/drugrepositioning", name="Get calculated shap explanations for  predicted drug targets for a given disease",
-    description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (such as MESHID or OMIMID), with confidence scores.
+@app.get("/drugrepositioning", name="Get  predicted drug targets for a given disease",
+    description="""Return the predicted targets for a given disease (such as MESHID or OMIMID), with confidence scores.
 Only disease_id can be provided, the disease_id will be ignored if drug_id is provided
 This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
 
@@ -285,10 +285,10 @@ def get_drugrepositioning(
         #model_id: str ='openpredict-baseline-omim-drugbank', 
         n_results: int = 100
     ) -> dict:
-    """Get explanations for a given entity CURIE disease and predicted drugs.
+    """Get drug repositioning predictions for a given entity CURIE disease  .
 
-    :param entity: Get explanations associations for this entity CURIE
-    :return: Prediction results with shap values for all features  in the  ML model with score
+    :param entity: Get predictions associations for this entity CURIE
+    :return: Prediction results 
     """
     time_start = datetime.now()
     #return ('test: provide a drugid or diseaseid', 400)
