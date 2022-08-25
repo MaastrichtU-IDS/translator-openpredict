@@ -46,7 +46,7 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-
+# A class to preload some models before starting the API
 class PreloadedModels(object):
   baseline_model_treatment: str
   treatment_embeddings = None

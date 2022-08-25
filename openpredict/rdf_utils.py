@@ -1,11 +1,11 @@
-import logging
-import uuid
 import os
-import pkg_resources
+import uuid
 from datetime import datetime
-from rdflib import Graph, Literal, RDF, URIRef, Namespace
-from rdflib.namespace import RDFS, XSD, DC, DCTERMS, VOID
-from SPARQLWrapper import SPARQLWrapper, POST, JSON
+
+import pkg_resources
+from rdflib import RDF, Graph, Literal, Namespace, URIRef
+from rdflib.namespace import DC, DCTERMS, RDFS, VOID, XSD
+from SPARQLWrapper import JSON, POST, SPARQLWrapper
 
 # Importing the data/openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')

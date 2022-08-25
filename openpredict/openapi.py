@@ -1,36 +1,15 @@
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from openpredict.config import settings
-from openpredict.openpredict_model import (
-    load_similarity_embeddings,
-    load_treatment_classifier,
-    load_treatment_embeddings,
-)
 from reasoner_pydantic import Message, Query
 
-# from rdflib_endpoint import SparqlEndpoint
 
-# from openpredict.utils import init_openpredict_dir
-# from openpredict.rdf_utils import init_triplestore
-# import logging
-# from datetime import datetime
-
-
-# class TRAPI(SparqlEndpoint):
 class TRAPI(FastAPI):
     """Translator Reasoner API - wrapper for FastAPI."""
-
-    # Embeddings and classifier are loaded here at the start of the API 
-    baseline_model_treatment: str
-    treatment_embeddings = None
-    treatment_classifier = None
-
-    baseline_model_similarity: str
-    similarity_embeddings = None
 
     required_tags = [
         {"name": "reasoner"},
@@ -43,8 +22,8 @@ class TRAPI(FastAPI):
     def __init__(
         self,
         *args,
-        baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
-        baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        # baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        # baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
         # contact: Optional[Dict[str, Any]] = None,
         **kwargs,
     ):
@@ -54,12 +33,6 @@ class TRAPI(FastAPI):
             root_path_in_servers=False,
             **kwargs,
         )
-        self.baseline_model_treatment = baseline_model_treatment
-        self.baseline_model_similarity = baseline_model_similarity
-        # Initialize embeddings features and classifiers to be used by the API
-        self.treatment_embeddings = load_treatment_embeddings(baseline_model_treatment)
-        self.treatment_classifier = load_treatment_classifier(baseline_model_treatment)
-        self.similarity_embeddings = load_similarity_embeddings()
         
         self.add_middleware(
             CORSMiddleware,
