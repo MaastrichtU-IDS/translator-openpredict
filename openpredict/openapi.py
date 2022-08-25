@@ -4,14 +4,13 @@ from typing import Any, Dict, List, Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from reasoner_pydantic import Message, Query
-
 from openpredict.config import settings
 from openpredict.openpredict_model import (
     load_similarity_embeddings,
     load_treatment_classifier,
     load_treatment_embeddings,
 )
+from reasoner_pydantic import Message, Query
 
 # from rdflib_endpoint import SparqlEndpoint
 

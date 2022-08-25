@@ -29,6 +29,7 @@ from sklearn import (
 )
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
+from openpredict.config import PreloadedModels
 
 
 hyper_params = {
@@ -760,7 +761,7 @@ def query_omim_drugbank_classifier(input_curie, model_id, app):
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    (drug_df, disease_df) = app.treatment_embeddings
+    (drug_df, disease_df) = PreloadedModels.treatment_embeddings
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename(
@@ -782,7 +783,7 @@ def query_omim_drugbank_classifier(input_curie, model_id, app):
     commonDiseases = diseaseswithfeatures.intersection(
         drugDiseaseKnown.Disease.unique())
 
-    clf = app.treatment_classifier
+    clf = PreloadedModels.treatment_classifier
     # if not clf:
     #     clf = load_treatment_classifier(model_id)
 

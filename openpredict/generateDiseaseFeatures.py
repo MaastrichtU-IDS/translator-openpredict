@@ -1,10 +1,12 @@
+import argparse
 import itertools
 import math
-import numpy as np
-import pandas as pd
-import argparse
 import os
 
+import numpy as np
+import pandas as pd
+
+# Standalone script to generate diseases features
 
 def fasta2seq(lines):
     lines = lines[lines.index('\n')+1:]

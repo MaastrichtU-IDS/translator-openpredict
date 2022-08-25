@@ -1,13 +1,14 @@
+import datetime
+import logging
 import os
 import shutil
-import logging
-import requests
-import pkg_resources
-import pandas as pd
 import time
-import datetime
-from openpredict.rdf_utils import init_triplestore
 from pathlib import Path
+
+import pandas as pd
+import pkg_resources
+import requests
+from openpredict.rdf_utils import init_triplestore
 
 global OPENPREDICT_DATA_DIR
 OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')

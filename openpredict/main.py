@@ -5,6 +5,7 @@ from typing import Dict, Optional
 from fastapi import Body, FastAPI, File, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
+from openpredict.config import PreloadedModels
 from openpredict.openapi import TRAPI, TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
 from openpredict.openpredict_model import (
     addEmbedding,
@@ -30,6 +31,17 @@ init_openpredict_dir()
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
 # debug = os.getenv('DEV_MODE', False)
+
+
+## PRELOAD models: https://github.com/tiangolo/fastapi/issues/2425
+# def create_app():
+#     MY_MODEL.load("model_path")
+#     app = FastAPI()
+#     app.include_router(my_router)
+#     return app
+# api = create_app()
+
+PreloadedModels.init()
 
 app = TRAPI(
     baseline_model_treatment='openpredict-baseline-omim-drugbank',
