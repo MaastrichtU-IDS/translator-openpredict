@@ -985,7 +985,6 @@ def get_predictions(
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
     predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id, app)
-
     if min_score:
         predictions_array = [
             p for p in predictions_array if p['score'] >= min_score]
@@ -1120,3 +1119,254 @@ def get_predictions(
     #     ],
     #     "umls": "C0212166"
     #     },
+
+
+
+
+import pandas as pd
+import numpy as np
+#import matplotlib.pyplot as plt
+from sklearn.preprocessing import normalize
+from sklearn.model_selection import train_test_split
+from subprocess import check_output
+import shap
+import sklearn
+
+
+
+def get_explanation(
+        drug_id = "DRUGBANK:DB00915", 
+        disease_id= 'OMIM:246300', 
+        model_id: str ='openpredict-baseline-omim-drugbank', 
+        min_score: float = None, max_score: float = None, n_results: int = None
+    ) -> dict:
+    """Get predicted associations for a given entity CURIE.
+
+    :param entity: Search for predicted associations for this entity CURIE
+    :return: Prediction results object with score
+    """
+    time_start = datetime.now()
+    #return ('test: provide a drugid or diseaseid', 400)
+    # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
+    concept_id = ''
+    if drug_id:
+        concept_id = drug_id
+    elif disease_id:
+        concept_id = disease_id
+    else:
+        return ('Bad request: provide a drugid or diseaseid', 400)
+
+    try:
+        
+        prediction_json, source_target_predictions = get_explanations(
+            concept_id, model_id, app, min_score, max_score, n_results
+        )
+        
+    except Exception as e:
+        print('Error processing ID ' + concept_id)
+        print(e)
+        return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
+
+    print('PredictRuntime: ' + str(datetime.now() - time_start))
+    return {'hits': prediction_json, 'count': len(prediction_json)}
+
+import shap
+import xpredictframework.xpredict as xp
+
+def get_explanations(
+        id_to_predict, model_id, app,
+        min_score=None, max_score=None, n_results=None, 
+    ):
+    """Run classifiers to get predictions
+
+    :param id_to_predict: Id of the entity to get prediction from
+    :param classifier: classifier used to get the predictions
+    :param score: score minimum of predictions
+    :param n_results: number of predictions to return
+    :return: predictions in array of JSON object
+    """
+    # classifier: Predict OMIM-DrugBank
+    # TODO: improve when we will have more classifier
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id, app)
+
+    if min_score:
+        predictions_array = [
+            p for p in predictions_array if p['score'] >= min_score]
+    if max_score:
+        predictions_array = [
+            p for p in predictions_array if p['score'] <= max_score]
+    if n_results:
+        # Predictions are already sorted from higher score to lower
+        predictions_array = predictions_array[:n_results]
+
+    # Build lists of unique node IDs to retrieve label
+    predicted_ids = set([])
+    for prediction in predictions_array:
+        for key, value in prediction.items():
+            if key != 'score':
+                predicted_ids.add(value)
+    labels_dict = get_entities_labels(predicted_ids)
+
+    # TODO: format using a model similar to BioThings:
+    # cf. at the end of this file
+
+    # Add label for each ID, and reformat the dict using source/target
+    labelled_predictions = []
+    # Second array with source and target info for the reasoner query resolution
+    source_target_predictions = []
+    for prediction in predictions_array:
+        labelled_prediction = {}
+        source_target_prediction = {}
+        for key, value in prediction.items():
+            if key == 'score':
+                labelled_prediction['score'] = value
+                source_target_prediction['score'] = value
+            elif value == id_to_predict:
+                # Only for the source_target_prediction object
+                #print("SHAPDisease:"+value)
+                # for finding disease explanalations: shaps=str(xp.getXPREDICTExplanation(drugId=value))
+                source_target_prediction['source'] = {
+                    'id': id_to_predict,
+                    'type': key
+                }
+                try:
+                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
+                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
+                except:
+                    print('No label found for ' + value)
+            else:
+                labelled_prediction['id'] = value
+                labelled_prediction['type'] = key
+                #print("SHAPX:"+value)
+                shaps=xp.getXPREDICTExplanation(drugId=value)
+             
+                labelled_prediction['shap'] = shaps
+                # Same for source_target object
+                source_target_prediction['target'] = {
+                    'id': value,
+                    'type': key,
+                    'shap' : shaps
+                }
+                try:
+                    if value in labels_dict and labels_dict[value]:
+                        labelled_prediction['label'] = labels_dict[value]['id']['label']
+                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+                except:
+                    print('No label found for ' + value)
+                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
+                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
+                #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+
+        labelled_predictions.append(labelled_prediction)
+        source_target_predictions.append(source_target_prediction)
+        # returns
+        # { score: 12,
+        #  source: {
+        #      id: DB0001
+        #      type: drug,
+        #      label: a drug
+        #  },
+        #  target { .... }}
+    #print(source_target_predictions)
+    #print(labelled_predictions)
+    
+    
+    return labelled_predictions,source_target_predictions
+
+
+
+import drugrepositioningfilesmodels.drugrepositioningpredict as drp
+def get_drugrepositioningresults(
+        diseaseCURIElist, n_results=100, 
+    ):
+    """Run classifiers to get predictions
+
+    :param score: score minimum of predictions
+    :param n_results: number of predictions to return
+    :return: predictions in array of JSON object
+    """
+    # classifier: Predict OMIM-DrugBank
+    # TODO: improve when we will have more classifier
+    id_to_predict=diseaseCURIElist
+    predictions_array = drp.predictDrugRepositioning(diseaseCURIElist,n_results)
+    print(predictions_array)
+   
+    if n_results:
+        # Predictions are already sorted from higher score to lower
+        predictions_df = predictions_array[:n_results]
+    predictions_df    
+    # Build lists of unique node IDs to retrieve label
+    predicted_ids = set([])
+    for prediction in predictions_array:
+        for key, value in prediction.items():
+            if key != 'score':
+                predicted_ids.add(value)
+    labels_dict = get_entities_labels(predicted_ids)
+
+    # TODO: format using a model similar to BioThings:
+    # cf. at the end of this file
+
+    # Add label for each ID, and reformat the dict using source/target
+    labelled_predictions = []
+    # Second array with source and target info for the reasoner query resolution
+    source_target_predictions = []
+    for prediction in predictions_array:
+        labelled_prediction = {}
+        source_target_prediction = {}
+        for key, value in prediction.items():
+            if key == 'score':
+                labelled_prediction['score'] = value
+                source_target_prediction['score'] = value
+            elif value == id_to_predict:
+                # Only for the source_target_prediction object
+                #print("SHAPDisease:"+value)
+                # for finding disease explanalations: shaps=str(xp.getXPREDICTExplanation(drugId=value))
+                source_target_prediction['source'] = {
+                    'id': id_to_predict,
+                    'type': key
+                }
+                try:
+                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
+                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
+                except:
+                    print('No label found for ' + value)
+            else:
+                labelled_prediction['id'] = value
+                labelled_prediction['type'] = key
+                #print("SHAPX:"+value)
+                #SHAPDISABLE shaps=xp.getXPREDICTExplanation(drugId=value)
+             
+                #SHAPDISABLE labelled_prediction['shap'] = shaps
+                # Same for source_target object
+                source_target_prediction['target'] = {
+                    'id': value,
+                    'type': key,
+                    #SHAPDISABLE shap' : shaps
+                }
+                try:
+                    if value in labels_dict and labels_dict[value]:
+                        labelled_prediction['label'] = labels_dict[value]['id']['label']
+                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+                except:
+                    print('No label found for ' + value)
+                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
+                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
+                #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
+
+        labelled_predictions.append(labelled_prediction)
+        source_target_predictions.append(source_target_prediction)
+        # returns
+        # { score: 12,
+        #  source: {
+        #      id: DB0001
+        #      type: drug,
+        #      label: a drug
+        #  },
+        #  target { .... }}
+    #print(source_target_predictions)
+    #print(labelled_predictions)
+    
+    
+    return labelled_predictions,source_target_predictions
+
+
