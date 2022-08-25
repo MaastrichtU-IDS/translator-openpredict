@@ -3,20 +3,14 @@ import uuid
 from datetime import datetime
 
 import pkg_resources
+from openpredict.config import settings
 from rdflib import RDF, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import DC, DCTERMS, RDFS, VOID, XSD
 from SPARQLWrapper import JSON, POST, SPARQLWrapper
 
-# Importing the data/openpredict-metadata.ttl RDF file to be used instead of a triplestore in dev
-OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
-if not OPENPREDICT_DATA_DIR:
-    # Data folder in current dir if not provided via environment variable
-    OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
-else:
-    if not OPENPREDICT_DATA_DIR.endswith('/'):
-        OPENPREDICT_DATA_DIR += '/'
-
-RDF_DATA_PATH = OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
+if not settings.OPENPREDICT_DATA_DIR.endswith('/'):
+    settings.OPENPREDICT_DATA_DIR += '/'
+RDF_DATA_PATH = settings.OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
 
 
 OPENPREDICT_GRAPH = 'https://w3id.org/openpredict/graph'

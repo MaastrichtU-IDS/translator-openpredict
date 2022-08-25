@@ -8,16 +8,7 @@ from pathlib import Path
 import pandas as pd
 import pkg_resources
 import requests
-from openpredict.rdf_utils import init_triplestore
-
-global OPENPREDICT_DATA_DIR
-OPENPREDICT_DATA_DIR = os.getenv('OPENPREDICT_DATA_DIR')
-if not OPENPREDICT_DATA_DIR:
-    # Use data folder in current dir if not provided via environment variable
-    OPENPREDICT_DATA_DIR = os.getcwd() + '/data/'
-else:
-    if not OPENPREDICT_DATA_DIR.endswith('/'):
-        OPENPREDICT_DATA_DIR += '/'
+from openpredict.config import settings
 
 MISSING_IDS = set()
 
@@ -33,7 +24,9 @@ def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
     Where models and features for runs are stored
     """
-    return OPENPREDICT_DATA_DIR + subfolder
+    if not settings.OPENPREDICT_DATA_DIR.endswith('/'):
+        settings.OPENPREDICT_DATA_DIR += '/'
+    return settings.OPENPREDICT_DATA_DIR + subfolder
 
 
 
@@ -41,7 +34,7 @@ def init_openpredict_dir():
     """Create OpenPredict folder and initiate files if necessary.
     Also create baseline features in the triplestore
     """
-    print('Using directory: ' + OPENPREDICT_DATA_DIR)
+    print('Using directory: ' + settings.OPENPREDICT_DATA_DIR)
     print('Creating if does not exist: ' + get_openpredict_dir())
     Path(get_openpredict_dir()).mkdir(parents=True, exist_ok=True)
     print('Creating if does not exist: ' + get_openpredict_dir('features'))
