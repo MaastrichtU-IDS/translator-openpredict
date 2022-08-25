@@ -58,6 +58,7 @@ def test_get_similarity_disease():
 
 def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
+    print(f'Testing for TRAPI version {settings.TRAPI_VERSION_TEST} 🏷️')
     url = '/query'
     for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
         with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:

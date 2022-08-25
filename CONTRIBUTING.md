@@ -198,7 +198,21 @@ find docs/README-pydoc.md -type f -exec sed -i "s/# Table of Contents/# OpenPred
 
 Get the latest TRAPI YAML: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/TranslatorReasonerAPI.yaml
 
-1. Update description of the service
-2. Add additional calls exclusive to OpenPredict
-3. Add `operationId` for each call
-4. In `components:` add `schemas: QueryOptions` 
+For the OpenAPI specifications:
+
+1. Change the `TRAPI_VERSION_TEST` in `openpredict/config.py`
+2. If need to add additional calls exclusive to OpenPredict: add `operationId` for each call, and in `components:` add `schemas: QueryOptions` 
+
+For the reasoner_validator tests:
+
+1. Change `TRAPI_VERSION_TEST` in `openpredict/config.py`
+
+2. In `requirements.txt` upgrade the version for the [reasoner-validator](https://pypi.org/project/reasoner-validator/)
+
+3. Rebuild OpenPredict and restart the tests:
+
+```bash
+docker-compose up --build
+docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
+```
+
