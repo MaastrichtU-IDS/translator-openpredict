@@ -2,7 +2,7 @@ import re
 
 import requests
 from openpredict.config import PreloadedModels, settings
-from openpredict.openpredict_model import get_predictions, get_similarities
+from openpredict.openpredict_model import get_predictions, get_similarities , get_drugrepositioning_results,get_explanations
 
 
 def is_accepted_id(id_to_check):
