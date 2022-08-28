@@ -1,7 +1,7 @@
 
 echo `pwd` > pwdfile.txt
 #download kg predict drugrepurposing files
-wget purl.org/kgpredict -O kgpredictfiles.tar.gz
+wget -q --show-progress purl.org/kgpredict -O kgpredictfiles.tar.gz
 #extract kgpredict files
 
 tar -xzvf kgpredictfiles.tar.gz  -C ./openpredict/data/kgpredict/
