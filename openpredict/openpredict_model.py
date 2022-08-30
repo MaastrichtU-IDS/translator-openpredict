@@ -1222,6 +1222,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
     # Add namespace to get CURIEs from IDs
     prediction_df["drug"] = "DRUGBANK:" + prediction_df["drug"]
     prediction_df["disease"] =  prediction_df["disease"]
+    
 
     # prediction_results=prediction_df.to_json(orient='records')
     prediction_results = prediction_df.to_dict(orient='records')

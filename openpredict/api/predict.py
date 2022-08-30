@@ -60,8 +60,8 @@ def get_predict(
 
 
 
-@app.get("/drugrepositioning", name="Get  predicted drug targets for a given disease",
-    description="""Return the predicted targets for a given disease (such as MESHID or OMIMID), with confidence scores.
+@app.get("/drugrepositioning", name="Get  predicted drugs for a given disease",
+    description="""Return the predicted drugs for a given disease (such as MESHID or OMIMID), with confidence scores.
 Only disease_id can be provided, the disease_id will be ignored if drug_id is provided
 This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
 
@@ -168,8 +168,8 @@ def get_similarity(
 
 
 
-@app.get("/explain", name="Get calculated shap explanations for  predicted drug targets for a given disease",
-    description="""Return the predicted targets  for a given disease  with SHAP values for feature importances: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+@app.get("/explain", name="Get calculated shap explanations for  predicted drug for a given disease",
+    description="""Return the explanations for predicted entities  for a given disease  with SHAP values for feature importances: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
 a disease_id can be provided,
 This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
 
