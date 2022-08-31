@@ -23,5 +23,8 @@ SPARQLWrapper>=2.0.0,<3.0.0
 networkx
 gensim==3.8.3
 requests
+shap
+matplotlib
+torch
 # networkx==1.11
 # kgx

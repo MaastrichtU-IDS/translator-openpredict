@@ -31,9 +31,8 @@ def get_openpredict_dir(subfolder=''):
 
 
 def init_openpredict_dir():
-    """Create OpenPredict folder and initiate files if necessary.
-    Also create baseline features in the triplestore
-    """
+    """Create OpenPredict folder and initiate files if necessary."""
+
     print('Using directory: ' + settings.OPENPREDICT_DATA_DIR)
     print('Creating if does not exist: ' + get_openpredict_dir())
     Path(get_openpredict_dir()).mkdir(parents=True, exist_ok=True)
@@ -41,6 +40,10 @@ def init_openpredict_dir():
     Path(get_openpredict_dir('features')).mkdir(parents=True, exist_ok=True)
     print('Creating if does not exist: ' + get_openpredict_dir('models'))
     Path(get_openpredict_dir('models')).mkdir(parents=True, exist_ok=True)
+    print('Creating if does not exist: ' + get_openpredict_dir('kgpredict'))
+    Path(get_openpredict_dir('kgpredict')).mkdir(parents=True, exist_ok=True)
+    print('Creating if does not exist: ' + get_openpredict_dir('xpredict'))
+    Path(get_openpredict_dir('xpredict')).mkdir(parents=True, exist_ok=True)
 
     if not os.path.exists(get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
@@ -55,6 +58,43 @@ def init_openpredict_dir():
         # shutil.copy(get_openpredict_dir('initial-openpredict-metadata.ttl'), 
         shutil.copy(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), 
             get_openpredict_dir('openpredict-metadata.ttl'))
+
+
+    if not os.path.exists(get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv')):
+        print('Initiating ' + get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv'))
+        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/kgpredict/kgpredict_drug_diseasemappings.tsv'), 
+            get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv'))
+
+    if not os.path.exists(get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv')):
+        print('Initiating ' + get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv'))
+        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/xpredict/deepdrug_repurposingpredictiondataset.csv'),
+            get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv'))
+
+    if not os.path.exists(get_openpredict_dir('kgpredict/embed/entity_embeddings.npy')):
+        print(f"📥️ Downloading Drug Repurposing KG embeddings in {get_openpredict_dir('kgpredict/embed')}")
+        os.system('wget -q --show-progress purl.org/kgpredict -O /tmp/kgpredictfiles.tar.gz')
+        os.system(f"tar -xzvf /tmp/kgpredictfiles.tar.gz  -C {get_openpredict_dir('kgpredict')}")
+        os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_entity.npy'), get_openpredict_dir('kgpredict/embed/entity_embeddings.npy'))
+        os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_relation.npy'), get_openpredict_dir('kgpredict/embed/relation_embeddings.npy'))
+
+        # shutil.copy(pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
+        #     get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
+
+    print('✅ OpenPredict data initialized')
+
+# echo `pwd` > pwdfile.txt
+# #download kg predict drugrepurposing files
+# wget -q --show-progress purl.org/kgpredict -O kgpredictfiles.tar.gz
+# #extract kgpredict files
+
+# tar -xzvf kgpredictfiles.tar.gz  -C ./openpredict/data/kgpredict/
+# rm kgpredictfiles.tar.gz
+
+# mv ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_entity.npy ./openpredict/data/kgpredict/embed/entity_embeddings.npy
+# mv ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_relation.npy ./openpredict/data/kgpredict/embed/relation_embeddings.npy
+
+
+
     
     # attempts = 0
     # while attempts < 30:
