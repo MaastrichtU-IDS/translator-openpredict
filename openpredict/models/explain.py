@@ -67,10 +67,22 @@ def getXPREDICTExplanation(shap_values,drugId="000"):
         
         shapx=shap_values[ishap]
         #print("ISHAP:"+str("Shapley Values:"+str(shapx)))
-        shapjson=json.dumps(str(shapx))
-        #shapjson=str(shapx)
-        #shapjson=shapx.to_json()
-        return shapjson
+        # print(f"shapex type: {type(shapx)}")
+
+        shapx_list = []
+        feature_list = ["TC_HPO-SIM", "TC_PHENO-SIM", "SE-SIM_HPO-SIM", "SE-SIM_PHENO-SIM", "PPI-SIM_HPO-SIM", "PPI-SIM_PHENO-SIM", "HPO-SIM", "PHENO-SIM", "GO-SIM_HPO-SIM", "GO-SIM_PHENO-SIM", "TARGETSEQ-SIM_HPO-SIM", "TARGETSEQ-SIM_PHENO-SIM"]
+        i = 0
+        for sh in shapx:
+            shapx_list.append({
+                'feature': feature_list[i],
+                'values': sh.values,
+                'base_values': sh.base_values,
+                'data': sh.data,
+            })
+            i += 1
+
+        # return str(shapx)
+        return shapx_list
     
     else:
         print("test ravel3")
