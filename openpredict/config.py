@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     STAGING_URL: str = 'https://openpredict.ci.transltr.io'
     DEV_URL: str = 'https://openpredict.semanticscience.org'
 
+    VIRTUAL_HOST: str
+
     BIOLINK_VERSION: str = '2.3.0'
     TRAPI_VERSION: str = "1.3.0"
     TRAPI_VERSION_TEST: str = "1.2.0"

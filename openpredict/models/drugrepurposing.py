@@ -70,8 +70,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         entity_emb = np.load(pth)
         #np.savez_compressed("entity_embeddings.npz", entity_emb=entity_emb)
         rel_emb = np.load(EMBPATH+'relation_embeddings.npy')
-
-            
+ 
         drug_ids = th.tensor(drug_ids).long()
         disease_ids = th.tensor(disease_ids).long()
         treatment_rid = th.tensor(treatment_rid)
@@ -79,7 +78,6 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         drug_emb = th.tensor(entity_emb[drug_ids])
         treatment_embs = [th.tensor(rel_emb[rid]) for rid in treatment_rid]
 
-        
         gamma=12.0
         def getEmbedding(head, rel, tail):
             score = head + rel - tail
@@ -130,7 +128,6 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         prediction_df["drug"] = "DRUGBANK:" + prediction_df["drug"]
         prediction_df["disease"] =  prediction_df["disease"]
         
-
         # prediction_results=prediction_df.to_json(orient='records')
         prediction_results = prediction_df.to_dict(orient='records')
         return prediction_results

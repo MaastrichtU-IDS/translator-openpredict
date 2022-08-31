@@ -11,7 +11,8 @@ services:
       - 8808:8808
       - 8000:8000
     volumes:
-      - ./data:/data/openpredict
+      # - ./data:/data/openpredict
+      - /data/openpredict:/data/openpredict
       - ./openpredict:/app/openpredict
       - ./tests:/app/tests
     environment:

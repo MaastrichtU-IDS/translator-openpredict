@@ -70,7 +70,10 @@ def getXPREDICTExplanation(shap_values,drugId="000"):
         # print(f"shapex type: {type(shapx)}")
 
         shapx_list = []
-        feature_list = ["TC_HPO-SIM", "TC_PHENO-SIM", "SE-SIM_HPO-SIM", "SE-SIM_PHENO-SIM", "PPI-SIM_HPO-SIM", "PPI-SIM_PHENO-SIM", "HPO-SIM", "PHENO-SIM", "GO-SIM_HPO-SIM", "GO-SIM_PHENO-SIM", "TARGETSEQ-SIM_HPO-SIM", "TARGETSEQ-SIM_PHENO-SIM"]
+        feature_list = [
+            "TC_HPO-SIM", "TC_PHENO-SIM", "SE-SIM_HPO-SIM", "SE-SIM_PHENO-SIM", "PPI-SIM_HPO-SIM", "PPI-SIM_PHENO-SIM",
+            "HPO-SIM", "PHENO-SIM", "GO-SIM_HPO-SIM", "GO-SIM_PHENO-SIM", "TARGETSEQ-SIM_HPO-SIM", "TARGETSEQ-SIM_PHENO-SIM"
+        ]
         i = 0
         for sh in shapx:
             shapx_list.append({
