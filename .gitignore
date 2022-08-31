@@ -22,7 +22,7 @@ docs/walks/
 docs/neurodkg_embedding.csv
 docs/neurodkg_embedding.json
 
-data/
+/data/
 
 .odo/odo-file-index.json
 

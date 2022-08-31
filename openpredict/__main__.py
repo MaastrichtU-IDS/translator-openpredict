@@ -1,12 +1,12 @@
-import click
 import logging
 import sys
-import uvicorn
 
-# from openpredict.openpredict_api import start_api as start_openpredict_api
-from openpredict.openpredict_model import train_model as train_openpredict_model
-from openpredict.rdf_utils import add_run_metadata, retrieve_features
+import click
+import uvicorn
 from openpredict.main import app
+from openpredict.models.openpredict_model import train_model as train_openpredict_model
+from openpredict.rdf_utils import add_run_metadata, retrieve_features
+
 
 @click.command()
 @click.option(

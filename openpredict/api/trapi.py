@@ -60,8 +60,6 @@ def post_reasoner_predict(
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-
-    # reasonerapi_response = resolve_trapi_query(request_body.dict(exclude_none=True), app=app)
     reasonerapi_response = resolve_trapi_query(request_body.dict(exclude_none=True))
 
     return JSONResponse(reasonerapi_response) or ('Not found', 404)

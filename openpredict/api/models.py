@@ -1,8 +1,8 @@
 import os
 
 from fastapi import APIRouter, File, UploadFile
+from openpredict.models.openpredict_model import addEmbedding
 from openpredict.openapi import EmbeddingTypes
-from openpredict.openpredict_model import addEmbedding
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 
 app = APIRouter()

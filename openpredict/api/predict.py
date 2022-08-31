@@ -3,11 +3,12 @@ from typing import Optional
 
 from fastapi import APIRouter
 from openpredict.config import PreloadedModels
+from openpredict.models.drugrepurposing import get_drugrepositioning_results
+from openpredict.models.explain import get_explanations
+from openpredict.models.openpredict_model import get_predictions, get_similarities
 from openpredict.openapi import SimilarityTypes
-from openpredict.openpredict_model import get_predictions , get_similarities , get_drugrepositioning_results, get_explanations
 
 app = APIRouter()
-
 
 
 @app.get("/predict", name="Get predicted targets for a given entity",
@@ -72,7 +73,7 @@ You can try:
 | to check the drug prediction explanations  for a disease  |
 """,
     response_model=dict,
-    tags=["biothings"],
+    tags=["openpredict"],
 )
 
 def get_drugrepositioning(
@@ -180,7 +181,7 @@ You can try:
 | to check the drug prediction explanations  for a disease  |
 """,
     response_model=dict,
-    tags=["biothings"],
+    tags=["openpredict"],
 )
 def get_explanation(
         #drug_id: Optional[str] = None, 

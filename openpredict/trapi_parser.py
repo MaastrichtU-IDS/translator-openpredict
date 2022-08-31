@@ -2,7 +2,11 @@ import re
 
 import requests
 from openpredict.config import PreloadedModels, settings
-from openpredict.openpredict_model import get_predictions, get_similarities , get_drugrepositioning_results,get_explanations
+from openpredict.models.openpredict_model import get_predictions, get_similarities
+
+# TODO: add explain and DRKG to TRAPI
+# from openpredict.models.drugrepurposing import get_drugrepositioning_results
+# from openpredict.models.explain import get_explanations
 
 
 def is_accepted_id(id_to_check):
