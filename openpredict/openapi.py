@@ -7,7 +7,6 @@ from fastapi.openapi.utils import get_openapi
 from openpredict.config import settings
 from reasoner_pydantic import Message, Query
 
-
 unordered_servers_list = [
     {
         "url": settings.PROD_URL,
@@ -91,16 +90,19 @@ class TRAPI(FastAPI):
         )
 
         if not settings.DEV_MODE:
-          servers_list = []
-          # Add the current server as 1st server in the list
-          for server in unordered_servers_list:
-            if settings.VIRTUAL_HOST in server.url:
-              servers_list.append(server)
-              break
-          # Add other servers
-          for server in servers_list:
-            if not settings.VIRTUAL_HOST in server.url:
-              servers_list.append(server)
+          if settings.VIRTUAL_HOST:
+            servers_list = []
+            # Add the current server as 1st server in the list
+            for server in unordered_servers_list:
+              if settings.VIRTUAL_HOST in server.url:
+                servers_list.append(server)
+                break
+            # Add other servers
+            for server in servers_list:
+              if not settings.VIRTUAL_HOST in server.url:
+                servers_list.append(server)
+          else:
+            servers_list = unordered_servers_list
 
           openapi_schema["servers"] = servers_list
 
