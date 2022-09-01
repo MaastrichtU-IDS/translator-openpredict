@@ -25,25 +25,25 @@
   * [post\_reasoner\_predict](#.openpredict.openpredict_api.post_reasoner_predict)
 * [openpredict.\_\_main\_\_](#.openpredict.__main__)
   * [main](#.openpredict.__main__.main)
-* [openpredict.openpredict\_model](#.openpredict.openpredict_model)
-  * [get\_spark\_context](#.openpredict.openpredict_model.get_spark_context)
-  * [adjcencydict2matrix](#.openpredict.openpredict_model.adjcencydict2matrix)
-  * [addEmbedding](#.openpredict.openpredict_model.addEmbedding)
-  * [mergeFeatureMatrix](#.openpredict.openpredict_model.mergeFeatureMatrix)
-  * [generatePairs](#.openpredict.openpredict_model.generatePairs)
-  * [balance\_data](#.openpredict.openpredict_model.balance_data)
-  * [geometricMean](#.openpredict.openpredict_model.geometricMean)
-  * [createFeatureArray](#.openpredict.openpredict_model.createFeatureArray)
-  * [sparkBuildFeatures](#.openpredict.openpredict_model.sparkBuildFeatures)
-  * [createFeatureDF](#.openpredict.openpredict_model.createFeatureDF)
-  * [calculateCombinedSimilarity](#.openpredict.openpredict_model.calculateCombinedSimilarity)
-  * [train\_classifier](#.openpredict.openpredict_model.train_classifier)
-  * [multimetric\_score](#.openpredict.openpredict_model.multimetric_score)
-  * [evaluate](#.openpredict.openpredict_model.evaluate)
-  * [createFeaturesSparkOrDF](#.openpredict.openpredict_model.createFeaturesSparkOrDF)
-  * [train\_model](#.openpredict.openpredict_model.train_model)
-  * [query\_omim\_drugbank\_classifier](#.openpredict.openpredict_model.query_omim_drugbank_classifier)
-  * [get\_predictions](#.openpredict.openpredict_model.get_predictions)
+* [openpredict.openpredict\_model](#.openpredict.models.openpredict_model)
+  * [get\_spark\_context](#.openpredict.models.openpredict_model.get_spark_context)
+  * [adjcencydict2matrix](#.openpredict.models.openpredict_model.adjcencydict2matrix)
+  * [addEmbedding](#.openpredict.models.openpredict_model.addEmbedding)
+  * [mergeFeatureMatrix](#.openpredict.models.openpredict_model.mergeFeatureMatrix)
+  * [generatePairs](#.openpredict.models.openpredict_model.generatePairs)
+  * [balance\_data](#.openpredict.models.openpredict_model.balance_data)
+  * [geometricMean](#.openpredict.models.openpredict_model.geometricMean)
+  * [createFeatureArray](#.openpredict.models.openpredict_model.createFeatureArray)
+  * [sparkBuildFeatures](#.openpredict.models.openpredict_model.sparkBuildFeatures)
+  * [createFeatureDF](#.openpredict.models.openpredict_model.createFeatureDF)
+  * [calculateCombinedSimilarity](#.openpredict.models.openpredict_model.calculateCombinedSimilarity)
+  * [train\_classifier](#.openpredict.models.openpredict_model.train_classifier)
+  * [multimetric\_score](#.openpredict.models.openpredict_model.multimetric_score)
+  * [evaluate](#.openpredict.models.openpredict_model.evaluate)
+  * [createFeaturesSparkOrDF](#.openpredict.models.openpredict_model.createFeaturesSparkOrDF)
+  * [train\_model](#.openpredict.models.openpredict_model.train_model)
+  * [query\_omim\_drugbank\_classifier](#.openpredict.models.openpredict_model.query_omim_drugbank_classifier)
+  * [get\_predictions](#.openpredict.models.openpredict_model.get_predictions)
 
 <a name=".openpredict"></a>
 # openpredict
@@ -332,10 +332,10 @@ main(args=None)
 
 Command Line Interface to run OpenPredict
 
-<a name=".openpredict.openpredict_model"></a>
+<a name=".openpredict.models.openpredict_model"></a>
 # openpredict.openpredict\_model
 
-<a name=".openpredict.openpredict_model.get_spark_context"></a>
+<a name=".openpredict.models.openpredict_model.get_spark_context"></a>
 #### get\_spark\_context
 
 ```python
@@ -349,7 +349,7 @@ If not URL is provided, then it will try to run Spark locally
 
 Spark context
 
-<a name=".openpredict.openpredict_model.adjcencydict2matrix"></a>
+<a name=".openpredict.models.openpredict_model.adjcencydict2matrix"></a>
 #### adjcencydict2matrix
 
 ```python
@@ -364,7 +364,7 @@ Convert dict to matrix
 - `name1`: index name
 - `name2`: columns name
 
-<a name=".openpredict.openpredict_model.addEmbedding"></a>
+<a name=".openpredict.models.openpredict_model.addEmbedding"></a>
 #### addEmbedding
 
 ```python
@@ -380,7 +380,7 @@ Add embedding to the drug similarity matrix dataframe
 - `types`: types in the embedding vector ['Drugs', 'Diseases', 'Both']
 - `description`: description of the embedding provenance
 
-<a name=".openpredict.openpredict_model.mergeFeatureMatrix"></a>
+<a name=".openpredict.models.openpredict_model.mergeFeatureMatrix"></a>
 #### mergeFeatureMatrix
 
 ```python
@@ -394,7 +394,7 @@ Merge the drug and disease feature matrix
 - `drugfeatfiles`: Drug features files list
 - `diseasefeatfiles`: Disease features files list
 
-<a name=".openpredict.openpredict_model.generatePairs"></a>
+<a name=".openpredict.models.openpredict_model.generatePairs"></a>
 #### generatePairs
 
 ```python
@@ -410,7 +410,7 @@ the Disease dataframe and known drug-disease associations dataframe
 - `disease_df`: Disease dataframe
 - `drugDiseaseKnown`: Known drug-disease association dataframe
 
-<a name=".openpredict.openpredict_model.balance_data"></a>
+<a name=".openpredict.models.openpredict_model.balance_data"></a>
 #### balance\_data
 
 ```python
@@ -425,7 +425,7 @@ Balance negative and positives samples
 - `classes`: Classes corresponding to the pairs
 - `n_proportion`: Proportion number, e.g. 2
 
-<a name=".openpredict.openpredict_model.geometricMean"></a>
+<a name=".openpredict.models.openpredict_model.geometricMean"></a>
 #### geometricMean
 
 ```python
@@ -442,7 +442,7 @@ Compute the geometric means of a drug-disease association using previously gener
 - `drugDF`: Drug dataframe
 - `diseaseDF`: Disease dataframe
 
-<a name=".openpredict.openpredict_model.createFeatureArray"></a>
+<a name=".openpredict.models.openpredict_model.createFeatureArray"></a>
 #### createFeatureArray
 
 ```python
@@ -463,7 +463,7 @@ Create the features dataframes for Spark.
 
 The features dataframe
 
-<a name=".openpredict.openpredict_model.sparkBuildFeatures"></a>
+<a name=".openpredict.models.openpredict_model.sparkBuildFeatures"></a>
 #### sparkBuildFeatures
 
 ```python
@@ -485,7 +485,7 @@ Create the feature matrix for Spark.
 
 The features dataframe
 
-<a name=".openpredict.openpredict_model.createFeatureDF"></a>
+<a name=".openpredict.models.openpredict_model.createFeatureDF"></a>
 #### createFeatureDF
 
 ```python
@@ -506,7 +506,7 @@ Create the features dataframes.
 
 The features dataframe
 
-<a name=".openpredict.openpredict_model.calculateCombinedSimilarity"></a>
+<a name=".openpredict.models.openpredict_model.calculateCombinedSimilarity"></a>
 #### calculateCombinedSimilarity
 
 ```python
@@ -525,7 +525,7 @@ Compute combined similarities. Use Spark if available for speed, otherwise use p
 - `disease_df`: Disease dataframe
 - `knownDrugDisease`: Known drug-disease associations
 
-<a name=".openpredict.openpredict_model.train_classifier"></a>
+<a name=".openpredict.models.openpredict_model.train_classifier"></a>
 #### train\_classifier
 
 ```python
@@ -539,7 +539,7 @@ Train classifier
 - `train_df`: Train dataframe
 - `clf`: Classifier
 
-<a name=".openpredict.openpredict_model.multimetric_score"></a>
+<a name=".openpredict.models.openpredict_model.multimetric_score"></a>
 #### multimetric\_score
 
 ```python
@@ -559,7 +559,7 @@ Return a dict of score for multimetric scoring
 
 Multimetric scores
 
-<a name=".openpredict.openpredict_model.evaluate"></a>
+<a name=".openpredict.models.openpredict_model.evaluate"></a>
 #### evaluate
 
 ```python
@@ -577,7 +577,7 @@ Evaluate the trained classifier
 
 Scores
 
-<a name=".openpredict.openpredict_model.createFeaturesSparkOrDF"></a>
+<a name=".openpredict.models.openpredict_model.createFeaturesSparkOrDF"></a>
 #### createFeaturesSparkOrDF
 
 ```python
@@ -597,7 +597,7 @@ Create features dataframes. Use Spark if available for speed, otherwise use pand
 
 Feature dataframe
 
-<a name=".openpredict.openpredict_model.train_model"></a>
+<a name=".openpredict.models.openpredict_model.train_model"></a>
 #### train\_model
 
 ```python
@@ -617,7 +617,7 @@ in the `data/models` folder,
 
 Classifier of predicted similarities and scores
 
-<a name=".openpredict.openpredict_model.query_omim_drugbank_classifier"></a>
+<a name=".openpredict.models.openpredict_model.query_omim_drugbank_classifier"></a>
 #### query\_omim\_drugbank\_classifier
 
 ```python
@@ -632,7 +632,7 @@ in the `data/models` folder
 
 Predictions and scores
 
-<a name=".openpredict.openpredict_model.get_predictions"></a>
+<a name=".openpredict.models.openpredict_model.get_predictions"></a>
 #### get\_predictions
 
 ```python

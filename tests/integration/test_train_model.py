@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pathlib
 from os import path
-from openpredict.openpredict_model import train_model, geometricMean, addEmbedding
+from openpredict.models.openpredict_model import train_model, geometricMean, addEmbedding
 from openpredict.utils import get_openpredict_dir, get_entities_labels
 
 def test_train_model():
