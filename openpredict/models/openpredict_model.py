@@ -9,16 +9,6 @@ import pandas as pd
 import pkg_resources
 from gensim.models import KeyedVectors
 from joblib import dump, load
-from openpredict.config import PreloadedModels
-from openpredict.rdf_utils import (
-    add_feature_metadata,
-    add_run_metadata,
-    get_run_id,
-    retrieve_features,
-)
-
-# from openpredict.utils import get_spark_context
-from openpredict.utils import get_entities_labels, get_openpredict_dir, log
 from sklearn import (
     ensemble,
     linear_model,
@@ -30,6 +20,17 @@ from sklearn import (
 )
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
+
+from openpredict.config import PreloadedModels
+from openpredict.rdf_utils import (
+    add_feature_metadata,
+    add_run_metadata,
+    get_run_id,
+    retrieve_features,
+)
+
+# from openpredict.utils import get_spark_context
+from openpredict.utils import get_entities_labels, get_openpredict_dir, log
 
 hyper_params = {
     'penalty': 'l2',

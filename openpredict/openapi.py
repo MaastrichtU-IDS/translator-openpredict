@@ -212,6 +212,17 @@ class SimilarityTypes(str, Enum):
     Drugs = "Drugs"
     Diseases = "Diseases"
 
+class FeatureTypesDrugs(str,Enum):
+    PPI_SIM = "PPI-SIM"
+    TC = "TC"
+    SE_SIM = "SE-SIM"
+    TARGETSEQ_SIM = "TARGETSEQ-SIM"
+    GO_SIM = "GO-SIM"
+
+class FeatureTypesDiseases(str, Enum) : 
+    HPO_SIM = "HPO-SIM"
+    PHENO_SIM = "PHENO-SIM"
+
 
 TRAPI_EXAMPLE = {
   "message": {
