@@ -351,8 +351,8 @@ You can try:
     tags=["openpredict"],
 )
 def get_evidence_path(
-        drug_id: str = Query(default=..., example="DB00915"),
-        disease_id: str = Query(default=..., example="104300"),
+        drug_id: str = Query(default=..., example="DRUGBANK:DB00915"),
+        disease_id: str = Query(default=..., example="OMIM:104300"),
         min_similarity_threshold_drugs: float = 1.0,
         min_similarity_threshold_disease : float = 1.0, 
         features_drug: FeatureTypesDrugs = None,
@@ -374,11 +374,13 @@ def get_evidence_path(
         #     features_of_interest = features_of_interest.split(", ")
         #     path_json = do_evidence_path(drug_id, disease_id,top_K,features_drug, features_disease)
         # else:
-
+        drug_id = drug_id[-7:]
+        disease_id = disease_id[-6:]
         # if features_drug is not None : 
         #     features_drug = features_drug.split(", ")
         # if features_disease is not None: 
         #     features_disease = features_disease.split(", ")
+
 
         path_json = do_evidence_path(drug_id, disease_id, min_similarity_threshold_drugs,min_similarity_threshold_disease, features_drug, features_disease)
     except Exception as e:
