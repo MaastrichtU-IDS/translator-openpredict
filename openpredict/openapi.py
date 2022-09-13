@@ -1,37 +1,39 @@
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from openpredict.config import settings
 from reasoner_pydantic import Message, Query
 
-from openpredict.config import settings
-from openpredict.openpredict_model import (
-    load_similarity_embeddings,
-    load_treatment_classifier,
-    load_treatment_embeddings,
-)
+unordered_servers_list = [
+    {
+        "url": settings.PROD_URL,
+        "description": 'OpenPredict TRAPI ITRB Production Server',
+        "x-maturity": 'production'
+    },
+    {
+        "url": settings.TEST_URL,
+        "description": 'OpenPredict TRAPI ITRB Test Server',
+        "x-maturity": 'testing'
+    },
+    {
+        "url": settings.STAGING_URL,
+        "description": 'OpenPredict TRAPI ITRB CI Server',
+        "x-maturity": 'staging'
+    },
+    {
+        "url": settings.DEV_URL,
+        "description": 'OpenPredict TRAPI ITRB Development Server',
+        "x-maturity": 'development',
+        "x-location": 'IDS'
+    },
+]
 
-# from rdflib_endpoint import SparqlEndpoint
 
-# from openpredict.utils import init_openpredict_dir
-# from openpredict.rdf_utils import init_triplestore
-# import logging
-# from datetime import datetime
-
-
-# class TRAPI(SparqlEndpoint):
 class TRAPI(FastAPI):
     """Translator Reasoner API - wrapper for FastAPI."""
-
-    # Embeddings and classifier are loaded here at the start of the API 
-    baseline_model_treatment: str
-    treatment_embeddings = None
-    treatment_classifier = None
-
-    baseline_model_similarity: str
-    similarity_embeddings = None
 
     required_tags = [
         {"name": "reasoner"},
@@ -41,11 +43,12 @@ class TRAPI(FastAPI):
         {"name": "translator"},
     ]
 
+
     def __init__(
         self,
         *args,
-        baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
-        baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        # baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
+        # baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
         # contact: Optional[Dict[str, Any]] = None,
         **kwargs,
     ):
@@ -55,12 +58,6 @@ class TRAPI(FastAPI):
             root_path_in_servers=False,
             **kwargs,
         )
-        self.baseline_model_treatment = baseline_model_treatment
-        self.baseline_model_similarity = baseline_model_similarity
-        # Initialize embeddings features and classifiers to be used by the API
-        self.treatment_embeddings = load_treatment_embeddings(baseline_model_treatment)
-        self.treatment_classifier = load_treatment_classifier(baseline_model_treatment)
-        self.similarity_embeddings = load_similarity_embeddings()
         
         self.add_middleware(
             CORSMiddleware,
@@ -94,29 +91,22 @@ class TRAPI(FastAPI):
         )
 
         if not settings.DEV_MODE:
-          openapi_schema["servers"] = [
-              {
-                  "url": settings.PROD_URL,
-                  "description": 'OpenPredict TRAPI ITRB Production Server',
-                  "x-maturity": 'production'
-              },
-              {
-                  "url": settings.TEST_URL,
-                  "description": 'OpenPredict TRAPI ITRB Test Server',
-                  "x-maturity": 'testing'
-              },
-              {
-                  "url": settings.STAGING_URL,
-                  "description": 'OpenPredict TRAPI ITRB CI Server',
-                  "x-maturity": 'staging'
-              },
-              {
-                  "url": settings.DEV_URL,
-                  "description": 'OpenPredict TRAPI ITRB Development Server',
-                  "x-maturity": 'development',
-                  "x-location": 'IDS'
-              },
-          ]
+          if settings.VIRTUAL_HOST:
+            servers_list = []
+            # Add the current server as 1st server in the list
+            for server in unordered_servers_list:
+              if settings.VIRTUAL_HOST in server['url']:
+                servers_list.append(server)
+                break
+
+            # Add other servers
+            for server in unordered_servers_list:
+              if not settings.VIRTUAL_HOST in server['url']:
+                servers_list.append(server)
+          else:
+            servers_list = unordered_servers_list
+
+          openapi_schema["servers"] = servers_list
 
         openapi_schema["info"]["x-translator"] = {
             "component": 'KP',

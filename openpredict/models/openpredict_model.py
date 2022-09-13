@@ -21,6 +21,7 @@ from sklearn import (
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
+from openpredict.config import PreloadedModels
 from openpredict.rdf_utils import (
     add_feature_metadata,
     add_run_metadata,
@@ -90,37 +91,6 @@ def get_spark_context():
     #     config.set("spark.memory.offHeap.enabled",True)
     #     config.set("spark.memory.offHeap.size","5g")
     #     sc = SparkContext(conf=config, appName="OpenPredict")
-
-
-def load_similarity_embeddings():
-    """Load embeddings model for similarity"""
-    embedding_folder = 'data/embedding'
-    # print(pkg_resources.resource_filename('openpredict', embedding_folder))
-    similarity_embeddings = {}
-    for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
-        if model_id.endswith('txt'):
-            feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
-            print("📥 Loading similarity features from " + feature_path)
-            emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
-            similarity_embeddings[model_id]= emb_vectors
-
-    return similarity_embeddings
-
-
-def load_treatment_classifier(model_id):
-    """Load embeddings model for treats and treated_by"""
-    print("📥 Loading treatment classifier from joblib for model " + str(model_id))
-    return load(get_openpredict_dir('models/' + str(model_id) + '.joblib'))
-
-
-def load_treatment_embeddings(model_id):
-    """Load embeddings model for treats and treated_by"""
-    print("📥 Loading treatment features for model " + str(model_id))
-    (drug_df, disease_df) = load(get_openpredict_dir(
-        'features/' + str(model_id) + '.joblib'))
-    print(disease_df.columns)
-    return (drug_df, disease_df)
-
 
 
 def adjcencydict2matrix(df, name1, name2):
@@ -736,7 +706,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     return clf, scores, hyper_params, (drug_df, disease_df)
 
 
-def query_omim_drugbank_classifier(input_curie, model_id, app):
+def query_omim_drugbank_classifier(input_curie, model_id):
     """The main function to query the drug-disease OpenPredict classifier, 
     It queries the previously generated classifier a `.joblib` file 
     in the `data/models` folder
@@ -762,7 +732,7 @@ def query_omim_drugbank_classifier(input_curie, model_id, app):
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    (drug_df, disease_df) = app.treatment_embeddings
+    (drug_df, disease_df) = PreloadedModels.treatment_embeddings
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename(
@@ -784,7 +754,7 @@ def query_omim_drugbank_classifier(input_curie, model_id, app):
     commonDiseases = diseaseswithfeatures.intersection(
         drugDiseaseKnown.Disease.unique())
 
-    clf = app.treatment_classifier
+    clf = PreloadedModels.treatment_classifier
     # if not clf:
     #     clf = load_treatment_classifier(model_id)
 
@@ -973,8 +943,7 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
 
 
 def get_predictions(
-        id_to_predict, model_id, app,
-        min_score=None, max_score=None, n_results=None, 
+        id_to_predict, model_id, min_score=None, max_score=None, n_results=None, 
     ):
     """Run classifiers to get predictions
 
@@ -986,7 +955,7 @@ def get_predictions(
     """
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id, app)
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
 
     if min_score:
         predictions_array = [

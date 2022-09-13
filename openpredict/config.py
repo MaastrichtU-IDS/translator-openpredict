@@ -3,6 +3,9 @@ import secrets
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+import pkg_resources
+from gensim.models import KeyedVectors
+from joblib import load
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
 
 
@@ -13,10 +16,15 @@ class Settings(BaseSettings):
     STAGING_URL: str = 'https://openpredict.ci.transltr.io'
     DEV_URL: str = 'https://openpredict.semanticscience.org'
 
+    VIRTUAL_HOST: str = None
+
     BIOLINK_VERSION: str = '2.3.0'
-    TRAPI_VERSION: str = "1.2.0"
+    TRAPI_VERSION: str = "1.3.0"
+    TRAPI_VERSION_TEST: str = "1.2.0"
 
     DEV_MODE: bool = False
+
+    OPENPREDICT_DATA_DIR: str = os.getcwd() + '/data'
 
     # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
 
@@ -39,6 +47,58 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+# A class to preload some models before starting the API
+class PreloadedModels(object):
+  baseline_model_treatment: str
+  treatment_embeddings = None
+  treatment_classifier = None
+
+  baseline_model_similarity: str
+  similarity_embeddings = None
+
+  @classmethod
+  def init(
+    cls, 
+    baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
+    baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank'
+  ) -> None:
+    print('Loading PreloadedModels')
+    cls.baseline_model_treatment = baseline_model_treatment
+    cls.baseline_model_similarity = baseline_model_similarity
+    # Initialize embeddings features and classifiers to be used by the API
+    cls.treatment_embeddings = load_treatment_embeddings(baseline_model_treatment)
+    cls.treatment_classifier = load_treatment_classifier(baseline_model_treatment)
+    cls.similarity_embeddings = load_similarity_embeddings()
+
+
+def load_similarity_embeddings():
+    """Load embeddings model for similarity"""
+    embedding_folder = 'data/embedding'
+    # print(pkg_resources.resource_filename('openpredict', embedding_folder))
+    similarity_embeddings = {}
+    for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
+        if model_id.endswith('txt'):
+            feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
+            print("📥 Loading similarity features from " + feature_path)
+            emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
+            similarity_embeddings[model_id]= emb_vectors
+    return similarity_embeddings
+
+
+def load_treatment_classifier(model_id):
+    """Load embeddings model for treats and treated_by"""
+    print("📥 Loading treatment classifier from joblib for model " + str(model_id))
+    return load(f'{settings.OPENPREDICT_DATA_DIR}/models/{str(model_id)}.joblib')
+
+
+def load_treatment_embeddings(model_id):
+    """Load embeddings model for treats and treated_by"""
+    print(f"📥 Loading treatment features for model {str(model_id)}")
+    (drug_df, disease_df) = load(f'{settings.OPENPREDICT_DATA_DIR}/features/{str(model_id)}.joblib')
+    return (drug_df, disease_df)
+
 
 
 BIOLINK_CONTEXT = {

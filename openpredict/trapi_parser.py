@@ -1,14 +1,12 @@
 import re
 
 import requests
-from openpredict.config import settings
-from openpredict.openpredict_model import (
-    get_predictions,
-    get_similarities,
-    load_similarity_embeddings,
-    load_treatment_classifier,
-    load_treatment_embeddings,
-)
+from openpredict.config import PreloadedModels, settings
+from openpredict.models.openpredict_model import get_predictions, get_similarities
+
+# TODO: add explain and DRKG to TRAPI
+# from openpredict.models.drugrepurposing import get_drugrepositioning_results
+# from openpredict.models.explain import get_explanations
 
 
 def is_accepted_id(id_to_check):
@@ -67,7 +65,7 @@ def resolve_id(id_to_resolve, resolved_ids_object):
     return id_to_resolve
 
 
-def resolve_trapi_query(reasoner_query, app):
+def resolve_trapi_query(reasoner_query):
     """Main function for TRAPI
     Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
@@ -176,7 +174,7 @@ def resolve_trapi_query(reasoner_query, app):
                         if 'biolink:Disease' in query_plan[edge_qg_id]['from_type'] or query_plan[edge_qg_id]['from_type'] == 'biolink:Disease':
                             similarity_model_id = 'disease_hp_embed.txt'
                         # similarity_model_id = model_id
-                        emb_vectors = app.similarity_embeddings[similarity_model_id]
+                        emb_vectors = PreloadedModels.similarity_embeddings[similarity_model_id]
                         similarity_json, source_target_predictions = get_similarities(
                             query_plan[edge_qg_id]['from_type'],
                             id_to_predict, 
@@ -295,7 +293,7 @@ def resolve_trapi_query(reasoner_query, app):
                     try:
                         # Run OpenPredict to get predictions
                         bte_response, prediction_json = get_predictions(
-                            id_to_predict, model_id, app, 
+                            id_to_predict, model_id,
                             min_score, max_score, n_results=None
                         )
                     except:

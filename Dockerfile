@@ -47,6 +47,7 @@ COPY . .
 ENV MODULE_NAME=openpredict.main
 ENV VARIABLE_NAME=app
 ENV PORT=8808
+ENV GUNICORN_CMD_ARGS="--preload"
 
 ## Install the pip package based on the source code
 
