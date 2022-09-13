@@ -16,8 +16,8 @@ app = TRAPI(
 
 app.include_router(trapi.app)
 app.include_router(predict.app)
-app.include_router(models.app)
 app.include_router(explain.app)
+app.include_router(models.app)
 
 
 @app.get("/health", include_in_schema=False)

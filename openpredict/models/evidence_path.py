@@ -37,7 +37,9 @@ from openpredict.models import openpredict_model
 #     else:
 #         print("✅ Model already present")
 
-df_op = pd.read_csv("openpredict/data/resources/openpredict-omim-drug.csv")
+# df_op = pd.read_csv("openpredict/data/resources/openpredict-omim-drug.csv")
+
+df_op = pd.read_csv(f"{settings.RESOURCE_DATA_DIR}/resources/openpredict-omim-drug.csv")
 
 drug_fp_vectors = KeyedVectors.load_word2vec_format(
     'openpredict/data/embedding/drugs_fp_embed.txt', binary=False)
@@ -61,8 +63,7 @@ def generate_paths_for_apair(drug, disease, drug_emb_vectors, disease_emb_vector
     (threshold_drug,threshold_disease) =getQuantiles(drug_emb_vectors, disease_emb_vectors, threshold_drugs)
 
     if(features_drug is not None) : 
-         filtered_embedding_drugs = KeyedVectors.load_word2vec_format(
-    f'openpredict/data/embedding/feature_specific_embeddings_KG/feature_{str(features_drug)}.txt', binary=False)
+         filtered_embedding_drugs = KeyedVectors.load_word2vec_format(f'{settings.OPENPREDICT_DATA_DIR}/evidence-path-model/feature_{str(features_drug)}.txt', binary=False)
          similarDrugs = filtered_embedding_drugs.most_similar(drug, topn=100)
          (threshold_drug,threshold_disease) =getQuantiles(filtered_embedding_drugs, disease_emb_vectors, threshold_drugs)
     else : 
@@ -84,11 +85,12 @@ def generate_paths_for_apair(drug, disease, drug_emb_vectors, disease_emb_vector
     (threshold_drug,threshold_disease) =getQuantiles(drug_emb_vectors, disease_emb_vectors, threshold_diseases)
 
 
+    # TODO: USE settings.OPENPREDICT_DATA_DIR instead of lucky relative path
     if(features_disease is not None) : 
-         filtered_embedding_diseases = KeyedVectors.load_word2vec_format(
-    f'openpredict/data/embedding/feature_specific_embeddings_KG/feature_{str(features_disease)}.txt', binary=False)
-         similarDiseases = filtered_embedding_diseases.most_similar(disease, topn=100)
-         (threshold_drug,threshold_disease) =getQuantiles(drug_fp_vectors, filtered_embedding_diseases, threshold_diseases)
+        filtered_embedding_diseases = KeyedVectors.load_word2vec_format(f'{settings.OPENPREDICT_DATA_DIR}/evidence-path-model/feature_{str(features_disease)}.txt', binary=False)
+        # filtered_embedding_diseases = KeyedVectors.load_word2vec_format(f'openpredict/data/embedding/feature_specific_embeddings_KG/feature_{str(features_disease)}.txt', binary=False)
+        similarDiseases = filtered_embedding_diseases.most_similar(disease, topn=100)
+        (threshold_drug,threshold_disease) =getQuantiles(drug_fp_vectors, filtered_embedding_diseases, threshold_diseases)
     else : 
         similarDiseases = disease_emb_vectors.most_similar(disease, topn=100)
 
@@ -113,6 +115,7 @@ def generate_paths_for_apair(drug, disease, drug_emb_vectors, disease_emb_vector
                                                                                })
     
     return (g)
+
 
 def generate_explanation(drug, disease, drug_fp_vectors, disease_hp_vectors,features_drug = None, features_disease = None,threshold_drugs = 0,threshold_disease = 0):
     #-> Path generation, add similar_to relation between query drug and disease
@@ -172,7 +175,7 @@ def do_evidence_path(drug_id: str, disease_id: str, threshold_drugs : float,thre
 
 
 ###############################################
-#script used to generate embeddings 
+# Script used to generate embeddings 
 # to generate embeddings, call generate_feature_embedding_data() in method do_evidence_path()
 #
 def calculateEntitySimilarities(tokenized_vector, topn = 100) :
