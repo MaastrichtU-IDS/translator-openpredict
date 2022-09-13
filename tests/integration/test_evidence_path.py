@@ -1,20 +1,19 @@
-import json
-import os
-
-import pkg_resources
 import pytest
 from fastapi.testclient import TestClient
-from reasoner_validator import validate
 from gensim.models import KeyedVectors
 from openpredict.config import settings
 from openpredict.main import app
+from openpredict.models.evidence_path import (
+    do_evidence_path,
+    getQuantiles,
+    percentiles_of_different_features,
+)
 from openpredict.rdf_utils import init_triplestore
 from openpredict.utils import init_openpredict_dir
-from openpredict.evidence_path import do_evidence_path, percentiles_of_different_features,getQuantiles
+from reasoner_validator import validate
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
-# init_triplestore()
 
 client = TestClient(app)
 
@@ -53,24 +52,4 @@ def test_get_quantiles():
         'openpredict/data/embedding/feature_specific_embeddings_KG/feature_FeatureTypesDiseases.' + "HPO_SIM" + '.txt', binary=False)
 
         assert getQuantiles(drug_emb, disease_emb, 0.5) <= 0.7 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def test_generate_explanation()
-
-#def test_generate_paths_for_apair()
-
-
-
-
 
