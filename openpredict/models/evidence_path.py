@@ -1,5 +1,5 @@
 import ast
-import os 
+import os
 from pathlib import Path
 
 import networkx as nx
@@ -7,9 +7,8 @@ import numpy as np
 import pandas as pd
 import pkg_resources
 from gensim.models import KeyedVectors
-
-from openpredict import openpredict_model
-from openpredict.config import settings
+from openpredict.config import load_treatment_embeddings, settings
+from openpredict.models import openpredict_model
 
 #from openpredict_model import load_treatment_embeddings
 
@@ -47,7 +46,7 @@ disease_hp_vectors = KeyedVectors.load_word2vec_format(
 
 df_op = df_op.rename(columns={'omimid': 'disease_id', 'drugid': 'drug_id'})
 df_op.disease_id = df_op.disease_id.astype(str)
-(drug_ft_emb, disease_ft_emb) = openpredict_model.load_treatment_embeddings('openpredict-baseline-omim-drugbank')
+(drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
 
 indications_dict = set()
 for i, row in df_op.iterrows():

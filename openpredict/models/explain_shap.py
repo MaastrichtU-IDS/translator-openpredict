@@ -6,10 +6,7 @@ import sklearn
 from openpredict.models.openpredict_model import query_omim_drugbank_classifier
 from openpredict.utils import get_entities_labels, get_openpredict_dir
 
-# import matplotlib.pyplot as plt
-
-#XPREDICT framework may be used to add explanation featuers to drug repositioning applications 
-
+# XPREDICT framework may be used to add explanation features to drug repositioning applications 
 
 def getSHAPModel(datasetFile="xpredict/deepdrug_repurposingpredictiondataset.csv", mlmodel="LR"):
     features= ['GO-SIM_HPO-SIM',
