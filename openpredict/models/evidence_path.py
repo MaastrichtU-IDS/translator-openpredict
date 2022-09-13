@@ -39,6 +39,7 @@ from openpredict.models import openpredict_model
 
 # df_op = pd.read_csv("openpredict/data/resources/openpredict-omim-drug.csv")
 
+
 df_op = pd.read_csv(f"{settings.RESOURCE_DATA_DIR}/resources/openpredict-omim-drug.csv")
 
 drug_fp_vectors = KeyedVectors.load_word2vec_format(
@@ -300,8 +301,3 @@ def save_embedding_as_txt(embedding_df, fileName) :
     embedding_df_np = embedding_df.to_numpy()
     np.savetxt('openpredict/data/embedding/feature_' + fileName, embedding_df_np, fmt = '%f' )
 
-
-
-
-    
- 
