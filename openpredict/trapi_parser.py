@@ -1,7 +1,8 @@
 import re
 
 import requests
-from openpredict.config import PreloadedModels, settings
+from openpredict.config import settings
+from openpredict.loaded_models import PreloadedModels
 from openpredict.models.openpredict_model import get_predictions, get_similarities
 
 # TODO: add explain and DRKG to TRAPI

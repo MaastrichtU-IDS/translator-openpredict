@@ -47,6 +47,8 @@ def get_evidence_path(
         #     features_of_interest = features_of_interest.split(", ")
         #     path_json = do_evidence_path(drug_id, disease_id,top_K,features_drug, features_disease)
         # else:
+        
+        # Remove namespaces from IDs:
         drug_id = drug_id[-7:]
         disease_id = disease_id[-6:]
         # if features_drug is not None : 
@@ -55,7 +57,11 @@ def get_evidence_path(
         #     features_disease = features_disease.split(", ")
 
 
-        path_json = do_evidence_path(drug_id, disease_id, min_similarity_threshold_drugs,min_similarity_threshold_disease, features_drug, features_disease)
+        path_json = do_evidence_path(
+            drug_id, disease_id, 
+            min_similarity_threshold_drugs, min_similarity_threshold_disease, 
+            features_drug, features_disease
+        )
     except Exception as e:
         print(f'Error getting evidence path between {drug_id} and {disease_id}')
         print(e)

@@ -7,8 +7,9 @@ import numpy as np
 import pandas as pd
 import pkg_resources
 from gensim.models import KeyedVectors
-from openpredict.config import load_treatment_embeddings, settings
+from openpredict.config import settings
 from openpredict.models import openpredict_model
+from openpredict.utils import load_treatment_embeddings
 
 #from openpredict_model import load_treatment_embeddings
 
@@ -40,12 +41,12 @@ from openpredict.models import openpredict_model
 # df_op = pd.read_csv("openpredict/data/resources/openpredict-omim-drug.csv")
 
 
-df_op = pd.read_csv(f"{settings.RESOURCE_DATA_DIR}/resources/openpredict-omim-drug.csv")
+df_op = pd.read_csv(f"{settings.GIT_DATA_DIR}/resources/openpredict-omim-drug.csv")
 
 drug_fp_vectors = KeyedVectors.load_word2vec_format(
-    'openpredict/data/embedding/drugs_fp_embed.txt', binary=False)
+    f'{settings.GIT_DATA_DIR}/embedding/drugs_fp_embed.txt', binary=False)
 disease_hp_vectors = KeyedVectors.load_word2vec_format(
-    'openpredict/data/embedding/disease_hp_embed.txt', binary=False)
+    f'{settings.GIT_DATA_DIR}/embedding/disease_hp_embed.txt', binary=False)
 
 df_op = df_op.rename(columns={'omimid': 'disease_id', 'drugid': 'drug_id'})
 df_op.disease_id = df_op.disease_id.astype(str)

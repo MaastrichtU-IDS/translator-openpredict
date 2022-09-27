@@ -1,6 +1,7 @@
 from fastapi.responses import RedirectResponse
 from openpredict.api import explain, models, predict, trapi
-from openpredict.config import PreloadedModels
+from openpredict.config import settings
+from openpredict.loaded_models import PreloadedModels
 from openpredict.openapi import TRAPI
 from openpredict.utils import init_openpredict_dir
 

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter
-from openpredict.config import PreloadedModels
+from openpredict.loaded_models import PreloadedModels
 from openpredict.models.drugrepurposing import get_drugrepositioning_results
 from openpredict.models.explain_shap import get_explanations
 from openpredict.models.openpredict_model import get_predictions, get_similarities
