@@ -38,7 +38,6 @@ class TRAPI(FastAPI):
     required_tags = [
         {"name": "reasoner"},
         {"name": "trapi"},
-        {"name": "biothings"},
         {"name": "openpredict"},
         {"name": "translator"},
     ]
@@ -58,7 +57,7 @@ class TRAPI(FastAPI):
             root_path_in_servers=False,
             **kwargs,
         )
-        
+
         self.add_middleware(
             CORSMiddleware,
             allow_origins=["*"],
@@ -75,7 +74,7 @@ class TRAPI(FastAPI):
         tags = self.required_tags
         if self.openapi_tags:
             tags += self.openapi_tags
-    
+
         openapi_schema = get_openapi(
             title='OpenPredict API',
             version='1.0.0',
@@ -191,7 +190,7 @@ class TRAPI(FastAPI):
             }
           }
         ]
-        
+
         # From fastapi:
         openapi_schema["info"]["x-logo"] = {
             # "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
@@ -219,7 +218,7 @@ class FeatureTypesDrugs(str,Enum):
     TARGETSEQ_SIM = "TARGETSEQ-SIM"
     GO_SIM = "GO-SIM"
 
-class FeatureTypesDiseases(str, Enum) : 
+class FeatureTypesDiseases(str, Enum) :
     HPO_SIM = "HPO-SIM"
     PHENO_SIM = "PHENO-SIM"
 

@@ -23,12 +23,12 @@ You can try:
 | to check the drug predictions for a disease   | to check the disease predictions for a drug |
 """,
     response_model=dict,
-    tags=["biothings"],
+    tags=["openpredict"],
 )
 def get_predict(
-        drug_id: Optional[str] = None, 
-        disease_id: Optional[str] = 'OMIM:246300', 
-        model_id: str ='openpredict-baseline-omim-drugbank', 
+        drug_id: Optional[str] = None,
+        disease_id: Optional[str] = 'OMIM:246300',
+        model_id: str ='openpredict-baseline-omim-drugbank',
         min_score: float = None, max_score: float = None, n_results: int = None
     ) -> dict:
     """Get predicted associations for a given entity CURIE.
@@ -68,7 +68,7 @@ This operation is annotated with x-bte-kgs-operations, and follow the BioThings 
 
 You can try:
 
-| disease_id: `MESH:D000544` | 
+| disease_id: `MESH:D000544` |
 
 | to check the drug prediction explanations  for a disease  |
 """,
@@ -77,15 +77,15 @@ You can try:
 )
 
 def get_drugrepositioning(
-        #drug_id: Optional[str] = None, 
-        disease_id: Optional[str] = 'MESH:D000544', 
-        #model_id: str ='openpredict-baseline-omim-drugbank', 
+        #drug_id: Optional[str] = None,
+        disease_id: Optional[str] = 'MESH:D000544',
+        #model_id: str ='openpredict-baseline-omim-drugbank',
         n_results: int = 100
     ) -> dict:
     """Get drug repositioning predictions for a given entity CURIE disease  .
 
     :param entity: Get predictions associations for this entity CURIE
-    :return: Prediction results 
+    :return: Prediction results
     """
     time_start = datetime.now()
     #return ('test: provide a drugid or diseaseid', 400)
@@ -102,7 +102,7 @@ def get_drugrepositioning(
         prediction_json, source_target_predictions = get_drugrepositioning_results(
             concept_id , n_results
         )
-        
+
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(str(e) )
@@ -116,7 +116,7 @@ def get_drugrepositioning(
 
 @app.get("/similarity", name="Get similar entities",
     description="""Get similar entites for a given entity CURIE.
-    
+
 You can try:
 
 | drug_id: `DRUGBANK:DB00394` | disease_id: `OMIM:246300` |
@@ -128,10 +128,10 @@ You can try:
     tags=["openpredict"],
 )
 def get_similarity(
-        types: SimilarityTypes ='Diseases', 
-        drug_id: Optional[str] = None, 
-        disease_id: Optional[str] = 'OMIM:246300', 
-        model_id: str ='disease_hp_embed.txt', 
+        types: SimilarityTypes ='Diseases',
+        drug_id: Optional[str] = None,
+        disease_id: Optional[str] = 'OMIM:246300',
+        model_id: str ='disease_hp_embed.txt',
         min_score: float =None, max_score: float =None, n_results: int =None
     ) -> dict:
     """Get similar entites for a given entity CURIE.
@@ -176,7 +176,7 @@ This operation is annotated with x-bte-kgs-operations, and follow the BioThings 
 
 You can try:
 
-| disease_id: `OMIM:246300` | 
+| disease_id: `OMIM:246300` |
 
 | to check the drug prediction explanations  for a disease  |
 """,
@@ -184,9 +184,9 @@ You can try:
     tags=["openpredict"],
 )
 def get_explanation(
-        #drug_id: Optional[str] = None, 
-        disease_id: Optional[str] = 'OMIM:246300', 
-        #model_id: str ='openpredict-baseline-omim-drugbank', 
+        #drug_id: Optional[str] = None,
+        disease_id: Optional[str] = 'OMIM:246300',
+        #model_id: str ='openpredict-baseline-omim-drugbank',
         n_results: int = 100
     ) -> dict:
     """Get explanations for a given entity CURIE disease and predicted drugs.
@@ -210,11 +210,11 @@ def get_explanation(
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        
+
         prediction_json, source_target_predictions = get_explanations(
             concept_id, model_id, app, min_score, max_score, n_results
         )
-        
+
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)

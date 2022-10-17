@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
 
     # CONTEXT = 'https://raw.githubusercontent.com/MaastrichtU-IDS/knowledge-collaboratory/main/context.jsonld'
-    
+
 
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:8080"]'

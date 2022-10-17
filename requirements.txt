@@ -4,7 +4,7 @@ uvicorn[standard]>=0.12.0
 gunicorn>=20.1.0
 python-multipart
 reasoner-pydantic>=2.2.3
-reasoner-validator>=2.2.4
+reasoner-validator>=2.2.4,<3
 joblib
 numpy==1.16.1
 scipy==1.5.4
