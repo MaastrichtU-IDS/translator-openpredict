@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 ## Gunicorn image 3.39GB: https://github.com/tiangolo/uvicorn-gunicorn-docker/tree/master/docker-images
 
 # FROM jupyter/pyspark-notebook:python-3.8.8
@@ -11,7 +11,9 @@ USER root
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y build-essential curl vim openjdk-11-jdk wget
+    apt-get install -y build-essential curl vim openjdk-11-jdk wget && \
+    pip install --upgrade pip
+
 
 ## Install Spark for standalone context in /opt
 ENV APACHE_SPARK_VERSION=3.2.0
