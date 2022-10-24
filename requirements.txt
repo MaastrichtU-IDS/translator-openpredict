@@ -9,7 +9,7 @@ reasoner-pydantic>=2.1.0
 # reasoner-validator>=2.2.4,<3
 reasoner-validator>=2.1.0,<3
 joblib
-numpy==1.16.1
+numpy==1.22.0
 scipy==1.5.4
 # scipy==0.19.1
 ## Cannot update to numpy1.16.5 because it requires werkzeug>=2.0
