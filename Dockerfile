@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 ## Gunicorn image 3.39GB: https://github.com/tiangolo/uvicorn-gunicorn-docker/tree/master/docker-images
 
 # FROM jupyter/pyspark-notebook:python-3.8.8
