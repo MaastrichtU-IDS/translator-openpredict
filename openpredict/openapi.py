@@ -143,53 +143,53 @@ class TRAPI(FastAPI):
             "url": "https://opensource.org/licenses/MIT",
         }
 
-        # To make the /predict call compatible with the BioThings Explorer:
-        openapi_schema["paths"]["/predict"]["x-bte-kgs-operations"] = [
-          {
-            "inputs": [
-              {
-                "id": "biolink:DRUGBANK",
-                "semantic": "biolink:ChemicalSubstance"
-              }
-            ],
-            "outputs": [
-              {
-                "id": "biolink:OMIM",
-                "semantic": "biolink:Disease"
-              }
-            ],
-            "parameters": {
-              "drug_id": "{inputs[0]}"
-            },
-            "predicate": "biolink:treats",
-            "supportBatch": False,
-            "responseMapping": {
-              "OMIM": "hits.id"
-            }
-          },
-          {
-            "inputs": [
-              {
-                "id": "biolink:OMIM",
-                "semantic": "biolink:Disease"
-              }
-            ],
-            "outputs": [
-              {
-                "id": "biolink:DRUGBANK",
-                "semantic": "biolink:ChemicalSubstance"
-              }
-            ],
-            "parameters": {
-              "disease_id": "{inputs[0]}"
-            },
-            "predicate": "biolink:treated_by",
-            "supportBatch": False,
-            "responseMapping": {
-              "DRUGBANK": "hits.id"
-            }
-          }
-        ]
+        # TODO: REMOVE to make the /predict call compatible with the BioThings Explorer:
+        # openapi_schema["paths"]["/predict"]["x-bte-kgs-operations"] = [
+        #   {
+        #     "inputs": [
+        #       {
+        #         "id": "biolink:DRUGBANK",
+        #         "semantic": "biolink:ChemicalSubstance"
+        #       }
+        #     ],
+        #     "outputs": [
+        #       {
+        #         "id": "biolink:OMIM",
+        #         "semantic": "biolink:Disease"
+        #       }
+        #     ],
+        #     "parameters": {
+        #       "drug_id": "{inputs[0]}"
+        #     },
+        #     "predicate": "biolink:treats",
+        #     "supportBatch": False,
+        #     "responseMapping": {
+        #       "OMIM": "hits.id"
+        #     }
+        #   },
+        #   {
+        #     "inputs": [
+        #       {
+        #         "id": "biolink:OMIM",
+        #         "semantic": "biolink:Disease"
+        #       }
+        #     ],
+        #     "outputs": [
+        #       {
+        #         "id": "biolink:DRUGBANK",
+        #         "semantic": "biolink:ChemicalSubstance"
+        #       }
+        #     ],
+        #     "parameters": {
+        #       "disease_id": "{inputs[0]}"
+        #     },
+        #     "predicate": "biolink:treated_by",
+        #     "supportBatch": False,
+        #     "responseMapping": {
+        #       "DRUGBANK": "hits.id"
+        #     }
+        #   }
+        # ]
 
         # From fastapi:
         openapi_schema["info"]["x-logo"] = {
