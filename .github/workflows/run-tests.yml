@@ -63,7 +63,7 @@ jobs:
         SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
         SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
-        coverage erase
+        poetry run coverage erase
         poetry run pytest --cov openpredict --cov-report xml:coverage.xml tests/integration/*
         cat coverage.xml
         poetry run coverage combine --append || true
