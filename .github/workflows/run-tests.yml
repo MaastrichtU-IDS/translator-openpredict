@@ -66,9 +66,9 @@ jobs:
         coverage erase
         poetry run pytest --cov openpredict --cov-report xml:coverage.xml tests/integration/*
         cat coverage.xml
-        coverage combine --append || true
-        coverage report
-        coverage xml
+        poetry run coverage combine --append || true
+        poetry run coverage report
+        poetry run coverage xml
       # sonar-scanner
     - name: Run SonarCloud
       env:
