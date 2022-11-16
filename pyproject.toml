@@ -9,7 +9,11 @@ authors = ["Vincent Emonet <vincent.emonet@gmail.com>"]
 #         'tests/queries/*', 'data/embedding/*']},
 
 # packages = [{ include = "schema_graph" }]
-# include = ["schema_graph/static/schema_graph/main.js"]
+include = [
+  'openapi.yml', 'data/models/*', 'data/ontology/*', 'data/models/*',
+  'data/features/*', 'data/input/*', 'data/sparql/*', 'data/resources/*', 'data/*.ttl',
+  'tests/queries/*', 'data/embedding/*'
+]
 
 [tool.poetry.scripts]
 openpredict = "openpredict.__main__:main"
