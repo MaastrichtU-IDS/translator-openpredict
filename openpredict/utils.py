@@ -17,7 +17,7 @@ MISSING_IDS = set()
 
 def log(msg: str):
     """Simple print with a timestamp"""
-    log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%d@%H:%M:%S")) + '] ' + msg 
+    log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%d@%H:%M:%S")) + '] ' + msg
     # logging.info(log_msg)
     print(log_msg)
 
@@ -49,28 +49,38 @@ def init_openpredict_dir():
 
     if not os.path.exists(get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
-        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
-            get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
+        shutil.copy(
+            pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
+            get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')
+        )
     if not os.path.exists(get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib'))
-        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/models/openpredict-baseline-omim-drugbank.joblib'), 
-            get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib'))
+        shutil.copy(
+            pkg_resources.resource_filename('openpredict', 'data/models/openpredict-baseline-omim-drugbank.joblib'),
+            get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib')
+        )
     if not os.path.exists(get_openpredict_dir('openpredict-metadata.ttl')):
         print('Creating ' + get_openpredict_dir('openpredict-metadata.ttl'))
-        # shutil.copy(get_openpredict_dir('initial-openpredict-metadata.ttl'), 
-        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'), 
-            get_openpredict_dir('openpredict-metadata.ttl'))
+        # shutil.copy(get_openpredict_dir('initial-openpredict-metadata.ttl'),
+        shutil.copy(
+            pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'),
+            get_openpredict_dir('openpredict-metadata.ttl')
+        )
 
 
     if not os.path.exists(get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv')):
         print('Initiating ' + get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv'))
-        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/kgpredict/kgpredict_drug_diseasemappings.tsv'), 
-            get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv'))
+        shutil.copy(
+            pkg_resources.resource_filename('openpredict', 'data/kgpredict/kgpredict_drug_diseasemappings.tsv'),
+            get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv')
+        )
 
     if not os.path.exists(get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv')):
         print('Initiating ' + get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv'))
-        shutil.copy(pkg_resources.resource_filename('openpredict', 'data/xpredict/deepdrug_repurposingpredictiondataset.csv'),
-            get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv'))
+        shutil.copy(
+            pkg_resources.resource_filename('openpredict', 'data/xpredict/deepdrug_repurposingpredictiondataset.csv'),
+            get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv')
+        )
 
     if not os.path.exists(get_openpredict_dir('kgpredict/embed/entity_embeddings.npy')):
         print(f"📥️ Downloading Drug Repurposing KG embeddings in {get_openpredict_dir('kgpredict/embed')}")
@@ -97,7 +107,7 @@ def init_openpredict_dir():
 
 
 
-    
+
     # attempts = 0
     # while attempts < 30:
     #     try:
@@ -162,14 +172,14 @@ def normalize_id_to_translator(ids_list):
 def convert_baseline_features_ids():
     """Convert IDs to use Translator preferred IDs when building the baseline model from scratch"""
     baseline_features_folder = "data/baseline_features/"
-    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv', 
+    drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv',
                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
     diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
     drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
     diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',') 
+    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',')
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
@@ -187,7 +197,7 @@ def convert_baseline_features_ids():
         df = pd.read_csv(csv_file, delimiter=',')
         diseases_set.update(df['Disease1'].tolist())
         diseases_set.update(df['Disease2'].tolist())
-    
+
     diseases_set = ['OMIM:{0}'.format(disease) for disease in diseases_set]
     drugs_set = ['DRUGBANK:{0}'.format(drug) for drug in drugs_set]
 
@@ -217,7 +227,7 @@ def convert_baseline_features_ids():
     print('❌️ Missing IDs: ')
     for missing_id in MISSING_IDS:
         print(missing_id)
-    
+
 
     # drugs_set.add(2)
     # drugs_set.update([2, 3, 4])

@@ -30,11 +30,11 @@ class PreloadedModels(object):
   # explain_shap: ExplainShapModel = None
   # openpredict: OpenPredictModel = None
   # drug_repurposing_kg: DrugRepurposingKGModel = None
-  
+
 
   @classmethod
   def init(
-    cls, 
+    cls,
     baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
     baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank'
   ) -> None:
@@ -45,7 +45,7 @@ class PreloadedModels(object):
     cls.treatment_embeddings = load_treatment_embeddings(baseline_model_treatment)
     cls.treatment_classifier = load_treatment_classifier(baseline_model_treatment)
     cls.similarity_embeddings = load_similarity_embeddings()
-    
+
     cls.evidence_path = EvidencePathModel()
 
 
