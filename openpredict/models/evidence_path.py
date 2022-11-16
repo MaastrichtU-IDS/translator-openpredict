@@ -49,7 +49,6 @@ disease_hp_vectors = KeyedVectors.load_word2vec_format(
 
 df_op = df_op.rename(columns={'omimid': 'disease_id', 'drugid': 'drug_id'})
 df_op.disease_id = df_op.disease_id.astype(str)
-(drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
 
 indications_dict = set()
 for i, row in df_op.iterrows():
@@ -260,7 +259,7 @@ def path_weight_product(g1,drug,disease) :
 
 def filter_out_features_diseases(features_of_interest):
     '''Creates the dataframe based on disease features to be converted to a embedding later '''
-
+    (drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
     resulting_embeddings = disease_ft_emb.loc[:,features_of_interest]
     #if(len(features_of_interest) > 1):
     #resulting_embeddings.columns = resulting_embeddings.columns.droplevel()
@@ -281,7 +280,7 @@ def generate_feature_embedding_data():
 
 def filter_out_features_drugs(features_of_interest) :
     '''Creates the dataframe based on drug features to be converted to a embedding later '''
-
+    (drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
     resulting_embeddings = drug_ft_emb.loc[:,features_of_interest]
     # if(len(features_of_interest) > 1) :
     #     resulting_embeddings.columns = resulting_embeddings.columns.droplevel()

@@ -935,7 +935,7 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
         # { score: 12,
         #  source: {
         #      id: DB0001
-        #      type: drug,
+        #      'type': drug,
         #      label: a drug
         #  },
         #  target { .... }}
@@ -1025,7 +1025,7 @@ def get_predictions(
         # { score: 12,
         #  source: {
         #      id: DB0001
-        #      type: drug,
+        #      'type': drug,
         #      label: a drug
         #  },
         #  target { .... }}

@@ -30,25 +30,25 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
             reader = csv.DictReader(csvfile, delimiter='\t', fieldnames=['drug','ids'])
             for row_val in reader:
                 drug_list.append(row_val['drug'])
-        
+
         len(drug_list)
 
         treatment = ['Hetionet::CtD::Compound:Disease','GNBR::T::Compound:Disease']
-        
+
         entity_idmap_file = EMBPATH+'entities.tsv'
         relation_idmap_file = EMBPATH+'relations.tsv'
-        
+
         entity_map = {}
         entity_id_map = {}
         relation_map = {}
-        
+
         with open(entity_idmap_file, newline='', encoding='utf-8') as csvfile:
-            
+
             reader = csv.DictReader(csvfile, delimiter='\t', fieldnames=['name','id'])
             for row_val in reader:
                 entity_map[row_val['name']] = int(row_val['id'])
                 entity_id_map[int(row_val['id'])] = row_val['name']
-            
+
         with open(relation_idmap_file, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile, delimiter='\t', fieldnames=['name','id'])
             for row_val in reader:
@@ -58,23 +58,23 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         disease_ids = []
         for drug in drug_list:
             drug_ids.append(entity_map[drug])
-        
+
         for disease in diseaselist:
             disease_ids.append(entity_map["Disease::"+str(disease)])
 
         treatment_rid = [relation_map[treat]  for treat in treatment]
-    
+
         # Load embeddings
         pth=EMBPATH+'entity_embeddings.npy'
-        #print("DISLIST3:"+str(pth))  
+        #print("DISLIST3:"+str(pth))
         entity_emb = np.load(pth)
         #np.savez_compressed("entity_embeddings.npz", entity_emb=entity_emb)
         rel_emb = np.load(EMBPATH+'relation_embeddings.npy')
- 
+
         drug_ids = th.tensor(drug_ids).long()
         disease_ids = th.tensor(disease_ids).long()
         treatment_rid = th.tensor(treatment_rid)
-        
+
         drug_emb = th.tensor(entity_emb[drug_ids])
         treatment_embs = [th.tensor(rel_emb[rid]) for rid in treatment_rid]
 
@@ -82,7 +82,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         def getEmbedding(head, rel, tail):
             score = head + rel - tail
             return gamma - th.norm(score, p=2, dim=-1)
-    
+
         scores_per_disease = []
         dids = []
         for rid in range(len(treatment_embs)):
@@ -94,31 +94,31 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
                 dids.append(drug_ids)
         scores = th.cat(scores_per_disease)
         dids = th.cat(dids)
-        
-        # sort scores 
+
+        # sort scores
         idx = th.flip(th.argsort(scores), dims=[0])
         scores = scores[idx].numpy()
         dids = dids[idx].numpy()
-        
-        
+
+
         _, unique_indices = np.unique(dids, return_index=True)
         topk=noofResults
         topk_indices = np.sort(unique_indices)[:topk]
         proposed_dids = dids[topk_indices]
         proposed_scores = scores[topk_indices]
-        
-        
+
+
         for i in range(topk):
             drug = int(proposed_dids[i])
             score = proposed_scores[i]
-        
+
         proposed_drugnames={}
-        
+
         for row_val in range(topk):
             drug = int(proposed_dids[row_val])
             proposed_drugnames[row_val] = entity_id_map[drug].replace("Compound::","")
 
-        
+
         prediction_df = pd.DataFrame(list(zip(
             proposed_drugnames.values(), proposed_drugnames.values(), list(proposed_scores))), columns=['drug', 'disease', 'score'])
         prediction_df.sort_values(by='score', inplace=True, ascending=False)
@@ -127,7 +127,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         # Add namespace to get CURIEs from IDs
         prediction_df["drug"] = "DRUGBANK:" + prediction_df["drug"]
         prediction_df["disease"] =  prediction_df["disease"]
-        
+
         # prediction_results=prediction_df.to_json(orient='records')
         prediction_results = prediction_df.to_dict(orient='records')
         return prediction_results
@@ -139,14 +139,14 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
 
 
 #print("Drug Repositioning  TOP 100 Predictions (Score=0 is best drug) :")
-#drugscores=predictDrugRepositioning(uterinecancerdisease,noofResults=100)    
+#drugscores=predictDrugRepositioning(uterinecancerdisease,noofResults=100)
 #print(drugscores)
 
 
 
 
 def get_drugrepositioning_results(
-        diseaseCURIElist, n_results=100, 
+        diseaseCURIElist, n_results=100,
     ):
     """Run kg evaluation to get predictions
 
@@ -163,7 +163,7 @@ def get_drugrepositioning_results(
     if n_results:
         # Predictions are already sorted from higher score to lower
         predictions_df = predictions_array[:n_results]
-    predictions_df    
+    predictions_df
     # Build lists of unique node IDs to retrieve label
     predicted_ids = set([])
     for prediction in predictions_array:
@@ -204,7 +204,7 @@ def get_drugrepositioning_results(
                 labelled_prediction['type'] = key
                 #print("SHAPX:"+value)
                 #SHAPDISABLE shaps=xp.getXPREDICTExplanation(drugId=value)
-             
+
                 #SHAPDISABLE labelled_prediction['shap'] = shaps
                 # Same for source_target object
                 source_target_prediction['target'] = {
@@ -228,12 +228,12 @@ def get_drugrepositioning_results(
         # { score: 12,
         #  source: {
         #      id: DB0001
-        #      type: drug,
+        #      'type': drug,
         #      label: a drug
         #  },
         #  target { .... }}
     #print(source_target_predictions)
     #print(labelled_predictions)
-    
-    
+
+
     return labelled_predictions,source_target_predictions

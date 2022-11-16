@@ -6,7 +6,7 @@ import sklearn
 from openpredict.models.openpredict_model import query_omim_drugbank_classifier
 from openpredict.utils import get_entities_labels, get_openpredict_dir
 
-# XPREDICT framework may be used to add explanation features to drug repositioning applications 
+# XPREDICT framework may be used to add explanation features to drug repositioning applications
 
 def getSHAPModel(datasetFile="xpredict/deepdrug_repurposingpredictiondataset.csv", mlmodel="LR"):
     features= ['GO-SIM_HPO-SIM',
@@ -20,30 +20,30 @@ def getSHAPModel(datasetFile="xpredict/deepdrug_repurposingpredictiondataset.csv
      'TC_HPO-SIM',
      'TC_PHENO-SIM']
     outclass=['Class']
-    
+
     deepdrug_dataset_df=pd.read_csv(get_openpredict_dir(datasetFile))
     Xdf= deepdrug_dataset_df[features]
     ydf=deepdrug_dataset_df[outclass]
 
     modellr = sklearn.linear_model.LogisticRegression()
     modellr.fit(Xdf, ydf)
-    
-    
+
+
     # explain the model's predictions using SHAP
     # (same syntax works for LightGBM, CatBoost, scikit-learn, transformers, Spark, etc.)
     X100 = shap.utils.sample(Xdf, 50130)
     explainerlr = shap.Explainer(modellr,X100)
 
     shap_valueslr = explainerlr(Xdf)
-    
+
     return shap_valueslr
 
 
 def getXPREDICTExplanation(shap_values,drugId="000"):
-    
+
     if drugId=="000":
         return pd.DataFrame().to_json()
-    
+
     ##shap.plots.bar(shap_valueslr,max_display=11)
     ##shap.plots.beeswarm(shap_valueslr)
     # shap_valueslr[1]
@@ -52,7 +52,7 @@ def getXPREDICTExplanation(shap_values,drugId="000"):
 
     datasetFile="xpredict/deepdrug_repurposingpredictiondataset.csv"
     deepdrug_dataset_df=pd.read_csv(get_openpredict_dir(datasetFile))
-    
+
     i=50#deepdrug_dataset_df['Drug'== drugId]
     strx=str(drugId)
     drid=strx[strx.rfind(":")+1:]
@@ -61,7 +61,7 @@ def getXPREDICTExplanation(shap_values,drugId="000"):
     if deepdrug_dataset_df.shape[0] >0:
         #shapx=deepdrug_dataset_df.loc[deepdrug_dataset_df.Drug==drid].iloc[0] #test
         ishap=deepdrug_dataset_df.loc[deepdrug_dataset_df.Drug==drid].index[0]
-        
+
         shapx=shap_values[ishap]
         #print("ISHAP:"+str("Shapley Values:"+str(shapx)))
         # print(f"shapex type: {type(shapx)}")
@@ -83,17 +83,17 @@ def getXPREDICTExplanation(shap_values,drugId="000"):
 
         # return str(shapx)
         return shapx_list
-    
+
     else:
         print("test ravel3")
         return pd.DataFrame().to_json() #return null DF
-        
-    
+
+
 
 
 def get_explanations(
         id_to_predict, model_id, app,
-        min_score=None, max_score=None, n_results=None, 
+        min_score=None, max_score=None, n_results=None,
     ):
     """Run classifiers to get predictions
 
@@ -107,7 +107,7 @@ def get_explanations(
     # TODO: improve when we will have more classifier
     predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
     shap_valueslr= getSHAPModel(datasetFile="xpredict/deepdrug_repurposingpredictiondataset.csv")
-    
+
     if min_score:
         predictions_array = [
             p for p in predictions_array if p['score'] >= min_score]
@@ -183,13 +183,13 @@ def get_explanations(
         # { score: 12,
         #  source: {
         #      id: DB0001
-        #      type: drug,
+        #      'type': drug,
         #      label: a drug
         #  },
         #  target { .... }}
     #print(source_target_predictions)
     #print(labelled_predictions)
-    
-    
+
+
     return labelled_predictions,source_target_predictions
 
