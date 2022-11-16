@@ -9,6 +9,9 @@ authors = ["Vincent Emonet <vincent.emonet@gmail.com>"]
 #         'tests/queries/*', 'data/embedding/*']},
 
 # packages = [{ include = "schema_graph" }]
+packages = [
+    { include = "openpredict" },
+]
 include = [
   'openpredict/data/models/*', 'openpredict/data/ontology/*', 'openpredict/data/models/*',
   'openpredict/data/features/*', 'openpredict/data/input/*', 'openpredict/data/sparql/*', 'openpredict/data/resources/*', 'openpredict/data/*.ttl',
