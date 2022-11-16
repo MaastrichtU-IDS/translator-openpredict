@@ -249,7 +249,7 @@ def map_id_to_translator(mapping_obj, source_id):
 
 def load_similarity_embeddings():
     """Load embeddings model for similarity"""
-    embedding_folder = 'data/embedding'
+    embedding_folder = os.path.join('data', 'embedding')
     # print(pkg_resources.resource_filename('openpredict', embedding_folder))
     similarity_embeddings = {}
     for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
@@ -264,12 +264,14 @@ def load_similarity_embeddings():
 def load_treatment_classifier(model_id):
     """Load embeddings model for treats and treated_by"""
     print("📥 Loading treatment classifier from joblib for model " + str(model_id))
-    return load(f'{settings.OPENPREDICT_DATA_DIR}/models/{str(model_id)}.joblib')
+    model_path = os.path.join(settings.OPENPREDICT_DATA_DIR, "models", f"{str(model_id)}.joblib")
+    return load(model_path)
 
 
 def load_treatment_embeddings(model_id):
     """Load embeddings model for treats and treated_by"""
     print(f"📥 Loading treatment features for model {str(model_id)}")
-    (drug_df, disease_df) = load(f'{settings.OPENPREDICT_DATA_DIR}/features/{str(model_id)}.joblib')
+    model_path = os.path.join(settings.OPENPREDICT_DATA_DIR, "features", f"{str(model_id)}.joblib")
+    (drug_df, disease_df) = load(model_path)
     return (drug_df, disease_df)
 
