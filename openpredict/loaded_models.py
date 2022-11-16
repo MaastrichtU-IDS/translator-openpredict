@@ -3,7 +3,6 @@ import secrets
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-import pkg_resources
 from gensim.models import KeyedVectors
 from joblib import load
 from openpredict.config import settings
@@ -47,31 +46,3 @@ class PreloadedModels(object):
     cls.similarity_embeddings = load_similarity_embeddings()
 
     cls.evidence_path = EvidencePathModel()
-
-
-# def load_similarity_embeddings():
-#     """Load embeddings model for similarity"""
-#     embedding_folder = 'data/embedding'
-#     # print(pkg_resources.resource_filename('openpredict', embedding_folder))
-#     similarity_embeddings = {}
-#     for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
-#         if model_id.endswith('txt'):
-#             feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
-#             print("📥 Loading similarity features from " + feature_path)
-#             emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
-#             similarity_embeddings[model_id]= emb_vectors
-#     return similarity_embeddings
-
-
-# def load_treatment_classifier(model_id):
-#     """Load embeddings model for treats and treated_by"""
-#     print("📥 Loading treatment classifier from joblib for model " + str(model_id))
-#     return load(f'{settings.OPENPREDICT_DATA_DIR}/models/{str(model_id)}.joblib')
-
-
-# def load_treatment_embeddings(model_id):
-#     """Load embeddings model for treats and treated_by"""
-#     print(f"📥 Loading treatment features for model {str(model_id)}")
-#     (drug_df, disease_df) = load(f'{settings.OPENPREDICT_DATA_DIR}/features/{str(model_id)}.joblib')
-#     return (drug_df, disease_df)
-

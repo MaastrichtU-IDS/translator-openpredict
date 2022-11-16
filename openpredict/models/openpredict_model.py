@@ -6,7 +6,6 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-import pkg_resources
 from gensim.models import KeyedVectors
 from joblib import dump, load
 from openpredict.loaded_models import PreloadedModels
@@ -19,6 +18,7 @@ from openpredict.rdf_utils import (
 
 # from openpredict.utils import get_spark_context
 from openpredict.utils import get_entities_labels, get_openpredict_dir, log
+from openpredict.config import settings
 from sklearn import (
     ensemble,
     linear_model,
@@ -213,7 +213,7 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     # df_sim_m= df_sim.stack().reset_index(level=[0,1])
-    # df_sim_m.to_csv(pkg_resources.resource_filename('openpredict', os.path.join("data/features/", emb_name+'.csv')), header=header)
+    # df_sim_m.to_csv(os.path.join("openpredict/data/features/", emb_name+'.csv')), header=header)
     return run_id, scores
 
 
@@ -266,8 +266,8 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
 
 
 def generatePairs(drug_df, disease_df, drugDiseaseKnown):
-    """Generate positive and negative pairs using the Drug dataframe, 
-    the Disease dataframe and known drug-disease associations dataframe 
+    """Generate positive and negative pairs using the Drug dataframe,
+    the Disease dataframe and known drug-disease associations dataframe
 
     :param drug_df: Drug dataframe
     :param disease_df: Disease dataframe
@@ -357,7 +357,7 @@ def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
     :param knownDrugDisease: Known drug-disease associations
     :param drugDFs: Drug dataframes
     :param diseaseDFs: Disease dataframes
-    :return: The features dataframe 
+    :return: The features dataframe
     """
     # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
     feature_array = []
@@ -380,7 +380,7 @@ def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
     :param knownDrugDisease: Known drug-disease associations
     :param drugDFs: Drug dataframes
     :param diseaseDFs: Disease dataframes
-    :return: The features dataframe 
+    :return: The features dataframe
     """
 
     rdd = sc.parallelize(list(zip(pairs[:, 0], pairs[:, 1], classes))).map(lambda x: (
@@ -409,7 +409,7 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
     :param knownDrugDisease: Known drug-disease associations
     :param drugDFs: Drug dataframes
     :param diseaseDFs: Disease dataframes
-    :return: The features dataframe 
+    :return: The features dataframe
     """
     totalNumFeatures = len(drugDFs)*len(diseaseDFs)
     # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
@@ -539,7 +539,7 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
     """Create features dataframes. Use Spark if available for speed, otherwise use pandas
     :param pairs: pairs
     :param classes: classes
-    :param drug_df: drug 
+    :param drug_df: drug
     :param disease_df: disease dataframe
     :return: Feature dataframe
     """
@@ -562,9 +562,9 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
 
 
 def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
-    """The main function to run the drug-disease similarities pipeline, 
+    """The main function to run the drug-disease similarities pipeline,
     and train the drug-disease classifier.
-    It returns, and stores the generated classifier as a `.joblib` file 
+    It returns, and stores the generated classifier as a `.joblib` file
     in the `data/models` folder,
 
     :param from_scratch: Train the model for scratch (True by default)
@@ -573,13 +573,15 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     time_start = datetime.now()
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename(
-        'openpredict', 'data/resources/openpredict-omim-drug.csv'), delimiter=',')
+    drugDiseaseKnown = pd.read_csv(
+        os.path.join(settings.GIT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'),
+        delimiter=','
+    )
     drugDiseaseKnown.rename(
         columns={'drugid': 'Drug', 'omimid': 'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # TODO: Translator IDs version (MONDO & CHEBI)
-    # drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/known-drug-diseases.csv'), delimiter=',')
+    # drugDiseaseKnown = pd.read_csv('openpredict/data/resources/known-drug-diseases.csv', delimiter=',')
 
     # print(drugDiseaseKnown.head())
 
@@ -590,10 +592,10 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
         drugfeatfiles = ['drugs-fingerprint-sim.csv', 'drugs-se-sim.csv',
                          'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv', 'drugs-target-seq-sim.csv']
         diseasefeatfiles = ['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv']
-        drugfeatfiles = [pkg_resources.resource_filename('openpredict', os.path.join(
-            baseline_features_folder, fn)) for fn in drugfeatfiles]
-        diseasefeatfiles = [pkg_resources.resource_filename('openpredict', os.path.join(
-            baseline_features_folder, fn)) for fn in diseasefeatfiles]
+        drugfeatfiles = [os.path.join(settings.GIT_DATA_DIR,
+            baseline_features_folder, fn) for fn in drugfeatfiles]
+        diseasefeatfiles = [os.path.join(settings.GIT_DATA_DIR,
+            baseline_features_folder, fn) for fn in diseasefeatfiles]
         # baseline_features_folder = "data/baseline_features/"
         # TODO: Translator IDs version (MONDO & CHEBI)
         drug_df, disease_df = mergeFeatureMatrix(
@@ -706,8 +708,8 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
 
 
 def query_omim_drugbank_classifier(input_curie, model_id):
-    """The main function to query the drug-disease OpenPredict classifier, 
-    It queries the previously generated classifier a `.joblib` file 
+    """The main function to query the drug-disease OpenPredict classifier,
+    It queries the previously generated classifier a `.joblib` file
     in the `data/models` folder
 
     :return: Predictions and scores
@@ -734,8 +736,8 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     (drug_df, disease_df) = PreloadedModels.treatment_embeddings
 
     # TODO: should we update this file too when we create new runs?
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename(
-        'openpredict', 'data/resources/openpredict-omim-drug.csv'), delimiter=',')
+    drugDiseaseKnown = pd.read_csv(
+        os.path.join(settings.GIT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'), delimiter=',')
     drugDiseaseKnown.rename(
         columns={'drugid': 'Drug', 'omimid': 'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
@@ -839,8 +841,8 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
             similar_entites.append((disease, en, sim))
 
 
-    
-    if drug is not None:  
+
+    if drug is not None:
         similarity_df = pd.DataFrame(similar_entites, columns=['entity', 'drug', 'score'])
         similarity_df["entity"] = "DRUGBANK:" + similarity_df["entity"]
         similarity_df["drug"] = "DRUGBANK:" + similarity_df["drug"]
@@ -942,7 +944,7 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
 
 
 def get_predictions(
-        id_to_predict, model_id, min_score=None, max_score=None, n_results=None, 
+        id_to_predict, model_id, min_score=None, max_score=None, n_results=None,
     ):
     """Run classifiers to get predictions
 

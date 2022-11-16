@@ -1,12 +1,10 @@
 import json
 import os
 
-import pkg_resources
 import pytest
 from fastapi.testclient import TestClient
 from openpredict.config import settings
 from openpredict.main import app
-from openpredict.rdf_utils import init_triplestore
 from openpredict.utils import init_openpredict_dir
 from reasoner_validator import validate
 
@@ -59,12 +57,12 @@ def test_get_similarity_disease():
 def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     url = '/query'
-    for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
-        with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
+    for trapi_filename in os.listdir(os.path.join('tests', 'queries')):
+        with open(os.path.join('tests', 'queries', trapi_filename),'r') as f:
             reasoner_query = f.read()
             response = client.post(
-                url, 
-                data=reasoner_query, 
+                url,
+                data=reasoner_query,
                 headers={"Content-Type": "application/json"},
                 # content_type='application/json'
             )
@@ -126,8 +124,8 @@ def test_trapi_empty_response():
     #     'accept': '*/*',
     #     'Content-Type': 'multipart/form-data',
     # }
-    # response = client.post(url, 
-    #                         # files=('embedding_file', json.dumps(embeddings_json)), 
+    # response = client.post(url,
+    #                         # files=('embedding_file', json.dumps(embeddings_json)),
     #                         files=files,
     #                         headers=headers)
     #                         # content_type='application/json'))

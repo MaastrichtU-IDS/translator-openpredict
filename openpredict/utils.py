@@ -6,7 +6,6 @@ import time
 from pathlib import Path
 
 import pandas as pd
-import pkg_resources
 import requests
 from gensim.models import KeyedVectors
 from joblib import load
@@ -50,20 +49,20 @@ def init_openpredict_dir():
     if not os.path.exists(get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
         shutil.copy(
-            pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
+            os.path.join(settings.GIT_DATA_DIR, 'features', 'openpredict-baseline-omim-drugbank.joblib'),
             get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')
         )
     if not os.path.exists(get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib')):
         print('Initiating ' + get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib'))
         shutil.copy(
-            pkg_resources.resource_filename('openpredict', 'data/models/openpredict-baseline-omim-drugbank.joblib'),
+            os.path.join(settings.GIT_DATA_DIR, 'models', 'openpredict-baseline-omim-drugbank.joblib'),
             get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib')
         )
     if not os.path.exists(get_openpredict_dir('openpredict-metadata.ttl')):
         print('Creating ' + get_openpredict_dir('openpredict-metadata.ttl'))
         # shutil.copy(get_openpredict_dir('initial-openpredict-metadata.ttl'),
         shutil.copy(
-            pkg_resources.resource_filename('openpredict', 'data/openpredict-metadata.ttl'),
+            os.path.join(settings.GIT_DATA_DIR, 'openpredict-metadata.ttl'),
             get_openpredict_dir('openpredict-metadata.ttl')
         )
 
@@ -71,14 +70,14 @@ def init_openpredict_dir():
     if not os.path.exists(get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv')):
         print('Initiating ' + get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv'))
         shutil.copy(
-            pkg_resources.resource_filename('openpredict', 'data/kgpredict/kgpredict_drug_diseasemappings.tsv'),
+            os.path.join(settings.GIT_DATA_DIR, 'kgpredict', 'kgpredict_drug_diseasemappings.tsv'),
             get_openpredict_dir('kgpredict/kgpredict_drug_diseasemappings.tsv')
         )
 
     if not os.path.exists(get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv')):
         print('Initiating ' + get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv'))
         shutil.copy(
-            pkg_resources.resource_filename('openpredict', 'data/xpredict/deepdrug_repurposingpredictiondataset.csv'),
+            os.path.join(settings.GIT_DATA_DIR, 'xpredict', 'deepdrug_repurposingpredictiondataset.csv'),
             get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv')
         )
 
@@ -88,9 +87,6 @@ def init_openpredict_dir():
         os.system(f"tar -xzvf /tmp/kgpredictfiles.tar.gz  -C {get_openpredict_dir('kgpredict')}")
         os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_entity.npy'), get_openpredict_dir('kgpredict/embed/entity_embeddings.npy'))
         os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_relation.npy'), get_openpredict_dir('kgpredict/embed/relation_embeddings.npy'))
-
-        # shutil.copy(pkg_resources.resource_filename('openpredict', 'data/features/openpredict-baseline-omim-drugbank.joblib'),
-        #     get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib'))
 
     print('✅ OpenPredict data initialized')
 
@@ -171,15 +167,19 @@ def normalize_id_to_translator(ids_list):
 
 def convert_baseline_features_ids():
     """Convert IDs to use Translator preferred IDs when building the baseline model from scratch"""
-    baseline_features_folder = "data/baseline_features/"
+    baseline_features_folder = os.path.join(settings.GIT_DATA_DIR, "baseline_features")
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv',
                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
     diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
-    drugfeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in drugfeatfiles]
-    diseasefeatfiles = [ pkg_resources.resource_filename('openpredict', os.path.join(baseline_features_folder, fn)) for fn in diseasefeatfiles]
+    drugfeatfiles = [
+        os.path.join(baseline_features_folder, fn) for fn in drugfeatfiles
+    ]
+    diseasefeatfiles = [
+        os.path.join(baseline_features_folder, fn) for fn in diseasefeatfiles
+    ]
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(pkg_resources.resource_filename('openpredict', 'data/resources/openpredict-omim-drug.csv'),delimiter=',')
+    drugDiseaseKnown = pd.read_csv(os.path.join(settings.GIT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'),delimiter=',')
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
@@ -249,12 +249,11 @@ def map_id_to_translator(mapping_obj, source_id):
 
 def load_similarity_embeddings():
     """Load embeddings model for similarity"""
-    embedding_folder = os.path.join('data', 'embedding')
-    # print(pkg_resources.resource_filename('openpredict', embedding_folder))
+    embedding_folder = os.path.join(settings.GIT_DATA_DIR, 'embedding')
     similarity_embeddings = {}
-    for model_id in os.listdir(pkg_resources.resource_filename('openpredict', embedding_folder)):
+    for model_id in os.listdir(embedding_folder):
         if model_id.endswith('txt'):
-            feature_path = pkg_resources.resource_filename('openpredict', os.path.join(embedding_folder, model_id))
+            feature_path = os.path.join(embedding_folder, model_id)
             print("📥 Loading similarity features from " + feature_path)
             emb_vectors = KeyedVectors.load_word2vec_format(feature_path)
             similarity_embeddings[model_id]= emb_vectors

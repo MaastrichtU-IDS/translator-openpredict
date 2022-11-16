@@ -2,7 +2,6 @@ import os
 import uuid
 from datetime import datetime
 
-import pkg_resources
 from openpredict.config import settings
 from rdflib import RDF, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import DC, DCTERMS, RDFS, VOID, XSD
@@ -129,22 +128,21 @@ def query_sparql_endpoint(query, parameters=[]):
         return results
 
 
-def init_triplestore():
-    """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
-    Init using the data/openpredict-metadata.ttl RDF file
-    """
-    # check_baseline_run_query = """SELECT DISTINCT ?runType
-    # WHERE {
-    #     <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
-    # } LIMIT 10
-    # """
-    # results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
-    # if (len(results) < 1):
-    g = Graph()
-    g.parse(pkg_resources.resource_filename('openpredict',
-            'data/openpredict-metadata.ttl'), format="ttl")
-    insert_graph_in_sparql_endpoint(g)
-    print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
+# def init_triplestore():
+#     """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
+#     Init using the data/openpredict-metadata.ttl RDF file
+#     """
+#     # check_baseline_run_query = """SELECT DISTINCT ?runType
+#     # WHERE {
+#     #     <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
+#     # } LIMIT 10
+#     # """
+#     # results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
+#     # if (len(results) < 1):
+#     g = Graph()
+#     g.parse('openpredict/data/openpredict-metadata.ttl', format="ttl")
+#     insert_graph_in_sparql_endpoint(g)
+#     print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
 
 def add_feature_metadata(id, description, type):
@@ -346,23 +344,23 @@ def retrieve_models():
             	mls:hasOutput ?evaluation .
             ?evaluation a mls:ModelEvaluation  .
             ?features dc:identifier ?featureId .
-    
-            ?evaluation mls:specifiedBy [a mls:EvaluationMeasure ; 
+
+            ?evaluation mls:specifiedBy [a mls:EvaluationMeasure ;
                         rdfs:label "accuracy" ;
                         mls:hasValue ?accuracy ] .
-            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
                     rdfs:label "precision" ;
                     mls:hasValue ?precision ] .
-            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
                     rdfs:label "f1" ;
                     mls:hasValue ?f1 ] .
-            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
                     rdfs:label "recall" ;
                     mls:hasValue ?recall ] .
-            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
                     rdfs:label "roc_auc" ;
                     mls:hasValue ?roc_auc ] .
-            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ; 
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
                     rdfs:label "average_precision" ;
                     mls:hasValue ?average_precision ] .
         }

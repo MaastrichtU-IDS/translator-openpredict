@@ -31,7 +31,7 @@ convert_baseline_features_ids()
 #     'C': 1.0,
 #     'random_state': 100
 # }
-# scores = {'precision': 0.8602150537634409, 'recall': 0.7228915662650602, 'accuracy': 0.8683417085427135, 
+# scores = {'precision': 0.8602150537634409, 'recall': 0.7228915662650602, 'accuracy': 0.8683417085427135,
 #     'roc_auc': 0.8988169874066402, 'f1': 0.7855973813420621, 'average_precision': 0.8733631857757298}
 
 # Features should be picked up from baseline-omim-drugbank
@@ -73,13 +73,13 @@ convert_baseline_features_ids()
 # config.set("spark.executor.memory", "5g")
 # config.set('spark.driver.memory', '5g')
 # config.set("spark.memory.offHeap.enabled",True)
-# config.set("spark.memory.offHeap.size","5g") 
+# config.set("spark.memory.offHeap.size","5g")
 # sc = SparkContext(conf=config, appName="OpenPredict")
 # print (sc)
 
 
 ### Print Dataframes
-# clf = load('openpredict/data/models/openpredict-baseline-omim-drugbank.joblib') 
+# clf = load('openpredict/data/models/openpredict-baseline-omim-drugbank.joblib')
 # print(clf.feature_names)
 
 # (drug_df, disease_df) = load('openpredict/data/features/drug_disease_dataframes.joblib')
@@ -108,5 +108,5 @@ convert_baseline_features_ids()
 # print(drug_features_df)
 # pd.set_option("display.max_rows", 10, "display.max_columns", None)
 # print(drug_df)
-# (drug_df, disease_df)= load(pkg_resources.resource_filename('openpredict', 'data/features/drug_disease_dataframes.joblib'))
+# (drug_df, disease_df)= load('openpredict/data/features/drug_disease_dataframes.joblib')
 # print(features.feature_names)

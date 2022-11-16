@@ -1,6 +1,5 @@
 import os
 
-import pkg_resources
 import pytest
 import requests
 from openpredict.config import settings
@@ -30,9 +29,9 @@ def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     headers = {'Content-type': 'application/json'}
 
-    for trapi_filename in os.listdir(pkg_resources.resource_filename('tests', 'queries')):
+    for trapi_filename in os.listdir(os.path.join('tests', 'queries')):
 
-        with open(pkg_resources.resource_filename('tests', 'queries/' + trapi_filename),'r') as f:
+        with open(os.path.join('tests', 'queries', trapi_filename),'r') as f:
             trapi_query = f.read()
             trapi_results = requests.post(PROD_API_URL + '/query',
                         data=trapi_query, headers=headers).json()

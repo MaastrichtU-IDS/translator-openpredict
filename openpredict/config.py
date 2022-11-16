@@ -3,7 +3,6 @@ import secrets
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-import pkg_resources
 from gensim.models import KeyedVectors
 from joblib import load
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
@@ -25,7 +24,8 @@ class Settings(BaseSettings):
     DEV_MODE: bool = False
 
     OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'data')
-    GIT_DATA_DIR: str = pkg_resources.resource_filename('openpredict', 'data')
+    GIT_DATA_DIR: str = str(os.path.join(os.getcwd(), 'openpredict', 'data')),
+    # GIT_DATA_DIR: str = pkg_resources.resource_filename('openpredict', 'data')
 
     # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
 
