@@ -11,13 +11,6 @@ USER root
 WORKDIR /app
 
 
-# Install Poetry
-ENV POETRY_VERSION=1.2.0
-RUN curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION
-ENV PATH=/root/.local/bin:$PATH
-RUN poetry config virtualenvs.create false
-
-
 RUN apt-get update && \
     apt-get install -y build-essential curl vim openjdk-11-jdk wget && \
     pip install --upgrade pip
@@ -39,24 +32,13 @@ RUN wget -q -O spark.tgz https://archive.apache.org/dist/spark/spark-${APACHE_SP
 ENV OPENPREDICT_DATA_DIR=/data/openpredict
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
-# ENV PYSPARK_PYTHON=/opt/conda/bin/python3
-# ENV PYSPARK_DRIVER_PYTHON=/opt/conda/bin/python3
 
-# Avoid to reinstall packages when no changes to requirements
-COPY ./pyproject.toml ./poetry.lock* /app/
-
-# Allow installing dev dependencies to run tests
-ARG INSTALL_DEV=false
-RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --no-dev ; fi"
-
-# COPY requirements.txt .
-# RUN pip install -r requirements.txt
-# ARG INSTALL_DEV=false
-# COPY requirements-dev.txt .
-# RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -r requirements-dev.txt ; fi"
 
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
+
+# RUN pip install ".[train,test,dev]"
+RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e .[train,test,dev] ; else pip install . ; fi"
 
 ## Gunicorn config
 ENV MODULE_NAME=openpredict.main
@@ -66,7 +48,7 @@ ENV GUNICORN_CMD_ARGS="--preload"
 
 ## Install the pip package based on the source code
 
-RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e . ; else pip install . ; fi"
+# RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e . ; else pip install . ; fi"
 
 EXPOSE 8808
 

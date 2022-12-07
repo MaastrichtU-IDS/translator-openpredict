@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - email: r.celebi@maastrichtuniversity.nl
+    given-names:  Remzi Çelebi
+    affiliation: Institute of Data Science, Maastricht University
+    orcid: https://orcid.org/0000-0001-7769-4272
+  - given-names: Elif
+    affiliation: Institute of Data Science, Maastricht University
+    # email: elif@maastrichtuniversity.nl
+    # orcid: https://orcid.org/0000-0000-0000-0000
+  # - email: arif.yilmaz@maastrichtuniversity.nl
+  #   given-names: Arif Yilmaz
+  #   affiliation: Institute of Data Science, Maastricht University
+    # orcid: https://orcid.org/0000-0000-0000-0000
+title: "OpenPredict model"
+repository-code: https://github.com/MaastrichtU-IDS/translator-openpredict
+date-released: 2022-12-07
+# url: https://pypi.org/project/openpredict-model
+# doi: 10.48550/arXiv.2206.13787
