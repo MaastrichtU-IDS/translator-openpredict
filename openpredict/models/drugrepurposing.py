@@ -15,6 +15,8 @@ import torch.nn.functional as fn
 from openpredict.utils import get_entities_labels, get_openpredict_dir
 
 
+# Predict drug repurposing based on the DRKG (drug repurposing KG) by Arif Yilmaz
+
 def predictDrugRepositioning(diseaseCURIElist,noofResults):
     # FILEPATH="/openpredict/data/kgpredict/"
     FILEPATH=get_openpredict_dir("kgpredict/")

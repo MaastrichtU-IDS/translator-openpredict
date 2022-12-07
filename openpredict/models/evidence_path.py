@@ -10,6 +10,8 @@ from openpredict.config import settings
 from openpredict.models import openpredict_model
 from openpredict.utils import load_treatment_embeddings
 
+## Evidence path for OpenPredict model by Elif
+
 #from openpredict_model import load_treatment_embeddings
 
 #from openpredict.utils import get_openpredict_dir

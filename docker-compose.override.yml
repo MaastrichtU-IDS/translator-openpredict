@@ -22,7 +22,7 @@ services:
 
       # SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict
       # SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict/statements
-    
+
     entrypoint: uvicorn openpredict.main:app --host 0.0.0.0 --port 8808 --reload
     # entrypoint: openpredict start-api --debug
     ## Gunicorn for multiple uvicorn workers in prod:
