@@ -40,6 +40,8 @@ COPY . .
 RUN pip install -e ".[train,test,dev]"
 # RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e \".[train,test,dev]\" ; else pip install . ; fi"
 
+# RUN dvc pull
+
 ## Gunicorn config
 ENV MODULE_NAME=openpredict.main
 ENV VARIABLE_NAME=app
