@@ -2,6 +2,6 @@
 # the performance. Learn more at
 # https://dvc.org/doc/user-guide/dvcignore
 
-/data/kgpredict
+/data/kgpredict/*
 
 !/data/kgpredict/kgpredict_drug_diseasemappings.tsv

@@ -12,6 +12,7 @@ import torch.nn.functional as fn
 from openpredict.utils import get_entities_labels, get_openpredict_dir
 
 
+# Downloading 500M kgpredict external dependency to avoid to have to commit it to dvc
 def download():
     if not os.path.exists(get_openpredict_dir("kgpredict")):
         print("kgpredict data not present, downloading it")
@@ -164,6 +165,7 @@ def get_drugrepositioning_results(
     :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
+    download()
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
     id_to_predict=diseaseCURIElist
