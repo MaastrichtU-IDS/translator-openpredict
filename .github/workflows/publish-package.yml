@@ -21,9 +21,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install ".[train,test,dev]"
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -31,13 +30,8 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
-      env:
-        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-        SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
-        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
-        python setup.py pytest
+        pytest
 
   tests-spark:
     runs-on: ubuntu-latest
@@ -59,44 +53,33 @@ jobs:
         spark-version: '3.0.1'
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install ".[train,test,dev]"
     - name: Test with pytest
-      env:
-        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-        SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
-        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: python setup.py pytest
-  
+
   publish:
     needs: [ tests, tests-spark ]
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-        python setup.py sdist bdist_wheel
+        pip install build
 
     - name: Build and publish to PyPI
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python setup.py sdist bdist_wheel
-        twine upload dist/*
+        python -m build
+        # twine upload dist/*
 
-    ## To test:
-    # - name: Build and publish to PyPI
-    #   uses: pypa/gh-action-pypi-publish@master
-    #   with:
-    #     user: ${{ secrets.PYPI_USERNAME }}
-    #     password: ${{ secrets.PYPI_PASSWORD }}
+    - name: Publish
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_PASSWORD }}

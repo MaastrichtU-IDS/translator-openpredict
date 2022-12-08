@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 version = "0.1.0"
 requires-python = ">=3.8,<3.9"
@@ -39,6 +43,7 @@ dependencies = [
     "pydantic >=1.9",
     "reasoner-pydantic >=2.2.3",
     # "reasoner-pydantic >=3.0.0",
+    "reasoner-validator >=3.1.4",
     "fastapi >=0.68.1",
     "uvicorn >=0.15.0",
     "gunicorn >=20.0.4",
@@ -93,10 +98,6 @@ History = "https://github.com/MaastrichtU-IDS/translator-openpredict/releases"
 Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
 Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
 
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 # include = [
 #   'openpredict/data/models/*', 'openpredict/data/ontology/*', 'openpredict/data/models/*',

@@ -3,7 +3,7 @@ import re
 import requests
 from openpredict.config import settings
 from openpredict.loaded_models import PreloadedModels
-from openpredict.models.openpredict_model import get_predictions, get_similarities
+from openpredict_model.predict import get_predictions, get_similarities
 
 # TODO: add explain and DRKG to TRAPI
 # from openpredict.models.drugrepurposing import get_drugrepositioning_results
@@ -41,7 +41,7 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
             resolved_ids_object[id_to_resolve] = id_to_resolve
         else:
             ids_to_normalize.append(id_to_resolve)
-    
+
     # Query Translator NodeNormalization API to convert IDs to OMIM/DrugBank IDs
     if len(ids_to_normalize) > 0:
         try:
@@ -100,7 +100,7 @@ def resolve_trapi_query(reasoner_query):
 
     # Parse the query_graph to build the query plan
     for edge_id, qg_edge in query_graph["edges"].items():
-        # Build dict with all infos of associations to predict 
+        # Build dict with all infos of associations to predict
         query_plan[edge_id] = {
             # 'predicates': qg_edge['predicates'],
             # 'qedge_subjects': qg_edge['subject'],
@@ -109,7 +109,7 @@ def resolve_trapi_query(reasoner_query):
         }
         if 'predicates' in qg_edge.keys():
             query_plan[edge_id]['predicates'] = qg_edge['predicates']
-        else: 
+        else:
             # Quick fix: in case no relation is provided
             query_plan[edge_id]['predicates'] = ['biolink:treats']
 
@@ -126,10 +126,10 @@ def resolve_trapi_query(reasoner_query):
                     # TOREMOVE: If single values provided for id or category: make it an array
                     # if not isinstance(node['id'], list):
                     #     node['id'] = [ node['id'] ]
-                    
+
                     # Resolve the curie provided with the NodeNormalization API
                     query_plan[edge_id]['from_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['ids'], resolved_ids_object)
-                        
+
                     query_plan[edge_id]['from_qg_id'] = node_id
                     if 'categories' in node.keys():
                         query_plan[edge_id]['from_type'] = node['categories']
@@ -178,7 +178,7 @@ def resolve_trapi_query(reasoner_query):
                         emb_vectors = PreloadedModels.similarity_embeddings[similarity_model_id]
                         similarity_json, source_target_predictions = get_similarities(
                             query_plan[edge_qg_id]['from_type'],
-                            id_to_predict, 
+                            id_to_predict,
                             emb_vectors, min_score, max_score, n_results
                         )
                         #  [
@@ -299,7 +299,7 @@ def resolve_trapi_query(reasoner_query):
                         )
                     except:
                         prediction_json = []
-                        
+
                     for association in prediction_json:
                         # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
                         # Build dict of node ID : label
@@ -311,7 +311,7 @@ def resolve_trapi_query(reasoner_query):
                         # If the target ID is given, we filter here from the predictions
                         if 'to_kg_id' in query_plan[edge_qg_id] and target_node_id not in query_plan[edge_qg_id]['to_kg_id']:
                             pass
-                        
+
                         else:
                             edge_kg_id = 'e' + str(kg_edge_count)
                             # Get the ID of the predicted entity in result association
@@ -381,7 +381,7 @@ def resolve_trapi_query(reasoner_query):
                             if association['source']['type'] == 'drug':
                                 # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
                                 edge_dict['predicate'] = 'biolink:treats'
-                            else: 
+                            else:
                                 edge_dict['predicate'] = 'biolink:treated_by'
 
                             # Add the association in the knowledge_graph as edge
@@ -414,7 +414,7 @@ def resolve_trapi_query(reasoner_query):
                 print('BioLink category not parents of Drug or Disease, no results returned')
                 prediction_json = []
 
-        else: 
+        else:
             prediction_json = []
 
     # Generate kg nodes from the dict of nodes + result from query to resolve labels

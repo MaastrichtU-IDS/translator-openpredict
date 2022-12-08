@@ -29,7 +29,7 @@ RUN wget -q -O spark.tgz https://archive.apache.org/dist/spark/spark-${APACHE_SP
 
 
 ## Define some environment variables
-ENV OPENPREDICT_DATA_DIR=/data/openpredict
+# ENV OPENPREDICT_DATA_DIR=/data/openpredict
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
 
@@ -37,8 +37,8 @@ ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
-# RUN pip install ".[train,test,dev]"
-RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e .[train,test,dev] ; else pip install . ; fi"
+RUN pip install -e ".[train,test,dev]"
+# RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e \".[train,test,dev]\" ; else pip install . ; fi"
 
 ## Gunicorn config
 ENV MODULE_NAME=openpredict.main

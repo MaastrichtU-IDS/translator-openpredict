@@ -4,7 +4,7 @@ import sys
 import click
 import uvicorn
 from openpredict.main import app
-from openpredict.models.openpredict_model import train_model as train_openpredict_model
+from openpredict_model.train import train_model as train_openpredict_model
 from openpredict.rdf_utils import add_run_metadata, retrieve_features
 
 

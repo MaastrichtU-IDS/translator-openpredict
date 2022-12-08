@@ -1,8 +1,5 @@
-
-
-
 # @Author Arif YILMAZ, a.yilmaz@maastrichtuniversity.nl
-#@repoaddress "https://github.com/arifx/XPREDICT"
+# @repoaddress "https://github.com/arifx/XPREDICT"
 
 import csv
 import os
@@ -14,6 +11,17 @@ import torch as th
 import torch.nn.functional as fn
 from openpredict.utils import get_entities_labels, get_openpredict_dir
 
+
+def download():
+    if not os.path.exists(get_openpredict_dir("kgpredict")):
+        print("kgpredict data not present, downloading it")
+        try:
+            os.system(f'mkdir -p ./data/kgpredict')
+            os.system(f"wget -q --show-progress purl.org/kgpredict -O kgpredict.tar.gz")
+            os.system(f'tar -xzvf kgpredict.tar.gz  -C ./data/kgpredict/')
+            os.system(f"rm kgpredict.tar.gz")
+        except Exception as e:
+            print(f"Error while downloading kgpredict: {e}")
 
 # Predict drug repurposing based on the DRKG (drug repurposing KG) by Arif Yilmaz
 

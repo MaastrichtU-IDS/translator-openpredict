@@ -8,9 +8,10 @@ import pandas as pd
 from gensim.models import KeyedVectors
 from openpredict.config import settings
 from openpredict.ml_models.base_machine_learning_model import BaseMachineLearningModel
-from openpredict.models import openpredict_model
 from openpredict.utils import load_treatment_embeddings
 
+# Experiment to define models as class, which download their model
+# But we will probably go more towards using dvc
 
 class EvidencePathModel(BaseMachineLearningModel):
 
@@ -34,14 +35,14 @@ class EvidencePathModel(BaseMachineLearningModel):
         # You can also add more objects to your model, e.g. if you need to store dataframes
         # to reuse later, for example with self.drug_fp_vectors
 
-        self.df_op = pd.read_csv(f"{settings.GIT_DATA_DIR}/resources/openpredict-omim-drug.csv")
+        self.df_op = pd.read_csv(f"{settings.OPENPREDICT_DATA_DIR}/resources/openpredict-omim-drug.csv")
         print("df_op :")
         print(self.df_op)
 
         self.drug_fp_vectors = KeyedVectors.load_word2vec_format(
-            f'{settings.GIT_DATA_DIR}/embedding/drugs_fp_embed.txt', binary=False)
+            f'{settings.OPENPREDICT_DATA_DIR}/embedding/drugs_fp_embed.txt', binary=False)
         self.disease_hp_vectors = KeyedVectors.load_word2vec_format(
-            f'{settings.GIT_DATA_DIR}/embedding/disease_hp_embed.txt', binary=False)
+            f'{settings.OPENPREDICT_DATA_DIR}/embedding/disease_hp_embed.txt', binary=False)
 
 
         self.df_op = self.df_op.rename(columns={'omimid': 'disease_id', 'drugid': 'drug_id'})
@@ -112,7 +113,7 @@ class EvidencePathModel(BaseMachineLearningModel):
     # df_op = pd.read_csv("openpredict/data/resources/openpredict-omim-drug.csv")
 
 
-    # df_op = pd.read_csv(f"{settings.GIT_DATA_DIR}/resources/openpredict-omim-drug.csv")
+    # df_op = pd.read_csv(f"{settings.OPENPREDICT_DATA_DIR}/resources/openpredict-omim-drug.csv")
 
     # drug_fp_vectors = KeyedVectors.load_word2vec_format(
     #     'openpredict/data/embedding/drugs_fp_embed.txt', binary=False)

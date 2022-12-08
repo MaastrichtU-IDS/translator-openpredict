@@ -28,7 +28,7 @@ git checkout -b my-branch
 Install `openpredict` from the source code, and update the package automatically when the files changes locally :arrows_counterclockwise:
 
 ```bash
-pip3 install -e .
+pip install -e .
 ```
 
 > See the [main README](https://github.com/MaastrichtU-IDS/translator-openpredict) for more details on the package installation.
@@ -38,6 +38,54 @@ The OpenPredict API stores its metadata using RDF:
 * We use a `.ttl` file in `data/` in local development
 * It can use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment with docker
 * We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore!
+
+
+## Setup dvc
+
+[dvc](https://dvc.org/) is a tool for data version control, install it with:
+
+```bash
+pip install dvc
+```
+
+It helps you to easily store datasets used by your machine learning workflows, and keep track of changes in a way similar to git. Like git, with dvc you will need to choose a platform to publish your data, such as [DagsHub](https://dagshub.com/docs/integration_guide/dvc/) or [HuggingFace](https://dvc.org/doc/dvclive/api-reference/ml-frameworks/huggingface).
+
+### Pull data with dvc
+
+Pull data:
+
+```bash
+dvc pull -r origin
+```
+
+### Create a new project on DagsHub
+
+Here we document the process using DagsHub to publish data related to a ML experiment, but you could choose to use a different platform for your project.
+
+⚠️ Open source projects on DagsHub using the free plan have a 10G storage limit.
+
+1. Go to [dagshub.com](https://dagshub.com/user/login), and login with GitHub or Google
+
+2. Create a new project in DagsHub by connecting it to the GitHub repository with the code for the experiment (this repository)
+
+3. Connect your local repository with the created DagsHub project:
+
+   ```bash
+   export DAGSHUB_USER="vemonet"
+   export DAGSHUB_TOKEN="TOKEN"
+
+   dvc remote add origin https://dagshub.com/$DAGSHUB_USER/openpredict-model.dvc
+   dvc remote modify origin --local auth basic
+   dvc remote modify origin --local user $DAGSHUB_USER
+   dvc remote modify origin --local password $DAGSHUB_TOKEN
+   ```
+
+3. Push data:
+
+   ```bash
+   dvc push -r origin
+   ```
+
 
 ### Start the OpenPredict API :rocket:
 
@@ -92,7 +140,7 @@ If you want to reset the (meta)data used by OpenPredict locally:
 
 > This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
 >
-> On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl` 
+> On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl`
 
 See more **[documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs)** locally or with Docker.
 
@@ -201,4 +249,4 @@ Get the latest TRAPI YAML: https://github.com/NCATSTranslator/ReasonerAPI/blob/m
 1. Update description of the service
 2. Add additional calls exclusive to OpenPredict
 3. Add `operationId` for each call
-4. In `components:` add `schemas: QueryOptions` 
+4. In `components:` add `schemas: QueryOptions`

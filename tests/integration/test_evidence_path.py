@@ -3,13 +3,12 @@ from fastapi.testclient import TestClient
 from gensim.models import KeyedVectors
 from openpredict.config import settings
 from openpredict.main import app
-from openpredict.models.evidence_path import (
-    do_evidence_path,
+from openpredict_evidence_path.train import (
     getQuantiles,
     percentiles_of_different_features,
 )
+from openpredict_evidence_path.predict import do_evidence_path
 from openpredict.utils import init_openpredict_dir
-from reasoner_validator import validate
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()

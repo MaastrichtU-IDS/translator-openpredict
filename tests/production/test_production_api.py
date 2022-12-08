@@ -3,7 +3,7 @@ import os
 import pytest
 import requests
 from openpredict.config import settings
-from reasoner_validator import validate
+from tests.conftest import validator
 
 PROD_API_URL = 'https://openpredict.semanticscience.org'
 # PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
@@ -38,7 +38,12 @@ def test_post_trapi():
             edges = trapi_results['message']['knowledge_graph']['edges'].items()
 
             print(trapi_filename)
-            assert validate(trapi_results['message'], "Message", settings.TRAPI_VERSION_TEST) == None
+            validator.check_compliance_of_trapi_response(message=trapi_results["message"])
+            validator_resp = validator.get_messages()
+            print(validator_resp["warnings"])
+            assert (
+                len(validator_resp["errors"]) == 0
+            )
             if trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):

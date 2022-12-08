@@ -19,12 +19,11 @@ class Settings(BaseSettings):
 
     BIOLINK_VERSION: str = '2.3.0'
     TRAPI_VERSION: str = "1.3.0"
-    TRAPI_VERSION_TEST: str = "1.2.0"
 
     DEV_MODE: bool = False
 
     OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'data')
-    GIT_DATA_DIR: str = os.path.join(os.getcwd(), 'openpredict', 'data')
+    # OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'src', 'openpredict', 'data')
 
     # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
 

@@ -3,9 +3,9 @@ from typing import Optional
 
 from fastapi import APIRouter
 from openpredict.loaded_models import PreloadedModels
-from openpredict.models.drugrepurposing import get_drugrepositioning_results
-from openpredict.models.explain_shap import get_explanations
-from openpredict.models.openpredict_model import get_predictions, get_similarities
+from drkg_model.predict import get_drugrepositioning_results
+from openpredict_explain_shap.predict import get_explanations
+from openpredict_model.predict import get_predictions, get_similarities
 from openpredict.openapi import SimilarityTypes
 
 app = APIRouter()

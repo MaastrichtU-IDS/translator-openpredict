@@ -1,7 +1,7 @@
 import os
 
 from fastapi import APIRouter, File, UploadFile
-from openpredict.models.openpredict_model import addEmbedding
+from openpredict_model.train import addEmbedding
 from openpredict.openapi import EmbeddingTypes
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 
@@ -39,9 +39,9 @@ def get_models() -> dict:
 
 
 @app.post("/embedding", name="Upload your embedding for drugs or diseases",
-    description="""Upload your embedding file:  
+    description="""Upload your embedding file:
 
-1. Select which types do you have in the embeddings: Drugs, Diseases or Both. 
+1. Select which types do you have in the embeddings: Drugs, Diseases or Both.
 
 2. Define the base `model_id`: use the `/models` call to see the list of trained models with their characteristics, and pick the ID of the model you will use as base to add your embedding
 
@@ -51,13 +51,13 @@ def get_models() -> dict:
     tags=["openpredict"],
 )
 def post_embedding(
-        emb_name: str, description: str, 
-        types: EmbeddingTypes ='Both', model_id: str ='openpredict-baseline-omim-drugbank', 
+        emb_name: str, description: str,
+        types: EmbeddingTypes ='Both', model_id: str ='openpredict-baseline-omim-drugbank',
         apikey: str=None,
         uploaded_file: UploadFile = File(...)
     ) -> dict:
-    """Post JSON embeddings via the API, with simple APIKEY authentication 
-    provided in environment variables 
+    """Post JSON embeddings via the API, with simple APIKEY authentication
+    provided in environment variables
     """
     if type(types) is EmbeddingTypes:
         types = types.value

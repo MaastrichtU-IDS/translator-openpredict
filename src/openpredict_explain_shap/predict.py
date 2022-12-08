@@ -1,9 +1,12 @@
+# @Author Arif YILMAZ, a.yilmaz@maastrichtuniversity.nl
+# @repoaddress "https://github.com/arifx/XPREDICT"
+
 import json
 
 import pandas as pd
 import shap as shap
 import sklearn
-from openpredict.models.openpredict_model import query_omim_drugbank_classifier
+from openpredict_model.predict import query_omim_drugbank_classifier
 from openpredict.utils import get_entities_labels, get_openpredict_dir
 
 # XPREDICT framework may be used to add explanation features to drug repositioning applications
