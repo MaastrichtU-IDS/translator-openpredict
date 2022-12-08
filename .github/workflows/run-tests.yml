@@ -42,7 +42,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install ".[train,test,dev]"
+        pip install -e ".[train,test,dev]"
 
     # - name: Install dependencies
     #   run: |
