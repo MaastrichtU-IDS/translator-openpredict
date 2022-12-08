@@ -80,12 +80,12 @@ def init_openpredict_dir():
             get_openpredict_dir('xpredict/deepdrug_repurposingpredictiondataset.csv')
         )
 
-    if not os.path.exists(get_openpredict_dir('kgpredict/embed/entity_embeddings.npy')):
+    if not os.path.exists(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_entity.npy')):
         print(f"📥️ Downloading Drug Repurposing KG embeddings in {get_openpredict_dir('kgpredict/embed')}")
         os.system('wget -q --show-progress purl.org/kgpredict -O /tmp/kgpredictfiles.tar.gz')
         os.system(f"tar -xzvf /tmp/kgpredictfiles.tar.gz  -C {get_openpredict_dir('kgpredict')}")
-        os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_entity.npy'), get_openpredict_dir('kgpredict/embed/entity_embeddings.npy'))
-        os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_relation.npy'), get_openpredict_dir('kgpredict/embed/relation_embeddings.npy'))
+        os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_entity.npy'), get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_entity.npy'))
+        os.rename(get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_relation.npy'), get_openpredict_dir('kgpredict/embed/DRKG_TransE_l2_relation.npy'))
 
     print('✅ OpenPredict data initialized')
 
@@ -97,8 +97,8 @@ def init_openpredict_dir():
 # tar -xzvf kgpredictfiles.tar.gz  -C ./openpredict/data/kgpredict/
 # rm kgpredictfiles.tar.gz
 
-# mv ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_entity.npy ./openpredict/data/kgpredict/embed/entity_embeddings.npy
-# mv ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_relation.npy ./openpredict/data/kgpredict/embed/relation_embeddings.npy
+# mv ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_entity.npy ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_entity.npy
+# mv ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_relation.npy ./openpredict/data/kgpredict/embed/DRKG_TransE_l2_relation.npy
 
 
 

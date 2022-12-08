@@ -37,4 +37,4 @@ services:
       # Show print() in logs:
       PYTHONUNBUFFERED: '1'
       DEV_MODE: 'true'
-    entrypoint: pytest --cov=src
+    entrypoint: pytest --cov=src tests/integration

@@ -34,12 +34,15 @@ jobs:
     - uses: vemonet/setup-spark@v1
       with:
         spark-version: '3.0.2'
+    - uses: iterative/setup-dvc@v1
 
+    - name: Pull data with dvc
+      run: |
+        dvc pull
 
     - name: Install dependencies
       run: |
         pip install ".[train,test,dev]"
-        dvc pull
 
     # - name: Install dependencies
     #   run: |

@@ -76,11 +76,11 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         treatment_rid = [relation_map[treat]  for treat in treatment]
 
         # Load embeddings
-        pth=EMBPATH+'entity_embeddings.npy'
+        pth=EMBPATH+'DRKG_TransE_l2_entity.npy'
         #print("DISLIST3:"+str(pth))
         entity_emb = np.load(pth)
-        #np.savez_compressed("entity_embeddings.npz", entity_emb=entity_emb)
-        rel_emb = np.load(EMBPATH+'relation_embeddings.npy')
+        #np.savez_compressed("DRKG_TransE_l2_entity.npz", entity_emb=entity_emb)
+        rel_emb = np.load(EMBPATH+'DRKG_TransE_l2_relation.npy')
 
         drug_ids = th.tensor(drug_ids).long()
         disease_ids = th.tensor(disease_ids).long()
