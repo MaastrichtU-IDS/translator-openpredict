@@ -27,6 +27,5 @@ Public URL where the dataset can be download or SPARQL endpoint URL.
 
 Add any note, documentation and links about the data model here.
 
-#### Notable licensing issues 
+#### Notable licensing issues
 Add any issue related to the dataset licensing here.
-

@@ -1,19 +1,11 @@
-import os
-import secrets
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Optional
 
-from gensim.models import KeyedVectors
-from joblib import load
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
-
-from openpredict.config import settings
 from openpredict.models.evidence_path_model import EvidencePathModel
 from openpredict_model.utils import load_similarity_embeddings, load_treatment_classifier, load_treatment_embeddings
 
 
 # A class to preload some models before starting the API
-class PreloadedModels(object):
+class PreloadedModels:
   baseline_model_treatment: str
   treatment_embeddings = None
   treatment_classifier = None

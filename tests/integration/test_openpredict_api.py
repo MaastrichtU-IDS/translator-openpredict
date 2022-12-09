@@ -1,9 +1,8 @@
 import json
 import os
 
-import pytest
 from fastapi.testclient import TestClient
-from openpredict.config import settings
+
 from openpredict.main import app
 from openpredict.utils import init_openpredict_dir
 from tests.conftest import validator
@@ -58,7 +57,7 @@ def test_post_trapi():
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     url = '/query'
     for trapi_filename in os.listdir(os.path.join('tests', 'queries')):
-        with open(os.path.join('tests', 'queries', trapi_filename),'r') as f:
+        with open(os.path.join('tests', 'queries', trapi_filename)) as f:
             reasoner_query = f.read()
             response = client.post(
                 url,
@@ -141,4 +140,3 @@ def test_trapi_empty_response():
     #                         # content_type='application/json'))
     # print(response.status_code)
     # assert response.status_code == 200
-

@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 
 from rdflib import RDF, Graph, Literal, Namespace, URIRef
-from rdflib.namespace import DC, DCTERMS, RDFS, VOID, XSD
+from rdflib.namespace import DC, RDFS, XSD
 from SPARQLWrapper import JSON, POST, SPARQLWrapper
 
 from openpredict.config import settings

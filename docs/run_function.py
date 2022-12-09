@@ -1,10 +1,6 @@
-from joblib import load
-from datetime import datetime
-import pandas as pd
 # from openpredict.openpredict_api import get_predict, init_openpredict_dir
 # from openpredict.models.openpredict_model import train_model
 
-from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, retrieve_features
 from openpredict.utils import convert_baseline_features_ids
 
 convert_baseline_features_ids()

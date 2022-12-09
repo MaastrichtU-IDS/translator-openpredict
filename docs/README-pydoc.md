@@ -228,7 +228,7 @@ and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalizatio
 start_api(port=8808, debug=False, start_spark=True)
 ```
 
-Start the Translator OpenPredict API 
+Start the Translator OpenPredict API
 
 **Arguments**:
 
@@ -651,4 +651,3 @@ Run classifiers to get predictions
 **Returns**:
 
 predictions in array of JSON object
-

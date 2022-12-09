@@ -1,7 +1,3 @@
-import ast
-import os
-from pathlib import Path
-
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -144,4 +140,3 @@ def save_embedding_as_txt(embedding_df, fileName) :
     embedding_df = embedding_df.reset_index()
     embedding_df_np = embedding_df.to_numpy()
     np.savetxt('data/embedding/feature_' + fileName, embedding_df_np, fmt = '%f' )
-

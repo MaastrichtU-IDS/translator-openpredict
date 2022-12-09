@@ -1,22 +1,14 @@
-import rdflib
-import numpy as np
-from sklearn.utils.validation import check_is_fitted
-from gensim.models.word2vec import Word2Vec
-import tqdm
-import copy
-from rdf2vec.graph import Vertex
-from hashlib import md5
-import itertools
-from rdf2vec.walkers import RandomWalker
-
-import findspark
 import os
 import shutil
 import time
 
+import findspark
+from gensim.models.word2vec import Word2Vec
 from pyspark import SparkConf, SparkContext
+from rdf2vec.walkers import RandomWalker
+from sklearn.utils.validation import check_is_fitted
 
-    
+
 def walk_sequence(walker, graph, root):
     walks = walker.extract(graph, [root])
     print (walks)
@@ -31,17 +23,17 @@ def walk_sequence(walker, graph, root):
                     s += '{}'.format(walk[i])
                 else:
                     s += '{}'.format(walk[i])
-                
+
                 if i < len(walk) - 1:
                     s += '->'
 
             walk_strs.append(s)
-        return '\n'.join(walk_strs)  
+        return '\n'.join(walk_strs)
     else:
         return ''
-        
 
-class MySentences(object):
+
+class MySentences:
     def __init__(self, dirname, filename):
         self.dirname = dirname
         self.filename = filename
@@ -55,7 +47,7 @@ class MySentences(object):
                 if not 'part' in fname: continue
                 if '.crc' in fname: continue
                 try:
-                    for line in open(os.path.join(fpath, fname), mode='r'):
+                    for line in open(os.path.join(fpath, fname)):
                         line = line.rstrip('\n')
                         words = line.split("->")
                         yield words
@@ -74,8 +66,8 @@ class RDF2VecTransformer():
         The dimension of the embeddings.
 
     max_path_depth: int (default: 1)
-        The maximum number of hops to take in the knowledge graph. Due to the 
-        fact that we transform s -(p)-> o to s -> p -> o, this will be 
+        The maximum number of hops to take in the knowledge graph. Due to the
+        fact that we transform s -(p)-> o to s -> p -> o, this will be
         translated to `2 * max_path_depth` hops internally.
 
     wl: bool (default: True)
@@ -114,7 +106,7 @@ class RDF2VecTransformer():
 
     """
     def __init__(self, vector_size=500, walkers=RandomWalker(2, float('inf')),
-                 n_jobs=1, window=5, sg=1, max_iter=10, negative=25, 
+                 n_jobs=1, window=5, sg=1, max_iter=10, negative=25,
                  min_count=1):
         self.vector_size = vector_size
         self.walkers = walkers
@@ -124,23 +116,23 @@ class RDF2VecTransformer():
         self.max_iter = max_iter
         self.negative = negative
         self.min_count = min_count
-        
+
         findspark.init()
-        
+
         config = SparkConf()
         config.setMaster("local[10]")
         config.set("spark.executor.memory", "70g")
         config.set('spark.driver.memory', '90g')
         config.set("spark.memory.offHeap.enabled",True)
-        config.set("spark.memory.offHeap.size","50g") 
+        config.set("spark.memory.offHeap.size","50g")
         self.sc = SparkContext(conf=config)
         print (self.sc)
-        
 
-        
+
+
     def fit(self, graph, instances):
         """Fit the embedding network based on provided instances.
-        
+
         Parameters
         ----------
         graphs: graph.KnowledgeGraph
@@ -151,7 +143,7 @@ class RDF2VecTransformer():
         instances: array-like
             The instances for which an embedding will be created. It important
             to note that the test instances should be passed to the fit method
-            as well. Due to RDF2Vec being unsupervised, there is no 
+            as well. Due to RDF2Vec being unsupervised, there is no
             label leakage.
         -------
         """
@@ -160,12 +152,12 @@ class RDF2VecTransformer():
         #for walker in self.walkers:
         #    self.walks_ += list(walker.extract(graph, instances))
         #print('Extracted {} walks for {} instances!'.format(len(self.walks_), len(instances)))
-        
-        
+
+
         folder = './walks/'
         #folder = walk_folder
         if os.path.isdir(folder):
-            shutil.rmtree(folder) 
+            shutil.rmtree(folder)
         os.mkdir(folder)
         for walker in self.walkers:
             #self.walks_ += list(walker.extract(graph, instances))
@@ -178,19 +170,19 @@ class RDF2VecTransformer():
             print ('Time elapsed to generate features:',time.strftime("%H:%M:%S",       time.gmtime(elapsed_time)))
         print('Extracted {} walks for {} instances!'.format(len(self.walks_),
                                                             len(instances)))
-        
+
         #sentences = [list(map(str, x)) for x in self.walks_]
 
         pattern = 'uniform'
-        
+
         #vector_output =  './vectors/'
         #trainModel(entities, id2entity, walk_folder, model_folder, vector_file, pattern, maxDepth)
 
         sentences = MySentences(folder, filename=pattern)
-        self.model_ = Word2Vec(sentences, size=self.vector_size, 
-                              window=self.window, workers=self.n_jobs, 
-                              sg=self.sg, iter=self.max_iter, 
-                              negative=self.negative, 
+        self.model_ = Word2Vec(sentences, size=self.vector_size,
+                              window=self.window, workers=self.n_jobs,
+                              sg=self.sg, iter=self.max_iter,
+                              negative=self.negative,
                               min_count=self.min_count, seed=42)
 
     def transform(self, graph, instances):
@@ -204,7 +196,7 @@ class RDF2VecTransformer():
             from an `rdflib.Graph` object by using a converter method.
 
         instances: array-like
-            The instances for which an embedding will be created. These 
+            The instances for which an embedding will be created. These
             instances must have been passed to the fit method as well,
             or their embedding will not exist in the model vocabulary.
 
@@ -232,7 +224,7 @@ class RDF2VecTransformer():
             from an `rdflib.Graph` object by using a converter method.
 
         instances: array-like
-            The instances for which an embedding will be created. 
+            The instances for which an embedding will be created.
 
         Returns
         -------

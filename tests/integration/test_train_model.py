@@ -1,10 +1,8 @@
-import pytest
-import pandas as pd
 import numpy as np
-import pathlib
-from os import path
-from openpredict_model.train import train_model, geometricMean, addEmbedding
-from openpredict.utils import get_openpredict_dir, get_entities_labels
+import pandas as pd
+
+from openpredict_model.train import geometricMean, train_model
+
 
 def test_train_model():
     """Test to train from baseline model to get drug-disease similarities (drugbank-omim)"""

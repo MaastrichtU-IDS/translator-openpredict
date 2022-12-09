@@ -1993,4 +1993,3 @@ ns1:drugbank:DB00829 rdfs:label "Diazepam",
 
 <http://www.w3id.org/doid/1470> rdfs:label "Major Depressive Disorder",
         "major depressive disorder" .
-

@@ -17,4 +17,3 @@ def download():
             os.system(f"rm kgpredict.tar.gz")
         except Exception as e:
             print(f"Error while downloading kgpredict: {e}")
-

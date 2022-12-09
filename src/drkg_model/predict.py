@@ -2,8 +2,6 @@
 # @repoaddress "https://github.com/arifx/XPREDICT"
 
 import csv
-import os
-import sys
 
 import numpy as np
 import pandas as pd
@@ -166,7 +164,7 @@ def get_drugrepositioning_results(
         predictions_df = predictions_array[:n_results]
     predictions_df
     # Build lists of unique node IDs to retrieve label
-    predicted_ids = set([])
+    predicted_ids = set()
     for prediction in predictions_array:
         for key, value in prediction.items():
             if key != 'score':

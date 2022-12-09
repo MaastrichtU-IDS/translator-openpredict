@@ -365,4 +365,3 @@ class EvidencePathModel(BaseMachineLearningModel):
         embedding_df = embedding_df.reset_index()
         embedding_df_np = embedding_df.to_numpy()
         np.savetxt('openpredict/data/embedding/feature_' + fileName, embedding_df_np, fmt = '%f' )
-

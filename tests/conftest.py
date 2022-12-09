@@ -1,6 +1,6 @@
 from reasoner_validator import TRAPIResponseValidator
-from openpredict.config import settings
 
+from openpredict.config import settings
 
 validator = TRAPIResponseValidator(
     trapi_version=settings.TRAPI_VERSION,

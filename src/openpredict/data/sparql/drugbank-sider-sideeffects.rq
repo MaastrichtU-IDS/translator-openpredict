@@ -19,11 +19,11 @@ UNION{
 {
 ?d ov:x-pubchemcompound ?pc  .
 }
-UNION 
+UNION
 {
-?d dv:x-pubchemcompound ?pc  .       
+?d dv:x-pubchemcompound ?pc  .
 }
-?d ov:indication ?disease .     
-BIND(STRAFTER( str(?d), "http://bio2rdf.org/drugbank:") AS ?drugid) 
+?d ov:indication ?disease .
+BIND(STRAFTER( str(?d), "http://bio2rdf.org/drugbank:") AS ?drugid)
 BIND(STRAFTER( str(?se), "http://bio2rdf.org/umls:") AS ?umlsid)
 }

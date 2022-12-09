@@ -2,7 +2,6 @@ import datetime
 import logging
 import os
 import shutil
-import time
 from pathlib import Path
 
 import pandas as pd
@@ -197,8 +196,8 @@ def convert_baseline_features_ids():
         diseases_set.update(df['Disease1'].tolist())
         diseases_set.update(df['Disease2'].tolist())
 
-    diseases_set = ['OMIM:{0}'.format(disease) for disease in diseases_set]
-    drugs_set = ['DRUGBANK:{0}'.format(drug) for drug in drugs_set]
+    diseases_set = ['OMIM:{}'.format(disease) for disease in diseases_set]
+    drugs_set = ['DRUGBANK:{}'.format(drug) for drug in drugs_set]
 
     diseases_mappings = normalize_id_to_translator(diseases_set)
     drugs_mappings = normalize_id_to_translator(drugs_set)

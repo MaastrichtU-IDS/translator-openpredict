@@ -1,22 +1,19 @@
 import logging
 import numbers
 import os
-import re
 from datetime import datetime
 
 import numpy as np
 import pandas as pd
-from gensim.models import KeyedVectors
 from joblib import dump, load
-from sklearn import ensemble, linear_model, metrics, model_selection, neighbors, svm, tree
+from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
+from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
 from openpredict.config import settings
-from openpredict.loaded_models import PreloadedModels
 from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, get_run_id, retrieve_features
 # from openpredict.utils import get_spark_context
-from openpredict.utils import get_entities_labels, get_openpredict_dir, log
+from openpredict.utils import get_openpredict_dir
 
 
 def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
@@ -276,10 +273,10 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
 
     if types == 'Drugs':
         names = drug_df.columns.levels[1]
-        header = ["Drug1", "Drug2", emb_name]
+        ["Drug1", "Drug2", emb_name]
     else:
         names = disease_df.columns.levels[1]
-        header = ["Disease1", "Disease2", emb_name]
+        ["Disease1", "Disease2", emb_name]
 
     entity_exist = [d for d in names if d in emb_df.index]
     print("Number of drugs that do not exist in the embedding ",
@@ -413,8 +410,8 @@ def generatePairs(drug_df, disease_df, drugDiseaseKnown):
     drugwithfeatures = set(drug_df.columns.levels[1])
     diseaseswithfeatures = set(disease_df.columns.levels[1])
 
-    drugDiseaseDict = set(
-        [tuple(x) for x in drugDiseaseKnown[['Drug', 'Disease']].values])
+    drugDiseaseDict = {
+        tuple(x) for x in drugDiseaseKnown[['Drug', 'Disease']].values}
 
     commonDrugs = drugwithfeatures.intersection(drugDiseaseKnown.Drug.unique())
     commonDiseases = diseaseswithfeatures.intersection(
@@ -548,11 +545,10 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
     :param diseaseDFs: Disease dataframes
     :return: The features dataframe
     """
-    totalNumFeatures = len(drugDFs)*len(diseaseDFs)
+    len(drugDFs)*len(diseaseDFs)
     # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
     df = pd.DataFrame(list(zip(pairs[:, 0], pairs[:, 1], classes)), columns=[
                       'Drug', 'Disease', 'Class'])
-    index = 0
     for i, drug_col in enumerate(drugDFs.columns.levels[0]):
         for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
             drugDF = drugDFs[drug_col]

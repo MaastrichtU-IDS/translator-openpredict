@@ -12,7 +12,7 @@ A clear and concise description of what the bug is.
 
 #### Which version of the package are you using?
 
-Provide the version of package from PyPI the branch (e.g. `main`) 
+Provide the version of package from PyPI the branch (e.g. `main`)
 
 #### Environment
 

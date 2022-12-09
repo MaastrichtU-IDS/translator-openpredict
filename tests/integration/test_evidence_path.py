@@ -1,14 +1,10 @@
-import pytest
 from fastapi.testclient import TestClient
 from gensim.models import KeyedVectors
-from openpredict.config import settings
+
 from openpredict.main import app
-from openpredict_evidence_path.train import (
-    getQuantiles,
-    percentiles_of_different_features,
-)
-from openpredict_evidence_path.predict import do_evidence_path
 from openpredict.utils import init_openpredict_dir
+from openpredict_evidence_path.predict import do_evidence_path
+from openpredict_evidence_path.train import getQuantiles
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
@@ -50,4 +46,3 @@ def dont_test_get_quantiles():
         'openpredict/data/embedding/feature_specific_embeddings_KG/feature_FeatureTypesDiseases.' + "HPO_SIM" + '.txt', binary=False)
 
         assert getQuantiles(drug_emb, disease_emb, 0.5) <= 0.7
-

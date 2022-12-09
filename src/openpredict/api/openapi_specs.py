@@ -1,10 +1,8 @@
-from enum import Enum
 from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from reasoner_pydantic import Message, Query
 
 from openpredict.config import settings
 

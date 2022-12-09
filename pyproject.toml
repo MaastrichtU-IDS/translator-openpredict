@@ -117,15 +117,14 @@ post-install-commands = [
 ]
 
 [tool.hatch.envs.default.scripts]
-install = "dvc pull"
 format = [
     "isort src tests",
     "autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place src tests --exclude=__init__.py",
     "pre-commit run --all-files || true",
 ]
 check = [
-    "flake8 .",
     "isort --check-only --diff .",
+    "flake8 .",
 ]
 
 # TOOLS

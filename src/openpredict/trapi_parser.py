@@ -29,7 +29,7 @@ def get_biolink_parents(concept):
         resp = resolve_curies.json()
         resp.append(concept)
         return resp
-    except Exception as e:
+    except Exception:
         print(f'Error querying {query_url}, using the original IDs')
         return [concept]
 
@@ -56,7 +56,7 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
                     if is_accepted_id(str(alt_id['identifier'])):
                         resolved_ids_list.append(str(alt_id['identifier']))
                         resolved_ids_object[str(alt_id['identifier'])] = resolved_id
-        except Exception as e:
+        except Exception:
             print('Error querying the NodeNormalization API, using the original IDs')
 
     return resolved_ids_list, resolved_ids_object
@@ -85,7 +85,7 @@ def resolve_trapi_query(reasoner_query):
     min_score = None
     max_score = None
     if 'query_options' in reasoner_query.keys():
-        query_options = reasoner_query["query_options"]
+        reasoner_query["query_options"]
         if 'n_results' in reasoner_query["query_options"]:
             n_results = int(reasoner_query["query_options"]["n_results"])
         if 'min_score' in reasoner_query["query_options"]:
@@ -338,7 +338,6 @@ def resolve_trapi_query(reasoner_query):
                                 node_dict[target_node_id]['label'] = association['label']
 
                             # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
-                            source = 'OpenPredict'
                             relation = 'RO:0002434'
                             # relation = 'OBOREL:0002606'
                             association_score = str(association['score'])

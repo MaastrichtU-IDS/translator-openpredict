@@ -33,9 +33,9 @@ jobs:
 
 
       ## If getting error due to missing permissions:
-      # Create an access token with `read:packages` and `write:packages` scopes 
+      # Create an access token with `read:packages` and `write:packages` scopes
       #   -> https://github.com/settings/tokens
-      # Add the token as a secret `CONTAINER_REGISTRY_GITHUB_TOKEN` 
+      # Add the token as a secret `CONTAINER_REGISTRY_GITHUB_TOKEN`
       #   -> https://github.com/MaastrichtU-IDS/translator-openpredict/settings/secrets/actions
       # Then replace secrets.GITHUB_TOKEN by secrets.CONTAINER_REGISTRY_GITHUB_TOKEN here:
       - name: Login to GitHub Container Registry

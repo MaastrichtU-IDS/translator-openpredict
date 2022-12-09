@@ -1,11 +1,6 @@
 import os
-import secrets
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
 
-from gensim.models import KeyedVectors
-from joblib import load
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):

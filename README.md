@@ -10,11 +10,11 @@ Access the **Translator OpenPredict API** at **[https://openpredict.semanticscie
 
 > You can use this API to retrieve predictions for drug/disease, or add new embeddings to improve the model.
 
-# 🧑‍💻 Deploy the OpenPredict API locally
+# Deploy the OpenPredict API locally :woman_technologist:
 
-Requirements: docker and pip
+Requirements: Python 3.8+ and `pip` installed
 
-### 📥️ Install
+### Install
 
 1. Clone the repository:
 
@@ -30,18 +30,19 @@ Requirements: docker and pip
    dvc pull
    ```
 
-### 🚀 Start the API
 
-Start the API in development with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
+Start the API in development mode with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
 
 ```bash
-docker-compose up api
+docker-compose up
 ```
 
-You will need to re-build the docker image if you add new dependencies to the `pyproject.toml`:
+> Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
+
+You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
 
 ```bash
-docker-compose up api --build
+docker-compose exec api openpredict train-model --model openpredict-baseline-omim-drugbank
 ```
 
 ### Test the OpenPredict API
@@ -50,15 +51,15 @@ See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
 
 ---
 
-# 📬️ Use the API
+# Use the API​ :mailbox_with_mail:
 
 
-The user provides a drug or a disease identifier as a CURIE (e.g. `DRUGBANK:DB00394`, or `OMIM:246300`), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented).
+The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented).
 
 The API will return predicted targets for the given drug or disease:
 
-* The **potential drugs treating a given disease**
-* The **potential diseases a given drug could treat**
+* The **potential drugs treating a given disease** :pill:
+* The **potential diseases a given drug could treat** :microbe:
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
@@ -118,14 +119,14 @@ The `/predicates` operation will return the entities and relations provided by t
 
 > Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
 
-### :notebook_with_decorative_cover: Notebooks examples
+### Notebooks examples :notebook_with_decorative_cover:
 
 We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
 
 1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
 
-### :station: Add embedding
+### Add embedding :station:
 
 The default baseline model is `openpredict-baseline-omim-drugbank`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
 
@@ -135,7 +136,7 @@ The default baseline model is `openpredict-baseline-omim-drugbank`. You can choo
 
 Once the embedding has been added you can find the existing models previously generated (including `openpredict-baseline-omim-drugbank`), and use them as base model when you ask the model for prediction or add new embeddings.
 
-### :crystal_ball: Predict operation
+### Predict operation :crystal_ball:
 
 Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
 
@@ -151,7 +152,7 @@ The API will return the list of predicted target for the given entity, the label
 
 ---
 
-# :minidisc: More about the data model
+# More about the data model :minidisc:
 
 * The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
 * Metadata about runs, models evaluations, features are stored as RDF using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
@@ -226,4 +227,3 @@ Add new embeddings to improve the predictive models, with versioning and scoring
 * Service funded by the [NIH NCATS Translator project](https://ncats.nih.gov/translator/about).
 
 ![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)
-

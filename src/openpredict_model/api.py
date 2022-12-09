@@ -4,7 +4,6 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from drkg_model.predict import get_drugrepositioning_results
 from openpredict.loaded_models import PreloadedModels
 from openpredict_model.predict import get_predictions, get_similarities
 
@@ -118,4 +117,3 @@ def get_similarity(
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
     # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)
-

@@ -21,11 +21,11 @@ To work with translator-openpredict locally:
    cd translator-openpredict
    ```
 
-2. Pull the data required to run the models in the `data` folder with [`dvc`](https://dvc.org/):
+2. Install hatch to manage the project, then use hatch to install the dependencies, this will also pull the data required to run the models in the `data` folder with [`dvc`](https://dvc.org/), and install pre-commit hooks:
 
    ```bash
-   pip install dvc
-   dvc pull
+   pip install hatch
+   hatch env create
    ```
 
 ### 🚀 Start the API
@@ -46,7 +46,13 @@ docker-compose up api --build
 
 [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
 
-You can run the tests locally after starting the API wit docker-compose:
+Run the integrations tests with docker:
+
+```bash
+docker-compose run tests
+```
+
+Or you can run the tests locally after starting the API with docker-compose:
 
 ```bash
 docker-compose exec api pytest tests/integration
@@ -54,9 +60,17 @@ docker-compose exec api pytest tests/integration
 
 See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
 
+## Format
+
+To automatically format the code with isort, autoflake, etc:
+
+```bash
+hatch run format
+```
+
 ### 📤️ Push changes to the data
 
-If you make changes to the data in the `data` folder you will need to add and push this data on [DagsHub](https://dagshub.com/docs/integration_guide/dvc/) with `dvc` 
+If you make changes to the data in the `data` folder you will need to add and push this data on [DagsHub](https://dagshub.com/docs/integration_guide/dvc/) with `dvc`
 
 1. Go to [dagshub.com](https://dagshub.com/user/login), and login with GitHub or Google
 

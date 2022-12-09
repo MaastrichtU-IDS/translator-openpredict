@@ -1,18 +1,14 @@
-import logging
 import os
 import re
 from typing import List
 
 import numpy as np
 import pandas as pd
-from sklearn import ensemble, linear_model, metrics, model_selection, neighbors, svm, tree
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
 from openpredict.config import settings
 from openpredict.loaded_models import PreloadedModels
 from openpredict.models.predict_output import PredictOutput, TrapiRelation
-from openpredict.utils import get_entities_labels, get_openpredict_dir, log
+from openpredict.utils import get_entities_labels
 from openpredict_model.train import createFeaturesSparkOrDF
 
 satisfies_relations: List[TrapiRelation] = [
@@ -54,7 +50,7 @@ def get_predictions(
         predictions_array = predictions_array[:n_results]
 
     # Build lists of unique node IDs to retrieve label
-    predicted_ids = set([])
+    predicted_ids = set()
     for prediction in predictions_array:
         for key, value in prediction.items():
             if key != 'score':
@@ -126,8 +122,8 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     print('Known indications', len(drugDiseaseKnown))
 
     # TODO: save json?
-    drugDiseaseDict = set(
-        [tuple(x) for x in drugDiseaseKnown[['Drug', 'Disease']].values])
+    drugDiseaseDict = {
+        tuple(x) for x in drugDiseaseKnown[['Drug', 'Disease']].values}
 
     drugwithfeatures = set(drug_df.columns.levels[1].tolist())
     diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
@@ -262,7 +258,7 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
         predictions_array = predictions_array[:n_results]
 
     # Build lists of unique node IDs to retrieve label
-    predicted_ids = set([])
+    predicted_ids = set()
     for prediction in predictions_array:
         for key, value in prediction.items():
             if key != 'score':

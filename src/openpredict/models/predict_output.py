@@ -1,10 +1,6 @@
-import os
-from pathlib import Path
 from typing import List, Optional
 
 from pydantic import BaseModel
-
-from openpredict.config import settings
 
 
 class PredictHit(BaseModel):

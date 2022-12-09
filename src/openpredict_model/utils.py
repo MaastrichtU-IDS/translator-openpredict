@@ -1,7 +1,9 @@
+import os
+
 from gensim.models import KeyedVectors
 from joblib import load
+
 from openpredict.config import settings
-import os
 
 
 def load_similarity_embeddings():

@@ -5,7 +5,7 @@ import click
 import uvicorn
 
 from openpredict.main import app
-from openpredict.rdf_utils import add_run_metadata, retrieve_features
+from openpredict.rdf_utils import retrieve_features
 from openpredict_model.train import train_model as train_openpredict_model
 
 
@@ -24,7 +24,7 @@ def start_api(port, debug, start_spark):
 @click.option('--model', default='openpredict-baseline-omim-drugbank', help="Build the features from scratch (default to yes).")
 def train_model(model):
     print('Using model: ', model)
-    model_features = retrieve_features('All').keys()
+    retrieve_features('All').keys()
     clf, scores, hyper_params, features_df = train_openpredict_model(model)
     # add_run_metadata(scores, model_features, hyper_params)
 

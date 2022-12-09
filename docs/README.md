@@ -68,7 +68,7 @@ pip3 install openpredict
 
 # Alternatives to run OpenPredict
 
-Requirements: 
+Requirements:
 
 * [Docker](https://docs.docker.com/get-docker/) installed (and `docker-compose`)
 * Python 3.6+
@@ -155,7 +155,7 @@ openpredict_api.start_api(8808)
 
 > Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
 
-> Run by default in production, set `debug = True` to run in development environments. 
+> Run by default in production, set `debug = True` to run in development environments.
 
 ### Option 3: Run with Docker 🐳
 
@@ -168,7 +168,7 @@ git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
 cd translator-openpredict
 ```
 
-1. For **development environments**: see above to use the default `docker-compose.yml` file to deploy the Virtuoso triplestore for development using Docker 
+1. For **development environments**: see above to use the default `docker-compose.yml` file to deploy the Virtuoso triplestore for development using Docker
 2. For **production deployment** use the `docker-compose.prod.yml`
 
 > The docker-compose is currently configured to deploy on [openpredict.semanticscience.org](https://openpredict.semanticscience.org/) using a [nginx-proxy for Docker](https://github.com/nginx-proxy)
@@ -241,4 +241,3 @@ sphinx-quickstart sphinx-docs/ --project 'openpredict' --author 'Vincent Emonet'
 cd sphinx-docs/
 make html
 ```
-

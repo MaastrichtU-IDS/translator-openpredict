@@ -1,12 +1,13 @@
-from rdf2vec.walkers import Walker
-from rdf2vec.graph import Vertex
-import numpy as np
 from hashlib import md5
+
+import numpy as np
+from rdf2vec.graph import Vertex
+from rdf2vec.walkers import Walker
 
 
 class RandomWalker(Walker):
     def __init__(self, depth, walks_per_graph):
-        super(RandomWalker, self).__init__(depth, walks_per_graph)
+        super().__init__(depth, walks_per_graph)
 
     def extract_random_walks(self, graph, root):
         """Extract random walks of depth - 1 hops rooted in root."""
@@ -14,7 +15,7 @@ class RandomWalker(Walker):
         walks = {(root,)}
 
         for i in range(self.depth):
-            # In each iteration, iterate over the walks, grab the 
+            # In each iteration, iterate over the walks, grab the
             # last hop, get all its neighbors and extend the walks
             walks_copy = walks.copy()
             for walk in walks_copy:
@@ -30,7 +31,7 @@ class RandomWalker(Walker):
             # TODO: Should we prune in every iteration?
             if self.walks_per_graph is not None:
                 n_walks = min(len(walks),  self.walks_per_graph)
-                walks_ix = np.random.choice(range(len(walks)), replace=False, 
+                walks_ix = np.random.choice(range(len(walks)), replace=False,
                                             size=n_walks)
                 if len(walks_ix) > 0:
                     walks_list = list(walks)

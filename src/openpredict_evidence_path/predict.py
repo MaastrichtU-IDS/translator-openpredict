@@ -1,9 +1,7 @@
 import ast
 
 import networkx as nx
-import numpy as np
 import pandas as pd
-from fastapi import APIRouter, Query
 from gensim.models import KeyedVectors
 
 from openpredict.config import settings

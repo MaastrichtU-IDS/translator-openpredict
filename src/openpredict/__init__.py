@@ -1,1 +1,1 @@
-from .models.predict_output import TrapiRelation, PredictHit, PredictOutput
+from .models.predict_output import PredictHit, PredictOutput, TrapiRelation

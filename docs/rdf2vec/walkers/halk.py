@@ -1,13 +1,14 @@
 from collections import defaultdict
-from rdf2vec.walkers import RandomWalker
-from rdf2vec.graph import Vertex
-import numpy as np
 from hashlib import md5
 
+from rdf2vec.graph import Vertex
+from rdf2vec.walkers import RandomWalker
+
+
 class HalkWalker(RandomWalker):
-    def __init__(self, depth, walks_per_graph, 
+    def __init__(self, depth, walks_per_graph,
                  freq_thresholds=[0.001]):
-        super(HalkWalker, self).__init__(depth, walks_per_graph)
+        super().__init__(depth, walks_per_graph)
         self.freq_thresholds = freq_thresholds
         # self.lb_freq_threshold = lb_freq_threshold
 
@@ -41,5 +42,5 @@ class HalkWalker(RandomWalker):
                             digest = md5(hop.name.encode()).digest()[:8]
                             canonical_walk.append(str(digest))
                 canonical_walks.add(tuple(canonical_walk))
-                
+
         return canonical_walks

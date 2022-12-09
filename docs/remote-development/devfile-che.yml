@@ -32,7 +32,7 @@ commands:
         component: python
         command: 'pip install -e . && pip install ptvsd'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
-  # - 
+  # -
   #   name: migrate
   #   actions:
   #     -
@@ -40,7 +40,7 @@ commands:
   #       component: python
   #       command: '. ${HOME}/.venv/bin/activate && python manage.py migrate'
   #       workdir: '${CHE_PROJECTS_ROOT}/openpredict'
-  - 
+  -
     name: run api
     actions:
       -
@@ -48,7 +48,7 @@ commands:
         component: python
         command: 'openpredict start-api'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
-  - 
+  -
     name: run server in debug mode
     actions:
       -
@@ -56,7 +56,7 @@ commands:
         component: python
         command: 'export DEBUG_MODE=True && openpredict start-api --debug'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
-  - 
+  -
     name: debug
     actions:
     - type: vscode-launch
@@ -78,5 +78,3 @@ commands:
             ]
           }]
         }
-
-

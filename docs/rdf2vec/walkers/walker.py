@@ -1,5 +1,3 @@
-
-
 class Walker():
     def __init__(self, depth, walks_per_graph):
         self.depth = depth
@@ -15,7 +13,7 @@ class Walker():
                     s += '{} '.format(walk[i])
                 else:
                     s += '{} '.format(walk[i])
-                
+
                 if i < len(walk) - 1:
                     s += '--> '
 

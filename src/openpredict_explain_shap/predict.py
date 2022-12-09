@@ -1,7 +1,6 @@
 # @Author Arif YILMAZ, a.yilmaz@maastrichtuniversity.nl
 # @repoaddress "https://github.com/arifx/XPREDICT"
 
-import json
 
 import pandas as pd
 import shap as shap
@@ -123,7 +122,7 @@ def get_explanations(
         predictions_array = predictions_array[:n_results]
 
     # Build lists of unique node IDs to retrieve label
-    predicted_ids = set([])
+    predicted_ids = set()
     for prediction in predictions_array:
         for key, value in prediction.items():
             if key != 'score':
@@ -162,4 +161,3 @@ def get_explanations(
         labelled_predictions.append(labelled_prediction)
 
     return labelled_predictions
-

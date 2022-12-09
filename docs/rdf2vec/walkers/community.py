@@ -1,12 +1,14 @@
-from rdf2vec.walkers import Walker
-from rdf2vec.graph import Vertex
-from collections import defaultdict
-from hashlib import md5
-import networkx as nx
-import numpy as np
 #import community
 import itertools
 import math
+from collections import defaultdict
+from hashlib import md5
+
+import networkx as nx
+import numpy as np
+from rdf2vec.graph import Vertex
+from rdf2vec.walkers import Walker
+
 
 def check_random_state(seed):
     return np.random
@@ -23,7 +25,7 @@ np.random.permutation = lambda x: next(itertools.permutations(x))#sample_from_it
 
 class CommunityWalker(Walker):
     def __init__(self, depth, walks_per_graph, hop_prob=0.1, resolution=1):
-        super(CommunityWalker, self).__init__(depth, walks_per_graph)
+        super().__init__(depth, walks_per_graph)
         self.hop_prob = hop_prob
         self.resolution = resolution
 
@@ -41,13 +43,13 @@ class CommunityWalker(Walker):
                 v_name = v.name
                 # Neighbors are predicates
                 for pred in graph.get_neighbors(v):
-                    pred_name = pred.name
+                    pred.name
                     for obj in graph.get_neighbors(pred):
                         obj_name = obj.name
                         nx_graph.add_edge(v_name, obj_name)
 
         # This will create a dictionary that maps the URI on a community
-        partition = community.best_partition(nx_graph, 
+        partition = community.best_partition(nx_graph,
                                              resolution=self.resolution)
         self.labels_per_community = defaultdict(list)
 

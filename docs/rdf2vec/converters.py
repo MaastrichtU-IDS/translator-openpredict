@@ -1,6 +1,7 @@
 from rdf2vec.graph import KnowledgeGraph, Vertex
 from tqdm import tqdm
 
+
 def create_kg(triples, label_predicates):
     kg = KnowledgeGraph()
     for (s, p, o) in tqdm(triples):
@@ -30,14 +31,15 @@ def rdflib_to_kg(file, filetype=None, label_predicates=[]):
     return create_kg(g, label_predicates)
 
 
-def endpoint_to_kg(endpoint_url="http://localhost:5820/db/query?query=", 
+def endpoint_to_kg(endpoint_url="http://localhost:5820/db/query?query=",
                    label_predicates=[]):
     """Generate KnowledgeGraph using SPARQL Endpoint."""
     import urllib
+
     import requests
 
     session = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(pool_connections=100, 
+    adapter = requests.adapters.HTTPAdapter(pool_connections=100,
                                             pool_maxsize=100)
     session.mount('http://', adapter)
 
@@ -51,8 +53,6 @@ def endpoint_to_kg(endpoint_url="http://localhost:5820/db/query?query=",
         print("could not query result")
         qres = []
 
-    triples = [(row['s']['value'], row['p']['value'], row['o']['value']) 
+    triples = [(row['s']['value'], row['p']['value'], row['o']['value'])
                for row in qres]
     return create_kg(triples, label_predicates)
-
-

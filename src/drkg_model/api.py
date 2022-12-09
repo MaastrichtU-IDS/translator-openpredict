@@ -1,12 +1,9 @@
 from datetime import datetime
-from enum import Enum
 from typing import Optional
 
 from fastapi import APIRouter
 
 from drkg_model.predict import get_drugrepositioning_results
-from openpredict.loaded_models import PreloadedModels
-from openpredict_model.predict import get_predictions, get_similarities
 
 api = APIRouter()
 
@@ -60,5 +57,3 @@ def get_drugrepositioning(
 
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
-
-

@@ -1,12 +1,12 @@
-from rdf2vec.walkers import RandomWalker
-from rdf2vec.graph import Vertex
-import numpy as np
 import itertools
-from hashlib import md5
+
+from rdf2vec.graph import Vertex
+from rdf2vec.walkers import RandomWalker
+
 
 class NGramWalker(RandomWalker):
     def __init__(self, depth, walks_per_graph, n=3, wildcards=None):
-        super(NGramWalker, self).__init__(depth, walks_per_graph)
+        super().__init__(depth, walks_per_graph)
         self.n = n
         self.wildcards = wildcards
         self.n_gram_map = {}
@@ -17,12 +17,12 @@ class NGramWalker(RandomWalker):
             if i == 0 or i % 2 == 1 or i < self.n:
                 n_gram_walk.append(hop.name)
             else:
-                n_gram = tuple(walk[j].name for j in range(max(0, i - (self.n - 1)), 
+                n_gram = tuple(walk[j].name for j in range(max(0, i - (self.n - 1)),
                                                            i + 1))
                 if n_gram not in self.n_gram_map:
                     self.n_gram_map[n_gram] = str(len(self.n_gram_map))
                 n_gram_walk.append(self.n_gram_map[n_gram])
-                
+
         return n_gram_walk
 
     def extract(self, graph, instances):

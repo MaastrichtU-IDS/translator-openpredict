@@ -1,12 +1,12 @@
-from rdf2vec.walkers import RandomWalker
-from rdf2vec.graph import Vertex
-import numpy as np
 import itertools
-from hashlib import md5
+
+from rdf2vec.graph import Vertex
+from rdf2vec.walkers import RandomWalker
+
 
 class WildcardWalker(RandomWalker):
     def __init__(self, depth, walks_per_graph, wildcards=[1]):
-        super(WildcardWalker, self).__init__(depth, walks_per_graph)
+        super().__init__(depth, walks_per_graph)
         self.wildcards = wildcards
 
     def extract(self, graph, instances):
@@ -14,10 +14,10 @@ class WildcardWalker(RandomWalker):
         for instance in instances:
             walks = self.extract_random_walks(graph, Vertex(str(instance)))
             for walk in walks:
-                canonical_walks.add(tuple([x.name for x in walk]))
+                canonical_walks.add(tuple(x.name for x in walk))
 
                 for wildcard in self.wildcards:
-                    combinations = itertools.combinations(range(1, len(walk)), 
+                    combinations = itertools.combinations(range(1, len(walk)),
                                                           wildcard)
                     for idx in combinations:
                         new_walk = []

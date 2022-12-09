@@ -17,7 +17,7 @@ Provide the full URL or `curl` command to reproduce the problematic call if appl
 
 #### To Reproduce
 
-Steps to reproduce the behavior if the issue is related to the web UI: 
+Steps to reproduce the behavior if the issue is related to the web UI:
 1. Go to '...'
 2. Click on '....'
 3. Write '....'

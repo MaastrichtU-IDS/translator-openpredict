@@ -23,7 +23,7 @@ parameters:
   value: api
   required: true
 - name: APIKEY
-  displayName: OpenPredict API KEY 
+  displayName: OpenPredict API KEY
   description: Define the API key to authenticate when adding new embeddings.
   # from: "[a-zA-Z0-9]{16}"
   # generate: expression
@@ -55,7 +55,7 @@ objects:
       app: "${APPLICATION_NAME}"
   stringData:
     application-password: "${APIKEY}"
-    
+
 - apiVersion: "v1"
   kind: "PersistentVolumeClaim"
   metadata:
@@ -152,7 +152,7 @@ objects:
           - name: dshm
             mountPath: /dev/shm
           # resources:
-          #   requests: 
+          #   requests:
           #     cpu: "${CPU_LIMIT}"
           #     memory: "${MEMORY_LIMIT}"
           #   limits:

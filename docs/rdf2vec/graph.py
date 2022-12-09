@@ -1,8 +1,9 @@
 from collections import defaultdict
 
-class Vertex(object):
+
+class Vertex:
     vertex_counter = 0
-    
+
     def __init__(self, name, predicate=False, _from=None, _to=None):
         self.name = name
         self.predicate = predicate
@@ -11,12 +12,12 @@ class Vertex(object):
 
         self.id = Vertex.vertex_counter
         Vertex.vertex_counter += 1
-        
+
     def __eq__(self, other):
-        if other is None: 
+        if other is None:
             return False
         return self.__hash__() == other.__hash__()
-    
+
     def __hash__(self):
         if self.predicate:
             return hash((self.id, self._from, self._to, self.name))
@@ -27,18 +28,18 @@ class Vertex(object):
         return self.name < other.name
 
 
-class KnowledgeGraph(object):
+class KnowledgeGraph:
     def __init__(self):
         self._vertices = set()
         self._transition_matrix = defaultdict(set)
         self._inv_transition_matrix = defaultdict(set)
-        
+
     def get_all_entities(self):
-        entities = set([])
+        entities = set()
         for v in self._vertices:
             entities.add(v.name)
         return list(entities)
-        
+
     def add_vertex(self, vertex):
         """Add a vertex to the Knowledge Graph."""
         if vertex.predicate:
@@ -50,7 +51,7 @@ class KnowledgeGraph(object):
         """Add a uni-directional edge."""
         self._transition_matrix[v1].add(v2)
         self._inv_transition_matrix[v2].add(v1)
-        
+
     def remove_edge(self, v1, v2):
         """Remove the edge v1 -> v2 if present."""
         if v2 in self._transition_matrix[v1]:
@@ -63,18 +64,18 @@ class KnowledgeGraph(object):
     def get_inv_neighbors(self, vertex):
         """Get all the neighbors of vertex (vertex -> neighbor)."""
         return self._inv_transition_matrix[vertex]
-    
+
     def visualise(self):
         """Visualise the graph using networkx & matplotlib."""
         import matplotlib.pyplot as plt
         import networkx as nx
         nx_graph = nx.DiGraph()
-        
+
         for v in self._vertices:
             if not v.predicate:
                 name = v.name.split('/')[-1]
                 nx_graph.add_node(name, name=name, pred=v.predicate)
-            
+
         for v in self._vertices:
             if not v.predicate:
                 v_name = v.name.split('/')[-1]
@@ -84,7 +85,7 @@ class KnowledgeGraph(object):
                     for obj in self.get_neighbors(pred):
                         obj_name = obj.name.split('/')[-1]
                         nx_graph.add_edge(v_name, obj_name, name=pred_name)
-        
+
         plt.figure(figsize=(10,10))
         _pos = nx.circular_layout(nx_graph)
         nx.draw_networkx_nodes(nx_graph, pos=_pos)

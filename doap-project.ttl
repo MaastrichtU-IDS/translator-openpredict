@@ -13,10 +13,10 @@
   doap:license <https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/LICENSE> ;
   doap:homepage <https://github.com/MaastrichtU-IDS/translator-openpredict> ;
   doap:bug-database <https://github.com/MaastrichtU-IDS/translator-openpredict/issues> ;
-  
-  
+
+
   doap:service-endpoint <https://openpredict.semanticscience.org> ;
-  
+
   doap:category "Research" ;
   doap:repository [
     a doap:GitRepository ;

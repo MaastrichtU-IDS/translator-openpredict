@@ -1,11 +1,10 @@
-from rdf2vec.walkers import RandomWalker
 from rdf2vec.graph import Vertex
-import numpy as np
-from hashlib import md5
+from rdf2vec.walkers import RandomWalker
+
 
 class AnonymousWalker(RandomWalker):
     def __init__(self, depth, walks_per_graph):
-        super(AnonymousWalker, self).__init__(depth, walks_per_graph)
+        super().__init__(depth, walks_per_graph)
 
     def extract(self, graph, instances):
         canonical_walks = set()

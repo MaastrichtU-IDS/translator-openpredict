@@ -1,8 +1,7 @@
 import os
 
-import pytest
 import requests
-from openpredict.config import settings
+
 from tests.conftest import validator
 
 PROD_API_URL = 'https://openpredict.semanticscience.org'
@@ -31,7 +30,7 @@ def test_post_trapi():
 
     for trapi_filename in os.listdir(os.path.join('tests', 'queries')):
 
-        with open(os.path.join('tests', 'queries', trapi_filename),'r') as f:
+        with open(os.path.join('tests', 'queries', trapi_filename)) as f:
             trapi_query = f.read()
             trapi_results = requests.post(PROD_API_URL + '/query',
                         data=trapi_query, headers=headers).json()
