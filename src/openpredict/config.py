@@ -11,33 +11,12 @@ class Settings(BaseSettings):
     DEV_URL: str = 'https://openpredict.semanticscience.org'
 
     VIRTUAL_HOST: str = None
+    DEV_MODE: bool = False
 
     BIOLINK_VERSION: str = '2.3.0'
     TRAPI_VERSION: str = "1.3.0"
 
-    DEV_MODE: bool = False
-
     OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'data')
-    # OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'src', 'openpredict', 'data')
-
-    # MONGODB_URL: str = f'mongodb://root:oursecretkey@mongodb:27017/'
-
-    # CONTEXT = 'https://raw.githubusercontent.com/MaastrichtU-IDS/knowledge-collaboratory/main/context.jsonld'
-
-
-    # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
-    # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:8080"]'
-    # BACKEND_CORS_ORIGINS: List[str] = ["*"]
-    # @validator("BACKEND_CORS_ORIGINS", pre=True)
-    # def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
-    #     if isinstance(v, str) and not v.startswith("["):
-    #         return [i.strip() for i in v.split(",")]
-    #     elif isinstance(v, (list, str)):
-    #         return v
-    #     raise ValueError(v)
-
-    class Config:
-        case_sensitive = True
 
 
 settings = Settings()

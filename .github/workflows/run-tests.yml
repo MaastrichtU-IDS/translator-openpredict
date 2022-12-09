@@ -5,8 +5,8 @@ on:
   push:
     branches: [ master, develop ]
     paths:
-    - 'requirements.txt'
-    - 'openpredict/**'
+    - 'pyproject.toml'
+    - 'src/**'
     - 'tests/**'
     - '.github/workflows/run-tests.yml'
 
@@ -17,7 +17,6 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        # python-version: [3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v3
@@ -35,6 +34,8 @@ jobs:
       with:
         spark-version: '3.0.2'
     - uses: iterative/setup-dvc@v1
+    - name: Setup SonarCloud
+      uses: warchant/setup-sonar-scanner@v3
 
     - name: Pull data with dvc
       run: |
@@ -44,40 +45,21 @@ jobs:
       run: |
         pip install -e ".[train,test,dev]"
 
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements-dev.txt
-    #     pip install .
-    # - name: Check code style with flake8 (lint)
-    #   run: |
-    #     # warnings if there are Python syntax errors or undefined names
-    #     # (remove --exit-zero to fail when syntax error)
-    #     flake8 . --count --exit-zero --select=E9,F63,F7,F82 --show-source --statistics
-    #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-    #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-    - name: Setup SonarCloud
-      uses: warchant/setup-sonar-scanner@v3
     - name: Test with pytest with coverage
-      env:
-        SPARQL_ENDPOINT_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev
-        SPARQL_ENDPOINT_UPDATE_URL: https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements
-        SPARQL_USERNAME: ${{ secrets.GRAPHDB_USER }}
-        SPARQL_PASSWORD: ${{ secrets.GRAPHDB_PASSWORD }}
       run: |
         coverage erase
         pytest -s --cov src --cov-report xml:coverage.xml tests/integration/*
-        cat coverage.xml
-        coverage combine --append || true
-        coverage report
-        coverage xml
-      # sonar-scanner
+      # cat coverage.xml
+      # coverage combine --append || true
+      # coverage report
+      # coverage xml
+
+
     - name: Run SonarCloud
       env:
-        # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=maastrichtu-ids  -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=MaastrichtU-IDS_translator-openpredict -Dsonar.python.coverage.reportPaths=coverage.xml
+
     # - name: SonarCloud Scan
     #   uses: SonarSource/sonarcloud-github-action@master
     #   env:

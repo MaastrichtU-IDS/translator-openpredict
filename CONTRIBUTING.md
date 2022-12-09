@@ -62,7 +62,7 @@ See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
 
 ## Format
 
-To automatically format the code with isort, autoflake, etc:
+To automatically format the code with isort, autoflake, etc, run:
 
 ```bash
 hatch run format
