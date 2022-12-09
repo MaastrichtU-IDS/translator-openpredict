@@ -13,8 +13,8 @@ authors:
   #   given-names: Arif Yilmaz
   #   affiliation: Institute of Data Science, Maastricht University
     # orcid: https://orcid.org/0000-0000-0000-0000
-title: "OpenPredict model"
+title: "Translator OpenPredict"
 repository-code: https://github.com/MaastrichtU-IDS/translator-openpredict
 date-released: 2022-12-07
-# url: https://pypi.org/project/openpredict-model
+# url: https://pypi.org/project/openpredict
 # doi: 10.48550/arXiv.2206.13787

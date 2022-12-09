@@ -68,6 +68,7 @@ train = [
     "scikit-learn ==0.23.1",
     "shap",
     "matplotlib",
+    "pyRDF2vec",
     "python-multipart >=0.0.5",
     "httpx >=0.21.1",
 ]

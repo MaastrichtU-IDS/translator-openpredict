@@ -1,3 +1,4 @@
 /data/kgpredict/*
+*.jar
 
 !/data/kgpredict/kgpredict_drug_diseasemappings.tsv

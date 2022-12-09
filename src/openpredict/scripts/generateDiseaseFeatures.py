@@ -5,6 +5,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from openpredict.config import settings
+
 # Standalone script to generate diseases features
 
 def fasta2seq(lines):
@@ -12,8 +14,19 @@ def fasta2seq(lines):
     lines = lines.replace('\n', '')
     return lines
 
+def download():
+    if not os.path.exists(settings.OPENPREDICT_DATA_DIR / "lib" / "sml-toolkit-0.9.jar" ):
+        print("sml-toolkit-0.9.jar not present, downloading it")
+        try:
+            os.system(f'mkdir -p data/lib')
+            os.system(f"wget -q --show-progress https://repo1.maven.org/maven2/com/github/sharispe/slib-tools-sml-toolkit/0.9/slib-tools-sml-toolkit-0.9.jar -O data/lib/sml-toolkit-0.9.jar")
+        except Exception as e:
+            print(f"Error while downloading kgpredict: {e}")
+
+
 
 if __name__ == "__main__":
+    download()
     #cd /data
     # git clone https://github.com/fair-workflows/openpredict
     # python generateDiseaseFeatures.py -hpo data/external/phenotype_annotation_hpoteam.tab -mesh data/external/mim2mesh.tsv -di data/input/openpredict-omim-drug.csv -t ../temp -a /data/openpredict/
@@ -187,7 +200,7 @@ if __name__ == "__main__":
     os.chdir(abs_path)
     # run the semantic relatedness library with given query and anotation file it will produce a file named: hpo.sim.out
     os.system(
-        'java -jar lib/sml-toolkit-0.9.jar -t sm -xmlconf data/conf/sml.omim.hpo.conf')
+        'java -jar data/lib/sml-toolkit-0.9.jar -t sm -xmlconf data/conf/sml.omim.hpo.conf')
     # os.chdir(temp_folder)
 
     # In[101]:
