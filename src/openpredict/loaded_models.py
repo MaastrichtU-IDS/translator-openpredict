@@ -5,14 +5,11 @@ from typing import Any, Dict, List, Optional, Union
 
 from gensim.models import KeyedVectors
 from joblib import load
-from openpredict.config import settings
-from openpredict.ml_models.evidence_path_model import EvidencePathModel
-from openpredict.utils import (
-    load_similarity_embeddings,
-    load_treatment_classifier,
-    load_treatment_embeddings,
-)
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
+
+from openpredict.config import settings
+from openpredict.models.evidence_path_model import EvidencePathModel
+from openpredict_model.utils import load_similarity_embeddings, load_treatment_classifier, load_treatment_embeddings
 
 
 # A class to preload some models before starting the API

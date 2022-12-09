@@ -6,8 +6,9 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from gensim.models import KeyedVectors
+
 from openpredict.config import settings
-from openpredict.utils import load_treatment_embeddings
+from openpredict_model.utils import load_treatment_embeddings
 
 ## Evidence path for OpenPredict model by Elif
 

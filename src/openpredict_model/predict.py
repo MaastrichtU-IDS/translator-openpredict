@@ -1,26 +1,92 @@
 import logging
 import os
 import re
+from typing import List
 
 import numpy as np
 import pandas as pd
-from openpredict.loaded_models import PreloadedModels
-from openpredict_model.train import createFeaturesSparkOrDF
-
-# from openpredict.utils import get_spark_context
-from openpredict.utils import get_entities_labels, get_openpredict_dir, log
-from openpredict.config import settings
-from sklearn import (
-    ensemble,
-    linear_model,
-    metrics,
-    model_selection,
-    neighbors,
-    svm,
-    tree,
-)
+from sklearn import ensemble, linear_model, metrics, model_selection, neighbors, svm, tree
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
+
+from openpredict.config import settings
+from openpredict.loaded_models import PreloadedModels
+from openpredict.models.predict_output import PredictOutput, TrapiRelation
+from openpredict.utils import get_entities_labels, get_openpredict_dir, log
+from openpredict_model.train import createFeaturesSparkOrDF
+
+satisfies_relations: List[TrapiRelation] = [
+    {
+        'subject': 'biolink:Drug',
+        'predicate': 'biolink:treats',
+        'object': 'biolink:Disease',
+    },
+    {
+        'subject': 'biolink:Disease',
+        'predicate': 'biolink:treated_by',
+        'object': 'biolink:Drug',
+    },
+]
+
+def get_predictions(
+        id_to_predict, model_id, min_score=None, max_score=None, n_results=None,
+    ) -> PredictOutput:
+    """Run classifiers to get predictions
+
+    :param id_to_predict: Id of the entity to get prediction from
+    :param classifier: classifier used to get the predictions
+    :param score: score minimum of predictions
+    :param n_results: number of predictions to return
+    :return: predictions in array of JSON object
+    """
+    # classifier: Predict OMIM-DrugBank
+    # TODO: improve when we will have more classifier
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
+
+    if min_score:
+        predictions_array = [
+            p for p in predictions_array if p['score'] >= min_score]
+    if max_score:
+        predictions_array = [
+            p for p in predictions_array if p['score'] <= max_score]
+    if n_results:
+        # Predictions are already sorted from higher score to lower
+        predictions_array = predictions_array[:n_results]
+
+    # Build lists of unique node IDs to retrieve label
+    predicted_ids = set([])
+    for prediction in predictions_array:
+        for key, value in prediction.items():
+            if key != 'score':
+                predicted_ids.add(value)
+    labels_dict = get_entities_labels(predicted_ids)
+
+    # TODO: format using a model similar to BioThings:
+    # cf. at the end of this file
+
+    # Add label for each ID, and reformat the dict using source/target
+    labelled_predictions = []
+    # Second array with source and target info for the reasoner query resolution
+    for prediction in predictions_array:
+        labelled_prediction = {}
+        for key, value in prediction.items():
+            if key == 'score':
+                labelled_prediction['score'] = value
+            elif value != id_to_predict:
+                labelled_prediction['id'] = value
+                labelled_prediction['type'] = key
+                try:
+                    if value in labels_dict and labels_dict[value]:
+                        labelled_prediction['label'] = labels_dict[value]['id']['label']
+                except:
+                    print('No label found for ' + value)
+                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
+                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
+
+        labelled_predictions.append(labelled_prediction)
+
+    return labelled_predictions
+
 
 
 def query_omim_drugbank_classifier(input_curie, model_id):
@@ -203,210 +269,23 @@ def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_scor
                 predicted_ids.add(value)
     labels_dict = get_entities_labels(predicted_ids)
 
-    # TODO: format using a model similar to BioThings:
-    # cf. at the end of this file
-
-    # Add label for each ID, and reformat the dict using source/target
     labelled_predictions = []
-    # Second array with source and target info for the reasoner query resolution
-    source_target_predictions = []
     for prediction in predictions_array:
         labelled_prediction = {}
-        source_target_prediction = {}
         for key, value in prediction.items():
             if key == 'score':
                 labelled_prediction['score'] = value
-                source_target_prediction['score'] = value
-            elif value == id_to_predict:
-                # Only for the source_target_prediction object
-                source_target_prediction['source'] = {
-                    'id': id_to_predict,
-                    'type': key
-                }
-                try:
-                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
-                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
-                except:
-                    print('No label found for ' + value)
-            else:
+            elif value != id_to_predict:
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
-                # Same for source_target object
-                source_target_prediction['target'] = {
-                    'id': value,
-                    'type': key
-                }
                 try:
                     if value in labels_dict and labels_dict[value]:
                         labelled_prediction['label'] = labels_dict[value]['id']['label']
-                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
                 except:
                     print('No label found for ' + value)
                 # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
                 #     labelled_prediction['label'] = labels_dict[value]['id']['label']
-                #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
 
         labelled_predictions.append(labelled_prediction)
-        source_target_predictions.append(source_target_prediction)
-        # returns
-        # { score: 12,
-        #  source: {
-        #      id: DB0001
-        #      'type': drug,
-        #      label: a drug
-        #  },
-        #  target { .... }}
 
-    return labelled_predictions, source_target_predictions
-
-
-
-def get_predictions(
-        id_to_predict, model_id, min_score=None, max_score=None, n_results=None,
-    ):
-    """Run classifiers to get predictions
-
-    :param id_to_predict: Id of the entity to get prediction from
-    :param classifier: classifier used to get the predictions
-    :param score: score minimum of predictions
-    :param n_results: number of predictions to return
-    :return: predictions in array of JSON object
-    """
-    # classifier: Predict OMIM-DrugBank
-    # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
-
-    if min_score:
-        predictions_array = [
-            p for p in predictions_array if p['score'] >= min_score]
-    if max_score:
-        predictions_array = [
-            p for p in predictions_array if p['score'] <= max_score]
-    if n_results:
-        # Predictions are already sorted from higher score to lower
-        predictions_array = predictions_array[:n_results]
-
-    # Build lists of unique node IDs to retrieve label
-    predicted_ids = set([])
-    for prediction in predictions_array:
-        for key, value in prediction.items():
-            if key != 'score':
-                predicted_ids.add(value)
-    labels_dict = get_entities_labels(predicted_ids)
-
-    # TODO: format using a model similar to BioThings:
-    # cf. at the end of this file
-
-    # Add label for each ID, and reformat the dict using source/target
-    labelled_predictions = []
-    # Second array with source and target info for the reasoner query resolution
-    source_target_predictions = []
-    for prediction in predictions_array:
-        labelled_prediction = {}
-        source_target_prediction = {}
-        for key, value in prediction.items():
-            if key == 'score':
-                labelled_prediction['score'] = value
-                source_target_prediction['score'] = value
-            elif value == id_to_predict:
-                # Only for the source_target_prediction object
-                source_target_prediction['source'] = {
-                    'id': id_to_predict,
-                    'type': key
-                }
-                try:
-                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
-                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
-                except:
-                    print('No label found for ' + value)
-            else:
-                labelled_prediction['id'] = value
-                labelled_prediction['type'] = key
-                # Same for source_target object
-                source_target_prediction['target'] = {
-                    'id': value,
-                    'type': key
-                }
-                try:
-                    if value in labels_dict and labels_dict[value]:
-                        labelled_prediction['label'] = labels_dict[value]['id']['label']
-                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
-                except:
-                    print('No label found for ' + value)
-                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
-                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
-                #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
-
-        labelled_predictions.append(labelled_prediction)
-        source_target_predictions.append(source_target_prediction)
-        # returns
-        # { score: 12,
-        #  source: {
-        #      id: DB0001
-        #      'type': drug,
-        #      label: a drug
-        #  },
-        #  target { .... }}
-
-    return labelled_predictions, source_target_predictions
-
-    # {
-    # "took": 1,
-    # "total": 4,
-    # "max_score": 12.203629,
-    # "hits": [
-    #     {
-    #     "@type": "Gene",
-    #     "_id": "C0212166",
-    #     "_score": 12.203629,
-    #     "has_part": [
-    #         {
-    #         "@type": "ChemicalSubstance",
-    #         "name": "DNA",
-    #         "pmid": [
-    #             "7553674"
-    #         ],
-    #         "umls": "C0012854"
-    #         }
-    #     ],
-    #     "located_in": [
-    #         {
-    #         "@type": "AnatomicalEntity",
-    #         "name": "Plasma",
-    #         "pmid": [
-    #             "1473120"
-    #         ],
-    #         "umls": "C0032105"
-    #         },
-    #         {
-    #         "@type": "Cell",
-    #         "name": "Tumor cells, malignant",
-    #         "pmid": [
-    #             "7691406"
-    #         ],
-    #         "umls": "C0334227"
-    #         }
-    #     ],
-    #     "name": "cancer-recognition, immunedefense suppression, serine protease protection peptide",
-    #     "part_of": [
-    #         {
-    #         "@type": "Cell",
-    #         "name": "Lymphocyte",
-    #         "pmid": [
-    #             "7691405"
-    #         ],
-    #         "umls": "C0024264"
-    #         }
-    #     ],
-    #     "physically_interacts_with": [
-    #         {
-    #         "@type": "Gene",
-    #         "name": "Serine Endopeptidases",
-    #         "pmid": [
-    #             "7691406"
-    #         ],
-    #         "umls": "C0036734"
-    #         }
-    #     ],
-    #     "umls": "C0212166"
-    #     },
+    return labelled_predictions

@@ -12,7 +12,7 @@ WORKDIR /app
 
 
 RUN apt-get update && \
-    apt-get install -y build-essential curl vim openjdk-11-jdk wget && \
+    apt-get install -y build-essential wget curl vim openjdk-11-jdk && \
     pip install --upgrade pip
 
 
@@ -40,7 +40,7 @@ COPY . .
 RUN pip install -e ".[train,test,dev]"
 # RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e \".[train,test,dev]\" ; else pip install . ; fi"
 
-# RUN dvc pull
+RUN dvc pull
 
 ## Gunicorn config
 ENV MODULE_NAME=openpredict.main

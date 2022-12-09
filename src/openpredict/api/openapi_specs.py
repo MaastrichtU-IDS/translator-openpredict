@@ -4,8 +4,9 @@ from typing import Any, Dict
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from openpredict.config import settings
 from reasoner_pydantic import Message, Query
+
+from openpredict.config import settings
 
 unordered_servers_list = [
     {
@@ -199,64 +200,3 @@ class TRAPI(FastAPI):
 
         self.openapi_schema = openapi_schema
         return self.openapi_schema
-
-
-class EmbeddingTypes(str, Enum):
-    Both = "Both"
-    Drugs = "Drugs"
-    Diseases = "Diseases"
-
-
-class SimilarityTypes(str, Enum):
-    Drugs = "Drugs"
-    Diseases = "Diseases"
-
-class FeatureTypesDrugs(str,Enum):
-    PPI_SIM = "PPI-SIM"
-    TC = "TC"
-    SE_SIM = "SE-SIM"
-    TARGETSEQ_SIM = "TARGETSEQ-SIM"
-    GO_SIM = "GO-SIM"
-
-class FeatureTypesDiseases(str, Enum) :
-    HPO_SIM = "HPO-SIM"
-    PHENO_SIM = "PHENO-SIM"
-
-
-TRAPI_EXAMPLE = {
-  "message": {
-    "query_graph": {
-      "edges": {
-        "e01": {
-          "object": "n1",
-          "predicates": [
-            "biolink:treated_by"
-          ],
-          "subject": "n0"
-        }
-      },
-      "nodes": {
-        "n0": {
-          "categories": [
-            "biolink:Disease"
-          ],
-          "ids": [
-            "OMIM:246300",
-            # "MONDO:0007190"
-          ]
-        },
-        "n1": {
-          "categories": [
-            "biolink:Drug"
-          ]
-        }
-      }
-    }
-  },
-  "query_options": {
-    "max_score": 1,
-    "min_score": 0.5,
-    "n_results": 10
-  }
-}
-

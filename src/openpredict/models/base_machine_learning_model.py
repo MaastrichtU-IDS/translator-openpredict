@@ -1,21 +1,17 @@
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
-from openpredict.config import settings
 from pydantic import BaseModel
 
-
-class TrapiRelation(BaseModel):
-    subject: str
-    predicate: str
-    object: str
+from openpredict.config import settings
+from openpredict.models.predict_output import TrapiRelation
 
 
 class BaseMachineLearningModel():
 
     _folder_path: str = settings.OPENPREDICT_DATA_DIR
-    
+
     trapi_relations: List[TrapiRelation] = []
 
     def __init__(self, train: bool = False):
@@ -50,6 +46,6 @@ class BaseMachineLearningModel():
     def __str__(self):
         json = {
             'folder_path': self._folder_path
-        } 
+        }
         return str(json)
 

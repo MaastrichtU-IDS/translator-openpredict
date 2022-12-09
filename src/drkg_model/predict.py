@@ -9,20 +9,9 @@ import numpy as np
 import pandas as pd
 import torch as th
 import torch.nn.functional as fn
+
+from drkg_model.download import download
 from openpredict.utils import get_entities_labels, get_openpredict_dir
-
-
-# Downloading 500M kgpredict external dependency to avoid to have to commit it to dvc
-def download():
-    if not os.path.exists(get_openpredict_dir("kgpredict")):
-        print("kgpredict data not present, downloading it")
-        try:
-            os.system(f'mkdir -p ./data/kgpredict')
-            os.system(f"wget -q --show-progress purl.org/kgpredict -O kgpredict.tar.gz")
-            os.system(f'tar -xzvf kgpredict.tar.gz  -C ./data/kgpredict/')
-            os.system(f"rm kgpredict.tar.gz")
-        except Exception as e:
-            print(f"Error while downloading kgpredict: {e}")
 
 # Predict drug repurposing based on the DRKG (drug repurposing KG) by Arif Yilmaz
 
@@ -190,28 +179,12 @@ def get_drugrepositioning_results(
     # Add label for each ID, and reformat the dict using source/target
     labelled_predictions = []
     # Second array with source and target info for the reasoner query resolution
-    source_target_predictions = []
     for prediction in predictions_array:
         labelled_prediction = {}
-        source_target_prediction = {}
         for key, value in prediction.items():
             if key == 'score':
                 labelled_prediction['score'] = value
-                source_target_prediction['score'] = value
-            elif value == id_to_predict:
-                # Only for the source_target_prediction object
-                #print("SHAPDisease:"+value)
-                # for finding disease explanalations: shaps=str(xp.getXPREDICTExplanation(drugId=value))
-                source_target_prediction['source'] = {
-                    'id': id_to_predict,
-                    'type': key
-                }
-                try:
-                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
-                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
-                except:
-                    print('No label found for ' + value)
-            else:
+            elif value != id_to_predict:
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
                 #print("SHAPX:"+value)
@@ -219,15 +192,9 @@ def get_drugrepositioning_results(
 
                 #SHAPDISABLE labelled_prediction['shap'] = shaps
                 # Same for source_target object
-                source_target_prediction['target'] = {
-                    'id': value,
-                    'type': key,
-                    #SHAPDISABLE shap' : shaps
-                }
                 try:
                     if value in labels_dict and labels_dict[value]:
                         labelled_prediction['label'] = labels_dict[value]['id']['label']
-                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
                 except:
                     print('No label found for ' + value)
                 # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
@@ -235,17 +202,5 @@ def get_drugrepositioning_results(
                 #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
 
         labelled_predictions.append(labelled_prediction)
-        source_target_predictions.append(source_target_prediction)
-        # returns
-        # { score: 12,
-        #  source: {
-        #      id: DB0001
-        #      'type': drug,
-        #      label: a drug
-        #  },
-        #  target { .... }}
-    #print(source_target_predictions)
-    #print(labelled_predictions)
 
-
-    return labelled_predictions,source_target_predictions
+    return labelled_predictions

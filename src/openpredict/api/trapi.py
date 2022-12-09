@@ -1,10 +1,48 @@
 from fastapi import APIRouter, Body, FastAPI, File, Request, Response, UploadFile
 from fastapi.responses import JSONResponse
-from openpredict.openapi import TRAPI_EXAMPLE, EmbeddingTypes, SimilarityTypes
-from openpredict.trapi_parser import resolve_trapi_query
 from reasoner_pydantic import Message, Query
 
+from openpredict.trapi_parser import resolve_trapi_query
+
 app = APIRouter()
+
+
+TRAPI_EXAMPLE = {
+  "message": {
+    "query_graph": {
+      "edges": {
+        "e01": {
+          "object": "n1",
+          "predicates": [
+            "biolink:treated_by"
+          ],
+          "subject": "n0"
+        }
+      },
+      "nodes": {
+        "n0": {
+          "categories": [
+            "biolink:Disease"
+          ],
+          "ids": [
+            "OMIM:246300",
+            # "MONDO:0007190"
+          ]
+        },
+        "n1": {
+          "categories": [
+            "biolink:Drug"
+          ]
+        }
+      }
+    }
+  },
+  "query_options": {
+    "max_score": 1,
+    "min_score": 0.5,
+    "n_results": 10
+  }
+}
 
 
 @app.post("/query", name="TRAPI query",
@@ -50,7 +88,7 @@ def post_reasoner_predict(
     :return: Predictions as a ReasonerStdAPI Message
     """
     query_graph = request_body.message.query_graph.dict(exclude_none=True)
-    
+
     if len(query_graph["edges"]) == 0:
         return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
         # return ({"status": 400, "title": "Bad Request", "detail": "No edges", "type": "about:blank" }, 400)

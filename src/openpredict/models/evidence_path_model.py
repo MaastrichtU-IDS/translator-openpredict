@@ -6,9 +6,10 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from gensim.models import KeyedVectors
+
 from openpredict.config import settings
-from openpredict.ml_models.base_machine_learning_model import BaseMachineLearningModel
-from openpredict.utils import load_treatment_embeddings
+from openpredict.models.base_machine_learning_model import BaseMachineLearningModel
+from openpredict_model.utils import load_treatment_embeddings
 
 # Experiment to define models as class, which download their model
 # But we will probably go more towards using dvc

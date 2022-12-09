@@ -2,10 +2,11 @@ import os
 import uuid
 from datetime import datetime
 
-from openpredict.config import settings
 from rdflib import RDF, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import DC, DCTERMS, RDFS, VOID, XSD
 from SPARQLWrapper import JSON, POST, SPARQLWrapper
+
+from openpredict.config import settings
 
 if not settings.OPENPREDICT_DATA_DIR.endswith('/'):
     settings.OPENPREDICT_DATA_DIR += '/'

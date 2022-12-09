@@ -1,0 +1,1 @@
+from .models.predict_output import TrapiRelation, PredictHit, PredictOutput

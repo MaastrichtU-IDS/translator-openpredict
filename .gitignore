@@ -5,6 +5,7 @@ build/
 .eggs/
 dist/
 __pycache__/
+.pytest_cache/
 .coverage
 
 .DS_Store

@@ -2,7 +2,7 @@
 
 [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-**OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug). 
+**OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug).
 
 Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) as RDF.
 
@@ -10,48 +10,39 @@ Access the **Translator OpenPredict API** at **[https://openpredict.semanticscie
 
 > You can use this API to retrieve predictions for drug/disease, or add new embeddings to improve the model.
 
-# Deploy the OpenPredict API locally :woman_technologist:
+# 🧑‍💻 Deploy the OpenPredict API locally
 
-> Requirements: Python 3.6+ and `pip` installed
+Requirements: docker and pip
 
-You can install the `openpredict` python package with `pip` to run the OpenPredict API on your machine, to test new embeddings or improve the library.
+### 📥️ Install
 
-We currently recommend to install from the source code `master` branch to get the latest version of OpenPredict. But we also regularly publish the `openpredict` package to PyPI: https://pypi.org/project/openpredict
+1. Clone the repository:
 
-### With Docker from the source code :whale:
+   ```bash
+   git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+   cd translator-openpredict
+   ```
 
-Clone the repository:
+2. Pull the data required to run the models in the `data` folder with [`dvc`](https://dvc.org/):
 
-```bash
-git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
-cd translator-openpredict
-```
+   ```bash
+   pip install dvc
+   dvc pull
+   ```
 
-Start the API in development mode on http://localhost:8808:
+### 🚀 Start the API
 
-```bash
-docker-compose up
-```
-
-By default all data are stored in the `data/` folder in the directory were you used the `openpredict` command (RDF metadata, features and models of each run)
-
-> Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
-
-You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
+Start the API in development with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
 
 ```bash
-docker-compose exec api openpredict train-model --model openpredict-baseline-omim-drugbank
+docker-compose up api
 ```
 
-### Reset your local OpenPredict data :wastebasket:
-
-You can easily reset the data of your local OpenPredict deployment by deleting the `data/` folder and restarting the OpenPredict API:
+You will need to re-build the docker image if you add new dependencies to the `pyproject.toml`:
 
 ```bash
-rm -rf data/
+docker-compose up api --build
 ```
-
-> If you are working on improving OpenPredict, you can explore [additional documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs) locally or with Docker.
 
 ### Test the OpenPredict API
 
@@ -59,15 +50,15 @@ See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
 
 ---
 
-# Use the API​ :mailbox_with_mail:
+# 📬️ Use the API
 
 
-The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented). 
+The user provides a drug or a disease identifier as a CURIE (e.g. `DRUGBANK:DB00394`, or `OMIM:246300`), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented).
 
 The API will return predicted targets for the given drug or disease:
 
-* The **potential drugs treating a given disease** :pill:
-* The **potential diseases a given drug could treat** :microbe:
+* The **potential drugs treating a given disease**
+* The **potential diseases a given drug could treat**
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
@@ -127,14 +118,14 @@ The `/predicates` operation will return the entities and relations provided by t
 
 > Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
 
-### Notebooks examples :notebook_with_decorative_cover:
+### :notebook_with_decorative_cover: Notebooks examples
 
 We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
 
 1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
 
-### Add embedding :station:
+### :station: Add embedding
 
 The default baseline model is `openpredict-baseline-omim-drugbank`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
 
@@ -144,7 +135,7 @@ The default baseline model is `openpredict-baseline-omim-drugbank`. You can choo
 
 Once the embedding has been added you can find the existing models previously generated (including `openpredict-baseline-omim-drugbank`), and use them as base model when you ask the model for prediction or add new embeddings.
 
-### Predict operation :crystal_ball:
+### :crystal_ball: Predict operation
 
 Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
 
@@ -152,7 +143,7 @@ Use this operation if you just want to easily retrieve predictions for a given e
   * **OR** a `disease_id` to get predicted drugs it could be treated with (e.g. `OMIM:246300`)
 * The prediction model to use (default to `Predict OMIM-DrugBank`)
 * The minimum score of the returned predictions, from 0 to 1 (optional)
-* The limit of results to return, starting from the higher score, e.g. 42 (optional)  
+* The limit of results to return, starting from the higher score, e.g. 42 (optional)
 
 The API will return the list of predicted target for the given entity, the labels are resolved using the [Translator Name Resolver API](https://nodenormalization-sri.renci.org)
 
@@ -160,7 +151,7 @@ The API will return the list of predicted target for the given entity, the label
 
 ---
 
-# More about the data model :minidisc:
+# :minidisc: More about the data model
 
 * The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
 * Metadata about runs, models evaluations, features are stored as RDF using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
@@ -180,11 +171,11 @@ Query for drug-disease pairs predicted from pre-computed sets of graphs embeddin
 Add new embeddings to improve the predictive models, with versioning and scoring of the models.
 
 ### Component List
-**API component** 
+**API component**
 
 1. Component Name: **OpenPredict API**
 
-2. Component Description: **Python API to serve pre-computed set of drug-disease pair predictions from graphs embeddings** 
+2. Component Description: **Python API to serve pre-computed set of drug-disease pair predictions from graphs embeddings**
 
 3. GitHub Repository URL: https://github.com/MaastrichtU-IDS/translator-openpredict
 
@@ -194,11 +185,11 @@ Add new embeddings to improve the predictive models, with versioning and scoring
 
     5.1. Specific OS and version if required: **python 3.8**
 
-    5.2. CPU/Memory (for CI, TEST and PROD):  **32 CPUs and 32 Go memory ?** 
+    5.2. CPU/Memory (for CI, TEST and PROD):  **32 CPUs and 32 Go memory ?**
 
     5.3. Disk size/IO throughput (for CI, TEST and PROD): **20 Go ?**
 
-    5.4. Firewall policies: does the team need access to infrastructure components? 
+    5.4. Firewall policies: does the team need access to infrastructure components?
     **The NodeNormalization API https://nodenormalization-sri.renci.org**
 
 
@@ -219,7 +210,7 @@ Add new embeddings to improve the predictive models, with versioning and scoring
     7.3. Docker run command:
 
 	**Replace `${PERSISTENT_STORAGE}` with the path to persistent storage on host:**
-	
+
     ```bash
     docker run -d -v ${PERSISTENT_STORAGE}:/data/openpredict -p 8808:8808 ghcr.io/maastrichtu-ids/openpredict-api
     ```
@@ -232,7 +223,7 @@ Add new embeddings to improve the predictive models, with versioning and scoring
 
 * This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project.
 * Predictions made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
-* Service funded by the [NIH NCATS Translator project](https://ncats.nih.gov/translator/about). 
+* Service funded by the [NIH NCATS Translator project](https://ncats.nih.gov/translator/about).
 
 ![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)
 

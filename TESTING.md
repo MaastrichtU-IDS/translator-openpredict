@@ -53,16 +53,16 @@ Integration tests on a local API are run automatically by the [GitHub Action wor
 
 We test the embeddings computation with a Spark local context ([setup with a GitHub Action](https://github.com/marketplace/actions/setup-apache-spark)), and without Spark context (using NumPy and pandas)
 
-You can run the tests for the different components of OpenPredict locally:
+You can run all the local integration tests with docker-compose:
 
 ```bash
-docker-compose exec api pytest tests/integration
+docker-compose run tests
 ```
 
 To run a specific test in a specific file, and display `print()` lines in the output:
 
 ```bash
-docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
+docker-compose run tests --entrypoint pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
 ```
 
 ## Docker tests

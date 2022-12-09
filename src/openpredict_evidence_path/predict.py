@@ -1,13 +1,12 @@
 import ast
-import os
-from pathlib import Path
 
 import networkx as nx
 import numpy as np
 import pandas as pd
+from fastapi import APIRouter, Query
 from gensim.models import KeyedVectors
+
 from openpredict.config import settings
-from openpredict.utils import load_treatment_embeddings
 from openpredict_evidence_path.train import getQuantiles, path_weight_product
 
 ## Evidence path for OpenPredict model by Elif
@@ -166,5 +165,3 @@ def do_evidence_path(drug_id: str, disease_id: str, threshold_drugs : float,thre
     evidence_path = generate_explanation(drug=drug_id, disease=disease_id, drug_fp_vectors = drug_fp_vectors, disease_hp_vectors= disease_hp_vectors,
                                          features_drug = features_drug, features_disease = features_disease,threshold_drugs = threshold_drugs,threshold_disease = threshold_disease )
     return generate_json(evidence_path)
-
-

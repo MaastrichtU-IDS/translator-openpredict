@@ -8,29 +8,15 @@ import numpy as np
 import pandas as pd
 from gensim.models import KeyedVectors
 from joblib import dump, load
-from openpredict.loaded_models import PreloadedModels
-from openpredict.rdf_utils import (
-    add_feature_metadata,
-    add_run_metadata,
-    get_run_id,
-    retrieve_features,
-)
-
-# from openpredict.utils import get_spark_context
-from openpredict.utils import get_entities_labels, get_openpredict_dir, log
-from openpredict.config import settings
-from sklearn import (
-    ensemble,
-    linear_model,
-    metrics,
-    model_selection,
-    neighbors,
-    svm,
-    tree,
-)
+from sklearn import ensemble, linear_model, metrics, model_selection, neighbors, svm, tree
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import GroupKFold, StratifiedKFold, StratifiedShuffleSplit
 
+from openpredict.config import settings
+from openpredict.loaded_models import PreloadedModels
+from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, get_run_id, retrieve_features
+# from openpredict.utils import get_spark_context
+from openpredict.utils import get_entities_labels, get_openpredict_dir, log
 
 
 def train_model(from_model_id='openpredict-baseline-omim-drugbank'):

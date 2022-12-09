@@ -6,8 +6,9 @@ import json
 import pandas as pd
 import shap as shap
 import sklearn
-from openpredict_model.predict import query_omim_drugbank_classifier
+
 from openpredict.utils import get_entities_labels, get_openpredict_dir
+from openpredict_model.predict import query_omim_drugbank_classifier
 
 # XPREDICT framework may be used to add explanation features to drug repositioning applications
 
@@ -135,28 +136,12 @@ def get_explanations(
     # Add label for each ID, and reformat the dict using source/target
     labelled_predictions = []
     # Second array with source and target info for the reasoner query resolution
-    source_target_predictions = []
     for prediction in predictions_array:
         labelled_prediction = {}
-        source_target_prediction = {}
         for key, value in prediction.items():
             if key == 'score':
                 labelled_prediction['score'] = value
-                source_target_prediction['score'] = value
-            elif value == id_to_predict:
-                # Only for the source_target_prediction object
-                #print("SHAPDisease:"+value)
-                # for finding disease explanalations: shaps=str(xp.getXPREDICTExplanation(drugId=value))
-                source_target_prediction['source'] = {
-                    'id': id_to_predict,
-                    'type': key
-                }
-                try:
-                    if id_to_predict in labels_dict and labels_dict[id_to_predict] and labels_dict[id_to_predict]['id'] and labels_dict[value]['id']['label']:
-                        source_target_prediction['source']['label'] = labels_dict[id_to_predict]['id']['label']
-                except:
-                    print('No label found for ' + value)
-            else:
+            elif value != id_to_predict:
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
                 #print("SHAPX:"+value)
@@ -165,15 +150,9 @@ def get_explanations(
 
                 labelled_prediction['shap'] = shaps
                 # Same for source_target object
-                source_target_prediction['target'] = {
-                    'id': value,
-                    'type': key,
-                    'shap' : shaps
-                }
                 try:
                     if value in labels_dict and labels_dict[value]:
                         labelled_prediction['label'] = labels_dict[value]['id']['label']
-                        source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
                 except:
                     print('No label found for ' + value)
                 # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
@@ -181,18 +160,6 @@ def get_explanations(
                 #     source_target_prediction['target']['label'] = labels_dict[value]['id']['label']
 
         labelled_predictions.append(labelled_prediction)
-        source_target_predictions.append(source_target_prediction)
-        # returns
-        # { score: 12,
-        #  source: {
-        #      id: DB0001
-        #      'type': drug,
-        #      label: a drug
-        #  },
-        #  target { .... }}
-    #print(source_target_predictions)
-    #print(labelled_predictions)
 
-
-    return labelled_predictions,source_target_predictions
+    return labelled_predictions
 

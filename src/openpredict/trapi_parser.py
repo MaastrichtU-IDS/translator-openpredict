@@ -1,8 +1,10 @@
 import re
 
 import requests
+
 from openpredict.config import settings
 from openpredict.loaded_models import PreloadedModels
+from openpredict.utils import get_entities_labels
 from openpredict_model.predict import get_predictions, get_similarities
 
 # TODO: add explain and DRKG to TRAPI
@@ -167,7 +169,8 @@ def resolve_trapi_query(reasoner_query):
         if any(i in similar_parents for i in query_plan[edge_qg_id]['predicates']):
             if 'from_kg_id' in query_plan[edge_qg_id]:
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
-
+                    labels_dict = get_entities_labels([id_to_predict])
+                    label_to_predict = labels_dict[id_to_predict]['id']['label']
                     try:
                         # TODO: make it dynamic by passing the TRAPI app object with all models
                         # currently using default models for drug and disease similarity
@@ -176,7 +179,7 @@ def resolve_trapi_query(reasoner_query):
                             similarity_model_id = 'disease_hp_embed.txt'
                         # similarity_model_id = model_id
                         emb_vectors = PreloadedModels.similarity_embeddings[similarity_model_id]
-                        similarity_json, source_target_predictions = get_similarities(
+                        similarity_json = get_similarities(
                             query_plan[edge_qg_id]['from_type'],
                             id_to_predict,
                             emb_vectors, min_score, max_score, n_results
@@ -202,10 +205,12 @@ def resolve_trapi_query(reasoner_query):
                             node_dict[source_node_id] = {
                                 'type': query_plan[edge_qg_id]['from_type']
                             }
+                            if label_to_predict:
+                                node_dict[source_node_id]['label'] = label_to_predict
+
                             node_dict[target_node_id] = {
                                 'type': hit['type']
                             }
-
                             if 'label' in hit.keys():
                                 node_dict[target_node_id]['label'] = hit['label']
 
@@ -291,9 +296,11 @@ def resolve_trapi_query(reasoner_query):
             if any(i in drugdisease_parents for i in query_plan[edge_qg_id]['from_type']) and any(i in drugdisease_parents for i in query_plan[edge_qg_id]['to_type']):
                 # Iterate over the list of ids provided
                 for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
+                    labels_dict = get_entities_labels([id_to_predict])
+                    label_to_predict = labels_dict[id_to_predict]['id']['label']
                     try:
                         # Run OpenPredict to get predictions
-                        bte_response, prediction_json = get_predictions(
+                        prediction_json = get_predictions(
                             id_to_predict, model_id,
                             min_score, max_score, n_results=None
                         )
@@ -303,8 +310,8 @@ def resolve_trapi_query(reasoner_query):
                     for association in prediction_json:
                         # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
                         # Build dict of node ID : label
-                        source_node_id = resolve_id(association['source']['id'], resolved_ids_object)
-                        target_node_id = resolve_id(association['target']['id'], resolved_ids_object)
+                        source_node_id = resolve_id(id_to_predict, resolved_ids_object)
+                        target_node_id = resolve_id(association['id'], resolved_ids_object)
 
                         # TODO: XAI get path between source and target nodes (first create the function for this)
 
@@ -319,16 +326,16 @@ def resolve_trapi_query(reasoner_query):
                             # node_dict[id_to_predict] = query_plan[edge_qg_id]['from_type']
                             # node_dict[association[query_plan[edge_qg_id]['to_type']]] = query_plan[edge_qg_id]['to_type']
                             node_dict[source_node_id] = {
-                                'type': association['source']['type']
+                                'type': query_plan[edge_qg_id]['from_type']
                             }
-                            if 'label' in association['source'] and association['source']['label']:
-                                node_dict[source_node_id]['label'] = association['source']['label']
+                            if label_to_predict:
+                                node_dict[source_node_id]['label'] = label_to_predict
 
                             node_dict[target_node_id] = {
-                                'type': association['target']['type']
+                                'type': association['type']
                             }
-                            if 'label' in association['target'] and association['target']['label']:
-                                node_dict[target_node_id]['label'] = association['target']['label']
+                            if 'label' in association.keys():
+                                node_dict[target_node_id]['label'] = association['label']
 
                             # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
                             source = 'OpenPredict'
@@ -378,7 +385,7 @@ def resolve_trapi_query(reasoner_query):
                             edge_dict['object'] = target_node_id
 
                             # Define the predicate depending on the association source type returned by OpenPredict classifier
-                            if association['source']['type'] == 'drug':
+                            if query_plan[edge_qg_id]['from_type'] == 'drug':
                                 # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
                                 edge_dict['predicate'] = 'biolink:treats'
                             else:

@@ -1,9 +1,17 @@
 import os
+from enum import Enum
 
 from fastapi import APIRouter, File, UploadFile
-from openpredict_model.train import addEmbedding
-from openpredict.openapi import EmbeddingTypes
+
 from openpredict.rdf_utils import retrieve_features, retrieve_models
+from openpredict_model.train import addEmbedding
+
+
+class EmbeddingTypes(str, Enum):
+    Both = "Both"
+    Drugs = "Drugs"
+    Diseases = "Diseases"
+
 
 app = APIRouter()
 

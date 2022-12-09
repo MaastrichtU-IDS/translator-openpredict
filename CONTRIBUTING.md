@@ -8,143 +8,83 @@ When contributing to this repository, please first discuss the change you wish t
 
 If you are part of the [MaastrichtU-IDS organization on GitHub](https://github.com/MaastrichtU-IDS) you can directly create a branch in this repository. Otherwise you will need to first [fork this repository](https://github.com/MaastrichtU-IDS/translator-openpredict/fork).
 
-To contribute:
+## 👩‍💻 Development process
 
-1. Clone the repository (change the URL for your fork) 📥
+To work with translator-openpredict locally:
 
-```bash
-git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
-cd translator-openpredict
-```
+### 📥️ Install
 
-2. Create a new branch from the `master` branch and add your changes to this branch 🕊️
+1. Clone the repository:
 
-```bash
-git checkout -b my-branch
-```
+   ```bash
+   git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+   cd translator-openpredict
+   ```
 
-## Development process 👩‍💻
+2. Pull the data required to run the models in the `data` folder with [`dvc`](https://dvc.org/):
 
-Install `openpredict` from the source code, and update the package automatically when the files changes locally :arrows_counterclockwise:
+   ```bash
+   pip install dvc
+   dvc pull
+   ```
 
-```bash
-pip install -e .
-```
+### 🚀 Start the API
 
-> See the [main README](https://github.com/MaastrichtU-IDS/translator-openpredict) for more details on the package installation.
-
-The OpenPredict API stores its metadata using RDF:
-
-* We use a `.ttl` file in `data/` in local development
-* It can use the open source [Virtuoso triplestore](https://virtuoso.openlinksw.com/) in local development environment with docker
-* We use [Ontotext GraphDB](https://github.com/Ontotext-AD/graphdb-docker) in production at IDS, but you are free to use any other triplestore!
-
-
-## Setup dvc
-
-[dvc](https://dvc.org/) is a tool for data version control, install it with:
+Start the API in development with docker, the API will automatically reload when you make changes in the code:
 
 ```bash
-pip install dvc
+docker-compose up api
 ```
 
-It helps you to easily store datasets used by your machine learning workflows, and keep track of changes in a way similar to git. Like git, with dvc you will need to choose a platform to publish your data, such as [DagsHub](https://dagshub.com/docs/integration_guide/dvc/) or [HuggingFace](https://dvc.org/doc/dvclive/api-reference/ml-frameworks/huggingface).
-
-### Pull data with dvc
-
-Pull data:
+You will need to re-build the docker image if you add new dependencies to the `pyproject.toml`:
 
 ```bash
-dvc pull -r origin
+docker-compose up api --build
 ```
 
-### Create a new project on DagsHub
+### 🧪 Run tests
 
-Here we document the process using DagsHub to publish data related to a ML experiment, but you could choose to use a different platform for your project.
+[![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
 
-⚠️ Open source projects on DagsHub using the free plan have a 10G storage limit.
+You can run the tests locally after starting the API wit docker-compose:
+
+```bash
+docker-compose exec api pytest tests/integration
+```
+
+See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
+
+### 📤️ Push changes to the data
+
+If you make changes to the data in the `data` folder you will need to add and push this data on [DagsHub](https://dagshub.com/docs/integration_guide/dvc/) with `dvc` 
 
 1. Go to [dagshub.com](https://dagshub.com/user/login), and login with GitHub or Google
 
-2. Create a new project in DagsHub by connecting it to the GitHub repository with the code for the experiment (this repository)
-
-3. Connect your local repository with the created DagsHub project:
+2. Get your token and set your credentials:
 
    ```bash
    export DAGSHUB_USER="vemonet"
    export DAGSHUB_TOKEN="TOKEN"
+   ```
 
-   dvc remote add origin https://dagshub.com/$DAGSHUB_USER/openpredict-model.dvc
+3. Connect your local repository with the created DagsHub project:
+
+   ```bash
+   dvc remote add origin https://dagshub.com/vemonet/translator-openpredict.dvc
    dvc remote modify origin --local auth basic
    dvc remote modify origin --local user $DAGSHUB_USER
    dvc remote modify origin --local password $DAGSHUB_TOKEN
    ```
 
-3. Push data:
+4. Push data:
 
    ```bash
-   dvc push -r origin
+   dvc push
    ```
 
+> ⚠️ Open source projects on DagsHub using the free plan have a 10G storage limit.
 
-### Start the OpenPredict API :rocket:
-
-
-Start the **OpenPredict API in debug mode** on http://localhost:8808 (the API will be reloaded automatically at each change to the code)
-
-```bash
-openpredict start-api --debug
-```
-
-> OpenPredict metadata will be stored in `.ttl` RDF files
-
-Start the **OpenPredict API in productionn mode** with Tornado (the API will not reload at each change)
-
-```bash
-openpredict start-api
-```
-
-### Optional: start OpenPredict API with a local Virtuoso triplestore 🗄️
-
-To test OpenPredict using a local triplestore to store metadata:
-
-1. **Start the Virtuoso triplestore** locally on http://localhost:8890 using Docker (login: `dba` / `dba`):
-
-```bash
-docker-compose -f docker-compose.dev.yml up -d --force-recreate
-```
-
-2. Start the **OpenPredict API in debug mode** on http://localhost:8808 (the API will be reloaded automatically at each change to the code)
-
-```bash
-openpredict start-api --debug
-```
-
-3. **Stop** the Virtuoso container:
-
-```bash
-docker-compose down
-```
-
-
-### Reset your local OpenPredict data 🗑️
-
-If you want to reset the (meta)data used by OpenPredict locally:
-
-1. Stop OpenPredict API (and Virtuoso if used).
-2. Use the `reset_openpredict.sh` script to delete the folders where the OpenPredict API and Virtuoso data are stored, in `data/virtuoso` and `data/openpredict`
-
-```bash
-./reset_openpredict.sh
-```
-
-> This command uses `sudo` to be able to delete the `data/virtuoso` folder which has been created by the `docker` user.
->
-> On Windows: delete all files in `data` folder, just keep `initial-openpredict-metadata.ttl`
-
-See more **[documentation to deploy the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs)** locally or with Docker.
-
-## Create a new API call 📝
+## 📝 Create a new API call
 
 Guidelines to create a new API  call in the OpenPredict Open API.
 
@@ -176,13 +116,7 @@ def get_predict(entity='DB00001'):
 
 > The parameters provided in `openapi.yml` and the arguments of the function in `openpredict_api.py` need to match!
 
-## Run tests 🧪
-
-[![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)
-
-Check the [TESTING.md](/TESTING.md) documentation.
-
-## Pull Request process 📬
+## 📬 Pull Request process
 
 1. Ensure the tests are passing before sending a pull request 🧪
 
@@ -192,11 +126,11 @@ Check the [TESTING.md](/TESTING.md) documentation.
 
 ---
 
-## Additional informations about releases ℹ️
+## ℹ️ Additional informations about releases
 
 This part is not required to be completed if you are looking into contributing, it is purely informative on the release process of the OpenPredict API.
 
-### Release process 🏷️
+### 🏷️ Release process
 
 The versioning scheme for new releases on GitHub used is [SemVer](http://semver.org/) (Semantic Versioning).
 
@@ -204,7 +138,7 @@ The versioning scheme for new releases on GitHub used is [SemVer](http://semver.
 2. Create a new release in the [GitHub web UI](https:///github.com/MaastrichtU-IDS/translator-openpredict).Provide the version as tag, e.g. `v0.0.7`
 3. When you publish the new release, a [GitHub Action workflow](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Publish+package%22) will be automatically run to run the tests, and publish the `openpredict` package to [PyPI](https://pypi.org/project/openpredict/).
 
-### Publish a new Docker image 📦
+### 📦 Publish a new Docker image
 
 When publishing a new version of OpenPredict we usually also publish an updated Docker image to the [MaastrichtU-IDS GitHub Container Registry](https://github.com/orgs/MaastrichtU-IDS/packages/container/package/openpredict-api).
 
@@ -222,7 +156,7 @@ Push to the [MaastrichtU-IDS GitHub Container Registry](https://github.com/orgs/
 docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
 ```
 
-### Generate pydoc for the code 📖
+### 📖 Generate pydoc for the code
 
 Documentation in [docs/README-pydoc.md](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs/README-pydoc.md) is generated from the Python source code doc strings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
 
