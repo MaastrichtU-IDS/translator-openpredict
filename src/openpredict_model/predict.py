@@ -6,10 +6,11 @@ import numpy as np
 import pandas as pd
 
 from openpredict.config import settings
-from openpredict.loaded_models import PreloadedModels
-from openpredict.models.predict_output import PredictOutput, TrapiRelation
+from openpredict.decorators import trapi_predict
+from openpredict.models.predict_output import PredictOptions, PredictOutput, TrapiRelation
 from openpredict.utils import get_entities_labels
 from openpredict_model.train import createFeaturesSparkOrDF
+from openpredict_model.utils import load_treatment_classifier, load_treatment_embeddings, similarity_embeddings
 
 satisfies_relations: List[TrapiRelation] = [
     {
@@ -24,8 +25,9 @@ satisfies_relations: List[TrapiRelation] = [
     },
 ]
 
+@trapi_predict(relations=satisfies_relations)
 def get_predictions(
-        id_to_predict, model_id, min_score=None, max_score=None, n_results=None,
+        id_to_predict: str, options: PredictOptions
     ) -> PredictOutput:
     """Run classifiers to get predictions
 
@@ -35,19 +37,22 @@ def get_predictions(
     :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
+    if options.model_id is None:
+        options.model_id = 'openpredict-baseline-omim-drugbank'
+
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, options.model_id)
 
-    if min_score:
+    if options.min_score:
         predictions_array = [
-            p for p in predictions_array if p['score'] >= min_score]
-    if max_score:
+            p for p in predictions_array if p['score'] >= options.min_score]
+    if options.max_score:
         predictions_array = [
-            p for p in predictions_array if p['score'] <= max_score]
-    if n_results:
+            p for p in predictions_array if p['score'] <= options.max_score]
+    if options.n_results:
         # Predictions are already sorted from higher score to lower
-        predictions_array = predictions_array[:n_results]
+        predictions_array = predictions_array[:options.n_results]
 
     # Build lists of unique node IDs to retrieve label
     predicted_ids = set()
@@ -71,6 +76,7 @@ def get_predictions(
             elif value != id_to_predict:
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
+                # print(f"labels_dict {labels_dict}")
                 try:
                     if value in labels_dict and labels_dict[value]:
                         labelled_prediction['label'] = labels_dict[value]['id']['label']
@@ -78,9 +84,8 @@ def get_predictions(
                     print('No label found for ' + value)
                 # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
                 #     labelled_prediction['label'] = labels_dict[value]['id']['label']
-
+        # print(f"labelled prediction {labelled_prediction}")
         labelled_predictions.append(labelled_prediction)
-
     return labelled_predictions
 
 
@@ -111,7 +116,9 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    (drug_df, disease_df) = PreloadedModels.treatment_embeddings
+    print("load starts")
+    (drug_df, disease_df) = load_treatment_embeddings(model_id)
+    print("load done")
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(
@@ -133,7 +140,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     commonDiseases = diseaseswithfeatures.intersection(
         drugDiseaseKnown.Disease.unique())
 
-    clf = PreloadedModels.treatment_classifier
+    clf = load_treatment_classifier(model_id)
     # if not clf:
     #     clf = load_treatment_classifier(model_id)
 
@@ -236,26 +243,41 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
 
 
 
-def get_similarities(types, id_to_predict, emb_vectors, min_score=None, max_score=None, n_results=None):
+@trapi_predict(relations=[
+    {
+        'subject': 'biolink:Drug',
+        'predicate': 'biolink:similar_to',
+        'object': 'biolink:Drug',
+    },
+    {
+        'subject': 'biolink:Disease',
+        'predicate': 'biolink:similar_to',
+        'object': 'biolink:Disease',
+    },
+])
+def get_similarities(id_to_predict: str, options: PredictOptions):
     """Run classifiers to get predictions
 
     :param id_to_predict: Id of the entity to get prediction from
-    :param classifier: classifier used to get the predictions
-    :param score: score minimum of predictions
-    :param n_results: number of predictions to return
+    :param options
     :return: predictions in array of JSON object
     """
-    predictions_array = get_similar_for_entity(id_to_predict, emb_vectors, n_results)
+    similarity_model_id = 'drugs_fp_embed.txt'
+    if 'biolink:Disease' in options.types:
+        similarity_model_id = 'disease_hp_embed.txt'
+    emb_vectors = similarity_embeddings[similarity_model_id]
 
-    if min_score:
+    predictions_array = get_similar_for_entity(id_to_predict, emb_vectors, options.n_results)
+
+    if options.min_score:
         predictions_array = [
-            p for p in predictions_array if p['score'] >= min_score]
-    if max_score:
+            p for p in predictions_array if p['score'] >= options.min_score]
+    if options.max_score:
         predictions_array = [
-            p for p in predictions_array if p['score'] <= max_score]
-    if n_results:
+            p for p in predictions_array if p['score'] <= options.max_score]
+    if options.n_results:
         # Predictions are already sorted from higher score to lower
-        predictions_array = predictions_array[:n_results]
+        predictions_array = predictions_array[:options.n_results]
 
     # Build lists of unique node IDs to retrieve label
     predicted_ids = set()

@@ -4,7 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from openpredict.loaded_models import PreloadedModels
+from openpredict.models.predict_output import PredictOptions
 from openpredict_model.predict import get_predictions, get_similarities
 
 api = APIRouter()
@@ -39,18 +39,31 @@ def get_predict(
 
     # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
     concept_id = ''
+    types = []
     if drug_id:
         concept_id = drug_id
+        types.append("biolink:Drug")
     elif disease_id:
         concept_id = disease_id
+        types.append("biolink:Disease")
     else:
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        prediction_json = get_predictions(
-            concept_id, model_id, min_score, max_score, n_results
+        prediction_json = get_predictions[0](
+            concept_id,
+            PredictOptions.parse_obj({
+                "model_id": model_id,
+                "min_score": min_score,
+                "max_score": max_score,
+                "n_results": n_results,
+                # "types": types,
+            })
+            # TODO: concept_id, options
         )
     except Exception as e:
+        import traceback
+        print(traceback.format_exc())
         print('Error processing ID ' + concept_id)
         print(e)
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
@@ -61,8 +74,8 @@ def get_predict(
 
 
 class SimilarityTypes(str, Enum):
-    Drugs = "Drugs"
-    Diseases = "Diseases"
+    Drug = "Drug"
+    Disease = "Disease"
 
 
 @api.get("/similarity", name="Get similar entities",
@@ -79,10 +92,10 @@ You can try:
     tags=["openpredict"],
 )
 def get_similarity(
-        types: SimilarityTypes ='Diseases',
+        types: SimilarityTypes ='Disease',
         drug_id: Optional[str] = None,
         disease_id: Optional[str] = 'OMIM:246300',
-        model_id: str ='disease_hp_embed.txt',
+        model_id: str = 'disease_hp_embed.txt',
         min_score: float =None, max_score: float =None, n_results: int =None
     ) -> dict:
     """Get similar entites for a given entity CURIE.
@@ -93,6 +106,7 @@ def get_similarity(
     time_start = datetime.now()
     if type(types) is SimilarityTypes:
         types = types.value
+    types = [ f"biolink:{types}" ]
 
     # TODO: if drug_id and disease_id defined, then check if the disease appear in the provided drug predictions
     concept_id = ''
@@ -104,9 +118,15 @@ def get_similarity(
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        emb_vectors = PreloadedModels.similarity_embeddings[model_id]
-        prediction_json = get_similarities(
-            types, concept_id, emb_vectors, min_score, max_score, n_results
+        prediction_json = get_similarities[0](
+            concept_id,
+            PredictOptions.parse_obj({
+                "model_id": model_id,
+                "min_score": min_score,
+                "max_score": max_score,
+                "n_results": n_results,
+                "types": types,
+            })
         )
     except Exception as e:
         print('Error processing ID ' + concept_id)

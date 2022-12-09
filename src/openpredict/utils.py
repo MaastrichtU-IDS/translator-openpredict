@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 import shutil
+from itertools import zip_longest
 from pathlib import Path
 
 import pandas as pd
@@ -28,7 +29,7 @@ def get_openpredict_dir(subfolder=''):
     return settings.OPENPREDICT_DATA_DIR + subfolder
 
 
-
+# TODO: REMOVE, now handled by dvc
 def init_openpredict_dir():
     """Create OpenPredict folder and initiate files if necessary."""
 
@@ -120,6 +121,12 @@ def init_openpredict_dir():
     # add_feature_metadata("PHENO-SIM", "Disease Phenotype Similarity based on MESH terms similarity", "Diseases")
     # add_feature_metadata("HPO-SIM", "HPO based disease-disease similarity", "Diseases")
 
+def split_list(iterable, n, fillvalue=None):
+    "Collect data into fixed-length chunks or blocks"
+    # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx"
+    args = [iter(iterable)] * n
+    return zip_longest(*args, fillvalue=fillvalue)
+
 
 
 def get_entities_labels(entity_list):
@@ -128,19 +135,23 @@ def get_entities_labels(entity_list):
     and example notebook: https://github.com/TranslatorIIPrototypes/NodeNormalization/blob/master/documentation/NodeNormalization.ipynb
     """
     # TODO: add the preferred identifier CURIE to our answer also?
-    try:
-        get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
-                            params={'curie': entity_list})
-        get_label_result = get_label_result.json()
-    except:
-        # Catch if the call to the API fails (API not available)
-        logging.info("Translator API down: https://nodenormalization-sri.renci.org/apidocs")
-        get_label_result = {}
+    label_results = {}
+    entity_list = list(entity_list)
+    for chunk in split_list(entity_list, 300):
+        try:
+            get_label_result = requests.get('https://nodenormalization-sri.renci.org/get_normalized_nodes',
+                                params={'curie': chunk})
+            label_results.update(get_label_result.json())
+            # print(f"get_entities_labels {get_label_result}")
+        except Exception as e:
+            # Catch if the call to the API fails (API not available)
+            logging.info("Translator API down: https://nodenormalization-sri.renci.org/docs")
+            print(f"Error getting entities labels from NodeNormalization API: {e}")
     # Response is a JSON:
     # { "HP:0007354": {
     #     "id": { "identifier": "MONDO:0004976",
     #       "label": "amyotrophic lateral sclerosis" },
-    return get_label_result
+    return label_results
 
 
 def normalize_id_to_translator(ids_list):

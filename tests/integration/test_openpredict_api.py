@@ -36,7 +36,7 @@ def test_get_predict_disease():
 def test_get_similarity_drug():
     """Test prediction similarity API GET operation for a drug"""
     n_results=5
-    url = '/similarity?drug_id=DRUGBANK:DB00394&types=Drugs&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
+    url = '/similarity?drug_id=DRUGBANK:DB00394&types=Drug&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
     response = client.get(url).json()
     assert len(response['hits']) == n_results
     assert response['count'] == n_results
@@ -46,7 +46,7 @@ def test_get_similarity_drug():
 def test_get_similarity_disease():
     """Test prediction similarity API GET operation for a disease"""
     n_results=5
-    url = '/similarity?disease_id=OMIM:246300&types=Diseases&model_id=disease_hp_embed.txt&n_results=' + str(n_results)
+    url = '/similarity?disease_id=OMIM:246300&types=Disease&model_id=disease_hp_embed.txt&n_results=' + str(n_results)
     response = client.get(url).json()
     assert len(response['hits']) == n_results
     assert response['count'] == n_results
