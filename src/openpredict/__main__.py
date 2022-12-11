@@ -2,28 +2,16 @@ import logging
 import sys
 
 import click
-import uvicorn
 
-from openpredict.main import app
 from openpredict.rdf_utils import retrieve_features
 from openpredict_model.train import train_model as train_openpredict_model
 
-
-@click.command()
-@click.option(
-    '-p', '--port', default=8808,
-    help='Choose the port the API will run on.')
-@click.option('--debug', is_flag=True, help="Run in development mode with debugger enabled.")
-@click.option('--start-spark/--no-spark', default=True, help="Start local Spark cluster (default to yes).")
-def start_api(port, debug, start_spark):
-    uvicorn.run(app, host="0.0.0.0", port=port, reload=debug)
-    # start_openpredict_api(port, debug, start_spark)
 
 # TODO: update this call to make it "addEmbeddings?"
 @click.command()
 @click.option('--model', default='openpredict-baseline-omim-drugbank', help="Build the features from scratch (default to yes).")
 def train_model(model):
-    print('Using model: ', model)
+    print(f'Using model: {model}')
     retrieve_features('All').keys()
     clf, scores, hyper_params, features_df = train_openpredict_model(model)
     # add_run_metadata(scores, model_features, hyper_params)
@@ -42,7 +30,7 @@ def main(args=None):
     """Command Line Interface to run OpenPredict"""
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
-main.add_command(start_api)
+
 main.add_command(train_model)
 # main.add_command(generate_features)
 

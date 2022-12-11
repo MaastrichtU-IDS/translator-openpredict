@@ -133,7 +133,5 @@ def get_similarity(
         print(e)
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 
-    # relation = "biolink:treated_by"
     print('PredictRuntime: ' + str(datetime.now() - time_start))
     return {'hits': prediction_json, 'count': len(prediction_json)}
-    # return {'results': prediction_json, 'relation': relation, 'count': len(prediction_json)} or ('Not found', 404)

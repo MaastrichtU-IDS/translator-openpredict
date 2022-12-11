@@ -89,12 +89,6 @@ See the main README.md if you just want to OpenPredict locally, this documentati
 docker-compose -f docker-compose.dev.yml up -d --force-recreate
 ```
 
-3. **Start the OpenPredict API** on http://localhost:8808 (wait 30s for the database to start first):
-
-```bash
-openpredict start-api
-```
-
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md)
 
 Once you finished you can stop the Virtuoso container, and restart it later. The data will be stored in `data/virtuoso`
@@ -123,41 +117,7 @@ export OPENPREDICT_DATA_DIR=/data/openpredict
 
 The OpenPredict API can deployed in 3 different ways:
 
-### Option 1: Run from the command line ⌨️
-
-Use the `openpredict` CLI to run in development with [Flask 🧪](https://flask.palletsprojects.com/en/1.1.x/). The API will reload automatically at each change 🔃
-
-```bash
-openpredict start-api --debug
-```
-
-You can also start the API in production settings using [Tornado 🌪️](https://www.tornadoweb.org/en/stable/)
-
-```bash
-openpredict start-api
-```
-
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-You can provide the API port as argument:
-
-```bash
-openpredict start-api --port 8808
-```
-
-### Option 2: Run from a Python script 🐍
-
-```python
-from openpredict import openpredict_api
-
-openpredict_api.start_api(8808)
-```
-
-> Access the Swagger UI at [http://localhost:8808](http://localhost:8808)
-
-> Run by default in production, set `debug = True` to run in development environments.
-
-### Option 3: Run with Docker 🐳
+### Run with Docker 🐳
 
 Running using Docker can be convenient if you just want to run the API without installing the package locally, or if it runs in production alongside other services.
 

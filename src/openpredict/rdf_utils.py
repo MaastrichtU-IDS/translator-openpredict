@@ -125,7 +125,7 @@ def query_sparql_endpoint(query, parameters=[]):
             # or row[rdflib.Variable("s")]
             # TODO: create an object similar to SPARQLWrapper
             # result[variable]['value']
-        print(results)
+        # print(results)
         return results
 
 

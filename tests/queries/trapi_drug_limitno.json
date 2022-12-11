@@ -10,7 +10,7 @@
             },
             "nodes": {
                 "n0": {
-                    "ids": ["DRUGBANK:DB00394"],
+                    "ids": ["drugbank:DB00394"],
                     "categories": ["biolink:Drug"]
                 },
                 "n1": {

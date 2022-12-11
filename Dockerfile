@@ -24,7 +24,7 @@ RUN wget -q -O spark.tgz https://archive.apache.org/dist/spark/spark-${APACHE_SP
     tar xzf spark.tgz -C /opt && \
     rm "spark.tgz" && \
     ln -s "/opt/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" $SPARK_HOME
-
+RUN echo "log4j.rootCategory=ERROR, console" > $SPARK_HOME/conf/log4j.properties
 
 ## Define some environment variables for pyspark and gunicorn config
 ENV PYSPARK_PYTHON=/usr/local/bin/python3

@@ -36,7 +36,7 @@ commands:
       component: py-web
   - id: run-app
     exec:
-      commandLine: "python -m openpredict start-api"
+      commandLine: "python -m uvicorn src.openpredict.main:app --reload"
       workingDir: ${PROJECTS_ROOT}
       component: py-web
       group:

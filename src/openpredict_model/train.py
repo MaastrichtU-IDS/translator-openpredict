@@ -1,4 +1,3 @@
-import logging
 import numbers
 import os
 from datetime import datetime
@@ -13,7 +12,7 @@ from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from openpredict.config import settings
 from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, get_run_id, retrieve_features
 # from openpredict.utils import get_spark_context
-from openpredict.utils import get_openpredict_dir
+from openpredict.utils import get_openpredict_dir, log
 
 
 def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
@@ -182,33 +181,33 @@ def get_spark_context():
 
     if os.getenv('SPARK_HOME'):
         # Do not try to run Spark if SPARK_HOME env variable not set
-        logging.info('SPARK env var found')
+        log.info('SPARK env var found')
         # import findspark
         # findspark.init(os.getenv('SPARK_HOME'))
         import pyspark
 
-        print('SPARK_MASTER_URL', spark_master_url)
+        log.info(f'SPARK_MASTER_URL: {spark_master_url}')
         # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
         try:
-            logging.info(
+            log.info(
                 'SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
             sc = pyspark.SparkContext.getOrCreate()
-            logging.info(sc)
+            log.info(sc)
         except Exception as e:
-            logging.warning(e)
-            logging.info(
+            log.warning(e)
+            log.info(
                 "Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
             sc = None
 
         if spark_master_url and sc == None:
-            logging.info(
+            log.info(
                 'SPARK_MASTER_URL provided, connecting to the Spark cluster ✨')
             # e.g. spark://my-spark-spark-master:7077
             sc = pyspark.SparkContext(appName="Pi", master=spark_master_url)
-            logging.info(sc)
+            log.info(sc)
 
     else:
-        logging.info(
+        log.info(
             'SPARK_HOME not found, using pandas to handle dataframes 🐼')
     return sc
     # Old way:
@@ -576,14 +575,14 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
         drug_df_bc = spark_context.broadcast(drug_df)
         disease_df_bc = spark_context.broadcast(disease_df)
         knownDrugDis_bc = spark_context.broadcast(knownDrugDisease)
-        logging.info('Running Spark ✨')
+        log.info('Running Spark ✨')
         train_df = sparkBuildFeatures(spark_context, pairs_train, classes_train,
                                       knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
         test_df = sparkBuildFeatures(spark_context, pairs_test, classes_test,
                                      knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        logging.info("Finishing Spark jobs 🏁")
+        log.info("Finishing Spark jobs 🏁")
     else:
-        logging.info("Spark cluster not found, using pandas 🐼")
+        log.info("Spark cluster not found, using pandas 🐼")
         train_df = createFeatureDF(
             pairs_train, classes_train, knownDrugDisease, drug_df, disease_df)
         test_df = createFeatureDF(
@@ -678,15 +677,15 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
     """
     spark_context = get_spark_context()
     if spark_context:
-        logging.info('Running Spark ✨')
+        log.info('Running Spark ✨')
         drug_df_bc = spark_context.broadcast(drug_df)
         disease_df_bc = spark_context.broadcast(disease_df)
         knownDrugDis_bc = spark_context.broadcast(pairs[classes == 1])
         feature_df = sparkBuildFeatures(
             spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        logging.info("Finishing Spark jobs 🏁")
+        log.info("Finishing Spark jobs 🏁")
     else:
-        logging.info("Spark cluster not found, using pandas 🐼")
+        log.info("Spark cluster not found, using pandas 🐼")
         feature_df = createFeatureDF(
             pairs, classes, pairs[classes == 1], drug_df, disease_df)
     return feature_df

@@ -113,7 +113,6 @@ def test_trapi_empty_response():
         # content_type='application/json'
     )
 
-    print(response.json)
     validator.check_compliance_of_trapi_response(message=response.json()["message"])
     validator_resp = validator.get_messages()
     print(validator_resp["warnings"])

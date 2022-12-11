@@ -70,8 +70,6 @@ def percentiles_of_different_features():
         dr,ds = getQuantiles(drug_fp_vectors, disease_emb,0.25)
         feature_percentiles[feature] = ds
 
-
-    print(feature_percentiles)
     return feature_percentiles
 
 
@@ -119,6 +117,7 @@ def generate_feature_embedding_data():
         df = filter_out_features_diseases(feature)
         save_embedding_as_txt(df,'feature_FeatureTypesDiseases.' +feature+ '.txt')
 
+
 def filter_out_features_drugs(features_of_interest) :
     '''Creates the dataframe based on drug features to be converted to a embedding later '''
     (drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
@@ -139,4 +138,4 @@ def save_embedding_as_txt(embedding_df, fileName) :
     embedding_df.index = list(map(int, embedding_df.index))
     embedding_df = embedding_df.reset_index()
     embedding_df_np = embedding_df.to_numpy()
-    np.savetxt('data/embedding/feature_' + fileName, embedding_df_np, fmt = '%f' )
+    np.savetxt('data/evidence-path-model/feature_' + fileName, embedding_df_np, fmt = '%f' )

@@ -8,7 +8,7 @@ import pandas as pd
 from openpredict.config import settings
 from openpredict.decorators import trapi_predict
 from openpredict.models.predict_output import PredictOptions, PredictOutput, TrapiRelation
-from openpredict.utils import get_entities_labels
+from openpredict.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
 from openpredict_model.utils import load_treatment_classifier, load_treatment_embeddings, similarity_embeddings
 
@@ -25,13 +25,26 @@ satisfies_relations: List[TrapiRelation] = [
     },
 ]
 
-@trapi_predict(relations=satisfies_relations)
+@trapi_predict(path='/predict',
+    relations=satisfies_relations,
+    name="Get predicted targets for a given entity",
+    description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
+This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
+
+You can try:
+
+| disease_id: `OMIM:246300` | drug_id: `DRUGBANK:DB00394` |
+| ------- | ---- |
+| to check the drug predictions for a disease   | to check the disease predictions for a drug |
+""",
+)
 def get_predictions(
-        id_to_predict: str, options: PredictOptions
+        input_id: str, options: PredictOptions
     ) -> PredictOutput:
     """Run classifiers to get predictions
 
-    :param id_to_predict: Id of the entity to get prediction from
+    :param input_id: Id of the entity to get prediction from
     :param classifier: classifier used to get the predictions
     :param score: score minimum of predictions
     :param n_results: number of predictions to return
@@ -42,7 +55,7 @@ def get_predictions(
 
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, options.model_id)
+    predictions_array = query_omim_drugbank_classifier(input_id, options.model_id)
 
     if options.min_score:
         predictions_array = [
@@ -73,20 +86,16 @@ def get_predictions(
         for key, value in prediction.items():
             if key == 'score':
                 labelled_prediction['score'] = value
-            elif value != id_to_predict:
+            elif value != input_id:
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
-                # print(f"labels_dict {labels_dict}")
                 try:
                     if value in labels_dict and labels_dict[value]:
                         labelled_prediction['label'] = labels_dict[value]['id']['label']
                 except:
                     print('No label found for ' + value)
-                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
-                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
-        # print(f"labelled prediction {labelled_prediction}")
         labelled_predictions.append(labelled_prediction)
-    return labelled_predictions
+    return {'hits': labelled_predictions, 'count': len(labelled_predictions)}
 
 
 
@@ -116,9 +125,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
     # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
 
-    print("load starts")
     (drug_df, disease_df) = load_treatment_embeddings(model_id)
-    print("load done")
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(
@@ -126,7 +133,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     drugDiseaseKnown.rename(
         columns={'drugid': 'Drug', 'omimid': 'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
-    print('Known indications', len(drugDiseaseKnown))
+    log.debug('Known indications', len(drugDiseaseKnown))
 
     # TODO: save json?
     drugDiseaseDict = {
@@ -197,7 +204,6 @@ def query_omim_drugbank_classifier(input_curie, model_id):
 
 
 def get_similar_for_entity(input_curie, emb_vectors, n_results):
-    print (input_curie)
     parsed_curie = re.search('(.*?):(.*)', input_curie)
     input_namespace = parsed_curie.group(1)
     input_id = parsed_curie.group(2)
@@ -243,31 +249,53 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
 
 
 
-@trapi_predict(relations=[
-    {
-        'subject': 'biolink:Drug',
-        'predicate': 'biolink:similar_to',
-        'object': 'biolink:Drug',
-    },
-    {
-        'subject': 'biolink:Disease',
-        'predicate': 'biolink:similar_to',
-        'object': 'biolink:Disease',
-    },
-])
-def get_similarities(id_to_predict: str, options: PredictOptions):
+@trapi_predict(path='/similarity',
+    name="Get similar entities",
+    default_input="DRUGBANK:DB00394",
+    default_model=None,
+    relations=[
+        {
+            'subject': 'biolink:Drug',
+            'predicate': 'biolink:similar_to',
+            'object': 'biolink:Drug',
+        },
+        {
+            'subject': 'biolink:Disease',
+            'predicate': 'biolink:similar_to',
+            'object': 'biolink:Disease',
+        },
+    ],
+    description="""Get similar entites for a given entity CURIE.
+
+You can try:
+
+| drug_id: `DRUGBANK:DB00394` | disease_id: `OMIM:246300` |
+| ------- | ---- |
+| model_id: `drugs_fp_embed.txt` | model_id: `disease_hp_embed.txt` |
+| to check the drugs similar to a given drug | to check the diseases similar to a given disease   |
+""",
+)
+def get_similarities(input_id: str, options: PredictOptions):
     """Run classifiers to get predictions
 
-    :param id_to_predict: Id of the entity to get prediction from
+    :param input_id: Id of the entity to get prediction from
     :param options
     :return: predictions in array of JSON object
     """
-    similarity_model_id = 'drugs_fp_embed.txt'
-    if 'biolink:Disease' in options.types:
-        similarity_model_id = 'disease_hp_embed.txt'
-    emb_vectors = similarity_embeddings[similarity_model_id]
+    if not options.model_id:
+        options.model_id = 'drugs_fp_embed.txt'
+        input_types = get_entity_types(input_id)
+        if 'biolink:Disease' in input_types:
+            options.model_id = 'disease_hp_embed.txt'
+        # if len(input_types) == 0:
+        #     # If no type found we try to check from the ID namespace
+        #     if input_id.lower().startswith('omim:'):
+        #         options.model_id = 'disease_hp_embed.txt'
 
-    predictions_array = get_similar_for_entity(id_to_predict, emb_vectors, options.n_results)
+
+    emb_vectors = similarity_embeddings[options.model_id]
+
+    predictions_array = get_similar_for_entity(input_id, emb_vectors, options.n_results)
 
     if options.min_score:
         predictions_array = [
@@ -293,7 +321,7 @@ def get_similarities(id_to_predict: str, options: PredictOptions):
         for key, value in prediction.items():
             if key == 'score':
                 labelled_prediction['score'] = value
-            elif value != id_to_predict:
+            elif value != input_id:
                 labelled_prediction['id'] = value
                 labelled_prediction['type'] = key
                 try:
@@ -306,4 +334,4 @@ def get_similarities(id_to_predict: str, options: PredictOptions):
 
         labelled_predictions.append(labelled_prediction)
 
-    return labelled_predictions
+    return {'hits': labelled_predictions, 'count': len(labelled_predictions)}

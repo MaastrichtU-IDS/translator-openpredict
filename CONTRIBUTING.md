@@ -98,37 +98,44 @@ If you make changes to the data in the `data` folder you will need to add and pu
 
 > ⚠️ Open source projects on DagsHub using the free plan have a 10G storage limit.
 
-## 📝 Create a new API call
+## 📝 Integrate new prediction models
 
-Guidelines to create a new API  call in the OpenPredict Open API.
+The `openpredict` library provides a decorator `@trapi_predict` to annotate your functions that generate predictions.
 
-1. Create the operations in the [openpredict/openapi.yml](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openapi.yml#L44) file
-
-Provide the path to the function that will resolve this API call in `operationId`:
-
-```yaml
-paths:
-  /predict:
-    get:
-      operationId: openpredict.openpredict_api.get_predict
-      parameters:
-      - name: entity
-        in: query
-        description: CURIE of the entity to process (e.g. drug, disease, etc)
-        example: DRUGBANK:DB00394
-        required: true
-        schema:
-          type: string
-```
-
-2. Now, create the function in the [openpredict/openpredict_api.py](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/openpredict/openpredict_api.py#L67) file
+Predictions generated from functions decorated with `@trapi_predict` can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI)
 
 ```python
-def get_predict(entity='DB00001'):
-    print("Do stuff with " + entity)
+from openpredict import trapi_predict, PredictOptions, PredictOutput
+
+@trapi_predict(path='/predict',
+    name="Get predicted targets for a given entity",
+    description="Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.",
+    relations=[
+        {
+            'subject': 'biolink:Drug',
+            'predicate': 'biolink:treats',
+            'object': 'biolink:Disease',
+        },
+        {
+            'subject': 'biolink:Disease',
+            'predicate': 'biolink:treated_by',
+            'object': 'biolink:Drug',
+        },
+    ]
+)
+def get_predictions(
+        input_id: str, options: PredictOptions
+    ) -> PredictOutput:
+    predictions = [
+        "id": "DB00001",
+        "type": "biolink:Drug",
+        "score": 0.12345,
+        "label": "Leipirudin"
+    ]
+    return predictions
 ```
 
-> The parameters provided in `openapi.yml` and the arguments of the function in `openpredict_api.py` need to match!
+You can use our cookiecutter template to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish and integrate them in the Translator ecosystem
 
 ## 📬 Pull Request process
 

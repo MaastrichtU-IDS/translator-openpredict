@@ -130,7 +130,7 @@ def predictDrugRepositioning(diseaseCURIElist,noofResults):
         prediction_results = prediction_df.to_dict(orient='records')
         return prediction_results
     except Exception as e:
-        print(e)
+        print(f"Error getting predictions for DRKG model: {e}")
         return pd.DataFrame()
 
 
@@ -157,7 +157,6 @@ def get_drugrepositioning_results(
     # TODO: improve when we will have more classifier
     id_to_predict=diseaseCURIElist
     predictions_array = predictDrugRepositioning(diseaseCURIElist,n_results)
-    print(predictions_array)
 
     if n_results:
         # Predictions are already sorted from higher score to lower

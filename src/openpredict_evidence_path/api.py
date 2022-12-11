@@ -1,6 +1,9 @@
+from datetime import datetime
 from enum import Enum
 
 from fastapi import APIRouter, Query
+
+from openpredict_evidence_path.predict import do_evidence_path
 
 
 class FeatureTypesDrugs(str, Enum):

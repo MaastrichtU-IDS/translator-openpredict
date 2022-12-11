@@ -31,7 +31,6 @@ classifiers = [
 dependencies = [
     "dvc",
     "dagshub",
-    "click",
     "requests >=2.23.0",
     "pydantic >=1.9",
     "reasoner-pydantic >=2.2.3",
@@ -41,8 +40,7 @@ dependencies = [
     "fastapi >=0.68.1",
     "SPARQLWrapper >=2.0.0,<3.0.0",
     "pandas",
-    # "Authlib >=0.15.4",
-    # "itsdangerous >=2.0.1",
+    "click",
 ]
 
 [project.scripts]

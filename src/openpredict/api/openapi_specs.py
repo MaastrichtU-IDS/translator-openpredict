@@ -37,6 +37,7 @@ class TRAPI(FastAPI):
     required_tags = [
         {"name": "reasoner"},
         {"name": "trapi"},
+        {"name": "models"},
         {"name": "openpredict"},
         {"name": "translator"},
     ]

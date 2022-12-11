@@ -3,6 +3,8 @@ from enum import Enum
 
 from fastapi import APIRouter, File, UploadFile
 
+from openpredict.loaded_models import models_list
+from openpredict.models.predict_output import PredictOptions
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict_model.train import addEmbedding
 
@@ -14,6 +16,44 @@ class EmbeddingTypes(str, Enum):
 
 
 app = APIRouter()
+
+
+def endpoint_factory(prediction_func, model):
+
+    def prediction_endpoint(
+        input_id: str = model['default_input'],
+        model_id: str = model['default_model'],
+        min_score: float = None, max_score: float = None,
+        n_results: int = None
+    ):
+        try:
+            return prediction_func(input_id, PredictOptions.parse_obj({
+                "model_id": model_id,
+                "min_score": min_score,
+                "max_score": max_score,
+                "n_results": n_results,
+                # "types": ['biolink:Drug'],
+            }))
+        except Exception as e:
+            import traceback
+            print(traceback.format_exc())
+            return (f'Error when running the prediction: {e}', 500)
+
+    return prediction_endpoint
+
+
+for (do_prediction, model) in models_list:
+    app.add_api_route(
+        path=model['path'],
+        methods=["GET"],
+        # endpoint=copy_func(prediction_endpoint, model['path'].replace('/', '')),
+        endpoint=endpoint_factory(do_prediction, model),
+        name=model['name'],
+        openapi_extra={"description": model['description']},
+        response_model=dict,
+        tags=["models"],
+    )
+
 
 
 @app.get("/features", name="Return the features trained in the models",
@@ -73,7 +113,6 @@ def post_embedding(
     # Ignore the API key check if no env variable defined (for development)
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         embedding_file = uploaded_file.file
-        print(emb_name, types)
         run_id, scores = addEmbedding(
             embedding_file, emb_name, types, description, model_id)
         print('Embeddings uploaded')

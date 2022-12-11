@@ -45,7 +45,6 @@ def get_drugrepositioning(
         return ('Bad request: provide a drugid or diseaseid', 400)
 
     try:
-        print('concept' + concept_id)
         prediction_json = get_drugrepositioning_results(
             concept_id , n_results
         )
