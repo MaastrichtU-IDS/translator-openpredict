@@ -1,32 +1,18 @@
 import os
 import re
-from typing import List
 
 import numpy as np
 import pandas as pd
 
 from openpredict.config import settings
 from openpredict.decorators import trapi_predict
-from openpredict.predict_output import PredictOptions, PredictOutput, TrapiRelation
+from openpredict.predict_output import PredictOptions, PredictOutput
 from openpredict.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
 from openpredict_model.utils import load_treatment_classifier, load_treatment_embeddings, similarity_embeddings
 
-satisfies_relations: List[TrapiRelation] = [
-    {
-        'subject': 'biolink:Drug',
-        'predicate': 'biolink:treats',
-        'object': 'biolink:Disease',
-    },
-    {
-        'subject': 'biolink:Disease',
-        'predicate': 'biolink:treated_by',
-        'object': 'biolink:Drug',
-    },
-]
 
 @trapi_predict(path='/predict',
-    relations=satisfies_relations,
     name="Get predicted targets for a given entity",
     description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
 Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
@@ -38,6 +24,18 @@ You can try:
 | ------- | ---- |
 | to check the drug predictions for a disease   | to check the disease predictions for a drug |
 """,
+    relations=[
+        {
+            'subject': 'biolink:Drug',
+            'predicate': 'biolink:treats',
+            'object': 'biolink:Disease',
+        },
+        {
+            'subject': 'biolink:Disease',
+            'predicate': 'biolink:treated_by',
+            'object': 'biolink:Drug',
+        },
+    ],
 )
 def get_predictions(
         input_id: str, options: PredictOptions

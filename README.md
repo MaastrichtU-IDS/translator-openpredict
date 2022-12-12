@@ -8,6 +8,8 @@ Metadata about runs, models evaluations, features are stored using the [ML Schem
 
 Access the **Translator OpenPredict API** at **[https://openpredict.semanticscience.org 🔮🐍](https://openpredict.semanticscience.org)**
 
+The data used by the models in this repository is versionned using `dvc` and stored **on DagsHub at https://dagshub.com/vemonet/translator-openpredict**
+
 > You can use this API to retrieve predictions for drug/disease, or add new embeddings to improve the model.
 
 # Deploy the OpenPredict API locally :woman_technologist:
