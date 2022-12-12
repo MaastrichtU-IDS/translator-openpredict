@@ -13,7 +13,8 @@ class PredictHit(BaseModel):
 class PredictOutput(BaseModel):
     hits: List[PredictHit]
     count: int
-    input: str
+    # input_id: str
+    # input_type: str
 
 
 class PredictOptions(BaseModel):

@@ -126,12 +126,18 @@ from openpredict import trapi_predict, PredictOptions, PredictOutput
 def get_predictions(
         input_id: str, options: PredictOptions
     ) -> PredictOutput:
-    predictions = [
-        "id": "DB00001",
-        "type": "biolink:Drug",
-        "score": 0.12345,
-        "label": "Leipirudin"
-    ]
+    # Add the code the load the model and get predictions here
+    predictions = {
+        "hits": [
+            {
+                "id": "DB00001",
+                "type": "biolink:Drug",
+                "score": 0.12345,
+                "label": "Leipirudin",
+            }
+        ],
+        "count": 1,
+    }
     return predictions
 ```
 

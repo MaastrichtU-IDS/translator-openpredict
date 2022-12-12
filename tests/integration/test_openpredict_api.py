@@ -16,7 +16,7 @@ client = TestClient(app)
 
 def test_get_predict_drug():
     """Test predict API GET operation for a drug"""
-    url = '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+    url = '/predict?input_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
     response = client.get(url).json()
     assert len(response['hits']) == 42
     assert response['count'] == 42
@@ -25,7 +25,7 @@ def test_get_predict_drug():
 
 def test_get_predict_disease():
     """Test predict API GET operation for a disease"""
-    url = '/predict?disease_id=OMIM:246300&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+    url = '/predict?input_id=OMIM:246300&model_id=openpredict-baseline-omim-drugbank&n_results=42'
     response = client.get(url).json()
     assert len(response['hits']) == 42
     assert response['count'] == 42
@@ -36,7 +36,7 @@ def test_get_predict_disease():
 def test_get_similarity_drug():
     """Test prediction similarity API GET operation for a drug"""
     n_results=5
-    url = '/similarity?drug_id=DRUGBANK:DB00394&types=Drug&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
+    url = '/similarity?input_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
     response = client.get(url).json()
     assert len(response['hits']) == n_results
     assert response['count'] == n_results
@@ -46,7 +46,7 @@ def test_get_similarity_drug():
 def test_get_similarity_disease():
     """Test prediction similarity API GET operation for a disease"""
     n_results=5
-    url = '/similarity?disease_id=OMIM:246300&types=Disease&model_id=disease_hp_embed.txt&n_results=' + str(n_results)
+    url = '/similarity?input_id=OMIM:246300&model_id=disease_hp_embed.txt&n_results=' + str(n_results)
     response = client.get(url).json()
     assert len(response['hits']) == n_results
     assert response['count'] == n_results
