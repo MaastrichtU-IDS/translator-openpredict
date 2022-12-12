@@ -3,10 +3,10 @@ from enum import Enum
 
 from fastapi import APIRouter, File, UploadFile
 
-from openpredict.loaded_models import models_list
-from openpredict.models.predict_output import PredictOptions
+from openpredict.predict_output import PredictOptions
 from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict_model.train import addEmbedding
+from trapi.loaded_models import models_list
 
 
 class EmbeddingTypes(str, Enum):

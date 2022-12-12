@@ -29,7 +29,7 @@ RUN echo "log4j.rootCategory=ERROR, console" > $SPARK_HOME/conf/log4j.properties
 ## Define some environment variables for pyspark and gunicorn config
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
-ENV MODULE_NAME=openpredict.main
+ENV MODULE_NAME=trapi.main
 ENV VARIABLE_NAME=app
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
@@ -45,4 +45,4 @@ RUN dvc pull
 
 EXPOSE 8808
 
-# ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8808", "openpredict.main:app"]
+# ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8808", "trapi.main:app"]

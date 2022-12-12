@@ -7,7 +7,7 @@ import pandas as pd
 
 from openpredict.config import settings
 from openpredict.decorators import trapi_predict
-from openpredict.models.predict_output import PredictOptions, PredictOutput, TrapiRelation
+from openpredict.predict_output import PredictOptions, PredictOutput, TrapiRelation
 from openpredict.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
 from openpredict_model.utils import load_treatment_classifier, load_treatment_embeddings, similarity_embeddings

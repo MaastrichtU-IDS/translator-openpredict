@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse
 from reasoner_pydantic import Query
 
-from openpredict.trapi_parser import resolve_trapi_query
+from trapi.trapi_parser import resolve_trapi_query
 
 app = APIRouter()
 

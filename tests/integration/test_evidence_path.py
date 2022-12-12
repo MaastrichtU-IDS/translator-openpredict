@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
 from gensim.models import KeyedVectors
 
-from openpredict.main import app
 from openpredict.utils import init_openpredict_dir
 from openpredict_evidence_path.predict import do_evidence_path
 from openpredict_evidence_path.train import getQuantiles
+from trapi.main import app
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()

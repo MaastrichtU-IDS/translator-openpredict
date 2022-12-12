@@ -1,7 +1,7 @@
 import functools
 from typing import List, Optional
 
-from openpredict.models.predict_output import PredictOptions, TrapiRelation
+from openpredict.predict_output import PredictOptions, TrapiRelation
 
 
 def trapi_predict(

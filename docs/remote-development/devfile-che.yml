@@ -46,7 +46,7 @@ commands:
       -
         type: exec
         component: python
-        command: 'uvicorn src.openpredict.main:app --reload'
+        command: 'uvicorn src.trapi.main:app --reload'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
   -
     name: run server in debug mode
@@ -54,7 +54,7 @@ commands:
       -
         type: exec
         component: python
-        command: 'export DEBUG_MODE=True && uvicorn src.openpredict.main:app --reload'
+        command: 'export DEBUG_MODE=True && uvicorn src.trapi.main:app --reload'
         workdir: '${CHE_PROJECTS_ROOT}/openpredict'
   -
     name: debug

@@ -8,78 +8,31 @@ on:
 jobs:
 
   tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8]
+    uses: MaastrichtU-IDS/translator-openpredict/.github/workflows/run-tests.yml@develop
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip install ".[train,test,dev]"
-
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --exit-zero --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
-
-  tests-spark:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '11' # The JDK version to make available on the path.
-    - uses: vemonet/setup-spark@v1
-      with:
-        spark-version: '3.0.1'
-    - name: Install dependencies
-      run: |
-        pip install ".[train,test,dev]"
-    - name: Test with pytest
-      run: python setup.py pytest
 
   publish:
-    needs: [ tests, tests-spark ]
+    needs: [ tests ]
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
-    - name: Install dependencies
+
+    - name: Install build dependencies
       run: |
         pip install build
 
-    - name: Build and publish to PyPI
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+    - name: Build distribution
       run: |
         python -m build
-        # twine upload dist/*
 
     - name: Publish
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_PASSWORD }}
+        # password: ${{ secrets.PYPI_TOKEN }}

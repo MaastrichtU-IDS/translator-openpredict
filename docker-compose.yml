@@ -11,7 +11,7 @@ services:
       # Show print() in logs:
       PYTHONUNBUFFERED: '1'
       DEV_MODE: 'true'
-    entrypoint: uvicorn openpredict.main:app --host 0.0.0.0 --port 8808 --reload
+    entrypoint: uvicorn trapi.main:app --host 0.0.0.0 --port 8808 --reload
 
 
   tests:

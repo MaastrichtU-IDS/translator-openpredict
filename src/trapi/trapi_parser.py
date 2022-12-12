@@ -3,8 +3,8 @@ import re
 import requests
 
 from openpredict.config import settings
-from openpredict.loaded_models import models_list
 from openpredict.utils import get_entities_labels
+from trapi.loaded_models import models_list
 
 # TODO: add evidence path to TRAPI
 

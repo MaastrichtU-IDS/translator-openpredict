@@ -1,15 +1,16 @@
 import logging
+import time
 
+from fastapi import Request
 from fastapi.responses import RedirectResponse
 
 from drkg_model.api import api as drkg_model_api
-from openpredict.api import models, trapi
-from openpredict.api.openapi_specs import TRAPI
 from openpredict.config import settings
-# from openpredict.loaded_models import PreloadedModels
 from openpredict.utils import init_openpredict_dir
 from openpredict_evidence_path.api import api as evidence_path_api
 from openpredict_explain_shap.api import api as explain_shap_api
+from trapi import models, trapi
+from trapi.openapi_specs import TRAPI
 
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
@@ -31,6 +32,15 @@ app.include_router(evidence_path_api)
 app.include_router(explain_shap_api)
 app.include_router(drkg_model_api)
 app.include_router(models.app)
+
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
 
 @app.get("/health", include_in_schema=False)

@@ -36,7 +36,7 @@ commands:
       component: py-web
   - id: run-app
     exec:
-      commandLine: "python -m uvicorn src.openpredict.main:app --reload"
+      commandLine: "python -m uvicorn src.trapi.main:app --reload"
       workingDir: ${PROJECTS_ROOT}
       component: py-web
       group:

@@ -4,7 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter
 
-from openpredict.models.predict_output import PredictOptions
+from openpredict.predict_output import PredictOptions
 from openpredict_model.predict import get_predictions, get_similarities
 
 api = APIRouter()

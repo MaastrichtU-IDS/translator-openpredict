@@ -1,6 +1,7 @@
 name: Run tests
 # Run test at each push to master or develop, if changes to package files
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches: [ master, develop ]
@@ -23,17 +24,23 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/setup-java@v1
+
+    - uses: actions/setup-java@v3
       with:
+        distribution: 'zulu'
         java-version: '11' # The JDK version to make available on the path.
+
     - uses: vemonet/setup-spark@v1
       with:
         spark-version: '3.0.2'
+
     - uses: iterative/setup-dvc@v1
+
     - name: Setup SonarCloud
       uses: warchant/setup-sonar-scanner@v3
 
@@ -47,12 +54,7 @@ jobs:
 
     - name: Test with pytest with coverage
       run: |
-        coverage erase
         pytest -s --cov src --cov-report xml:coverage.xml tests/integration/*
-      # cat coverage.xml
-      # coverage combine --append || true
-      # coverage report
-      # coverage xml
 
 
     - name: Run SonarCloud

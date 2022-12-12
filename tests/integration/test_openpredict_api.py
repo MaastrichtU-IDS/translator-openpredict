@@ -3,9 +3,9 @@ import os
 
 from fastapi.testclient import TestClient
 
-from openpredict.main import app
 from openpredict.utils import init_openpredict_dir
 from tests.conftest import validator
+from trapi.main import app
 
 # Create and start Flask from openapi.yml before running tests
 init_openpredict_dir()
