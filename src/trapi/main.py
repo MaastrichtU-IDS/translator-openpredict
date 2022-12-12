@@ -9,7 +9,7 @@ from openpredict.config import settings
 from openpredict.utils import init_openpredict_dir
 from openpredict_evidence_path.api import api as evidence_path_api
 from openpredict_explain_shap.api import api as explain_shap_api
-from trapi import models, trapi
+from trapi import api_endpoints, trapi
 from trapi.openapi_specs import TRAPI
 
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
@@ -27,11 +27,10 @@ app = TRAPI(
 )
 
 app.include_router(trapi.app)
-# app.include_router(openpredict_model_api)
+app.include_router(api_endpoints.app)
 app.include_router(evidence_path_api)
 app.include_router(explain_shap_api)
 app.include_router(drkg_model_api)
-app.include_router(models.app)
 
 
 @app.middleware("http")

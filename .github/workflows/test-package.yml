@@ -1,0 +1,48 @@
+name: Test the openpredict package
+# Run test at each push to master or develop, if changes to package files
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: [ master, develop ]
+    paths:
+    - 'pyproject.toml'
+    - 'src/**'
+    - 'tests/**'
+    - '.github/workflows/test-package.yml'
+
+jobs:
+
+  tests-coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9, "3.10"]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # - name: Setup SonarCloud
+    #   uses: warchant/setup-sonar-scanner@v3
+
+    - name: Install dependencies
+      run: |
+        pip install .
+
+    - name: Test with pytest with coverage
+      run: |
+        pytest -s --cov src/openpredict tests/package
+
+
+    # - name: Run SonarCloud
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   run: sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=maastrichtu-ids  -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=MaastrichtU-IDS_translator-openpredict -Dsonar.python.coverage.reportPaths=coverage.xml

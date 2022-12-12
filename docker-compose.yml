@@ -23,7 +23,8 @@ services:
       DEV_MODE: 'true'
     # entrypoint: pytest --cov=src tests/integration
     # entrypoint:  pytest tests/integration/test_openpredict_api.py -s
-    entrypoint:  pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
+    # entrypoint:  pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
+    entrypoint:  pytest tests/package/test_decorator.py -s
 
 
   workspace:

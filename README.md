@@ -41,11 +41,11 @@ docker-compose up
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
 
-You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
+<!-- You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
 
 ```bash
-docker-compose exec api openpredict train-model --model openpredict-baseline-omim-drugbank
-```
+docker-compose exec api python src/openpredict_model/train.py
+``` -->
 
 ### Test the OpenPredict API
 

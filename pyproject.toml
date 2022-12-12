@@ -29,26 +29,12 @@ classifiers = [
 dynamic = ["version"]
 
 dependencies = [
-    "dvc",
-    "dagshub",
     "requests >=2.23.0",
     "pydantic >=1.9",
-    "reasoner-pydantic >=2.2.3",
-    # "reasoner-pydantic >=3.0.0",
-    "reasoner-validator >=3.1.4",
     "rdflib >=6.1.1",
-    "fastapi >=0.68.1",
     "SPARQLWrapper >=2.0.0,<3.0.0",
     "pandas",
-    "click",
 ]
-
-[project.scripts]
-openpredict = "openpredict.__main__:main"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/openpredict"]
-
 
 [project.optional-dependencies]
 train = [
@@ -72,6 +58,9 @@ train = [
     "pyRDF2vec",
     "python-multipart >=0.0.5",
     "httpx >=0.21.1",
+    "fastapi >=0.68.1",
+    "reasoner-pydantic >=2.2.3",
+    # "reasoner-pydantic >=3.0.0",
 ]
 test = [
     "pytest >=7.1.3,<8.0.0",
@@ -80,6 +69,7 @@ test = [
     "flake8 >=3.8.3,<6.0.0",
     "Flake8-pyproject>=1.1.0.post0",
     "flaky",
+    "reasoner-validator >=3.1.4",
 ]
 dev = [
     "pre-commit >=2.17.0,<3.0.0",
@@ -89,15 +79,15 @@ dev = [
     "uvicorn >=0.15.0",
     "gunicorn >=20.0.4",
     "types-requests",
+    "dvc",
+    "dagshub",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/openpredict"]
 
-[project.urls]
-Homepage = "https://github.com/MaastrichtU-IDS/translator-openpredict"
-Documentation = "https://github.com/MaastrichtU-IDS/translator-openpredict"
-History = "https://github.com/MaastrichtU-IDS/translator-openpredict/releases"
-Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
-Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+# [project.scripts]
+# openpredict = "openpredict.__main__:main"
 
 
 # ENVIRONMENTS AND SCRIPTS
@@ -150,3 +140,11 @@ ignore = [
     "E301", # expected 1 blank lines found 0
     "W503", # line break before binary operator
 ]
+
+
+[project.urls]
+Homepage = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+Documentation = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+History = "https://github.com/MaastrichtU-IDS/translator-openpredict/releases"
+Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
+Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"

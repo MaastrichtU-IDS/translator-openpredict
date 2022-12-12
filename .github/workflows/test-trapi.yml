@@ -1,4 +1,4 @@
-name: Run tests
+name: Run integration tests for TRAPI
 # Run test at each push to master or develop, if changes to package files
 on:
   workflow_call:
@@ -9,7 +9,7 @@ on:
     - 'pyproject.toml'
     - 'src/**'
     - 'tests/**'
-    - '.github/workflows/run-tests.yml'
+    - '.github/workflows/test-trapi.yml'
 
 jobs:
 

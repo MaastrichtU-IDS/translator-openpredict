@@ -18,6 +18,7 @@ class EmbeddingTypes(str, Enum):
 app = APIRouter()
 
 
+# Generate endpoints for the loaded models
 def endpoint_factory(prediction_func, model):
 
     def prediction_endpoint(

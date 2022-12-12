@@ -1,4 +1,4 @@
-name: Test production API
+name: Test the production API
 on:
   workflow_dispatch:
   schedule:

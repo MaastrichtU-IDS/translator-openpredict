@@ -34,5 +34,12 @@ class TrapiRelation(BaseModel):
     object: str
 
 
-# class TrainingOutput(BaseModel):
-#     score: float
+class TrainingOutput(BaseModel):
+    # All scores are floats between 0 and 1
+    precision: float
+    recall: float
+    accuracy: float
+    roc_auc: float
+    f1: float
+    average_precision: float
+    # elapsed_time: datetime
