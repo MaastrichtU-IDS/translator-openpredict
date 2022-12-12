@@ -1,22 +1,84 @@
-[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml) [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests.yml) [![CodeQL analysis](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml)
+[![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Test the openpredict package](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-package.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-package.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-trapi.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-trapi.yml) [![CodeQL analysis](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml)
 
 [![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-**OpenPredict** is a Python library and API to train and serve predicted biomedical entities associations (e.g. disease treated by drug).
+**OpenPredict** is a Python library to help train model, and serve predicted biomedical associations (e.g. disease treated by drug) that can be integrated in a Translator Reasoner API (aka. TRAPI).
 
-Metadata about runs, models evaluations, features are stored using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html) as RDF.
+It provides decorators and functions to help building reusable and FAIR predictive models that can be easily integrated to a TRAPI-compliant endpoint.
 
-Access the **Translator OpenPredict API** at **[https://openpredict.semanticscience.org 🔮🐍](https://openpredict.semanticscience.org)**
+The code for the python package is in `src/openpredict/`
 
-The data used by the models in this repository is versionned using `dvc` and stored **on DagsHub at https://dagshub.com/vemonet/translator-openpredict**
-
-> You can use this API to retrieve predictions for drug/disease, or add new embeddings to improve the model.
-
-# Deploy the OpenPredict API locally :woman_technologist:
-
-Requirements: Python 3.8+ and `pip` installed
+## 📦️ Use the package
 
 ### Install
+
+```bash
+pip install openpredict
+```
+
+### Use
+
+The `openpredict` library provides a decorator `@trapi_predict` to annotate your functions that generate predictions.
+
+Predictions generated from functions decorated with `@trapi_predict` can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI)
+
+```python
+from openpredict import trapi_predict, PredictOptions, PredictOutput
+
+@trapi_predict(path='/predict',
+    name="Get predicted targets for a given entity",
+    description="Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.",
+    relations=[
+        {
+            'subject': 'biolink:Drug',
+            'predicate': 'biolink:treats',
+            'object': 'biolink:Disease',
+        },
+        {
+            'subject': 'biolink:Disease',
+            'predicate': 'biolink:treated_by',
+            'object': 'biolink:Drug',
+        },
+    ]
+)
+def get_predictions(
+        input_id: str, options: PredictOptions
+    ) -> PredictOutput:
+    # Add the code the load the model and get predictions here
+    predictions = {
+        "hits": [
+            {
+                "id": "DB00001",
+                "type": "biolink:Drug",
+                "score": 0.12345,
+                "label": "Leipirudin",
+            }
+        ],
+        "count": 1,
+    }
+    return predictions
+```
+
+You can use [our cookiecutter template](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish, and integrate them in the Translator ecosystem
+
+## 🌐 The OpenPredict Translator API
+
+Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
+
+* the code for the OpenPredict API endpoints in  `src/trapi/`:
+  *  a TRAPI endpoint returning predictions for the loaded models
+  * individual endpoints for each loaded models, taking an input id, and returning predicted hits
+  * endpoints serving metadata about runs, models evaluations, features for the OpenPredict model, stored as RDF, using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
+* Various folders for **different prediction models** served by the OpenPredict API:
+  * the OpenPredict drug-disease prediction model in `src/openpredict_model/`
+  * a model to compile the evidence path between a drug and a disease explaining the predictions of the OpenPredict model in `src/openpredict_evidence_path/`
+  * a prediction model trained from the Drug Repurposing Knowledge Graph (aka. DRKG) in `src/drkg_model/`
+
+The data used by the models in this repository is versionned using `dvc` in the `data/` folder, and stored **on DagsHub at https://dagshub.com/vemonet/translator-openpredict**
+
+### Deploy the OpenPredict API locally
+
+Requirements: Python 3.8+ and `pip` installed
 
 1. Clone the repository:
 
@@ -45,7 +107,8 @@ docker-compose up
 
 ```bash
 docker-compose exec api python src/openpredict_model/train.py
-``` -->
+```
+-->
 
 ### Test the OpenPredict API
 

@@ -141,7 +141,7 @@ def get_predictions(
     return predictions
 ```
 
-You can use our cookiecutter template to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish and integrate them in the Translator ecosystem
+You can use [our cookiecutter template](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish and integrate them in the Translator ecosystem
 
 ## 📬 Pull Request process
 
