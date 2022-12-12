@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-requires-python = ">=3.8,<3.11"
+requires-python = ">=3.7,<3.11"
 # requires-python = ">=3.8,<3.9"
 name = "openpredict"
 description = "An API to compute and serve predictions of biomedical concepts associations via OpenAPI for the NCATS Translator project"
