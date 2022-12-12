@@ -6,7 +6,7 @@
 
 It provides decorators and functions to help building reusable and FAIR predictive models that can be easily integrated to a TRAPI-compliant endpoint.
 
-The code for the python package is in `src/openpredict/`
+Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
 ## 📦️ Use the package
 
@@ -18,7 +18,7 @@ pip install openpredict
 
 ### Use
 
-The `openpredict` library provides a decorator `@trapi_predict` to annotate your functions that generate predictions.
+The `openpredict` package provides a decorator `@trapi_predict` to annotate your functions that generate predictions. The code for this package is in `src/openpredict/`.
 
 Predictions generated from functions decorated with `@trapi_predict` can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI)
 
@@ -63,13 +63,13 @@ You can use [our cookiecutter template](https://github.com/MaastrichtU-IDS/cooki
 
 ## 🌐 The OpenPredict Translator API
 
-Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
+Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)** and the predictions models it exposes:
 
-* the code for the OpenPredict API endpoints in  `src/trapi/`:
+* the code for the OpenPredict API endpoints in  `src/trapi/` defines:
   *  a TRAPI endpoint returning predictions for the loaded models
   * individual endpoints for each loaded models, taking an input id, and returning predicted hits
   * endpoints serving metadata about runs, models evaluations, features for the OpenPredict model, stored as RDF, using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
-* Various folders for **different prediction models** served by the OpenPredict API:
+* various folders for **different prediction models** served by the OpenPredict API are available under `src/`:
   * the OpenPredict drug-disease prediction model in `src/openpredict_model/`
   * a model to compile the evidence path between a drug and a disease explaining the predictions of the OpenPredict model in `src/openpredict_evidence_path/`
   * a prediction model trained from the Drug Repurposing Knowledge Graph (aka. DRKG) in `src/drkg_model/`

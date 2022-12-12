@@ -8,7 +8,7 @@ on:
 jobs:
 
   tests:
-    uses: MaastrichtU-IDS/translator-openpredict/.github/workflows/run-tests.yml@develop
+    uses: MaastrichtU-IDS/translator-openpredict/.github/workflows/test-package.yml@master
 
 
   publish:
