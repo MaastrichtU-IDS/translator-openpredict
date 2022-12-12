@@ -12,6 +12,7 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y build-essential wget curl vim openjdk-11-jdk && \
     pip install --upgrade pip
+    # pip-tools
 
 
 ## Install Spark for standalone context in /opt
@@ -33,6 +34,11 @@ ENV MODULE_NAME=trapi.main
 ENV VARIABLE_NAME=app
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
+
+# TODO: use piptools to install dependencies only when needed?
+# COPY pyproject.toml .
+# RUN python -m piptools compile --extra dev --extra train --extra test -o requirements.txt pyproject.toml
+# RUN pip install -r requirements.txt
 
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
