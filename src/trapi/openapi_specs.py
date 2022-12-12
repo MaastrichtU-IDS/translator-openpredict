@@ -46,8 +46,6 @@ class TRAPI(FastAPI):
     def __init__(
         self,
         *args,
-        # baseline_model_treatment: Optional[str] = 'openpredict-baseline-omim-drugbank',
-        # baseline_model_similarity: Optional[str] = 'openpredict-baseline-omim-drugbank',
         # contact: Optional[Dict[str, Any]] = None,
         **kwargs,
     ):

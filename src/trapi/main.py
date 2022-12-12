@@ -21,10 +21,7 @@ if settings.DEV_MODE:
     log_level = logging.INFO
 logging.basicConfig(level=log_level)
 
-app = TRAPI(
-    baseline_model_treatment='openpredict-baseline-omim-drugbank',
-    baseline_model_similarity='drugs_fp_embed.txt',
-)
+app = TRAPI()
 
 app.include_router(trapi.app)
 app.include_router(api_endpoints.app)
