@@ -4,7 +4,6 @@ from itertools import zip_longest
 
 import pandas as pd
 import requests
-from dvc.api import DVCFileSystem
 
 from openpredict.config import settings
 
@@ -24,11 +23,6 @@ formatter = logging.Formatter(
 console_handler.setFormatter(formatter)
 log.addHandler(console_handler)
 
-# def log(msg: str):
-#     """Simple print with a timestamp"""
-#     log_msg = '[' + str(datetime.datetime.now().strftime("%Y-%m-%d@%H:%M:%S")) + '] ' + msg
-#     # logging.info(log_msg)
-#     print(log_msg)
 
 
 def get_openpredict_dir(subfolder=''):
@@ -43,13 +37,8 @@ def get_openpredict_dir(subfolder=''):
 def init_openpredict_dir():
     """Create OpenPredict folder and initiate files if necessary."""
     if not os.path.exists(get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')):
-        ("⚠️ The data required to run the prediction models could not be found in the `data` folder.\n"
-            "📥️ Downloading the data with dvc")
-        fs = DVCFileSystem(".")
-        fs.get("data", "data", recursive=True)
-
-        # raise ValueError("❌ The data required to run the prediction models could not be found in the `data` folder"
-        #     "ℹ️ Use `pip install dvc` and `dvc pull` to pull the data easily")
+        raise ValueError("❌ The data required to run the prediction models could not be found in the `data` folder"
+            "ℹ️ Use `pip install dvc` and `dvc pull` to pull the data easily")
 
 
 def split_list(iterable, n, fillvalue=None):
@@ -172,10 +161,8 @@ def convert_baseline_features_ids():
 
     log.warn(f"❌️ Missing IDs: {', '.join(MISSING_IDS)}")
 
-
     # drugs_set.add(2)
     # drugs_set.update([2, 3, 4])
-
     # Extract the dataframes col1 and 2 to a unique list
     # Add those list to the drugs and diseases sets
     # Convert the set/list it using normalize_id_to_translator(ids_list)

@@ -24,7 +24,7 @@ def get_predictions(
     predictions = {
         "hits": [
             {
-                "id": "DB00001",
+                "id": "drugbank:DB00001",
                 "type": "biolink:Drug",
                 "score": 0.12345,
                 "label": "Leipirudin",
@@ -37,6 +37,6 @@ def get_predictions(
 
 def test_trapi_predict_decorator():
     (func, metadata) = get_predictions
-    res = func('test', PredictOptions())
+    res = func('drugbank:DB00002', PredictOptions())
     assert len(metadata['relations']) == 2
     assert len(res['hits']) == 1

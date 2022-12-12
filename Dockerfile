@@ -47,4 +47,8 @@ EXPOSE 8808
 
 # ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8808", "trapi.main:app"]
 
-CMD [ "dvc", "pull", "&&", "/start.sh"]
+RUN echo "dvc pull" > /entrypoint.sh && \
+    echo "/start.sh" >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+CMD [ "/entrypoint.sh" ]
