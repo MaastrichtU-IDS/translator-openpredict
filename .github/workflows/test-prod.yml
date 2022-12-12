@@ -5,11 +5,9 @@ on:
     - cron:  '00 01 * * *'
     # Everyday at 01:00am GMT+1
   # push:
-  #   branches: [ master ]
+  #   branches: [ master, develop ]
   #   paths:
-  #   - 'tests/queries/*'
-  #   - 'tests/production/*'
-  #   - '.github/workflows/run-tests-prod.yml'
+  #   - '.github/workflows/test-prod.yml'
 
 jobs:
 
@@ -30,7 +28,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install ".[train,test,dev]"
+        pip install ".[test,dev]"
 
     - name: Test with pytest
       run: |
