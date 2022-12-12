@@ -15,6 +15,7 @@ def fasta2seq(lines):
     return lines
 
 def download():
+    """Download a jar file required for the processing in data/lib/"""
     if not os.path.exists(settings.OPENPREDICT_DATA_DIR / "lib" / "sml-toolkit-0.9.jar" ):
         print("sml-toolkit-0.9.jar not present, downloading it")
         try:

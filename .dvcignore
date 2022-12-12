@@ -1,4 +1,5 @@
-/data/kgpredict/*
 *.jar
 
+# Most of kgpredict is downloaded from purl.org/kgpredict, apart from 1 TSV mapping file
+/data/kgpredict/*
 !/data/kgpredict/kgpredict_drug_diseasemappings.tsv

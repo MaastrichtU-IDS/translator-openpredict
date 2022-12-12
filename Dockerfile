@@ -33,13 +33,11 @@ ENV MODULE_NAME=trapi.main
 ENV VARIABLE_NAME=app
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
-# ENV OPENPREDICT_DATA_DIR=/data/openpredict
 
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
 RUN pip install -e ".[train,test,dev]"
-# RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then pip install -e \".[train,test,dev]\" ; else pip install . ; fi"
 
 RUN dvc pull
 
@@ -47,7 +45,9 @@ EXPOSE 8808
 
 # ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8808", "trapi.main:app"]
 
-RUN echo "dvc pull" > /entrypoint.sh && \
+# Build entrypoint script to pull latest dvc changes before startup
+RUN echo "#!/bin/bash" > /entrypoint.sh && \
+    echo "dvc pull" >> /entrypoint.sh && \
     echo "/start.sh" >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
