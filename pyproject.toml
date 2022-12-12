@@ -27,6 +27,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.8",
 ]
+dynamic = ["version"]
 
 dependencies = [
     "dvc",
@@ -45,6 +46,9 @@ dependencies = [
 
 [project.scripts]
 openpredict = "openpredict.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openpredict"]
 
 
 [project.optional-dependencies]
@@ -97,13 +101,6 @@ Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
 Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
 
 
-# include = [
-#   'openpredict/data/models/*', 'openpredict/data/ontology/*', 'openpredict/data/models/*',
-#   'openpredict/data/features/*', 'openpredict/data/input/*', 'openpredict/data/sparql/*', 'openpredict/data/resources/*', 'openpredict/data/*.ttl',
-#   'tests/queries/*', 'openpredict/data/embedding/*'
-# ]
-
-
 # ENVIRONMENTS AND SCRIPTS
 [tool.hatch.envs.default]
 features = [
@@ -128,15 +125,16 @@ check = [
 
 # TOOLS
 
+[tool.hatch.version]
+path = "src/openpredict/__init__.py"
+
 [tool.isort]
 line_length = 120
-# skip = ["src/__init__.py"]
 
 
 [tool.coverage.run]
 source = ["project"]
 branch = true
-
 [tool.coverage.report]
 omit = ["tests/*"]
 
@@ -152,24 +150,4 @@ ignore = [
     "E303", # too many blank lines
     "E301", # expected 1 blank lines found 0
     "W503", # line break before binary operator
-]
-
-
-[tool.mypy]
-strict = false
-disallow_untyped_defs = false
-follow_imports = "normal"
-ignore_missing_imports = true
-pretty = true
-show_column_numbers = true
-warn_no_return = false
-warn_unused_ignores = true
-plugins = [
-    "pydantic.mypy"
-]
-
-
-[tool.pytest.ini_options]
-markers = [
-    "no_rsa_key: mark a test as a test only run when there is no nanopub RSA key setup.",
 ]
