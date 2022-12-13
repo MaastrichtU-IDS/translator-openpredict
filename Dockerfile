@@ -4,7 +4,7 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 
 LABEL org.opencontainers.image.source="https://github.com/MaastrichtU-IDS/translator-openpredict"
 
-## Change the current user to root and the working directory to /app
+# Change the current user to root and the working directory to /app
 USER root
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN apt-get update && \
     # pip-tools
 
 
-## Install Spark for standalone context in /opt
+# Install Spark for standalone context in /opt
 ENV APACHE_SPARK_VERSION=3.2.0
 ENV HADOOP_VERSION=3.2
 ENV SPARK_HOME=/opt/spark
@@ -27,7 +27,7 @@ RUN wget -q -O spark.tgz https://archive.apache.org/dist/spark/spark-${APACHE_SP
     ln -s "/opt/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" $SPARK_HOME
 RUN echo "log4j.rootCategory=ERROR, console" > $SPARK_HOME/conf/log4j.properties
 
-## Define some environment variables for pyspark and gunicorn config
+# Define some environment variables for pyspark and gunicorn config
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
 ENV MODULE_NAME=trapi.main
@@ -45,7 +45,7 @@ COPY . .
 
 RUN pip install -e ".[train,test,dev]"
 
-RUN dvc pull
+RUN dvc pull -f
 
 EXPOSE 8808
 

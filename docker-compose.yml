@@ -1,6 +1,7 @@
 version: "3"
 services:
 
+  # Container used for deploying the API
   api:
     build: .
     ports:
@@ -13,7 +14,7 @@ services:
       DEV_MODE: 'true'
     entrypoint: uvicorn trapi.main:app --host 0.0.0.0 --port 8808 --reload
 
-
+  # Container used for testing and running scripts
   tests:
     build: .
     volumes:
@@ -26,7 +27,7 @@ services:
     # entrypoint:  pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
     entrypoint:  pytest tests/package/test_decorator.py -s
 
-
+  # Container to deploy a JupyterLab/VSCode workspace for development
   workspace:
     image: ghcr.io/maastrichtu-ids/jupyterlab
     ports:

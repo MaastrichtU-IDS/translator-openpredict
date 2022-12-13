@@ -100,25 +100,28 @@ Requirements: Python 3.8+ and `pip` installed
 Start the API in development mode with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
 
 ```bash
-docker-compose up
+docker-compose up api
 ```
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
 
-<!-- You can use the `openpredict` command in the docker container, for example to re-train the baseline model:
-
-```bash
-docker-compose exec api python src/openpredict_model/train.py
-```
--->
-
 ### Test the OpenPredict API
 
-See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
+You can run the tests locally with docker:
 
----
+```bash
+docker-compose run tests
+```
 
-# Use the API​ :mailbox_with_mail:
+> See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
+
+You can change the entrypoint of the test container to run other commands, such as training a model:
+
+```bash
+docker-compose run --entrypoint "python src/openpredict_model/train.py" tests
+```
+
+### Use the OpenPredict API
 
 
 The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented).
@@ -130,11 +133,11 @@ The API will return predicted targets for the given drug or disease:
 
 > Feel free to try the API at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
 
-## TRAPI operations
+#### TRAPI operations
 
 Operations to query OpenPredict using the [Translator Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI) standards.
 
-### Query operation
+##### Query operation
 
 The `/query` operation will return the same predictions as the `/predict` operation, using the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) format, used within the [Translator project](https://ncats.nih.gov/translator/about).
 
@@ -180,20 +183,20 @@ Example of TRAPI query to retrieve drugs similar to a specific drug:
 }
 ```
 
-### Predicates operation
+##### Predicates operation
 
 The `/predicates` operation will return the entities and relations provided by this API in a JSON object (following the [ReasonerAPI](https://github.com/NCATSTranslator/ReasonerAPI) specifications).
 
 > Try it at [https://openpredict.semanticscience.org/predicates](https://openpredict.semanticscience.org/predicates)
 
-### Notebooks examples :notebook_with_decorative_cover:
+#### Notebooks examples :notebook_with_decorative_cover:
 
 We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
 
 1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
 2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
 
-### Add embedding :station:
+#### Add embedding :station:
 
 The default baseline model is `openpredict-baseline-omim-drugbank`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
 
@@ -203,7 +206,7 @@ The default baseline model is `openpredict-baseline-omim-drugbank`. You can choo
 
 Once the embedding has been added you can find the existing models previously generated (including `openpredict-baseline-omim-drugbank`), and use them as base model when you ask the model for prediction or add new embeddings.
 
-### Predict operation :crystal_ball:
+#### Predict operation :crystal_ball:
 
 Use this operation if you just want to easily retrieve predictions for a given entity. The `/predict` operation takes 4 parameters (1 required):
 
@@ -219,7 +222,7 @@ The API will return the list of predicted target for the given entity, the label
 
 ---
 
-# More about the data model :minidisc:
+### More about the data model :minidisc:
 
 * The gold standard for drug-disease indications has been retrieved from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979
 * Metadata about runs, models evaluations, features are stored as RDF using the [ML Schema ontology](http://ml-schema.github.io/documentation/ML%20Schema.html).
@@ -231,7 +234,7 @@ Diagram of the data model used for OpenPredict, based on the ML Schema ontology 
 
 ---
 
-# Translator application
+## Translator application
 
 ### Service Summary
 Query for drug-disease pairs predicted from pre-computed sets of graphs embeddings.
