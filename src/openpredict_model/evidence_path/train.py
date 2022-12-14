@@ -4,7 +4,7 @@ import pandas as pd
 from gensim.models import KeyedVectors
 
 from openpredict.config import settings
-from openpredict_model.utils import load_treatment_embeddings
+from openpredict_model.utils import load_features_embeddings
 
 ## Evidence path for OpenPredict model by Elif
 
@@ -98,7 +98,7 @@ def path_weight_product(g1,drug,disease) :
 
 def filter_out_features_diseases(features_of_interest):
     '''Creates the dataframe based on disease features to be converted to a embedding later '''
-    (drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
+    (drug_ft_emb, disease_ft_emb) = load_features_embeddings('openpredict_baseline')
     resulting_embeddings = disease_ft_emb.loc[:,features_of_interest]
     #if(len(features_of_interest) > 1):
     #resulting_embeddings.columns = resulting_embeddings.columns.droplevel()
@@ -120,7 +120,7 @@ def generate_feature_embedding_data():
 
 def filter_out_features_drugs(features_of_interest) :
     '''Creates the dataframe based on drug features to be converted to a embedding later '''
-    (drug_ft_emb, disease_ft_emb) = load_treatment_embeddings('openpredict-baseline-omim-drugbank')
+    (drug_ft_emb, disease_ft_emb) = load_features_embeddings('openpredict_baseline')
     resulting_embeddings = drug_ft_emb.loc[:,features_of_interest]
     # if(len(features_of_interest) > 1) :
     #     resulting_embeddings.columns = resulting_embeddings.columns.droplevel()

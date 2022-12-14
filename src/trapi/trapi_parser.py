@@ -161,176 +161,172 @@ def resolve_trapi_query(reasoner_query):
     # Now iterates the query plan to execute each query
     for edge_qg_id in query_plan.keys():
 
-        for (do_prediction, model_metadata) in models_list:
-            for relation in model_metadata['relations']:
-                predicate_parents = get_biolink_parents(relation['predicate'])
+        for loaded_model in models_list:
+            for (do_prediction, model_metadata) in loaded_model['endpoints']:
+                for prediction_relation in model_metadata['relations']:
+                    predicate_parents = get_biolink_parents(prediction_relation['predicate'])
 
-                if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):
-                    # Resolve when asking for treats prediction
-                    types_parents = []
-                    for type in query_plan[edge_qg_id]['from_type'] + query_plan[edge_qg_id]['to_type']:
-                        types_parents += get_biolink_parents(type)
-                    # types_parents = get_biolink_parents(query_plan[edge_qg_id]['from_type']) + get_biolink_parents(query_plan[edge_qg_id]['to_type'])
-                    if any(i in types_parents for i in query_plan[edge_qg_id]['from_type']) and any(i in types_parents for i in query_plan[edge_qg_id]['to_type']):
-                        # Iterate over the list of ids provided
-                        for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
-                            labels_dict = get_entities_labels([id_to_predict])
-                            label_to_predict = None
-                            if id_to_predict in labels_dict:
-                                label_to_predict = labels_dict[id_to_predict]['id']['label']
-                            try:
-                                # Run OpenPredict to get predictions
-                                # prediction_json = do_prediction(
-                                #     id_to_predict, model_id,
-                                #     min_score, max_score, n_results=None
-                                # )
-                                # TODO: add options param
-                                prediction_results = do_prediction(
-                                    id_to_predict,
-                                    {
-                                        "model_id": model_id,
-                                        "min_score": min_score,
-                                        "max_score": max_score,
-                                        "n_results": n_results,
-                                        "types": query_plan[edge_qg_id]['from_type'],
-                                    }
-                                )
-                                prediction_json = prediction_results['hits']
-                            except Exception as e:
-                                print(f"Error getting the predictions: {e}")
-                                import traceback
-                                print(traceback.format_exc())
-                                prediction_json = []
+                    if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):
+                        # Resolve when asking for treats prediction
+                        types_parents = []
+                        for type in query_plan[edge_qg_id]['from_type'] + query_plan[edge_qg_id]['to_type']:
+                            types_parents += get_biolink_parents(type)
+                        # types_parents = get_biolink_parents(query_plan[edge_qg_id]['from_type']) + get_biolink_parents(query_plan[edge_qg_id]['to_type'])
+                        if any(i in types_parents for i in query_plan[edge_qg_id]['from_type']) and any(i in types_parents for i in query_plan[edge_qg_id]['to_type']):
+                            # Iterate over the list of ids provided
+                            for id_to_predict in query_plan[edge_qg_id]['from_kg_id']:
+                                labels_dict = get_entities_labels([id_to_predict])
+                                label_to_predict = None
+                                if id_to_predict in labels_dict:
+                                    label_to_predict = labels_dict[id_to_predict]['id']['label']
+                                try:
+                                    # Run OpenPredict to get predictions
+                                    # prediction_json = do_prediction(
+                                    #     id_to_predict, model_id,
+                                    #     min_score, max_score, n_results=None
+                                    # )
+                                    # TODO: add options param
+                                    prediction_results = do_prediction(
+                                        id_to_predict,
+                                        {
+                                            "model_id": model_id,
+                                            "min_score": min_score,
+                                            "max_score": max_score,
+                                            "n_results": n_results,
+                                            "types": query_plan[edge_qg_id]['from_type'],
+                                        }
+                                    )
+                                    prediction_json = prediction_results['hits']
+                                except Exception as e:
+                                    print(f"Error getting the predictions: {e}")
+                                    import traceback
+                                    print(traceback.format_exc())
+                                    prediction_json = []
 
-                            for association in prediction_json:
-                                # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
-                                # Build dict of node ID : label
-                                source_node_id = resolve_id(id_to_predict, resolved_ids_object)
-                                target_node_id = resolve_id(association['id'], resolved_ids_object)
+                                for association in prediction_json:
+                                    # id/type of nodes are registered in a dict to avoid duplicate in knowledge_graph.nodes
+                                    # Build dict of node ID : label
+                                    source_node_id = resolve_id(id_to_predict, resolved_ids_object)
+                                    target_node_id = resolve_id(association['id'], resolved_ids_object)
 
-                                # TODO: XAI get path between source and target nodes (first create the function for this)
+                                    # TODO: XAI get path between source and target nodes (first create the function for this)
 
-                                # If the target ID is given, we filter here from the predictions
-                                if 'to_kg_id' in query_plan[edge_qg_id] and target_node_id not in query_plan[edge_qg_id]['to_kg_id']:
-                                    pass
+                                    # If the target ID is given, we filter here from the predictions
+                                    if 'to_kg_id' in query_plan[edge_qg_id] and target_node_id not in query_plan[edge_qg_id]['to_kg_id']:
+                                        pass
 
-                                else:
-                                    edge_kg_id = 'e' + str(kg_edge_count)
-                                    # Get the ID of the predicted entity in result association
-                                    # based on the type expected for the association "to" node
-                                    # node_dict[id_to_predict] = query_plan[edge_qg_id]['from_type']
-                                    # node_dict[association[query_plan[edge_qg_id]['to_type']]] = query_plan[edge_qg_id]['to_type']
-                                    node_dict[source_node_id] = {
-                                        'type': query_plan[edge_qg_id]['from_type']
-                                    }
-                                    if label_to_predict:
-                                        node_dict[source_node_id]['label'] = label_to_predict
-
-                                    node_dict[target_node_id] = {
-                                        'type': association['type']
-                                    }
-                                    if 'label' in association.keys():
-                                        node_dict[target_node_id]['label'] = association['label']
                                     else:
-                                        # TODO: improve to avoid to call the resolver everytime
-                                        labels_dict = get_entities_labels([target_node_id])
-                                        if target_node_id in labels_dict.keys() and labels_dict[target_node_id]:
-                                            node_dict[target_node_id]['label'] = labels_dict[target_node_id]['id']['label']
+                                        edge_kg_id = 'e' + str(kg_edge_count)
+                                        # Get the ID of the predicted entity in result association
+                                        # based on the type expected for the association "to" node
+                                        # node_dict[id_to_predict] = query_plan[edge_qg_id]['from_type']
+                                        # node_dict[association[query_plan[edge_qg_id]['to_type']]] = query_plan[edge_qg_id]['to_type']
+                                        node_dict[source_node_id] = {
+                                            'type': query_plan[edge_qg_id]['from_type']
+                                        }
+                                        if label_to_predict:
+                                            node_dict[source_node_id]['label'] = label_to_predict
 
-                                    # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
-                                    relation = 'RO:0002434' # interacts with
-                                    # relation = 'OBOREL:0002606'
-                                    association_score = str(association['score'])
+                                        node_dict[target_node_id] = {
+                                            'type': association['type']
+                                        }
+                                        if 'label' in association.keys():
+                                            node_dict[target_node_id]['label'] = association['label']
+                                        else:
+                                            # TODO: improve to avoid to call the resolver everytime
+                                            labels_dict = get_entities_labels([target_node_id])
+                                            if target_node_id in labels_dict.keys() and labels_dict[target_node_id]:
+                                                node_dict[target_node_id]['label'] = labels_dict[target_node_id]['id']['label']
 
-                                    model_id_label = model_id
-                                    if not model_id_label:
-                                        model_id_label = "openpredict-baseline-omim-drugbank"
+                                        # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'
+                                        # relation = 'RO:0002434' # interacts with
+                                        # relation = 'OBOREL:0002606'
+                                        association_score = str(association['score'])
 
-                                    # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
-                                    edge_dict = {
-                                        # TODO: not required anymore? 'association_type': edge_association_type,
-                                        # 'relation': relation,
+                                        model_id_label = model_id
+                                        if not model_id_label:
+                                            model_id_label = "openpredict_baseline"
 
-                                        # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
-                                        'attributes': [
+                                        # See attributes examples: https://github.com/NCATSTranslator/Evidence-Provenance-Confidence-Working-Group/blob/master/attribute_epc_examples/COHD_TRAPI1.1_Attribute_Example_2-3-21.yml
+                                        edge_dict = {
+                                            # TODO: not required anymore? 'association_type': edge_association_type,
+                                            # 'relation': relation,
+
+                                            # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
+                                            'attributes': [
+                                                {
+                                                    "description": "model_id",
+                                                    "attribute_type_id": "EDAM:data_1048",
+                                                    "value": model_id_label
+                                                },
+                                                {
+                                                    # TODO: use has_confidence_level?
+                                                    "description": "score",
+                                                    "attribute_type_id": "EDAM:data_1772",
+                                                    "value": association_score
+                                                    # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
+                                                },
+                                                {
+                                                    'attribute_type_id': 'biolink:aggregator_knowledge_source',
+                                                    'value': 'infores:openpredict',
+                                                    'value_type_id': 'biolink:InformationResource',
+                                                    'attribute_source': 'infores:openpredict',
+                                                    # 'value_url': 'https://openpredict.semanticscience.org/query'
+                                                },
+                                                {
+                                                    'attribute_type_id': 'biolink:supporting_data_source',
+                                                    'value': 'infores:cohd',
+                                                    'value_type_id': 'biolink:InformationResource',
+                                                    'attribute_source': 'infores:openpredict',
+                                                    # 'value_url': 'https://openpredict.semanticscience.org'
+                                                },
+                                            ]
+                                        }
+
+                                        # Map the source/target of query_graph to source/target of association
+                                        # if association['source']['type'] == query_plan[edge_qg_id]['from_type']:
+                                        edge_dict['subject'] = source_node_id
+                                        edge_dict['object'] = target_node_id
+
+                                        # TODO: Define the predicate depending on the association source type returned by OpenPredict classifier
+                                        if len(query_plan[edge_qg_id]['predicates']) > 0:
+                                            edge_dict['predicate'] = query_plan[edge_qg_id]['predicates'][0]
+                                        else:
+                                            edge_dict['predicate'] = prediction_relation['predicate']
+
+                                        # if query_plan[edge_qg_id]['from_type'] == 'drug':
+                                        #     # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
+                                        #     edge_dict['predicate'] = query_plan[edge_qg_id]['predicate']
+                                        # else:
+                                        #     edge_dict['predicate'] = 'biolink:treated_by'
+
+                                        # Add the association in the knowledge_graph as edge
+                                        # Use the type as key in the result association dict (for IDs)
+                                        knowledge_graph['edges'][edge_kg_id] = edge_dict
+
+                                        # Add the bindings to the results object
+                                        result = {'edge_bindings': {}, 'node_bindings': {}}
+                                        result['edge_bindings'][edge_qg_id] = [
                                             {
-                                                "description": "model_id",
-                                                "attribute_type_id": "EDAM:data_1048",
-                                                "value": model_id_label
-                                            },
-                                            {
-                                                # TODO: use has_confidence_level?
-                                                "description": "score",
-                                                "attribute_type_id": "EDAM:data_1772",
-                                                "value": association_score
-                                                # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
-                                            },
-                                            {
-                                                'attribute_type_id': 'biolink:aggregator_knowledge_source',
-                                                'value': 'infores:openpredict',
-                                                'value_type_id': 'biolink:InformationResource',
-                                                'attribute_source': 'infores:openpredict',
-                                                # 'value_url': 'https://openpredict.semanticscience.org/query'
-                                            },
-                                            {
-                                                'attribute_type_id': 'biolink:supporting_data_source',
-                                                'value': 'infores:cohd',
-                                                'value_type_id': 'biolink:InformationResource',
-                                                'attribute_source': 'infores:openpredict',
-                                                # 'value_url': 'https://openpredict.semanticscience.org'
-                                            },
+                                                "id": edge_kg_id
+                                            }
                                         ]
-                                    }
+                                        result['node_bindings'][query_plan[edge_qg_id]['from_qg_id']] = [
+                                            {
+                                                "id": source_node_id
+                                            }
+                                        ]
+                                        result['node_bindings'][query_plan[edge_qg_id]['to_qg_id']] = [
+                                            {
+                                                "id": target_node_id
+                                            }
+                                        ]
+                                        query_results.append(result)
 
-                                    # Map the source/target of query_graph to source/target of association
-                                    # if association['source']['type'] == query_plan[edge_qg_id]['from_type']:
-                                    edge_dict['subject'] = source_node_id
-                                    edge_dict['object'] = target_node_id
+                                        kg_edge_count += 1
+                                        if kg_edge_count == n_results:
+                                            break
 
-                                    # TODO: Define the predicate depending on the association source type returned by OpenPredict classifier
-                                    if len(query_plan[edge_qg_id]['predicates']) > 0:
-                                        edge_dict['predicate'] = query_plan[edge_qg_id]['predicates'][0]
-                                    else:
-                                        edge_dict['predicate'] = relations['predicate']
-
-                                    # if query_plan[edge_qg_id]['from_type'] == 'drug':
-                                    #     # and 'biolink:Drug' in query_plan[edge_qg_id]['predicates']: ?
-                                    #     edge_dict['predicate'] = query_plan[edge_qg_id]['predicate']
-                                    # else:
-                                    #     edge_dict['predicate'] = 'biolink:treated_by'
-
-                                    # Add the association in the knowledge_graph as edge
-                                    # Use the type as key in the result association dict (for IDs)
-                                    knowledge_graph['edges'][edge_kg_id] = edge_dict
-
-                                    # Add the bindings to the results object
-                                    result = {'edge_bindings': {}, 'node_bindings': {}}
-                                    result['edge_bindings'][edge_qg_id] = [
-                                        {
-                                            "id": edge_kg_id
-                                        }
-                                    ]
-                                    result['node_bindings'][query_plan[edge_qg_id]['from_qg_id']] = [
-                                        {
-                                            "id": source_node_id
-                                        }
-                                    ]
-                                    result['node_bindings'][query_plan[edge_qg_id]['to_qg_id']] = [
-                                        {
-                                            "id": target_node_id
-                                        }
-                                    ]
-                                    query_results.append(result)
-
-                                    kg_edge_count += 1
-                                    if kg_edge_count == n_results:
-                                        break
-                    else:
-                        print('BioLink category not parents of Drug or Disease, no results returned')
-                        prediction_json = []
-
-        else:
-            prediction_json = []
 
     # Generate kg nodes from the dict of nodes + result from query to resolve labels
     for node_id, properties in node_dict.items():

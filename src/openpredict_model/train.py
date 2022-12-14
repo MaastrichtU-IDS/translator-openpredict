@@ -1,31 +1,36 @@
 import numbers
 import os
+import pickle
 from datetime import datetime
 
 import numpy as np
 import pandas as pd
-from joblib import dump, load
+import pyspark
+import typer
 from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
 from openpredict import save
 from openpredict.config import settings
-from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, get_run_id, retrieve_features
-# from openpredict.utils import get_spark_context
+from openpredict.rdf_utils import get_run_id
 from openpredict.utils import get_openpredict_dir, log
 
+cli = typer.Typer(help="Training for OpenPredict model")
 
-def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
+@cli.command(help='Train an existing OpenPredict model')
+def train_model(from_model_id: str = 'openpredict_baseline'):
     """The main function to run the drug-disease similarities pipeline,
     and train the drug-disease classifier.
-    It returns, and stores the generated classifier as a `.joblib` file
+    It returns, and stores the generated classifier as a pickle file
     in the `data/models` folder,
 
     :param from_scratch: Train the model for scratch (True by default)
     :return: Classifier of predicted similarities and scores
     """
     time_start = datetime.now()
+    n_fold = 5
+    # n_fold = 1
 
     # Prepare drug-disease dictionary
     drugDiseaseKnown = pd.read_csv(
@@ -40,10 +45,10 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
 
     # print(drugDiseaseKnown.head())
 
-    if from_model_id == 'scratch':
+    if from_model_id == 'openpredict_baseline':
         print('🏗 Build the model from scratch')
         # Start from scratch (merge feature matrixes)
-        baseline_features_folder = "data/baseline_features/"
+        baseline_features_folder = "baseline_features/"
         drugfeatfiles = ['drugs-fingerprint-sim.csv', 'drugs-se-sim.csv',
                          'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv', 'drugs-target-seq-sim.csv']
         diseasefeatfiles = ['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv']
@@ -55,12 +60,13 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
         # TODO: Translator IDs version (MONDO & CHEBI)
         drug_df, disease_df = mergeFeatureMatrix(
             drugfeatfiles, diseasefeatfiles)
-        # dump((drug_df, disease_df), 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib')
     else:
-        print("📥 Loading the similarity tensor from " +
-              get_openpredict_dir('features/' + from_model_id + '.joblib'))
-        (drug_df, disease_df) = load(get_openpredict_dir(
-            'features/' + from_model_id + '.joblib'))
+        print("📥 Loading the features tensor from " +
+              get_openpredict_dir('features/' + from_model_id + '_features.pickle'))
+        (drug_df, disease_df) = pickle.load(open(
+            get_openpredict_dir('features/' + from_model_id + '_features.pickle'),
+            "rb"
+        ))
 
     print("Drug Features ", drug_df.columns.levels[0])
     print("Disease Features ", disease_df.columns.levels[0])
@@ -73,7 +79,6 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     pairs, classes = balance_data(pairs, classes, n_proportion)
 
     # Train-Test Splitting
-    n_fold = 5
     n_seed = 101
     if n_fold == 1:
         rs = StratifiedShuffleSplit(
@@ -147,28 +152,25 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
     print('Final model training runtime 🕕  ' +
           str(datetime.now() - final_training))
 
-    if from_model_id == 'scratch':
-        dump((drug_df, disease_df), get_openpredict_dir(
-            'features/openpredict-baseline-omim-drugbank.joblib'))
-        print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict-baseline-omim-drugbank.joblib')
-
-
+    if from_model_id == 'openpredict_baseline':
+        pickle.dump(
+            (drug_df, disease_df),
+            open(
+                get_openpredict_dir('features/' + from_model_id + '_features.pickle'),
+                "wb"
+            )
+        )
+        print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict_baseline_features.pickle')
         print('\nStore the model in the file ' +
-              get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib 💾'))
+              get_openpredict_dir('models/openpredict_baseline_features.pickle 💾'))
         # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
-
-
-    # import pickle
-    # pickle.dump(sample_data, open(f"models/sample_data.pickle", "wb"))
-    # pickle.dump(scores, open(f"models/scores.pickle", "wb"))
 
     save(
         model=clf,
         path="models/openpredict_baseline",
         sample_data=sample_data,
-        features=(drug_df, disease_df),
         hyper_params=hyper_params,
         scores=scores,
     )
@@ -192,37 +194,36 @@ def get_spark_context():
     :return: Spark context
     """
     spark_master_url = os.getenv('SPARK_MASTER_URL')
+    sc = None
 
     if os.getenv('SPARK_HOME'):
         # Do not try to run Spark if SPARK_HOME env variable not set
-        log.info('SPARK env var found')
         # import findspark
         # findspark.init(os.getenv('SPARK_HOME'))
-        import pyspark
-
-        log.info(f'SPARK_MASTER_URL: {spark_master_url}')
         # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
-        try:
-            log.info(
-                'SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
-            sc = pyspark.SparkContext.getOrCreate()
-            log.info(sc)
-        except Exception as e:
-            log.warning(e)
-            log.info(
-                "Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
-            sc = None
 
-        if spark_master_url and sc == None:
+        if spark_master_url and sc is None:
             log.info(
                 'SPARK_MASTER_URL provided, connecting to the Spark cluster ✨')
             # e.g. spark://my-spark-spark-master:7077
             sc = pyspark.SparkContext(appName="Pi", master=spark_master_url)
             log.info(sc)
+        else:
+            # Most of the time use local Spark available in docker container
+            try:
+                log.info(
+                    'SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
+                sc = pyspark.SparkContext.getOrCreate()
+                # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
+                log.info(sc)
+            except Exception as e:
+                log.warning(e)
+                log.info(
+                    "⚠️ Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
 
     else:
         log.info(
-            'SPARK_HOME not found, using pandas to handle dataframes 🐼')
+            'SPARK_HOME environment variable not found, using pandas to handle dataframes 🐼')
     return sc
     # Old way:
     #     import findspark
@@ -256,7 +257,14 @@ def adjcencydict2matrix(df, name1, name2):
     return df.pivot(index=name1, columns=name2)
 
 
-def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
+@cli.command(help='Add embeddings to the OpenPredict model')
+def add_embedding(
+    embedding_file: str,
+    emb_name: str,
+    types: str = 'Drugs',
+    # description: str,
+    from_model_id: str = "openpredict_baseline"
+):
     """Add embedding to the drug similarity matrix dataframe
 
     :param embedding_file: JSON file containing records ('entity': id, 'embdding': array of numbers )
@@ -278,11 +286,13 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     print('Embedding dimension', emb_size)
 
     # TODO: now also save the feature dataframe for each run to be able to add embedding to any run?
-    # Or can we just use the models/run_id.joblib file instead of having 2 files for 1 run?
+    # Or can we just use the models/run_id.pickle file instead of having 2 files for 1 run?
     print('📥 Loading features file: ' +
-          get_openpredict_dir('features/' + from_model_id + '.joblib'))
-    (drug_df, disease_df) = load(get_openpredict_dir(
-        'features/' + from_model_id + '.joblib'))
+          get_openpredict_dir('features/' + from_model_id + '_features.pickle'))
+    (drug_df, disease_df) = pickle.load(open(
+        get_openpredict_dir('features/' + from_model_id + '_features.pickle'),
+        "rb"
+    ))
 
     if types == 'Drugs':
         names = drug_df.columns.levels[1]
@@ -327,12 +337,16 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
         df_sim_m.index = disease_df.index
         disease_df = pd.concat([disease_df, df_sim_m],  axis=1)
 
-    # dump((drug_df, disease_df), 'openpredict/data/features/drug_disease_dataframes.joblib')
     run_id = get_run_id()
-    dump((drug_df, disease_df), get_openpredict_dir(
-        'features/' + run_id + '.joblib'))
+    pickle.dump(
+        (drug_df, disease_df),
+        open(
+            get_openpredict_dir('features/' + run_id + '_features.pickle'),
+            "wb"
+        )
+    )
 
-    added_feature_uri = add_feature_metadata(emb_name, description, types)
+    # added_feature_uri = add_feature_metadata(emb_name, description, types)
     # train the model
     clf, scores, hyper_params, features_df = train_model(run_id)
 
@@ -342,21 +356,27 @@ def addEmbedding(embedding_file, emb_name, types, description, from_model_id):
     # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
     # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
 
-    if from_model_id == 'scratch':
-        model_features = list(retrieve_features(
-            'All', 'openpredict-baseline-omim-drugbank').keys())
-    else:
-        model_features = list(retrieve_features('All', from_model_id).keys())
-    model_features.append(added_feature_uri)
+    # if from_model_id == 'scratch':
+    #     model_features = list(retrieve_features(
+    #         'All', 'openpredict_baseline').keys())
+    # else:
+    #     model_features = list(retrieve_features('All', from_model_id).keys())
+    # model_features.append(added_feature_uri)
 
-    run_id = add_run_metadata(scores, model_features,
-                              hyper_params, run_id=run_id)
+    # run_id = add_run_metadata(scores, model_features,
+    #                           hyper_params, run_id=run_id)
 
-    print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/' + run_id + '.joblib')
+    # print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/' + run_id + '_features.pickle')
 
-    dump(clf, get_openpredict_dir('models/' + run_id + '.joblib'))
-    print('\nStore the model in the file ' +
-          get_openpredict_dir('models/' + run_id) + '.joblib 💾')
+    # save(
+    #     model=clf,
+    #     path=f"models/{run_id}",
+    #     sample_data=sample_data,
+    #     features=(drug_df, disease_df),
+    #     hyper_params=hyper_params,
+    #     scores=scores,
+    # )
+
     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     # df_sim_m= df_sim.stack().reset_index(level=[0,1])
@@ -706,21 +726,22 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
 
 
 if __name__ == '__main__':
+    cli()
     # When directly executed as script
     # print(train_model())
 
     # loaded = load('models/openpredict_baseline')
-    import pickle
-    model = pickle.load(open("models/openpredict_baseline", "rb"))
-    features = pickle.load(open("models/openpredict_baseline.features", "rb"))
-    sample_data = pickle.load(open("models_BACK/sample_data.pickle", "rb"))
-    scores = pickle.load(open("models_BACK/scores.pickle", "rb"))
-    print("model")
-    print(model)
-    print("sample_data")
-    print(sample_data)
-    print("features")
-    print(features)
+    # import pickle
+    # model = pickle.load(open("models/openpredict_baseline", "rb"))
+    # features = pickle.load(open("models/openpredict_baseline.features", "rb"))
+    # sample_data = pickle.load(open("../models_BACK/sample_data.pickle", "rb"))
+    # scores = pickle.load(open("models_BACK/scores.pickle", "rb"))
+    # print("model")
+    # print(model)
+    # print("sample_data")
+    # print(sample_data)
+    # print("features")
+    # print(features)
     # save(
     #     model=model,
     #     path=f"models/openpredict_baseline_mlem",

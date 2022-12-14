@@ -10,7 +10,7 @@ from openpredict.decorators import trapi_predict
 from openpredict.predict_output import PredictOptions, PredictOutput
 from openpredict.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
-from openpredict_model.utils import similarity_embeddings
+from openpredict_model.utils import load_features_embeddings, similarity_embeddings
 
 
 @trapi_predict(path='/predict',
@@ -50,7 +50,7 @@ def get_predictions(
     :return: predictions in array of JSON object
     """
     if options.model_id is None:
-        options.model_id = 'openpredict-baseline-omim-drugbank'
+        options.model_id = 'openpredict_baseline'
 
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
@@ -100,7 +100,7 @@ def get_predictions(
 
 def query_omim_drugbank_classifier(input_curie, model_id):
     """The main function to query the drug-disease OpenPredict classifier,
-    It queries the previously generated classifier a `.joblib` file
+    It queries the previously generated classifier a `.pickle` file
     in the `data/models` folder
 
     :return: Predictions and scores
@@ -108,7 +108,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # TODO: XAI add the additional scores from SHAP here
     loaded_model = load(f"models/{model_id}")
     clf  = loaded_model.model
-    (drug_df, disease_df)  = loaded_model.features
+    (drug_df, disease_df)  = load_features_embeddings(model_id)
 
     parsed_curie = re.search('(.*?):(.*)', input_curie)
     input_namespace = parsed_curie.group(1)
@@ -125,7 +125,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     # Get all DFs
     # Merge feature matrix
     # drug_df, disease_df = mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles)
-    # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.joblib')
+    # (drug_df, disease_df)= load('data/features/drug_disease_dataframes.pickle')
 
     # (drug_df, disease_df) = load_treatment_embeddings(model_id)
 
@@ -148,14 +148,6 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     commonDrugs = drugwithfeatures.intersection(drugDiseaseKnown.Drug.unique())
     commonDiseases = diseaseswithfeatures.intersection(
         drugDiseaseKnown.Disease.unique())
-
-    # clf = load_treatment_classifier(model_id)
-    # if not clf:
-    #     clf = load_treatment_classifier(model_id)
-
-    # print("📥 Loading classifier " +
-    #       get_openpredict_dir('models/' + model_id + '.joblib'))
-    # clf = load(get_openpredict_dir('models/' + model_id + '.joblib'))
 
     pairs = []
     classes = []

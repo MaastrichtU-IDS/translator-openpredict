@@ -16,7 +16,7 @@ client = TestClient(app)
 
 def test_get_predict_drug():
     """Test predict API GET operation for a drug"""
-    url = '/predict?input_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+    url = '/predict?input_id=DRUGBANK:DB00394&model_id=openpredict_baseline&n_results=42'
     response = client.get(url).json()
     assert len(response['hits']) == 42
     assert response['count'] == 42
@@ -25,7 +25,7 @@ def test_get_predict_drug():
 
 def test_get_predict_disease():
     """Test predict API GET operation for a disease"""
-    url = '/predict?input_id=OMIM:246300&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+    url = '/predict?input_id=OMIM:246300&model_id=openpredict_baseline&n_results=42'
     response = client.get(url).json()
     assert len(response['hits']) == 42
     assert response['count'] == 42
@@ -123,8 +123,8 @@ def test_trapi_empty_response():
 
 # def test_post_embeddings():
 #     """Test post embeddings to add embeddings to the model and rebuild it"""
-    # curl -X POST "http://localhost:8808/embedding?types=Both&emb_name=test4&description=test&model_id=openpredict-baseline-omim-drugbank" -H  "accept: */*" -H  "Content-Type: multipart/form-data" -F "embedding_file=@neurodkg_embedding.json;type=application/json"
-    # url = '/embedding?types=Both&emb_name=test_embedding&description=Embeddingdescription&model_id=openpredict-baseline-omim-drugbank'
+    # curl -X POST "http://localhost:8808/embedding?types=Both&emb_name=test4&description=test&model_id=openpredict_baseline" -H  "accept: */*" -H  "Content-Type: multipart/form-data" -F "embedding_file=@neurodkg_embedding.json;type=application/json"
+    # url = '/embedding?types=Both&emb_name=test_embedding&description=Embeddingdescription&model_id=openpredict_baseline'
     # files = {
     #     'embedding_file': ('neurodkg_embedding.json;type', open(embeddings_filepath + ';type', 'rb')),
     # }

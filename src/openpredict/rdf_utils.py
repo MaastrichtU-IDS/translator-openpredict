@@ -4,13 +4,13 @@ from datetime import datetime
 
 from rdflib import RDF, Graph, Literal, Namespace, URIRef
 from rdflib.namespace import DC, RDFS, XSD
-from SPARQLWrapper import JSON, POST, SPARQLWrapper
+from SPARQLWrapper import JSON, SPARQLWrapper
 
 from openpredict.config import settings
 
 if not settings.OPENPREDICT_DATA_DIR.endswith('/'):
     settings.OPENPREDICT_DATA_DIR += '/'
-RDF_DATA_PATH = settings.OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
+# RDF_DATA_PATH = settings.OPENPREDICT_DATA_DIR + 'openpredict-metadata.ttl'
 
 
 OPENPREDICT_GRAPH = 'https://w3id.org/openpredict/graph'
@@ -50,37 +50,15 @@ if not SPARQL_ENDPOINT_PASSWORD:
 SPARQL_ENDPOINT_URL=None
 
 
-def insert_graph_in_sparql_endpoint(g):
-    """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
-
-    :param g: rdflib graph to insert
-    :return: SPARQL update query result
-    """
-    if SPARQL_ENDPOINT_URL:
-        sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
-        sparql.setMethod(POST)
-        # sparql.setHTTPAuth(BASIC)
-        sparql.setCredentials(SPARQL_ENDPOINT_USERNAME,
-                              SPARQL_ENDPOINT_PASSWORD)
-        query = """INSERT DATA {{ GRAPH  <{graph}>
-        {{
-        {ntriples}
-        }}
-        }}
-        """.format(ntriples=g.serialize(format='nt').decode('utf-8'), graph=OPENPREDICT_GRAPH)
-
-        sparql.setQuery(query)
-        return sparql.query()
-    else:
-        # If no SPARQL endpoint provided we store to the RDF file in data/openpredict-metadata.ttl (working)
-        graph_from_file = Graph()
-        graph_from_file.parse(RDF_DATA_PATH, format="ttl")
-        # graph_from_file.parse(g.serialize(format='turtle').decode('utf-8'), format="ttl")
-        graph_from_file = graph_from_file + g
-        graph_from_file.serialize(RDF_DATA_PATH, format='turtle')
+def get_loaded_graph(models_list):
+    g = Graph()
+    for loaded_model in models_list:
+        g.parse(f"{loaded_model['model']}.ttl")
+        # g.parse(f"{os.getcwd()}/{loaded_model['model']}.ttl")
+    return g
 
 
-def query_sparql_endpoint(query, parameters=[]):
+def query_sparql_endpoint(query, g, parameters=[]):
     """Run select SPARQL query against SPARQL endpoint
 
     :param query: SPARQL query as a string
@@ -101,17 +79,9 @@ def query_sparql_endpoint(query, parameters=[]):
         # Use SPARQLStore? https://github.com/RDFLib/rdflib/blob/master/examples/sparqlstore_example.py
         # But this would require to rewrite all SPARQL query resolution to use rdflib response object
         # Which miss the informations about which SPARQL variables (just returns rows of results without variable bind)
-        g = Graph()
-        g.parse(RDF_DATA_PATH, format="ttl")
-        # print('RDF data len')
-        # print(len(g))
-        # print(query)
         qres = g.query(query)
-        # print('query done')
-        # print(qres)
         results = []
         for row in qres:
-            # TODO: row.asdict()
             result = {}
             for i, p in enumerate(parameters):
                 result[p] = {}
@@ -130,12 +100,12 @@ def query_sparql_endpoint(query, parameters=[]):
 
 
 # def init_triplestore():
-#     """Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
+#     """Only initialized the triplestore if no run for openpredict_baseline can be found.
 #     Init using the data/openpredict-metadata.ttl RDF file
 #     """
 #     # check_baseline_run_query = """SELECT DISTINCT ?runType
 #     # WHERE {
-#     #     <https://w3id.org/openpredict/run/openpredict-baseline-omim-drugbank> a ?runType
+#     #     <https://w3id.org/openpredict/run/openpredict_baseline> a ?runType
 #     # } LIMIT 10
 #     # """
 #     # results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
@@ -145,39 +115,12 @@ def query_sparql_endpoint(query, parameters=[]):
 #     insert_graph_in_sparql_endpoint(g)
 #     print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
-def add_feature_metadata(id, description, type):
-    g = get_feature_metadata(id, description, type)
-    insert_graph_in_sparql_endpoint(g)
-    feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
-    return str(feature_uri)
-
-def get_feature_metadata(id, description, type):
-    """Generate RDF metadata for a feature
-
-    :param id: if used to identify the feature
-    :param description: feature description
-    :param type: feature type
-    :return: rdflib graph after loading the feature
-    """
-    g = Graph()
-    feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
-    g.add((feature_uri, RDF.type, MLS['Feature']))
-    g.add((feature_uri, DC.identifier, Literal(id)))
-    g.add((feature_uri, DC.description, Literal(description)))
-    g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
-    return g
 
 
 def get_run_id(run_id=None):
     if not run_id:
         # Generate random UUID for the run ID
         run_id = str(uuid.uuid1())
-    return run_id
-
-
-def add_run_metadata(scores, model_features, hyper_params, run_id=None):
-    g = get_run_metadata(scores, model_features, hyper_params, run_id)
-    insert_graph_in_sparql_endpoint(g)
     return run_id
 
 
@@ -191,6 +134,11 @@ def get_run_metadata(scores, model_features, hyper_params, run_id=None):
     :return: Run id
     """
     g = Graph()
+    g.bind("mls", Namespace("http://www.w3.org/ns/mls#"))
+    g.bind("prov", Namespace("http://www.w3.org/ns/prov#"))
+    g.bind("dc", Namespace("http://purl.org/dc/elements/1.1/"))
+    g.bind("openpredict", Namespace("https://w3id.org/openpredict/"))
+
     if not run_id:
         # Generate random UUID for the run ID
         run_id = str(uuid.uuid1())
@@ -242,16 +190,11 @@ def get_run_metadata(scores, model_features, hyper_params, run_id=None):
 
     # TODO: improve how we retrieve features
     for feature in model_features:
-        # feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature   )
-        # g.add((feature_uri, RDF.type, MLS['Feature']))
-        # g.add((feature_uri, DC.identifier, Literal(id)))
-        # g.add((feature_uri, DC.description, Literal(description)))
-        # g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
         print(f'FEATURE {feature}')
-        # feature_uri = URIRef(feature)
-        # # feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature)
-        # # g.add((run_uri, OPENPREDICT['has_features'], feature_uri))
-        # g.add((run_uri, MLS['hasInput'], feature_uri))
+        feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature   )
+        g.add((feature_uri, RDF.type, MLS['Feature']))
+        g.add((feature_uri, DC.identifier, Literal(feature)))
+        g.add((run_uri, MLS['hasInput'], feature_uri))
 
     # TODO: those 2 triples are for the PLEX ontology
     g.add((evaluation_uri, RDF.type, PROV['Entity']))
@@ -275,7 +218,7 @@ def get_run_metadata(scores, model_features, hyper_params, run_id=None):
 
 
 
-def retrieve_features(type='Both', run_id=None):
+def retrieve_features(g, type='Both', run_id=None):
     """Get features in the ML model
 
     :param type: type of the feature (Both, Drug, Disease)
@@ -289,57 +232,50 @@ def retrieve_features(type='Both', run_id=None):
             PREFIX dc: <http://purl.org/dc/elements/1.1/>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            SELECT DISTINCT ?feature ?featureId ?featureDescription ?embeddingType
+            SELECT DISTINCT ?feature ?featureId
             WHERE {
                 ?run a mls:Run ;
                     dc:identifier \"""" + run_id + """\" ;
                     mls:hasInput ?feature .
-                ?feature dc:identifier ?featureId ;
-                    <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
-                    dc:description ?featureDescription .
+                ?feature dc:identifier ?featureId .
             }"""
-        results = query_sparql_endpoint(sparql_feature_for_run, parameters=[
-                                        'feature', 'featureId', 'featureDescription', 'embeddingType'])
+            # <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+            #         dc:description ?featureDescription .
+        results = query_sparql_endpoint(sparql_feature_for_run, g, parameters=[
+                                        'feature', 'featureId'])
         # print(results)
 
         features_json = {}
         for result in results:
             features_json[result['feature']['value']] = {
                 "id": result['featureId']['value'],
-                "description": result['featureDescription']['value'],
-                "type": result['embeddingType']['value']
             }
 
     else:
-        type_filter = ''
-        if (type != "Both"):
-            type_filter = 'FILTER(?embeddingType = "' + type + '")'
+        # type_filter = ''
+        # if (type != "Both"):
+        #     type_filter = 'FILTER(?embeddingType = "' + type + '")'
 
-        query = """SELECT DISTINCT ?id ?description ?embeddingType ?feature
+        query = """SELECT DISTINCT ?id ?feature
             WHERE {{
                 ?feature a <http://www.w3.org/ns/mls#Feature> ;
-                    <http://purl.org/dc/elements/1.1/identifier> ?id ;
-                    <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
-                    <http://purl.org/dc/elements/1.1/description> ?description .
-                {type_filter}
+                    <http://purl.org/dc/elements/1.1/identifier> ?id .
             }}
-            """.format(type_filter=type_filter)
-
+            """
+            # {type_filter} .format(type_filter=type_filter)
         results = query_sparql_endpoint(
-            query, parameters=['id', 'description', 'embeddingType', 'feature'])
+            query, g, parameters=['id', 'feature'])
         # print(results)
 
         features_json = {}
         for result in results:
             features_json[result['feature']['value']] = {
                 "id": result['id']['value'],
-                "description": result['description']['value'],
-                "type": result['embeddingType']['value']
             }
     return features_json
 
 
-def retrieve_models():
+def retrieve_models(g):
     """Get models with their scores and features
 
     :return: JSON with models and features
@@ -382,7 +318,7 @@ def retrieve_models():
         }
         """
 
-    results = query_sparql_endpoint(sparql_get_scores,
+    results = query_sparql_endpoint(sparql_get_scores, g,
                                     parameters=['run', 'runId', 'generatedAtTime', 'featureId', 'accuracy',
                                                 'average_precision', 'f1', 'precision', 'recall', 'roc_auc'])
     models_json = {}
@@ -409,3 +345,51 @@ def retrieve_models():
         #     "type": result['embeddingType']['value']
         # }
     return models_json
+
+
+# TODO: Not really used, remove?
+# def get_feature_metadata(id, description, type):
+#     """Generate RDF metadata for a feature
+
+#     :param id: if used to identify the feature
+#     :param description: feature description
+#     :param type: feature type
+#     :return: rdflib graph after loading the feature
+#     """
+#     g = Graph()
+#     feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
+#     g.add((feature_uri, RDF.type, MLS['Feature']))
+#     g.add((feature_uri, DC.identifier, Literal(id)))
+#     g.add((feature_uri, DC.description, Literal(description)))
+#     g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
+#     return g
+
+
+# def insert_graph_in_sparql_endpoint(g):
+#     """Insert rdflib graph in a Update SPARQL endpoint using SPARQLWrapper
+
+#     :param g: rdflib graph to insert
+#     :return: SPARQL update query result
+#     """
+#     if SPARQL_ENDPOINT_URL:
+#         sparql = SPARQLWrapper(SPARQL_ENDPOINT_UPDATE_URL)
+#         sparql.setMethod(POST)
+#         # sparql.setHTTPAuth(BASIC)
+#         sparql.setCredentials(SPARQL_ENDPOINT_USERNAME,
+#                               SPARQL_ENDPOINT_PASSWORD)
+#         query = """INSERT DATA {{ GRAPH  <{graph}>
+#         {{
+#         {ntriples}
+#         }}
+#         }}
+#         """.format(ntriples=g.serialize(format='nt').decode('utf-8'), graph=OPENPREDICT_GRAPH)
+
+#         sparql.setQuery(query)
+#         return sparql.query()
+#     else:
+#         # If no SPARQL endpoint provided we store to the RDF file in data/openpredict-metadata.ttl (working)
+#         graph_from_file = Graph()
+#         graph_from_file.parse(RDF_DATA_PATH, format="ttl")
+#         # graph_from_file.parse(g.serialize(format='turtle').decode('utf-8'), format="ttl")
+#         graph_from_file = graph_from_file + g
+#         graph_from_file.serialize(RDF_DATA_PATH, format='turtle')

@@ -5,35 +5,9 @@ import pandas as pd
 from gensim.models import KeyedVectors
 
 from openpredict.config import settings
-from openpredict_evidence_path.train import getQuantiles, path_weight_product
+from openpredict_model.evidence_path.train import getQuantiles, path_weight_product
 
 ## Evidence path for OpenPredict model by Elif
-
-# Access uncommitted data in the persistent data directory
-# get_openpredict_dir('features/openpredict-baseline-omim-drugbank.joblib')
-
-# Access the openpredict/data folder for data that has been committed
-# 'openpredict/data/features/openpredict-baseline-omim-drugbank.joblib'
-
-# class ModelEvidencePath():
-
-
-# MODEL_DIR_PATH = settings.OPENPREDICT_DATA_DIR + '/evidence-path-model'
-# DOWNLOAD_MODEL_URL = 'https://download.dumontierlab.com/openpredict-models/evidence-path-model.zip'
-
-# def init():
-#     print('Initializing Evidence path')
-#     if not os.path.exists(f"{MODEL_DIR_PATH}"):
-#         print("📥️ Evidence path model not present, downloading it")
-#         Path(f"{MODEL_DIR_PATH}").mkdir(parents=True, exist_ok=True)
-#         os.system(f"wget -O {MODEL_DIR_PATH}/evidence-path-model.zip {DOWNLOAD_MODEL_URL}")
-#         os.system(f'unzip "{MODEL_DIR_PATH}/*.zip" -d {settings.OPENPREDICT_DATA_DIR}')
-#         os.system(f"rm {MODEL_DIR_PATH}/*.zip")
-#     else:
-#         print("✅ Model already present")
-
-# df_op = pd.read_csv("openpredict/data/resources/openpredict-omim-drug.csv")
-
 
 df_op = pd.read_csv(f"{settings.OPENPREDICT_DATA_DIR}/resources/openpredict-omim-drug.csv")
 

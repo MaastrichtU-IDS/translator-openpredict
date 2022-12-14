@@ -21,8 +21,8 @@ def test_train_model():
 #     # JSON embeddings broken since tabular embeddings has been added
 
 #     with open(embeddings_filepath,  encoding="utf8") as embeddings_file:
-#         run_id, scores = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict-baseline-omim-drugbank')
-#         assert path.exists(get_openpredict_dir('models/' + run_id + '.joblib'))
+#         run_id, scores = addEmbedding(embeddings_file, 'test_embedding', 'Both', 'test embedding', 'openpredict_baseline')
+#         assert path.exists('models/' + run_id)
 #         assert len(run_id) > 10
 #         assert 0.80 < scores['precision'] < 0.95
 #         assert 0.60 < scores['recall'] < 0.85

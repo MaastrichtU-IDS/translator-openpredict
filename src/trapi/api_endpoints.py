@@ -5,8 +5,8 @@ from fastapi import APIRouter, File, UploadFile
 
 from openpredict.predict_output import PredictOptions
 from openpredict.rdf_utils import retrieve_features, retrieve_models
-from openpredict_model.train import addEmbedding
-from trapi.loaded_models import models_list
+from openpredict_model.train import add_embedding
+from trapi.loaded_models import models_graph, models_list
 
 
 class EmbeddingTypes(str, Enum):
@@ -43,17 +43,18 @@ def endpoint_factory(prediction_func, model):
     return prediction_endpoint
 
 
-for (do_prediction, model) in models_list:
-    app.add_api_route(
-        path=model['path'],
-        methods=["GET"],
-        # endpoint=copy_func(prediction_endpoint, model['path'].replace('/', '')),
-        endpoint=endpoint_factory(do_prediction, model),
-        name=model['name'],
-        openapi_extra={"description": model['description']},
-        response_model=dict,
-        tags=["models"],
-    )
+for loaded_model in models_list:
+    for (do_prediction, model) in loaded_model['endpoints']:
+        app.add_api_route(
+            path=model['path'],
+            methods=["GET"],
+            # endpoint=copy_func(prediction_endpoint, model['path'].replace('/', '')),
+            endpoint=endpoint_factory(do_prediction, model),
+            name=model['name'],
+            openapi_extra={"description": model['description']},
+            response_model=dict,
+            tags=["models"],
+        )
 
 
 
@@ -69,7 +70,7 @@ def get_features(embedding_type: EmbeddingTypes ='Drugs') -> dict:
     """
     if type(embedding_type) is EmbeddingTypes:
         embedding_type = embedding_type.value
-    return retrieve_features(embedding_type)
+    return retrieve_features(models_graph, embedding_type)
 
 
 
@@ -83,7 +84,7 @@ def get_models() -> dict:
 
     :return: JSON with models and features
     """
-    return retrieve_models()
+    return retrieve_models(models_graph)
 
 
 
@@ -101,7 +102,7 @@ def get_models() -> dict:
 )
 def post_embedding(
         emb_name: str, description: str,
-        types: EmbeddingTypes ='Both', model_id: str ='openpredict-baseline-omim-drugbank',
+        types: EmbeddingTypes ='Both', model_id: str ='openpredict_baseline',
         apikey: str=None,
         uploaded_file: UploadFile = File(...)
     ) -> dict:
@@ -114,8 +115,8 @@ def post_embedding(
     # Ignore the API key check if no env variable defined (for development)
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         embedding_file = uploaded_file.file
-        run_id, scores = addEmbedding(
-            embedding_file, emb_name, types, description, model_id)
+        run_id, scores = add_embedding(
+            embedding_file, emb_name, types, model_id)
         print('Embeddings uploaded')
         # train_model(False)
         return {

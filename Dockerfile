@@ -26,6 +26,7 @@ RUN wget -q -O spark.tgz https://archive.apache.org/dist/spark/spark-${APACHE_SP
     rm "spark.tgz" && \
     ln -s "/opt/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" $SPARK_HOME
 RUN echo "log4j.rootCategory=ERROR, console" > $SPARK_HOME/conf/log4j.properties
+# RUN chown -R 1000:1000 /opt/spark
 
 # Define some environment variables for pyspark and gunicorn config
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
@@ -56,5 +57,6 @@ RUN echo "#!/bin/bash" > /entrypoint.sh && \
     echo "dvc pull" >> /entrypoint.sh && \
     echo "/start.sh" >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
+
 
 CMD [ "/entrypoint.sh" ]

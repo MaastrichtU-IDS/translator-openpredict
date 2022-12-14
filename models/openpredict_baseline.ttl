@@ -1,0 +1,145 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix mls: <http://www.w3.org/ns/mls#> .
+@prefix openpredict: <https://w3id.org/openpredict/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/openpredict/feature/Feature_GO-SIM_HPO-SIM> a mls:Feature ;
+    dc:identifier "Feature_GO-SIM_HPO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_GO-SIM_PHENO-SIM> a mls:Feature ;
+    dc:identifier "Feature_GO-SIM_PHENO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_PPI-SIM_HPO-SIM> a mls:Feature ;
+    dc:identifier "Feature_PPI-SIM_HPO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_PPI-SIM_PHENO-SIM> a mls:Feature ;
+    dc:identifier "Feature_PPI-SIM_PHENO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_SE-SIM_HPO-SIM> a mls:Feature ;
+    dc:identifier "Feature_SE-SIM_HPO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_SE-SIM_PHENO-SIM> a mls:Feature ;
+    dc:identifier "Feature_SE-SIM_PHENO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_TARGETSEQ-SIM_HPO-SIM> a mls:Feature ;
+    dc:identifier "Feature_TARGETSEQ-SIM_HPO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_TARGETSEQ-SIM_PHENO-SIM> a mls:Feature ;
+    dc:identifier "Feature_TARGETSEQ-SIM_PHENO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_TC_HPO-SIM> a mls:Feature ;
+    dc:identifier "Feature_TC_HPO-SIM" .
+
+<https://w3id.org/openpredict/feature/Feature_TC_PHENO-SIM> a mls:Feature ;
+    dc:identifier "Feature_TC_PHENO-SIM" .
+
+<https://w3id.org/openpredict/implementation/OpenPredict> a mls:Implementation ;
+    mls:hasHyperParameter <https://w3id.org/openpredict/HyperParameter/C>,
+        <https://w3id.org/openpredict/HyperParameter/dual>,
+        <https://w3id.org/openpredict/HyperParameter/penalty>,
+        <https://w3id.org/openpredict/HyperParameter/random_state>,
+        <https://w3id.org/openpredict/HyperParameter/tol>,
+        <https://w3id.org/openpredict/HyperParameterSetting/C>,
+        <https://w3id.org/openpredict/HyperParameterSetting/dual>,
+        <https://w3id.org/openpredict/HyperParameterSetting/penalty>,
+        <https://w3id.org/openpredict/HyperParameterSetting/random_state>,
+        <https://w3id.org/openpredict/HyperParameterSetting/tol> ;
+    mls:implements openpredict:LogisticRegression .
+
+<https://w3id.org/openpredict/openpredict_baseline/Model> a mls:Model .
+
+<https://w3id.org/openpredict/openpredict_baseline/accuracy> a mls:EvaluationMeasure ;
+    rdfs:label "accuracy" ;
+    mls:hasValue 8.66941e-01 .
+
+<https://w3id.org/openpredict/openpredict_baseline/average_precision> a mls:EvaluationMeasure ;
+    rdfs:label "average_precision" ;
+    mls:hasValue 8.514183e-01 .
+
+<https://w3id.org/openpredict/openpredict_baseline/f1> a mls:EvaluationMeasure ;
+    rdfs:label "f1" ;
+    mls:hasValue 7.813454e-01 .
+
+<https://w3id.org/openpredict/openpredict_baseline/precision> a mls:EvaluationMeasure ;
+    rdfs:label "precision" ;
+    mls:hasValue 8.627594e-01 .
+
+<https://w3id.org/openpredict/openpredict_baseline/recall> a mls:EvaluationMeasure ;
+    rdfs:label "recall" ;
+    mls:hasValue 7.144006e-01 .
+
+<https://w3id.org/openpredict/openpredict_baseline/roc_auc> a mls:EvaluationMeasure ;
+    rdfs:label "roc_auc" ;
+    mls:hasValue 8.924977e-01 .
+
+<https://w3id.org/openpredict/run/openpredict_baseline> a mls:Run ;
+    dc:identifier "openpredict_baseline" ;
+    mls:executes <https://w3id.org/openpredict/implementation/OpenPredict> ;
+    mls:hasInput <https://w3id.org/openpredict/HyperParameterSetting/C>,
+        <https://w3id.org/openpredict/HyperParameterSetting/dual>,
+        <https://w3id.org/openpredict/HyperParameterSetting/penalty>,
+        <https://w3id.org/openpredict/HyperParameterSetting/random_state>,
+        <https://w3id.org/openpredict/HyperParameterSetting/tol>,
+        <https://w3id.org/openpredict/feature/Feature_GO-SIM_HPO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_GO-SIM_PHENO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_PPI-SIM_HPO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_PPI-SIM_PHENO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_SE-SIM_HPO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_SE-SIM_PHENO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_TARGETSEQ-SIM_HPO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_TARGETSEQ-SIM_PHENO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_TC_HPO-SIM>,
+        <https://w3id.org/openpredict/feature/Feature_TC_PHENO-SIM> ;
+    mls:hasOutput <https://w3id.org/openpredict/openpredict_baseline/Model>,
+        <https://w3id.org/openpredict/run/openpredict_baseline/ModelEvaluation> ;
+    mls:realizes openpredict:LogisticRegression ;
+    prov:generatedAtTime "2022-12-14T13:05:44.989115"^^xsd:dateTime .
+
+<https://w3id.org/openpredict/run/openpredict_baseline/ModelEvaluation> a mls:ModelEvaluation,
+        prov:Entity ;
+    mls:specifiedBy <https://w3id.org/openpredict/openpredict_baseline/accuracy>,
+        <https://w3id.org/openpredict/openpredict_baseline/average_precision>,
+        <https://w3id.org/openpredict/openpredict_baseline/f1>,
+        <https://w3id.org/openpredict/openpredict_baseline/precision>,
+        <https://w3id.org/openpredict/openpredict_baseline/recall>,
+        <https://w3id.org/openpredict/openpredict_baseline/roc_auc> ;
+    prov:wasGeneratedBy <https://w3id.org/openpredict/run/openpredict_baseline> .
+
+<https://w3id.org/openpredict/HyperParameter/C> a mls:HyperParameter ;
+    rdfs:label "C" .
+
+<https://w3id.org/openpredict/HyperParameter/dual> a mls:HyperParameter ;
+    rdfs:label "dual" .
+
+<https://w3id.org/openpredict/HyperParameter/penalty> a mls:HyperParameter ;
+    rdfs:label "penalty" .
+
+<https://w3id.org/openpredict/HyperParameter/random_state> a mls:HyperParameter ;
+    rdfs:label "random_state" .
+
+<https://w3id.org/openpredict/HyperParameter/tol> a mls:HyperParameter ;
+    rdfs:label "tol" .
+
+<https://w3id.org/openpredict/HyperParameterSetting/C> a mls:HyperParameterSetting ;
+    mls:hasValue 1e+00 ;
+    mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/C> .
+
+<https://w3id.org/openpredict/HyperParameterSetting/dual> a mls:HyperParameterSetting ;
+    mls:hasValue false ;
+    mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/dual> .
+
+<https://w3id.org/openpredict/HyperParameterSetting/penalty> a mls:HyperParameterSetting ;
+    mls:hasValue "l2" ;
+    mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/penalty> .
+
+<https://w3id.org/openpredict/HyperParameterSetting/random_state> a mls:HyperParameterSetting ;
+    mls:hasValue 100 ;
+    mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/random_state> .
+
+<https://w3id.org/openpredict/HyperParameterSetting/tol> a mls:HyperParameterSetting ;
+    mls:hasValue 1e-04 ;
+    mls:specifiedBy <https://w3id.org/openpredict/HyperParameter/tol> .
+
+openpredict:LogisticRegression a mls:Algorithm .

@@ -95,7 +95,7 @@ def getXPREDICTExplanation(shap_values,drugId="000"):
 
 
 def get_explanations(
-        id_to_predict, model_id, app,
+        id_to_predict, model_id,
         min_score=None, max_score=None, n_results=None,
     ):
     """Run classifiers to get predictions
@@ -108,7 +108,7 @@ def get_explanations(
     """
     # classifier: Predict OMIM-DrugBank
     # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(id_to_predict, model_id)
+    predictions_array = query_omim_drugbank_classifier(id_to_predict, "openpredict_baseline")
     shap_valueslr= getSHAPModel(datasetFile="xpredict/deepdrug_repurposingpredictiondataset.csv")
 
     if min_score:

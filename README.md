@@ -198,13 +198,13 @@ We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the Op
 
 #### Add embedding :station:
 
-The default baseline model is `openpredict-baseline-omim-drugbank`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
+The default baseline model is `openpredict_baseline`. You can choose the base model when you post a new embeddings using the `/embeddings` call. Then the OpenPredict API will:
 
 1. add embeddings to the provided model
 2. train the model with the new embeddings
 3. store the features and model using a unique ID for the run (e.g. `7621843c-1f5f-11eb-85ae-48a472db7414`)
 
-Once the embedding has been added you can find the existing models previously generated (including `openpredict-baseline-omim-drugbank`), and use them as base model when you ask the model for prediction or add new embeddings.
+Once the embedding has been added you can find the existing models previously generated (including `openpredict_baseline`), and use them as base model when you ask the model for prediction or add new embeddings.
 
 #### Predict operation :crystal_ball:
 

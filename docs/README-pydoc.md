@@ -112,7 +112,7 @@ Object containing the result bindings
 init_triplestore()
 ```
 
-Only initialized the triplestore if no run for openpredict-baseline-omim-drugbank can be found.
+Only initialized the triplestore if no run for openpredict_baseline can be found.
 Init using the data/openpredict-metadata.ttl RDF file
 
 <a name=".openpredict.rdf_utils.add_feature_metadata"></a>
@@ -601,7 +601,7 @@ Feature dataframe
 #### train\_model
 
 ```python
-train_model(from_model_id='openpredict-baseline-omim-drugbank')
+train_model(from_model_id='openpredict_baseline')
 ```
 
 The main function to run the drug-disease similarities pipeline,

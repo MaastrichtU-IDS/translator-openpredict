@@ -9,7 +9,7 @@ convert_baseline_features_ids()
 
 # clf, scores, hyper_params, features_df = train_model('scratch)
 
-# model_features = retrieve_features('All', 'openpredict-baseline-omim-drugbank').keys()
+# model_features = retrieve_features('All', 'openpredict_baseline').keys()
 
 # run_id = 'openpredict-translator-baseline'
 # add_run_metadata(scores, model_features, hyper_params, run_id)
@@ -75,7 +75,7 @@ convert_baseline_features_ids()
 
 
 ### Print Dataframes
-# clf = load('openpredict/data/models/openpredict-baseline-omim-drugbank.joblib')
+# clf = load('openpredict/data/models/openpredict_baseline.joblib')
 # print(clf.feature_names)
 
 # (drug_df, disease_df) = load('openpredict/data/features/drug_disease_dataframes.joblib')

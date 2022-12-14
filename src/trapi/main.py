@@ -7,8 +7,7 @@ from fastapi.responses import RedirectResponse
 from drkg_model.api import api as drkg_model_api
 from openpredict.config import settings
 from openpredict.utils import init_openpredict_dir
-from openpredict_evidence_path.api import api as evidence_path_api
-from openpredict_explain_shap.api import api as explain_shap_api
+from openpredict_model.api import api as openpredict_api
 from trapi import api_endpoints, trapi
 from trapi.openapi_specs import TRAPI
 
@@ -25,8 +24,7 @@ app = TRAPI()
 
 app.include_router(trapi.app)
 app.include_router(api_endpoints.app)
-app.include_router(evidence_path_api)
-app.include_router(explain_shap_api)
+app.include_router(openpredict_api)
 app.include_router(drkg_model_api)
 
 

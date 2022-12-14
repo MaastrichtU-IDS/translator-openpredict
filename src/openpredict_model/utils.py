@@ -1,14 +1,14 @@
 import os
+import pickle
 
 from gensim.models import KeyedVectors
-from joblib import load
 
 from openpredict.config import settings
 from openpredict.utils import log
 
-default_model_id = "openpredict-baseline-omim-drugbank"
-treatment_embeddings = load(os.path.join(settings.OPENPREDICT_DATA_DIR, "features", f"{default_model_id}.joblib"))
-treatment_classifier = load(os.path.join(settings.OPENPREDICT_DATA_DIR, "models", f"{default_model_id}.joblib"))
+default_model_id = "openpredict_baseline"
+features_embeddings = pickle.load(open(f"data/features/{default_model_id}_features.pickle", "rb"))
+# features_embeddings = pickle.load(open(os.path.join(settings.OPENPREDICT_DATA_DIR, "features", f"{default_model_id}_features.pickle"), "rb"))
 
 # Preload similarity embeddings
 embedding_folder = os.path.join(settings.OPENPREDICT_DATA_DIR, 'embedding')
@@ -21,22 +21,13 @@ for model_id in os.listdir(embedding_folder):
         similarity_embeddings[model_id]= emb_vectors
 
 
-def load_treatment_classifier(model_id: str = default_model_id):
-    """Load embeddings model for treats and treated_by"""
-    print("📥 Loading treatment classifier from joblib for model " + str(model_id))
-    if (model_id == default_model_id):
-        return treatment_classifier
-
-    return load(os.path.join(settings.OPENPREDICT_DATA_DIR, "models", f"{model_id}.joblib"))
-
-
-def load_treatment_embeddings(model_id: str = default_model_id):
+def load_features_embeddings(model_id: str = default_model_id):
     """Load embeddings model for treats and treated_by"""
     print(f"📥 Loading treatment features for model {str(model_id)}")
     if (model_id == default_model_id):
-        return treatment_embeddings
+        return features_embeddings
 
-    return load(os.path.join(settings.OPENPREDICT_DATA_DIR, "features", f"{model_id}.joblib"))
+    return pickle.load(open(f"data/features/{model_id}_features.pickle", "rb"))
 
 
 def load_similarity_embeddings():

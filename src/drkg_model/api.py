@@ -26,7 +26,7 @@ You can try:
 def get_drugrepositioning(
         #drug_id: Optional[str] = None,
         disease_id: Optional[str] = 'MESH:D000544',
-        #model_id: str ='openpredict-baseline-omim-drugbank',
+        #model_id: str ='openpredict_baseline',
         n_results: int = 100
     ) -> dict:
     """Get drug repositioning predictions for a given entity CURIE disease  .

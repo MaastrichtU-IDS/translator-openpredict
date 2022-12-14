@@ -1,7 +1,8 @@
 artifacts:
   data:
-    hash: eb489abf2405582834ee4381dc0c2a8d
+    hash: 24866e91f6e4cd23a34fbf0968cbe68f
     size: 796
+    type: dvc
     uri: openpredict_baseline
 model_type:
   methods:

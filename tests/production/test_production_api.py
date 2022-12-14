@@ -10,12 +10,12 @@ PROD_API_URL = 'https://openpredict.semanticscience.org'
 
 def test_get_predict():
     """Test predict API GET operation"""
-    # url = PROD_API_URL + '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict-baseline-omim-drugbank&n_results=42'
+    # url = PROD_API_URL + '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict_baseline&n_results=42'
     get_predictions = requests.get(PROD_API_URL + '/predict',
                         params={
                             'drug_id': 'DRUGBANK:DB00394',
                             'n_results': '42',
-                            'model_id': 'openpredict-baseline-omim-drugbank'
+                            'model_id': 'openpredict_baseline'
                         }).json()
     assert 'hits' in get_predictions
     assert len(get_predictions['hits']) == 42
@@ -61,7 +61,7 @@ def test_post_trapi():
 #             "name": "model_id",
 #             "source": "OpenPredict",
 #             "type": "EDAM:data_1048",
-#             "value": "openpredict-baseline-omim-drugbank"
+#             "value": "openpredict_baseline"
 #           },
 #           {
 #             "name": "score",

@@ -18,7 +18,7 @@ class PredictOutput(BaseModel):
 
 
 class PredictOptions(BaseModel):
-    model_id: Optional[str] = 'openpredict-baseline-omim-drugbank'
+    model_id: Optional[str] = 'openpredict_baseline'
     min_score: Optional[float] = None
     max_score: Optional[float] = None
     n_results: Optional[int] = None
