@@ -1,0 +1,86 @@
+artifacts:
+  data:
+    hash: 24866e91f6e4cd23a34fbf0968cbe68f
+    size: 796
+    type: dvc
+    uri: openpredict_baseline
+model_type:
+  methods:
+    predict:
+      args:
+      - name: X
+        type_:
+          columns:
+          - Feature_GO-SIM_HPO-SIM
+          - Feature_GO-SIM_PHENO-SIM
+          - Feature_PPI-SIM_HPO-SIM
+          - Feature_PPI-SIM_PHENO-SIM
+          - Feature_SE-SIM_HPO-SIM
+          - Feature_SE-SIM_PHENO-SIM
+          - Feature_TARGETSEQ-SIM_HPO-SIM
+          - Feature_TARGETSEQ-SIM_PHENO-SIM
+          - Feature_TC_HPO-SIM
+          - Feature_TC_PHENO-SIM
+          dtypes:
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          index_cols: []
+          type: dataframe
+      name: predict
+      returns:
+        dtype: int64
+        shape:
+        - null
+        type: ndarray
+    predict_proba:
+      args:
+      - name: X
+        type_:
+          columns:
+          - Feature_GO-SIM_HPO-SIM
+          - Feature_GO-SIM_PHENO-SIM
+          - Feature_PPI-SIM_HPO-SIM
+          - Feature_PPI-SIM_PHENO-SIM
+          - Feature_SE-SIM_HPO-SIM
+          - Feature_SE-SIM_PHENO-SIM
+          - Feature_TARGETSEQ-SIM_HPO-SIM
+          - Feature_TARGETSEQ-SIM_PHENO-SIM
+          - Feature_TC_HPO-SIM
+          - Feature_TC_PHENO-SIM
+          dtypes:
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          - float64
+          index_cols: []
+          type: dataframe
+      name: predict_proba
+      returns:
+        dtype: float64
+        shape:
+        - null
+        - 2
+        type: ndarray
+  type: sklearn
+object_type: model
+requirements:
+- module: sklearn
+  version: 0.23.1
+- module: pandas
+  version: 1.1.1
+- module: numpy
+  version: 1.16.1
