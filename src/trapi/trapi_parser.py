@@ -88,7 +88,7 @@ def resolve_trapi_query(reasoner_query):
         if 'max_score' in reasoner_query["query_options"]:
             max_score = float(reasoner_query["query_options"]["max_score"])
         if 'model_id' in reasoner_query["query_options"]:
-            model_id = int(reasoner_query["query_options"]["model_id"])
+            model_id = str(reasoner_query["query_options"]["model_id"])
 
     query_plan = {}
     resolved_ids_object = {}

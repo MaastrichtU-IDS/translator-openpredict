@@ -12,6 +12,7 @@ services:
       # Show print() in logs:
       PYTHONUNBUFFERED: '1'
       DEV_MODE: 'true'
+      LOG_LEVEL: 'INFO'
     entrypoint: uvicorn trapi.main:app --host 0.0.0.0 --port 8808 --reload
 
   # Container used for testing and running scripts
@@ -22,10 +23,11 @@ services:
     environment:
       PYTHONUNBUFFERED: '1'
       DEV_MODE: 'true'
+      LOG_LEVEL: 'INFO'
     # entrypoint: pytest --cov=src tests/integration
-    # entrypoint:  pytest tests/integration/test_openpredict_api.py -s
+    entrypoint:  pytest tests/integration/test_openpredict_api.py -s
     # entrypoint:  pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
-    entrypoint:  pytest tests/package/test_decorator.py -s
+    # entrypoint:  pytest tests/package/test_decorator.py -s
 
   # Container to deploy a JupyterLab/VSCode workspace for development
   workspace:
@@ -37,5 +39,6 @@ services:
     user: root
     environment:
       - GRANT_SUDO=yes
+      - LOG_LEVEL=INFO
       ## With password:
       # - JUPYTER_TOKEN=password

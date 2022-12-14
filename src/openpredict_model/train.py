@@ -9,6 +9,7 @@ from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
+from openpredict import save
 from openpredict.config import settings
 from openpredict.rdf_utils import add_feature_metadata, add_run_metadata, get_run_id, retrieve_features
 # from openpredict.utils import get_spark_context
@@ -113,7 +114,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
         clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
                                               dual=hyper_params['dual'], tol=hyper_params['tol'],
                                               C=hyper_params['C'], random_state=hyper_params['random_state'])
-        clf = train_classifier(train_df, clf)
+        clf, sample_data = train_classifier(train_df, clf)
         time_training = datetime.now()
         print('Model training runtime 🕕  ' +
               str(time_training - time_calculate_similarity))
@@ -142,7 +143,7 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
                                           C=hyper_params['C'], random_state=hyper_params['random_state'])
     # penalty: HyperParameter , l2: HyperParameterSetting
     # Implementation: LogisticRegression
-    clf = train_classifier(train_df, clf)
+    clf, sample_data = train_classifier(train_df, clf)
     print('Final model training runtime 🕕  ' +
           str(datetime.now() - final_training))
 
@@ -151,13 +152,26 @@ def train_model(from_model_id='openpredict-baseline-omim-drugbank'):
             'features/openpredict-baseline-omim-drugbank.joblib'))
         print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict-baseline-omim-drugbank.joblib')
 
-        dump(clf, get_openpredict_dir(
-            'models/openpredict-baseline-omim-drugbank.joblib'))
+
         print('\nStore the model in the file ' +
               get_openpredict_dir('models/openpredict-baseline-omim-drugbank.joblib 💾'))
         # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
+
+
+    # import pickle
+    # pickle.dump(sample_data, open(f"models/sample_data.pickle", "wb"))
+    # pickle.dump(scores, open(f"models/scores.pickle", "wb"))
+
+    save(
+        model=clf,
+        path="models/openpredict_baseline",
+        sample_data=sample_data,
+        features=(drug_df, disease_df),
+        hyper_params=hyper_params,
+        scores=scores,
+    )
     return clf, scores, hyper_params, (drug_df, disease_df)
 
 
@@ -605,7 +619,7 @@ def train_classifier(train_df, clf):
     print(y.head())
     print('📦 Fitting classifier...')
     clf.fit(X, y)
-    return clf
+    return clf, X
 
 
 def multimetric_score(estimator, X_test, y_test, scorers):
@@ -689,3 +703,29 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
         feature_df = createFeatureDF(
             pairs, classes, pairs[classes == 1], drug_df, disease_df)
     return feature_df
+
+
+if __name__ == '__main__':
+    # When directly executed as script
+    # print(train_model())
+
+    # loaded = load('models/openpredict_baseline')
+    import pickle
+    model = pickle.load(open("models/openpredict_baseline", "rb"))
+    features = pickle.load(open("models/openpredict_baseline.features", "rb"))
+    sample_data = pickle.load(open("models_BACK/sample_data.pickle", "rb"))
+    scores = pickle.load(open("models_BACK/scores.pickle", "rb"))
+    print("model")
+    print(model)
+    print("sample_data")
+    print(sample_data)
+    print("features")
+    print(features)
+    # save(
+    #     model=model,
+    #     path=f"models/openpredict_baseline_mlem",
+    #     sample_data=sample_data,
+    #     features=features,
+    #     hyper_params=hyper_params,
+    #     scores=scores,
+    # )

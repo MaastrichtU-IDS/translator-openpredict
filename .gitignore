@@ -1,5 +1,11 @@
 /data
 
+/models/*
+!/models/*.mlem
+!/models/*.json
+!/models/*.ttl
+
+
 build/
 *.egg-info
 .eggs/

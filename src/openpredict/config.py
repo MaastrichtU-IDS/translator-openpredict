@@ -12,6 +12,7 @@ class Settings(BaseSettings):
 
     VIRTUAL_HOST: str = None
     DEV_MODE: bool = False
+    LOG_LEVEL: str = 'ERROR'
 
     BIOLINK_VERSION: str = '2.3.0'
     TRAPI_VERSION: str = "1.3.0"

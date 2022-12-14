@@ -12,9 +12,7 @@ MISSING_IDS = set()
 ## Instantiate logging utility
 log = logging.getLogger("uvicorn.error")
 log.propagate = False
-log_level = logging.ERROR
-if settings.DEV_MODE:
-    log_level = logging.INFO
+log_level = logging.getLevelName(settings.LOG_LEVEL)
 log.setLevel(log_level)
 console_handler = logging.StreamHandler()
 formatter = logging.Formatter(

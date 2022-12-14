@@ -145,8 +145,13 @@ def query_sparql_endpoint(query, parameters=[]):
 #     insert_graph_in_sparql_endpoint(g)
 #     print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
 
-
 def add_feature_metadata(id, description, type):
+    g = get_feature_metadata(id, description, type)
+    insert_graph_in_sparql_endpoint(g)
+    feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
+    return str(feature_uri)
+
+def get_feature_metadata(id, description, type):
     """Generate RDF metadata for a feature
 
     :param id: if used to identify the feature
@@ -155,15 +160,12 @@ def add_feature_metadata(id, description, type):
     :return: rdflib graph after loading the feature
     """
     g = Graph()
-
     feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + id)
     g.add((feature_uri, RDF.type, MLS['Feature']))
     g.add((feature_uri, DC.identifier, Literal(id)))
     g.add((feature_uri, DC.description, Literal(description)))
     g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
-
-    insert_graph_in_sparql_endpoint(g)
-    return str(feature_uri)
+    return g
 
 
 def get_run_id(run_id=None):
@@ -174,6 +176,12 @@ def get_run_id(run_id=None):
 
 
 def add_run_metadata(scores, model_features, hyper_params, run_id=None):
+    g = get_run_metadata(scores, model_features, hyper_params, run_id)
+    insert_graph_in_sparql_endpoint(g)
+    return run_id
+
+
+def get_run_metadata(scores, model_features, hyper_params, run_id=None):
     """Generate RDF metadata for a classifier and save it in data/openpredict-metadata.ttl, based on OpenPredict model:
     https://github.com/fair-workflows/openpredict/blob/master/data/rdf/results_disjoint_lr.nq
 
@@ -234,10 +242,16 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
 
     # TODO: improve how we retrieve features
     for feature in model_features:
-        feature_uri = URIRef(feature)
-        # feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature)
-        # g.add((run_uri, OPENPREDICT['has_features'], feature_uri))
-        g.add((run_uri, MLS['hasInput'], feature_uri))
+        # feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature   )
+        # g.add((feature_uri, RDF.type, MLS['Feature']))
+        # g.add((feature_uri, DC.identifier, Literal(id)))
+        # g.add((feature_uri, DC.description, Literal(description)))
+        # g.add((feature_uri, OPENPREDICT['embedding_type'], Literal(type)))
+        print(f'FEATURE {feature}')
+        # feature_uri = URIRef(feature)
+        # # feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature)
+        # # g.add((run_uri, OPENPREDICT['has_features'], feature_uri))
+        # g.add((run_uri, MLS['hasInput'], feature_uri))
 
     # TODO: those 2 triples are for the PLEX ontology
     g.add((evaluation_uri, RDF.type, PROV['Entity']))
@@ -256,8 +270,9 @@ def add_run_metadata(scores, model_features, hyper_params, run_id=None):
         # but that prevents to provide multiple values for 1 evaluation
         # http://ml-schema.github.io/documentation/ML%20Schema.html#overview
 
-    insert_graph_in_sparql_endpoint(g)
-    return run_id
+    return g
+
+
 
 
 def retrieve_features(type='Both', run_id=None):
