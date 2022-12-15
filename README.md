@@ -101,6 +101,8 @@ Start the API in development mode with docker on http://localhost:8808, the API 
 
 ```bash
 docker-compose up api
+# Or with the helper script:
+./scripts/api.sh
 ```
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
@@ -111,6 +113,8 @@ You can run the tests locally with docker:
 
 ```bash
 docker-compose run tests
+# Or with the helper script:
+./scripts/test.sh
 ```
 
 > See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
@@ -118,7 +122,9 @@ docker-compose run tests
 You can change the entrypoint of the test container to run other commands, such as training a model:
 
 ```bash
-docker-compose run --entrypoint "python src/openpredict_model/train.py" tests
+docker-compose run --entrypoint "python src/openpredict_model/train.py train-model" tests
+# Or with the helper script:
+./scripts/run.sh python src/openpredict_model/train.py train-model
 ```
 
 ### Use the OpenPredict API

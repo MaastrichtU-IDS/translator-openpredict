@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from mlem import api as mlem
-from mlem.core.objects import MlemModel
 from rdflib import Graph
 
 # from mlem.api import save as mlem_save, load as mlem_load
@@ -30,17 +29,15 @@ def save(
     #     path = os.path.join(os.getcwd(), path)
     log.info(f"💾 Saving model in {path}")
 
-    mlem_model = MlemModel.from_obj(model, sample_data=sample_data)
-    mlem_model.dump(path)
-    print(mlem_model)
-    # mlem.save(model, path, sample_data=sample_data)
+    # mlem_model = MlemModel.from_obj(model, sample_data=sample_data)
+    # mlem_model.dump(path)
+    # print(mlem_model)
+    mlem.save(model, path, sample_data=sample_data)
 
     g = get_run_metadata(scores, sample_data, hyper_params, model_name)
     g.serialize(f"{path}.ttl", format='ttl')
-    # g.serialize(f"{path}.json", format='json-ld')
     # os.chmod(f"{path}.ttl", 0o644)
     # os.chmod(f"{path}.mlem", 0o644)
-    # os.chmod(f"{path}.json", 0o644)
 
     # TODO: generate and store RDF metadata
 
