@@ -42,6 +42,16 @@ You will need to re-build the docker image if you add new dependencies to the `p
 docker-compose up api --build
 ```
 
+
+### 🏋️ Run training
+
+For OpenPredict model:
+
+```bash
+docker-compose run --entrypoint "python src/openpredict_model/train.py" tests
+```
+
+
 ### 🧪 Run tests
 
 [![Run tests](https://github.com/MaastrichtU-IDS/translator-openpredict/workflows/Run%20tests/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions?query=workflow%3A%22Run+tests%22)

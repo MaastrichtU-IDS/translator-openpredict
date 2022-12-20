@@ -12,7 +12,13 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y build-essential wget curl vim openjdk-11-jdk && \
     pip install --upgrade pip
-    # pip-tools
+
+# Install Poetry
+# ENV POETRY_VERSION=1.2.0
+# RUN curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION
+# ENV PATH=/root/.local/bin:$PATH
+# RUN poetry config virtualenvs.create false
+
 
 
 # Install Spark for standalone context in /opt
@@ -36,10 +42,9 @@ ENV VARIABLE_NAME=app
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
 
-# TODO: use piptools to install dependencies only when needed?
-# COPY pyproject.toml .
-# RUN python -m piptools compile --extra dev --extra train --extra test -o requirements.txt pyproject.toml
-# RUN pip install -r requirements.txt
+# Use requirements.txt to install some dependencies only when needed
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .

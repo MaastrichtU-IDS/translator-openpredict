@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any
 
+from fairworkflows import is_fairstep
 from mlem import api as mlem
 from rdflib import Graph
 
@@ -16,13 +17,19 @@ class LoadedModel():
     # features: Any = None
 
 
+@is_fairstep(label='Save a model')
 def save(
-    model: Any,
-    path: str,
-    sample_data: Any,
-    scores: Optional[Dict] = None,
-    hyper_params: Optional[Dict] = None,
-) -> None:
+    model,
+    path,
+    sample_data,
+    scores = None,
+    hyper_params = None,
+    # model: Any,
+    # path: str,
+    # sample_data: Any,
+    # scores: Optional[Dict] = None,
+    # hyper_params: Optional[Dict] = None,
+) -> str:
     model_name = path.rsplit('/', 1)[-1]
     # print(os.path.isabs(path))
     # if not os.path.isabs(path):
@@ -40,6 +47,7 @@ def save(
     # os.chmod(f"{path}.mlem", 0o644)
 
     # TODO: generate and store RDF metadata
+    return path
 
 
 

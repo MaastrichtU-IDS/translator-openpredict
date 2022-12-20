@@ -20,6 +20,7 @@ services:
     build: .
     volumes:
       - ./:/app
+      - ~/.nanopub-docker:/root/.nanopub
     environment:
       PYTHONUNBUFFERED: '1'
       DEV_MODE: 'true'

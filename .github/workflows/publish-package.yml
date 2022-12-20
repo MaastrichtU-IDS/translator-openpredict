@@ -9,6 +9,7 @@ jobs:
 
   tests:
     uses: MaastrichtU-IDS/translator-openpredict/.github/workflows/test-package.yml@master
+    secrets: inherit
 
 
   publish:

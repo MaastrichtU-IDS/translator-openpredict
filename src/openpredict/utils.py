@@ -22,7 +22,6 @@ console_handler.setFormatter(formatter)
 log.addHandler(console_handler)
 
 
-
 def get_openpredict_dir(subfolder=''):
     """Return the full path to the provided files in the OpenPredict data folder
     Where models and features for runs are stored

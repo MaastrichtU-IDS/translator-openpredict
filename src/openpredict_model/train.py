@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 import pyspark
 import typer
+from fairworkflows import FairWorkflow, is_fairstep, is_fairworkflow
+from noodles import unpack
 from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
@@ -14,25 +16,14 @@ from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from openpredict import save
 from openpredict.config import settings
 from openpredict.rdf_utils import get_run_id
-from openpredict.utils import get_openpredict_dir, log
+from openpredict.utils import log
 
 cli = typer.Typer(help="Training for OpenPredict model")
 
-@cli.command(help='Train an existing OpenPredict model')
-def train_model(from_model_id: str = 'openpredict_baseline'):
-    """The main function to run the drug-disease similarities pipeline,
-    and train the drug-disease classifier.
-    It returns, and stores the generated classifier as a pickle file
-    in the `data/models` folder,
 
-    :param from_scratch: Train the model for scratch (True by default)
-    :return: Classifier of predicted similarities and scores
-    """
-    time_start = datetime.now()
-    n_fold = 5
-    # n_fold = 1
 
-    # Prepare drug-disease dictionary
+@is_fairstep(label='Prepare known drug-disease associations dictionary')
+def get_known_associations():
     drugDiseaseKnown = pd.read_csv(
         os.path.join(settings.OPENPREDICT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'),
         delimiter=','
@@ -42,9 +33,12 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
     # TODO: Translator IDs version (MONDO & CHEBI)
     # drugDiseaseKnown = pd.read_csv('openpredict/data/resources/known-drug-diseases.csv', delimiter=',')
-
     # print(drugDiseaseKnown.head())
+    return drugDiseaseKnown
 
+
+@is_fairstep(label='Prepare or load drug-disease features dataframes')
+def get_drug_disease_features(from_model_id: str):
     if from_model_id == 'openpredict_baseline':
         print('🏗 Build the model from scratch')
         # Start from scratch (merge feature matrixes)
@@ -61,23 +55,20 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
         drug_df, disease_df = mergeFeatureMatrix(
             drugfeatfiles, diseasefeatfiles)
     else:
-        print("📥 Loading the features tensor from " +
-              get_openpredict_dir('features/' + from_model_id + '_features.pickle'))
+        print(type(from_model_id))
+        print(f"📥 Loading the features tensor from {settings.OPENPREDICT_DATA_DIR}/features/{str(from_model_id)}_features.pickle")
+
         (drug_df, disease_df) = pickle.load(open(
-            get_openpredict_dir('features/' + from_model_id + '_features.pickle'),
+            f"{settings.OPENPREDICT_DATA_DIR}/features/{str(from_model_id)}_features.pickle",
             "rb"
         ))
-
     print("Drug Features ", drug_df.columns.levels[0])
     print("Disease Features ", disease_df.columns.levels[0])
-    # Generate positive and negative pairs
-    pairs, classes = generatePairs(drug_df, disease_df, drugDiseaseKnown)
+    return (drug_df, disease_df)
 
-    # Balance negative/positive samples
-    n_proportion = 2
-    print("\n🍱 n_proportion: " + str(n_proportion))
-    pairs, classes = balance_data(pairs, classes, n_proportion)
 
+@is_fairstep(label='Train test splitting')
+def train_test_splitting(n_fold, pairs, classes):
     # Train-Test Splitting
     n_seed = 101
     if n_fold == 1:
@@ -138,45 +129,18 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     scores = cv_results.mean()
     print("\n " + str(n_fold) + "-fold CV - Avg Test results 🏆")
     print(scores)
+    return scores
 
-    print("\n Train the final model using all dataset")
-    final_training = datetime.now()
-    train_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
 
-    clf = linear_model.LogisticRegression(penalty=hyper_params['penalty'],
-                                          dual=hyper_params['dual'], tol=hyper_params['tol'],
-                                          C=hyper_params['C'], random_state=hyper_params['random_state'])
-    # penalty: HyperParameter , l2: HyperParameterSetting
-    # Implementation: LogisticRegression
-    clf, sample_data = train_classifier(train_df, clf)
-    print('Final model training runtime 🕕  ' +
-          str(datetime.now() - final_training))
-
-    if from_model_id == 'openpredict_baseline':
-        pickle.dump(
-            (drug_df, disease_df),
-            open(
-                get_openpredict_dir('features/' + from_model_id + '_features.pickle'),
-                "wb"
-            )
-        )
-        print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict_baseline_features.pickle')
-        print('\nStore the model in the file ' +
-              get_openpredict_dir('models/openpredict_baseline_features.pickle 💾'))
-        # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
-
-    print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
-
-    save(
-        model=clf,
-        path="models/openpredict_baseline",
-        sample_data=sample_data,
-        hyper_params=hyper_params,
-        scores=scores,
+@is_fairstep(label='Get the classifier')
+def get_classifier(hyper_params):
+    return linear_model.LogisticRegression(
+        penalty=hyper_params['penalty'],
+        dual=hyper_params['dual'],
+        tol=hyper_params['tol'],
+        C=hyper_params['C'],
+        random_state=hyper_params['random_state']
     )
-    return clf, scores, hyper_params, (drug_df, disease_df)
-
-
 
 
 hyper_params = {
@@ -187,6 +151,8 @@ hyper_params = {
     'random_state': 100
 }
 sc = None
+
+@is_fairstep(label='Get Spark context', is_script_task=True)
 def get_spark_context():
     """Get Spark context, either from Spark Master URL to a Spark cluster
     If not URL is provided, then it will try to run Spark locally
@@ -239,7 +205,7 @@ def get_spark_context():
     #     sc = SparkContext(conf=config, appName="OpenPredict")
 
 
-
+@is_fairstep(label='Convert a dictionary to a matrix', is_script_task=True)
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
 
@@ -257,7 +223,461 @@ def adjcencydict2matrix(df, name1, name2):
     return df.pivot(index=name1, columns=name2)
 
 
-@cli.command(help='Add embeddings to the OpenPredict model')
+@is_fairstep(label='Merge the drug and disease feature matrix', is_script_task=True)
+def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
+    """Merge the drug and disease feature matrix
+
+    :param drugfeatfiles: Drug features files list
+    :param diseasefeatfiles: Disease features files list
+    """
+    print('Load and merge features files 📂')
+    drug_df = None
+    for i, featureFilename in enumerate(drugfeatfiles):
+        print(featureFilename)
+        df = pd.read_csv(featureFilename, delimiter=',')
+        print(df.columns)
+        cond = df.Drug1 > df.Drug2
+        df.loc[cond, ['Drug1', 'Drug2']
+               ] = df.loc[cond, ['Drug2', 'Drug1']].values
+        if i != 0:
+            drug_df = drug_df.merge(df, on=['Drug1', 'Drug2'], how='inner')
+            # drug_df=drug_df.merge(temp,how='outer',on='Drug')
+        else:
+            drug_df = df
+    drug_df.fillna(0, inplace=True)
+
+    drug_df = adjcencydict2matrix(drug_df, 'Drug1', 'Drug2')
+    drug_df = drug_df.fillna(1.0)
+
+    disease_df = None
+    for i, featureFilename in enumerate(diseasefeatfiles):
+        print(featureFilename)
+        df = pd.read_csv(featureFilename, delimiter=',')
+        cond = df.Disease1 > df.Disease2
+        df.loc[cond, ['Disease1', 'Disease2']
+               ] = df.loc[cond, ['Disease2', 'Disease1']].values
+        if i != 0:
+            disease_df = disease_df.merge(
+                df, on=['Disease1', 'Disease2'], how='outer')
+            # drug_df=drug_df.merge(temp,how='outer',on='Drug')
+        else:
+            disease_df = df
+    disease_df.fillna(0, inplace=True)
+    disease_df.Disease1 = disease_df.Disease1.astype(str)
+    disease_df.Disease2 = disease_df.Disease2.astype(str)
+
+    disease_df = adjcencydict2matrix(disease_df, 'Disease1', 'Disease2')
+    disease_df = disease_df.fillna(1.0)
+
+    return drug_df, disease_df
+
+
+@is_fairstep(label='Generate positive and negative pairs using the Drug dataframe, the Disease dataframe and known drug-disease associations dataframe', is_script_task=True)
+def generatePairs(drug_df, disease_df, drugDiseaseKnown):
+    """Generate positive and negative pairs using the Drug dataframe,
+    the Disease dataframe and known drug-disease associations dataframe
+
+    :param drug_df: Drug dataframe
+    :param disease_df: Disease dataframe
+    :param drugDiseaseKnown: Known drug-disease association dataframe
+    """
+    drugwithfeatures = set(drug_df.columns.levels[1])
+    diseaseswithfeatures = set(disease_df.columns.levels[1])
+
+    drugDiseaseDict = {
+        tuple(x) for x in drugDiseaseKnown[['Drug', 'Disease']].values}
+
+    commonDrugs = drugwithfeatures.intersection(drugDiseaseKnown.Drug.unique())
+    commonDiseases = diseaseswithfeatures.intersection(
+        drugDiseaseKnown.Disease.unique())
+    print("💊 commonDrugs: %d 🦠  commonDiseases: %d" %
+          (len(commonDrugs), len(commonDiseases)))
+
+    # abridged_drug_disease = [(dr,di)  for  (dr,di)  in drugDiseaseDict if dr in drugwithfeatures and di in diseaseswithfeatures ]
+
+    # commonDrugs = set( [ dr  for dr,di in  abridged_drug_disease])
+    # commonDiseases  =set([ di  for dr,di in  abridged_drug_disease])
+
+    print("\n🥇 Gold standard, associations: %d drugs: %d diseases: %d" % (len(drugDiseaseKnown), len(
+        drugDiseaseKnown.Drug.unique()), len(drugDiseaseKnown.Disease.unique())))
+    print("\n🏷️  Drugs with features  : %d Diseases with features: %d" %
+          (len(drugwithfeatures), len(diseaseswithfeatures)))
+    print("\n♻️  commonDrugs : %d commonDiseases : %d" %
+          (len(commonDrugs), len(commonDiseases)))
+
+    pairs = []
+    classes = []
+    for dr in commonDrugs:
+        for di in commonDiseases:
+            cls = (1 if (dr, di) in drugDiseaseDict else 0)
+            pairs.append((dr, di))
+            classes.append(cls)
+
+    return pairs, classes
+
+
+@is_fairstep(label='Balance negative and positives samples', is_script_task=True)
+def balance_data(pairs, classes, n_proportion):
+    """Balance negative and positives samples
+
+    :param pairs: Positive/negative pairs previously generated
+    :param classes: Classes corresponding to the pairs
+    :param n_proportion: Proportion number, e.g. 2
+    """
+    classes = np.array(classes)
+    pairs = np.array(pairs)
+
+    indices_true = np.where(classes == 1)[0]
+    indices_false = np.where(classes == 0)[0]
+
+    np.random.shuffle(indices_false)
+    indices = indices_false[:(n_proportion*indices_true.shape[0])]
+    print("\n⚖️  ➕/➖ :", len(indices_true), len(indices), len(indices_false))
+    pairs = np.concatenate((pairs[indices_true], pairs[indices]), axis=0)
+    classes = np.concatenate((classes[indices_true], classes[indices]), axis=0)
+
+    return pairs, classes
+
+
+@is_fairstep(label='Compute the geometric means of a drug-disease association using previously generated dataframes', is_script_task=True)
+def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
+    """Compute the geometric means of a drug-disease association using previously generated dataframes
+
+    :param drug: Drug
+    :param disease: Disease
+    :param knownDrugDisease: Known drug-disease associations
+    :param drugDF: Drug dataframe
+    :param diseaseDF: Disease dataframe
+    """
+    a = drugDF.loc[knownDrugDisease[:, 0]][drug].values
+    b = diseaseDF.loc[knownDrugDisease[:, 1]][disease].values
+    c = np.sqrt(np.multiply(a, b))
+    ix2 = (knownDrugDisease == [drug, disease])
+    c[ix2[:, 1] & ix2[:, 0]] = 0.0
+    if len(c) == 0:
+        return 0.0
+    return float(max(c))
+
+
+@is_fairstep(label='Create the features dataframes for Spark', is_script_task=True)
+def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
+    """Create the features dataframes for Spark.
+
+    :param drug: Drug
+    :param disease: Disease
+    :param knownDrugDisease: Known drug-disease associations
+    :param drugDFs: Drug dataframes
+    :param diseaseDFs: Disease dataframes
+    :return: The features dataframe
+    """
+    # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
+    feature_array = []
+    for i, drug_col in enumerate(drugDFs.columns.levels[0]):
+        for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
+            drugDF = drugDFs[drug_col]
+            diseaseDF = diseaseDFs[disease_col]
+            feature_array.append(geometricMean(
+                drug, disease, knownDrugDisease, drugDF, diseaseDF))
+            # print (feature_series)
+    return feature_array
+
+
+@is_fairstep(label='Create the feature matrix for Spark', is_script_task=True)
+def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
+    """Create the feature matrix for Spark.
+
+    :param sc: Spark context
+    :param pairs: Generated pairs
+    :param classes: Classes corresponding to the pairs
+    :param knownDrugDisease: Known drug-disease associations
+    :param drugDFs: Drug dataframes
+    :param diseaseDFs: Disease dataframes
+    :return: The features dataframe
+    """
+
+    rdd = sc.parallelize(list(zip(pairs[:, 0], pairs[:, 1], classes))).map(lambda x: (
+        x[0], x[1], x[2], createFeatureArray(x[0], x[1], knownDrugDis,  drug_df, disease_df)))
+    all_scores = rdd.collect()
+    drug_col = drug_df.columns.levels[0]
+    disease_col = disease_df.columns.levels[0]
+    combined_features = ['Feature_'+dr_col+'_' +
+                         di_col for dr_col in drug_col for di_col in disease_col]
+    a = [e[0] for e in all_scores]
+    b = [e[1] for e in all_scores]
+    c = [e[2] for e in all_scores]
+    scores = [e[3] for e in all_scores]
+    df = pd.DataFrame(scores, columns=combined_features)
+    df['Drug'] = a
+    df['Disease'] = b
+    df['Class'] = c
+    return df
+
+
+@is_fairstep(label='Create the features dataframes', is_script_task=True)
+def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
+    """Create the features dataframes.
+
+    :param pairs: Generated pairs
+    :param classes: Classes corresponding to the pairs
+    :param knownDrugDisease: Known drug-disease associations
+    :param drugDFs: Drug dataframes
+    :param diseaseDFs: Disease dataframes
+    :return: The features dataframe
+    """
+    len(drugDFs)*len(diseaseDFs)
+    # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
+    df = pd.DataFrame(list(zip(pairs[:, 0], pairs[:, 1], classes)), columns=[
+                      'Drug', 'Disease', 'Class'])
+    for i, drug_col in enumerate(drugDFs.columns.levels[0]):
+        for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
+            drugDF = drugDFs[drug_col]
+            diseaseDF = diseaseDFs[disease_col]
+            feature_series = df.apply(lambda row: geometricMean(
+                row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
+            # print (feature_series)
+            df["Feature_"+str(drug_col)+'_'+str(disease_col)] = feature_series
+    return df
+
+
+@is_fairstep(label='Compute combined similarities', is_script_task=True)
+def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease):
+    """Compute combined similarities. Use Spark if available for speed, otherwise use pandas
+
+    :param pairs_train: Pairs used to train
+    :param pairs_test: Pairs used to test
+    :param classes_train: Classes corresponding to the pairs used to train
+    :param classes_test: Classes corresponding to the pairs used to test
+    :param drug_df: Drug dataframe
+    :param disease_df: Disease dataframe
+    :param knownDrugDisease: Known drug-disease associations
+    """
+    spark_context = get_spark_context()
+    if spark_context:
+        drug_df_bc = spark_context.broadcast(drug_df)
+        disease_df_bc = spark_context.broadcast(disease_df)
+        knownDrugDis_bc = spark_context.broadcast(knownDrugDisease)
+        log.info('Running Spark ✨')
+        train_df = sparkBuildFeatures(spark_context, pairs_train, classes_train,
+                                      knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        test_df = sparkBuildFeatures(spark_context, pairs_test, classes_test,
+                                     knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        log.info("Finishing Spark jobs 🏁")
+    else:
+        log.info("Spark cluster not found, using pandas 🐼")
+        train_df = createFeatureDF(
+            pairs_train, classes_train, knownDrugDisease, drug_df, disease_df)
+        test_df = createFeatureDF(
+            pairs_test, classes_test, knownDrugDisease, drug_df, disease_df)
+
+    return train_df, test_df
+
+
+@is_fairstep(label='Train classifier', is_script_task=True)
+def train_classifier(train_df, clf):
+    """Train classifier
+
+    :param train_df: Train dataframe
+    :param clf: Classifier
+    """
+    features = list(train_df.columns.difference(['Drug', 'Disease', 'Class']))
+    X = train_df[features]
+    print("Dataframe sample of training X (train_classifier features):")
+    print(X.head())
+    y = train_df['Class']
+    print(y.head())
+    print('📦 Fitting classifier...')
+    clf.fit(X, y)
+    return clf, X
+
+
+@is_fairstep(label='Return a dict of score for multimetric scoring', is_script_task=True)
+def multimetric_score(estimator, X_test, y_test, scorers):
+    """Return a dict of score for multimetric scoring
+
+    :param estimator: Estimator
+    :param X_test: X test
+    :param y_test: Y test
+    :param scorers: Dict of scorers
+    :return: Multimetric scores
+    """
+    scores = {}
+    for name, scorer in scorers.items():
+        if y_test is None:
+            score = scorer(estimator, X_test)
+        else:
+            score = scorer(estimator, X_test, y_test)
+
+        if hasattr(score, 'item'):
+            try:
+                # e.g. unwrap memmapped scalars
+                score = score.item()
+            except ValueError:
+                # non-scalar?
+                pass
+        scores[name] = score
+
+        if not isinstance(score, numbers.Number):
+            raise ValueError("scoring must return a number, got %s (%s) "
+                             "instead. (scorer=%s)"
+                             % (str(score), type(score), name))
+    return scores
+
+
+@is_fairstep(label='Evaluate the trained classifier', is_script_task=True)
+def evaluate(test_df, clf):
+    """Evaluate the trained classifier
+    :param test_df: Test dataframe
+    :param clf: Classifier
+    :return: Scores
+    """
+    features = list(test_df.columns.difference(['Drug', 'Disease', 'Class']))
+    X_test = test_df[features]
+    y_test = test_df['Class']
+
+    # https://scikit-learn.org/stable/modules/model_evaluation.html#using-multiple-metric-evaluation
+    scoring = ['precision', 'recall', 'accuracy',
+               'roc_auc', 'f1', 'average_precision']
+
+    # TODO: check changes here
+    # scorers, multimetric = metrics.scorer._check_multimetric_scoring(clf, scoring=scoring)
+    # AttributeError: module 'sklearn.metrics' has no attribute 'scorer'
+    # scorers, multimetric = metrics.get_scorer._check_multimetric_scoring(clf, scoring=scoring)
+    # AttributeError: 'function' object has no attribute '_check_multimetric_scoring'
+    scorers = {}
+    for scorer in scoring:
+        scorers[scorer] = metrics.get_scorer(scorer)
+
+    scores = multimetric_score(clf, X_test, y_test, scorers)
+    return scores
+
+
+@is_fairstep(label='Create features dataframes', is_script_task=True)
+def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
+    """Create features dataframes. Use Spark if available for speed, otherwise use pandas
+    :param pairs: pairs
+    :param classes: classes
+    :param drug_df: drug
+    :param disease_df: disease dataframe
+    :return: Feature dataframe
+    """
+    spark_context = get_spark_context()
+    if spark_context:
+        log.info('Running Spark ✨')
+        drug_df_bc = spark_context.broadcast(drug_df)
+        disease_df_bc = spark_context.broadcast(disease_df)
+        knownDrugDis_bc = spark_context.broadcast(pairs[classes == 1])
+        feature_df = sparkBuildFeatures(
+            spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
+        log.info("Finishing Spark jobs 🏁")
+    else:
+        log.info("Spark cluster not found, using pandas 🐼")
+        feature_df = createFeatureDF(
+            pairs, classes, pairs[classes == 1], drug_df, disease_df)
+    return feature_df
+
+
+
+
+@cli.command(help='Train an existing OpenPredict model')
+def train(
+    from_model_id: str = 'openpredict_baseline',
+    embedding_file: str = None,
+    emb_name: str = None,
+    types: str = 'Drugs',
+    create_model_id: str = None,
+):
+    # if not embedding_file:
+    #     train_model(from_model_id)
+    # else:
+    #     add_embedding(embedding_file, emb_name, types, from_model_id)
+
+    if not embedding_file:
+        workflow = FairWorkflow.from_function(train_model)
+        result, prov = workflow.execute(from_model_id)
+    else:
+        workflow = FairWorkflow.from_function(add_embedding)
+        result, prov = workflow.execute(embedding_file, emb_name, types, from_model_id)
+
+    workflow.publish_as_nanopub(use_test_server=True, publish_steps=True)
+    prov.publish_as_nanopub(use_test_server=True)
+
+    workflow._rdf.serialize(f"models/{from_model_id}.workflow.trig", format="trig")
+    prov._rdf.serialize(f"models/{from_model_id}.prov.trig", format="trig")
+
+
+
+@is_fairworkflow(label='OpenPredict model training workflow')
+def train_model(from_model_id: str = 'openpredict_baseline'):
+    """The main function to run the drug-disease similarities pipeline,
+    and train the drug-disease classifier.
+    It returns, and stores the generated classifier as a pickle file
+    in the `data/models` folder,
+
+    :param from_scratch: Train the model for scratch (True by default)
+    :return: Classifier of predicted similarities and scores
+    """
+    # time_start = datetime.now()
+    n_fold = 5
+    # n_fold = 1
+    print(type(from_model_id))
+    # if isinstance(from_model_id, inspect._empty):
+    # if type(from_model_id) == "<class 'inspect._empty'>":
+    #     # print("Empty model provided by fairworkflow, skipping. cf. https://github.com/fair-workflows/fairworkflows/blob/main/fairworkflows/fairworkflow.py#L503")
+    #     return {}
+
+    drugDiseaseKnown = get_known_associations()
+    # return drugDiseaseKnown
+    # (drug_df, disease_df) = get_drug_disease_features(from_model_id)
+    (drug_df, disease_df) = unpack(get_drug_disease_features(from_model_id), 2)
+
+    # Generate positive and negative pairs
+    pairs, classes = unpack(generatePairs(drug_df, disease_df, drugDiseaseKnown), 2)
+
+    # Balance negative/positive samples
+    n_proportion = 2
+    # print("\n🍱 n_proportion: " + str(n_proportion))
+    pairs, classes = unpack(balance_data(pairs, classes, n_proportion), 2)
+
+    scores = train_test_splitting(n_fold, pairs, classes)
+
+    # print("\n Train the final model using all dataset")
+    # final_training = datetime.now()
+    train_df = createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df)
+
+    clf = get_classifier(hyper_params)
+
+    # penalty: HyperParameter , l2: HyperParameterSetting
+    # Implementation: LogisticRegression
+    clf, sample_data = unpack(train_classifier(train_df, clf), 2)
+    # print(f"Final model training runtime 🕕 {str(datetime.now() - final_training)}")
+
+    # if from_model_id == 'openpredict_baseline':
+    #     pickle.dump(
+    #         (drug_df, disease_df),
+    #         open(
+    #             f"{settings.OPENPREDICT_DATA_DIR}/features/{from_model_id}_features.pickle",
+    #             "wb"
+    #         )
+    #     )
+    #     print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/openpredict_baseline_features.pickle')
+    #     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
+
+    # print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
+
+    model_path = save(
+        model=clf,
+        path="models/openpredict_baseline",
+        sample_data=sample_data,
+        hyper_params=hyper_params,
+        scores=scores,
+    )
+    # return clf, scores, hyper_params, (drug_df, disease_df)
+    return model_path
+
+
+
+
+@is_fairworkflow(label='Add new embeddings to the OpenPredict model, and train the new model')
 def add_embedding(
     embedding_file: str,
     emb_name: str,
@@ -288,9 +708,9 @@ def add_embedding(
     # TODO: now also save the feature dataframe for each run to be able to add embedding to any run?
     # Or can we just use the models/run_id.pickle file instead of having 2 files for 1 run?
     print('📥 Loading features file: ' +
-          get_openpredict_dir('features/' + from_model_id + '_features.pickle'))
+          f"{settings.OPENPREDICT_DATA_DIR}/features/{from_model_id}_features.pickle")
     (drug_df, disease_df) = pickle.load(open(
-        get_openpredict_dir('features/' + from_model_id + '_features.pickle'),
+        f"{settings.OPENPREDICT_DATA_DIR}/features/{from_model_id}_features.pickle",
         "rb"
     ))
 
@@ -341,7 +761,7 @@ def add_embedding(
     pickle.dump(
         (drug_df, disease_df),
         open(
-            get_openpredict_dir('features/' + run_id + '_features.pickle'),
+            f"{settings.OPENPREDICT_DATA_DIR}/features/{run_id}_features.pickle",
             "wb"
         )
     )
@@ -384,345 +804,6 @@ def add_embedding(
     return run_id, scores
 
 
-def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
-    """Merge the drug and disease feature matrix
-
-    :param drugfeatfiles: Drug features files list
-    :param diseasefeatfiles: Disease features files list
-    """
-    print('Load and merge features files 📂')
-    drug_df = None
-    for i, featureFilename in enumerate(drugfeatfiles):
-        print(featureFilename)
-        df = pd.read_csv(featureFilename, delimiter=',')
-        print(df.columns)
-        cond = df.Drug1 > df.Drug2
-        df.loc[cond, ['Drug1', 'Drug2']
-               ] = df.loc[cond, ['Drug2', 'Drug1']].values
-        if i != 0:
-            drug_df = drug_df.merge(df, on=['Drug1', 'Drug2'], how='inner')
-            # drug_df=drug_df.merge(temp,how='outer',on='Drug')
-        else:
-            drug_df = df
-    drug_df.fillna(0, inplace=True)
-
-    drug_df = adjcencydict2matrix(drug_df, 'Drug1', 'Drug2')
-    drug_df = drug_df.fillna(1.0)
-
-    disease_df = None
-    for i, featureFilename in enumerate(diseasefeatfiles):
-        print(featureFilename)
-        df = pd.read_csv(featureFilename, delimiter=',')
-        cond = df.Disease1 > df.Disease2
-        df.loc[cond, ['Disease1', 'Disease2']
-               ] = df.loc[cond, ['Disease2', 'Disease1']].values
-        if i != 0:
-            disease_df = disease_df.merge(
-                df, on=['Disease1', 'Disease2'], how='outer')
-            # drug_df=drug_df.merge(temp,how='outer',on='Drug')
-        else:
-            disease_df = df
-    disease_df.fillna(0, inplace=True)
-    disease_df.Disease1 = disease_df.Disease1.astype(str)
-    disease_df.Disease2 = disease_df.Disease2.astype(str)
-
-    disease_df = adjcencydict2matrix(disease_df, 'Disease1', 'Disease2')
-    disease_df = disease_df.fillna(1.0)
-
-    return drug_df, disease_df
-
-
-def generatePairs(drug_df, disease_df, drugDiseaseKnown):
-    """Generate positive and negative pairs using the Drug dataframe,
-    the Disease dataframe and known drug-disease associations dataframe
-
-    :param drug_df: Drug dataframe
-    :param disease_df: Disease dataframe
-    :param drugDiseaseKnown: Known drug-disease association dataframe
-    """
-    drugwithfeatures = set(drug_df.columns.levels[1])
-    diseaseswithfeatures = set(disease_df.columns.levels[1])
-
-    drugDiseaseDict = {
-        tuple(x) for x in drugDiseaseKnown[['Drug', 'Disease']].values}
-
-    commonDrugs = drugwithfeatures.intersection(drugDiseaseKnown.Drug.unique())
-    commonDiseases = diseaseswithfeatures.intersection(
-        drugDiseaseKnown.Disease.unique())
-    print("💊 commonDrugs: %d 🦠  commonDiseases: %d" %
-          (len(commonDrugs), len(commonDiseases)))
-
-    # abridged_drug_disease = [(dr,di)  for  (dr,di)  in drugDiseaseDict if dr in drugwithfeatures and di in diseaseswithfeatures ]
-
-    # commonDrugs = set( [ dr  for dr,di in  abridged_drug_disease])
-    # commonDiseases  =set([ di  for dr,di in  abridged_drug_disease])
-
-    print("\n🥇 Gold standard, associations: %d drugs: %d diseases: %d" % (len(drugDiseaseKnown), len(
-        drugDiseaseKnown.Drug.unique()), len(drugDiseaseKnown.Disease.unique())))
-    print("\n🏷️  Drugs with features  : %d Diseases with features: %d" %
-          (len(drugwithfeatures), len(diseaseswithfeatures)))
-    print("\n♻️  commonDrugs : %d commonDiseases : %d" %
-          (len(commonDrugs), len(commonDiseases)))
-
-    pairs = []
-    classes = []
-    for dr in commonDrugs:
-        for di in commonDiseases:
-            cls = (1 if (dr, di) in drugDiseaseDict else 0)
-            pairs.append((dr, di))
-            classes.append(cls)
-
-    return pairs, classes
-
-
-def balance_data(pairs, classes, n_proportion):
-    """Balance negative and positives samples
-
-    :param pairs: Positive/negative pairs previously generated
-    :param classes: Classes corresponding to the pairs
-    :param n_proportion: Proportion number, e.g. 2
-    """
-    classes = np.array(classes)
-    pairs = np.array(pairs)
-
-    indices_true = np.where(classes == 1)[0]
-    indices_false = np.where(classes == 0)[0]
-
-    np.random.shuffle(indices_false)
-    indices = indices_false[:(n_proportion*indices_true.shape[0])]
-    print("\n⚖️  ➕/➖ :", len(indices_true), len(indices), len(indices_false))
-    pairs = np.concatenate((pairs[indices_true], pairs[indices]), axis=0)
-    classes = np.concatenate((classes[indices_true], classes[indices]), axis=0)
-
-    return pairs, classes
-
-
-def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
-    """Compute the geometric means of a drug-disease association using previously generated dataframes
-
-    :param drug: Drug
-    :param disease: Disease
-    :param knownDrugDisease: Known drug-disease associations
-    :param drugDF: Drug dataframe
-    :param diseaseDF: Disease dataframe
-    """
-    a = drugDF.loc[knownDrugDisease[:, 0]][drug].values
-    b = diseaseDF.loc[knownDrugDisease[:, 1]][disease].values
-    c = np.sqrt(np.multiply(a, b))
-    ix2 = (knownDrugDisease == [drug, disease])
-    c[ix2[:, 1] & ix2[:, 0]] = 0.0
-    if len(c) == 0:
-        return 0.0
-    return float(max(c))
-
-
-def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
-    """Create the features dataframes for Spark.
-
-    :param drug: Drug
-    :param disease: Disease
-    :param knownDrugDisease: Known drug-disease associations
-    :param drugDFs: Drug dataframes
-    :param diseaseDFs: Disease dataframes
-    :return: The features dataframe
-    """
-    # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
-    feature_array = []
-    for i, drug_col in enumerate(drugDFs.columns.levels[0]):
-        for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
-            drugDF = drugDFs[drug_col]
-            diseaseDF = diseaseDFs[disease_col]
-            feature_array.append(geometricMean(
-                drug, disease, knownDrugDisease, drugDF, diseaseDF))
-            # print (feature_series)
-    return feature_array
-
-
-def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
-    """Create the feature matrix for Spark.
-
-    :param sc: Spark context
-    :param pairs: Generated pairs
-    :param classes: Classes corresponding to the pairs
-    :param knownDrugDisease: Known drug-disease associations
-    :param drugDFs: Drug dataframes
-    :param diseaseDFs: Disease dataframes
-    :return: The features dataframe
-    """
-
-    rdd = sc.parallelize(list(zip(pairs[:, 0], pairs[:, 1], classes))).map(lambda x: (
-        x[0], x[1], x[2], createFeatureArray(x[0], x[1], knownDrugDis,  drug_df, disease_df)))
-    all_scores = rdd.collect()
-    drug_col = drug_df.columns.levels[0]
-    disease_col = disease_df.columns.levels[0]
-    combined_features = ['Feature_'+dr_col+'_' +
-                         di_col for dr_col in drug_col for di_col in disease_col]
-    a = [e[0] for e in all_scores]
-    b = [e[1] for e in all_scores]
-    c = [e[2] for e in all_scores]
-    scores = [e[3] for e in all_scores]
-    df = pd.DataFrame(scores, columns=combined_features)
-    df['Drug'] = a
-    df['Disease'] = b
-    df['Class'] = c
-    return df
-
-
-def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
-    """Create the features dataframes.
-
-    :param pairs: Generated pairs
-    :param classes: Classes corresponding to the pairs
-    :param knownDrugDisease: Known drug-disease associations
-    :param drugDFs: Drug dataframes
-    :param diseaseDFs: Disease dataframes
-    :return: The features dataframe
-    """
-    len(drugDFs)*len(diseaseDFs)
-    # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
-    df = pd.DataFrame(list(zip(pairs[:, 0], pairs[:, 1], classes)), columns=[
-                      'Drug', 'Disease', 'Class'])
-    for i, drug_col in enumerate(drugDFs.columns.levels[0]):
-        for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
-            drugDF = drugDFs[drug_col]
-            diseaseDF = diseaseDFs[disease_col]
-            feature_series = df.apply(lambda row: geometricMean(
-                row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
-            # print (feature_series)
-            df["Feature_"+str(drug_col)+'_'+str(disease_col)] = feature_series
-    return df
-
-
-def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease):
-    """Compute combined similarities. Use Spark if available for speed, otherwise use pandas
-
-    :param pairs_train: Pairs used to train
-    :param pairs_test: Pairs used to test
-    :param classes_train: Classes corresponding to the pairs used to train
-    :param classes_test: Classes corresponding to the pairs used to test
-    :param drug_df: Drug dataframe
-    :param disease_df: Disease dataframe
-    :param knownDrugDisease: Known drug-disease associations
-    """
-    spark_context = get_spark_context()
-    if spark_context:
-        drug_df_bc = spark_context.broadcast(drug_df)
-        disease_df_bc = spark_context.broadcast(disease_df)
-        knownDrugDis_bc = spark_context.broadcast(knownDrugDisease)
-        log.info('Running Spark ✨')
-        train_df = sparkBuildFeatures(spark_context, pairs_train, classes_train,
-                                      knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        test_df = sparkBuildFeatures(spark_context, pairs_test, classes_test,
-                                     knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        log.info("Finishing Spark jobs 🏁")
-    else:
-        log.info("Spark cluster not found, using pandas 🐼")
-        train_df = createFeatureDF(
-            pairs_train, classes_train, knownDrugDisease, drug_df, disease_df)
-        test_df = createFeatureDF(
-            pairs_test, classes_test, knownDrugDisease, drug_df, disease_df)
-
-    return train_df, test_df
-
-
-def train_classifier(train_df, clf):
-    """Train classifier
-
-    :param train_df: Train dataframe
-    :param clf: Classifier
-    """
-    features = list(train_df.columns.difference(['Drug', 'Disease', 'Class']))
-    X = train_df[features]
-    print("Dataframe sample of training X (train_classifier features):")
-    print(X.head())
-    y = train_df['Class']
-    print(y.head())
-    print('📦 Fitting classifier...')
-    clf.fit(X, y)
-    return clf, X
-
-
-def multimetric_score(estimator, X_test, y_test, scorers):
-    """Return a dict of score for multimetric scoring
-
-    :param estimator: Estimator
-    :param X_test: X test
-    :param y_test: Y test
-    :param scorers: Dict of scorers
-    :return: Multimetric scores
-    """
-    scores = {}
-    for name, scorer in scorers.items():
-        if y_test is None:
-            score = scorer(estimator, X_test)
-        else:
-            score = scorer(estimator, X_test, y_test)
-
-        if hasattr(score, 'item'):
-            try:
-                # e.g. unwrap memmapped scalars
-                score = score.item()
-            except ValueError:
-                # non-scalar?
-                pass
-        scores[name] = score
-
-        if not isinstance(score, numbers.Number):
-            raise ValueError("scoring must return a number, got %s (%s) "
-                             "instead. (scorer=%s)"
-                             % (str(score), type(score), name))
-    return scores
-
-
-def evaluate(test_df, clf):
-    """Evaluate the trained classifier
-    :param test_df: Test dataframe
-    :param clf: Classifier
-    :return: Scores
-    """
-    features = list(test_df.columns.difference(['Drug', 'Disease', 'Class']))
-    X_test = test_df[features]
-    y_test = test_df['Class']
-
-    # https://scikit-learn.org/stable/modules/model_evaluation.html#using-multiple-metric-evaluation
-    scoring = ['precision', 'recall', 'accuracy',
-               'roc_auc', 'f1', 'average_precision']
-
-    # TODO: check changes here
-    # scorers, multimetric = metrics.scorer._check_multimetric_scoring(clf, scoring=scoring)
-    # AttributeError: module 'sklearn.metrics' has no attribute 'scorer'
-    # scorers, multimetric = metrics.get_scorer._check_multimetric_scoring(clf, scoring=scoring)
-    # AttributeError: 'function' object has no attribute '_check_multimetric_scoring'
-    scorers = {}
-    for scorer in scoring:
-        scorers[scorer] = metrics.get_scorer(scorer)
-
-    scores = multimetric_score(clf, X_test, y_test, scorers)
-    return scores
-
-
-def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
-    """Create features dataframes. Use Spark if available for speed, otherwise use pandas
-    :param pairs: pairs
-    :param classes: classes
-    :param drug_df: drug
-    :param disease_df: disease dataframe
-    :return: Feature dataframe
-    """
-    spark_context = get_spark_context()
-    if spark_context:
-        log.info('Running Spark ✨')
-        drug_df_bc = spark_context.broadcast(drug_df)
-        disease_df_bc = spark_context.broadcast(disease_df)
-        knownDrugDis_bc = spark_context.broadcast(pairs[classes == 1])
-        feature_df = sparkBuildFeatures(
-            spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        log.info("Finishing Spark jobs 🏁")
-    else:
-        log.info("Spark cluster not found, using pandas 🐼")
-        feature_df = createFeatureDF(
-            pairs, classes, pairs[classes == 1], drug_df, disease_df)
-    return feature_df
 
 
 if __name__ == '__main__':
