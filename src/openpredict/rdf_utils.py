@@ -191,7 +191,7 @@ def get_run_metadata(scores, model_features, hyper_params, run_id=None):
     # TODO: improve how we retrieve features
     for feature in model_features:
         print(f'FEATURE {feature}')
-        feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature   )
+        feature_uri = URIRef(OPENPREDICT_NAMESPACE + 'feature/' + feature.replace(" ", "_").replace("(", "").replace(")", "") )
         g.add((feature_uri, RDF.type, MLS['Feature']))
         g.add((feature_uri, DC.identifier, Literal(feature)))
         g.add((run_uri, MLS['hasInput'], feature_uri))
