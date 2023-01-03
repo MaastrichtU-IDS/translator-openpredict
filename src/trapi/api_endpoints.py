@@ -19,16 +19,16 @@ app = APIRouter()
 
 
 # Generate endpoints for the loaded models
-def endpoint_factory(prediction_func, model):
+def endpoint_factory(predict_func):
 
     def prediction_endpoint(
-        input_id: str = model['default_input'],
-        model_id: str = model['default_model'],
+        input_id: str = predict_func._trapi_predict['default_input'],
+        model_id: str = predict_func._trapi_predict['default_model'],
         min_score: float = None, max_score: float = None,
         n_results: int = None
     ):
         try:
-            return prediction_func(input_id, PredictOptions.parse_obj({
+            return predict_func(input_id, PredictOptions.parse_obj({
                 "model_id": model_id,
                 "min_score": min_score,
                 "max_score": max_score,
@@ -44,14 +44,14 @@ def endpoint_factory(prediction_func, model):
 
 
 for loaded_model in models_list:
-    for (do_prediction, model) in loaded_model['endpoints']:
+    for predict_func in loaded_model['endpoints']:
         app.add_api_route(
-            path=model['path'],
+            path=predict_func._trapi_predict['path'],
             methods=["GET"],
             # endpoint=copy_func(prediction_endpoint, model['path'].replace('/', '')),
-            endpoint=endpoint_factory(do_prediction, model),
-            name=model['name'],
-            openapi_extra={"description": model['description']},
+            endpoint=endpoint_factory(predict_func),
+            name=predict_func._trapi_predict['name'],
+            openapi_extra={"description": predict_func._trapi_predict['description']},
             response_model=dict,
             tags=["models"],
         )

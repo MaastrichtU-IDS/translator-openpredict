@@ -38,13 +38,5 @@ def trapi_predict(
             'default_model': default_model,
         }
 
-        return wrapper, {
-            'edges': edges,
-            'nodes': nodes,
-            'path': path,
-            'name': name,
-            'description': description,
-            'default_input': default_input,
-            'default_model': default_model,
-        }
+        return wrapper
     return decorator

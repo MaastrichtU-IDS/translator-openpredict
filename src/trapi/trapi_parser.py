@@ -162,8 +162,8 @@ def resolve_trapi_query(reasoner_query):
     for edge_qg_id in query_plan.keys():
 
         for loaded_model in models_list:
-            for (do_prediction, model_metadata) in loaded_model['endpoints']:
-                for prediction_relation in model_metadata['edges']:
+            for predict_func in loaded_model['endpoints']:
+                for prediction_relation in predict_func._trapi_predict['edges']:
                     predicate_parents = get_biolink_parents(prediction_relation['predicate'])
 
                     if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):
@@ -186,7 +186,7 @@ def resolve_trapi_query(reasoner_query):
                                     #     min_score, max_score, n_results=None
                                     # )
                                     # TODO: add options param
-                                    prediction_results = do_prediction(
+                                    prediction_results = predict_func(
                                         id_to_predict,
                                         {
                                             "model_id": model_id,
