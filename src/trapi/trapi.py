@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse
 from reasoner_pydantic import Query
 
+from trapi.loaded_models import models_list
 from trapi.trapi_parser import resolve_trapi_query
 
 app = APIRouter()
@@ -114,47 +115,15 @@ def get_meta_knowledge_graph() -> dict:
 
     :return: JSON with biolink entities
     """
-    openpredict_predicates = {
-        "edges": [
-            {
-                "object": "biolink:Disease",
-                "predicate": "biolink:treats",
-                "relations": [
-                    "RO:0002434"
-                ],
-                "subject": "biolink:Drug"
-                # TODO: https://github.com/NCATSTranslator/ReasonerAPI/pull/331/files
-                # "knowledge_types": ['inferred', 'lookup']
-            },
-            {
-                "object": "biolink:Drug",
-                "predicate": "biolink:treated_by",
-                "relations": [
-                    "RO:0002434"
-                ],
-                "subject": "biolink:Disease"
-            },
-            {
-                "object": "biolink:Entity",
-                "predicate": "biolink:similar_to",
-                # "relations": [
-                #     "RO:0002434"
-                # ],
-                "subject": "biolink:Entity"
-            },
-        ],
-        "nodes": {
-            "biolink:Disease": {
-                "id_prefixes": [
-                    "OMIM"
-                ]
-            },
-            "biolink:Drug": {
-                "id_prefixes": [
-                    "DRUGBANK"
-                ]
-            }
-        }
+    metakg = {
+        'edges': [],
+        'nodes': {}
     }
+    for loaded_model in models_list:
+        for predict_func in loaded_model['endpoints']:
+            if predict_func._trapi_predict['edges'] not in metakg['edges']:
+                metakg['edges'] += predict_func._trapi_predict['edges']
+            # Merge nodes dict
+            metakg['nodes'] = {**metakg['nodes'], **predict_func._trapi_predict['nodes']}
 
-    return JSONResponse(openpredict_predicates)
+    return JSONResponse(metakg)
