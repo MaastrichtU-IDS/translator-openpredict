@@ -12,6 +12,19 @@ from openpredict.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
 from openpredict_model.utils import load_features_embeddings, similarity_embeddings
 
+trapi_nodes = {
+    "biolink:Disease": {
+        "id_prefixes": [
+            "OMIM"
+        ]
+    },
+    "biolink:Drug": {
+        "id_prefixes": [
+            "DRUGBANK"
+        ]
+    }
+}
+
 
 @trapi_predict(path='/predict',
     name="Get predicted targets for a given entity",
@@ -25,18 +38,25 @@ You can try:
 | ------- | ---- |
 | to check the drug predictions for a disease   | to check the disease predictions for a drug |
 """,
-    relations=[
+    edges=[
         {
             'subject': 'biolink:Drug',
             'predicate': 'biolink:treats',
             'object': 'biolink:Disease',
+            'relations': [
+                'RO:0002434'
+            ],
         },
         {
             'subject': 'biolink:Disease',
             'predicate': 'biolink:treated_by',
             'object': 'biolink:Drug',
+            'relations': [
+                'RO:0002434'
+            ],
         },
     ],
+    nodes=trapi_nodes
 )
 def get_predictions(
         input_id: str, options: PredictOptions
@@ -247,7 +267,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
     name="Get similar entities",
     default_input="DRUGBANK:DB00394",
     default_model=None,
-    relations=[
+    edges=[
         {
             'subject': 'biolink:Drug',
             'predicate': 'biolink:similar_to',
@@ -259,6 +279,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
             'object': 'biolink:Disease',
         },
     ],
+    nodes=trapi_nodes,
     description="""Get similar entites for a given entity CURIE.
 
 You can try:

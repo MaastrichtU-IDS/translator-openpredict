@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from fairworkflows import is_fairstep
+# from fairworkflows import is_fairstep
 from mlem import api as mlem
 from rdflib import Graph
 
@@ -17,7 +17,7 @@ class LoadedModel():
     # features: Any = None
 
 
-@is_fairstep(label='Save a model')
+# @is_fairstep(label='Save a model')
 def save(
     model,
     path,

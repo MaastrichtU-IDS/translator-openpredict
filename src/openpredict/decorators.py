@@ -1,12 +1,15 @@
 import functools
-from typing import List, Optional
+from typing import Dict, List, Optional
 
-from openpredict.predict_output import PredictOptions, TrapiRelation
+from reasoner_pydantic import MetaEdge, MetaNode
+
+from openpredict.predict_output import PredictOptions
 
 
 def trapi_predict(
     path: str,
-    relations: List[TrapiRelation],
+    edges: List[MetaEdge],
+    nodes: Dict[str, MetaNode],
     name: Optional[str] =None,
     description: Optional[str] = "",
     default_input: Optional[str] = "DRUGBANK:DB00394",
@@ -22,10 +25,22 @@ def trapi_predict(
         def wrapper(input_id: str, options: PredictOptions):
             options = PredictOptions.parse_obj(options)
             # Add any additional logic or behavior here
-            # print(f'Decorator parameter: {relations}')
+            # print(f'Decorator parameter: {edges}')
             return func(input_id, options)
+
+        wrapper._trapi_predict = {
+            'edges': edges,
+            'nodes': nodes,
+            'path': path,
+            'name': name,
+            'description': description,
+            'default_input': default_input,
+            'default_model': default_model,
+        }
+
         return wrapper, {
-            'relations': relations,
+            'edges': edges,
+            'nodes': nodes,
             'path': path,
             'name': name,
             'description': description,

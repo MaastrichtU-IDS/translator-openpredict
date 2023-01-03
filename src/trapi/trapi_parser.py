@@ -163,7 +163,7 @@ def resolve_trapi_query(reasoner_query):
 
         for loaded_model in models_list:
             for (do_prediction, model_metadata) in loaded_model['endpoints']:
-                for prediction_relation in model_metadata['relations']:
+                for prediction_relation in model_metadata['edges']:
                     predicate_parents = get_biolink_parents(prediction_relation['predicate'])
 
                     if any(i in predicate_parents for i in query_plan[edge_qg_id]['predicates']):

@@ -28,11 +28,6 @@ class PredictOptions(BaseModel):
         arbitrary_types_allowed = True
 
 
-class TrapiRelation(BaseModel):
-    subject: str
-    predicate: str
-    object: str
-
 
 class TrainingOutput(BaseModel):
     # All scores are floats between 0 and 1

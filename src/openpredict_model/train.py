@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 import pyspark
 import typer
-from fairworkflows import FairWorkflow, is_fairstep, is_fairworkflow
-from noodles import unpack
+# from fairworkflows import FairWorkflow, is_fairstep, is_fairworkflow
+# from noodles import unpack
 from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
@@ -22,7 +22,7 @@ cli = typer.Typer(help="Training for OpenPredict model")
 
 
 
-@is_fairstep(label='Prepare known drug-disease associations dictionary')
+# @is_fairstep(label='Prepare known drug-disease associations dictionary')
 def get_known_associations():
     drugDiseaseKnown = pd.read_csv(
         os.path.join(settings.OPENPREDICT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'),
@@ -37,7 +37,7 @@ def get_known_associations():
     return drugDiseaseKnown
 
 
-@is_fairstep(label='Prepare or load drug-disease features dataframes')
+# @is_fairstep(label='Prepare or load drug-disease features dataframes')
 def get_drug_disease_features(from_model_id: str):
     if from_model_id == 'openpredict_baseline':
         print('🏗 Build the model from scratch')
@@ -67,7 +67,7 @@ def get_drug_disease_features(from_model_id: str):
     return (drug_df, disease_df)
 
 
-@is_fairstep(label='Train test splitting')
+# @is_fairstep(label='Train test splitting')
 def train_test_splitting(n_fold, pairs, classes):
     # Train-Test Splitting
     n_seed = 101
@@ -132,7 +132,7 @@ def train_test_splitting(n_fold, pairs, classes):
     return scores
 
 
-@is_fairstep(label='Get the classifier')
+# @is_fairstep(label='Get the classifier')
 def get_classifier(hyper_params):
     return linear_model.LogisticRegression(
         penalty=hyper_params['penalty'],
@@ -152,7 +152,7 @@ hyper_params = {
 }
 sc = None
 
-@is_fairstep(label='Get Spark context', is_script_task=True)
+# @is_fairstep(label='Get Spark context', is_script_task=True)
 def get_spark_context():
     """Get Spark context, either from Spark Master URL to a Spark cluster
     If not URL is provided, then it will try to run Spark locally
@@ -205,7 +205,7 @@ def get_spark_context():
     #     sc = SparkContext(conf=config, appName="OpenPredict")
 
 
-@is_fairstep(label='Convert a dictionary to a matrix', is_script_task=True)
+# @is_fairstep(label='Convert a dictionary to a matrix', is_script_task=True)
 def adjcencydict2matrix(df, name1, name2):
     """Convert dict to matrix
 
@@ -223,7 +223,7 @@ def adjcencydict2matrix(df, name1, name2):
     return df.pivot(index=name1, columns=name2)
 
 
-@is_fairstep(label='Merge the drug and disease feature matrix', is_script_task=True)
+# @is_fairstep(label='Merge the drug and disease feature matrix', is_script_task=True)
 def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     """Merge the drug and disease feature matrix
 
@@ -272,7 +272,7 @@ def mergeFeatureMatrix(drugfeatfiles, diseasefeatfiles):
     return drug_df, disease_df
 
 
-@is_fairstep(label='Generate positive and negative pairs using the Drug dataframe, the Disease dataframe and known drug-disease associations dataframe', is_script_task=True)
+# @is_fairstep(label='Generate positive and negative pairs using the Drug dataframe, the Disease dataframe and known drug-disease associations dataframe', is_script_task=True)
 def generatePairs(drug_df, disease_df, drugDiseaseKnown):
     """Generate positive and negative pairs using the Drug dataframe,
     the Disease dataframe and known drug-disease associations dataframe
@@ -316,7 +316,7 @@ def generatePairs(drug_df, disease_df, drugDiseaseKnown):
     return pairs, classes
 
 
-@is_fairstep(label='Balance negative and positives samples', is_script_task=True)
+# @is_fairstep(label='Balance negative and positives samples', is_script_task=True)
 def balance_data(pairs, classes, n_proportion):
     """Balance negative and positives samples
 
@@ -339,7 +339,7 @@ def balance_data(pairs, classes, n_proportion):
     return pairs, classes
 
 
-@is_fairstep(label='Compute the geometric means of a drug-disease association using previously generated dataframes', is_script_task=True)
+# @is_fairstep(label='Compute the geometric means of a drug-disease association using previously generated dataframes', is_script_task=True)
 def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     """Compute the geometric means of a drug-disease association using previously generated dataframes
 
@@ -359,7 +359,7 @@ def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
     return float(max(c))
 
 
-@is_fairstep(label='Create the features dataframes for Spark', is_script_task=True)
+# @is_fairstep(label='Create the features dataframes for Spark', is_script_task=True)
 def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
     """Create the features dataframes for Spark.
 
@@ -382,7 +382,7 @@ def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
     return feature_array
 
 
-@is_fairstep(label='Create the feature matrix for Spark', is_script_task=True)
+# @is_fairstep(label='Create the feature matrix for Spark', is_script_task=True)
 def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
     """Create the feature matrix for Spark.
 
@@ -413,7 +413,7 @@ def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
     return df
 
 
-@is_fairstep(label='Create the features dataframes', is_script_task=True)
+# @is_fairstep(label='Create the features dataframes', is_script_task=True)
 def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
     """Create the features dataframes.
 
@@ -439,7 +439,7 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
     return df
 
 
-@is_fairstep(label='Compute combined similarities', is_script_task=True)
+# @is_fairstep(label='Compute combined similarities', is_script_task=True)
 def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_test, drug_df, disease_df, knownDrugDisease):
     """Compute combined similarities. Use Spark if available for speed, otherwise use pandas
 
@@ -472,7 +472,7 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
     return train_df, test_df
 
 
-@is_fairstep(label='Train classifier', is_script_task=True)
+# @is_fairstep(label='Train classifier', is_script_task=True)
 def train_classifier(train_df, clf):
     """Train classifier
 
@@ -490,7 +490,7 @@ def train_classifier(train_df, clf):
     return clf, X
 
 
-@is_fairstep(label='Return a dict of score for multimetric scoring', is_script_task=True)
+# @is_fairstep(label='Return a dict of score for multimetric scoring', is_script_task=True)
 def multimetric_score(estimator, X_test, y_test, scorers):
     """Return a dict of score for multimetric scoring
 
@@ -523,7 +523,7 @@ def multimetric_score(estimator, X_test, y_test, scorers):
     return scores
 
 
-@is_fairstep(label='Evaluate the trained classifier', is_script_task=True)
+# @is_fairstep(label='Evaluate the trained classifier', is_script_task=True)
 def evaluate(test_df, clf):
     """Evaluate the trained classifier
     :param test_df: Test dataframe
@@ -551,7 +551,7 @@ def evaluate(test_df, clf):
     return scores
 
 
-@is_fairstep(label='Create features dataframes', is_script_task=True)
+# @is_fairstep(label='Create features dataframes', is_script_task=True)
 def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
     """Create features dataframes. Use Spark if available for speed, otherwise use pandas
     :param pairs: pairs
@@ -586,27 +586,27 @@ def train(
     types: str = 'Drugs',
     create_model_id: str = None,
 ):
-    # if not embedding_file:
-    #     train_model(from_model_id)
-    # else:
-    #     add_embedding(embedding_file, emb_name, types, from_model_id)
-
     if not embedding_file:
-        workflow = FairWorkflow.from_function(train_model)
-        result, prov = workflow.execute(from_model_id)
+        train_model(from_model_id)
     else:
-        workflow = FairWorkflow.from_function(add_embedding)
-        result, prov = workflow.execute(embedding_file, emb_name, types, from_model_id)
+        add_embedding(embedding_file, emb_name, types, from_model_id)
 
-    workflow.publish_as_nanopub(use_test_server=True, publish_steps=True)
-    prov.publish_as_nanopub(use_test_server=True)
+    # if not embedding_file:
+    #     workflow = FairWorkflow.from_function(train_model)
+    #     result, prov = workflow.execute(from_model_id)
+    # else:
+    #     workflow = FairWorkflow.from_function(add_embedding)
+    #     result, prov = workflow.execute(embedding_file, emb_name, types, from_model_id)
 
-    workflow._rdf.serialize(f"models/{from_model_id}.workflow.trig", format="trig")
-    prov._rdf.serialize(f"models/{from_model_id}.prov.trig", format="trig")
+    # workflow.publish_as_nanopub(use_test_server=True, publish_steps=True)
+    # prov.publish_as_nanopub(use_test_server=True)
+
+    # workflow._rdf.serialize(f"models/{from_model_id}.workflow.trig", format="trig")
+    # prov._rdf.serialize(f"models/{from_model_id}.prov.trig", format="trig")
 
 
 
-@is_fairworkflow(label='OpenPredict model training workflow')
+# @is_fairworkflow(label='OpenPredict model training workflow')
 def train_model(from_model_id: str = 'openpredict_baseline'):
     """The main function to run the drug-disease similarities pipeline,
     and train the drug-disease classifier.
@@ -628,15 +628,15 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     drugDiseaseKnown = get_known_associations()
     # return drugDiseaseKnown
     # (drug_df, disease_df) = get_drug_disease_features(from_model_id)
-    (drug_df, disease_df) = unpack(get_drug_disease_features(from_model_id), 2)
+    (drug_df, disease_df) = get_drug_disease_features(from_model_id)
 
     # Generate positive and negative pairs
-    pairs, classes = unpack(generatePairs(drug_df, disease_df, drugDiseaseKnown), 2)
+    pairs, classes = generatePairs(drug_df, disease_df, drugDiseaseKnown)
 
     # Balance negative/positive samples
     n_proportion = 2
     # print("\n🍱 n_proportion: " + str(n_proportion))
-    pairs, classes = unpack(balance_data(pairs, classes, n_proportion), 2)
+    pairs, classes = balance_data(pairs, classes, n_proportion)
 
     scores = train_test_splitting(n_fold, pairs, classes)
 
@@ -648,7 +648,7 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
 
     # penalty: HyperParameter , l2: HyperParameterSetting
     # Implementation: LogisticRegression
-    clf, sample_data = unpack(train_classifier(train_df, clf), 2)
+    clf, sample_data = train_classifier(train_df, clf)
     # print(f"Final model training runtime 🕕 {str(datetime.now() - final_training)}")
 
     # if from_model_id == 'openpredict_baseline':
@@ -677,7 +677,7 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
 
 
 
-@is_fairworkflow(label='Add new embeddings to the OpenPredict model, and train the new model')
+# @is_fairworkflow(label='Add new embeddings to the OpenPredict model, and train the new model')
 def add_embedding(
     embedding_file: str,
     emb_name: str,
