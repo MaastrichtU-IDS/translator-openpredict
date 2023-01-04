@@ -68,6 +68,7 @@ test = [
     "pytest >=7.1.3,<8.0.0",
     "pytest-cov >=2.12.0,<4.0.0",
     "reasoner-validator >=3.1.4",
+    "httpx",
 ]
 dev = [
     "typer==0.7.0",
