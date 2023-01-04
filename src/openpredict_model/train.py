@@ -68,7 +68,7 @@ def get_drug_disease_features(from_model_id: str):
 
 
 # @is_fairstep(label='Train test splitting')
-def train_test_splitting(n_fold, pairs, classes):
+def train_test_splitting(n_fold, pairs, classes, drug_df, disease_df):
     time_start = datetime.now()
     # Train-Test Splitting
     n_seed = 101
@@ -333,7 +333,7 @@ def balance_data(pairs, classes, n_proportion):
 
     np.random.shuffle(indices_false)
     indices = indices_false[:(n_proportion*indices_true.shape[0])]
-    print("\n⚖️  ➕/➖ :", len(indices_true), len(indices), len(indices_false))
+    print("\n⚖️  +/- :", len(indices_true), len(indices), len(indices_false))
     pairs = np.concatenate((pairs[indices_true], pairs[indices]), axis=0)
     classes = np.concatenate((classes[indices_true], classes[indices]), axis=0)
 
@@ -373,8 +373,8 @@ def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
     """
     # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
     feature_array = []
-    for i, drug_col in enumerate(drugDFs.columns.levels[0]):
-        for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
+    for _i, drug_col in enumerate(drugDFs.columns.levels[0]):
+        for _j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
             drugDF = drugDFs[drug_col]
             diseaseDF = diseaseDFs[disease_col]
             feature_array.append(geometricMean(
@@ -429,8 +429,8 @@ def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
     # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
     df = pd.DataFrame(list(zip(pairs[:, 0], pairs[:, 1], classes)), columns=[
                       'Drug', 'Disease', 'Class'])
-    for i, drug_col in enumerate(drugDFs.columns.levels[0]):
-        for j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
+    for _i, drug_col in enumerate(drugDFs.columns.levels[0]):
+        for _j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
             drugDF = drugDFs[drug_col]
             diseaseDF = diseaseDFs[disease_col]
             feature_series = df.apply(lambda row: geometricMean(
@@ -639,7 +639,7 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     # print("\n🍱 n_proportion: " + str(n_proportion))
     pairs, classes = balance_data(pairs, classes, n_proportion)
 
-    scores = train_test_splitting(n_fold, pairs, classes)
+    scores = train_test_splitting(n_fold, pairs, classes, drug_df, disease_df)
 
     # print("\n Train the final model using all dataset")
     # final_training = datetime.now()
@@ -672,7 +672,6 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
         hyper_params=hyper_params,
         scores=scores,
     )
-    # return clf, scores, hyper_params, (drug_df, disease_df)
     return model_path
 
 
@@ -771,37 +770,6 @@ def add_embedding(
     # train the model
     clf, scores, hyper_params, features_df = train_model(run_id)
 
-    # TODO: How can we get the list of features directly from the built model?
-    # The baseline features are here, but not the one added
-    # drug_features_df = drug_df.columns.get_level_values(0).drop_duplicates()
-    # disease_features_df = disease_df.columns.get_level_values(0).drop_duplicates()
-    # model_features = drug_features_df.values.tolist() + disease_features_df.values.tolist()
-
-    # if from_model_id == 'scratch':
-    #     model_features = list(retrieve_features(
-    #         'All', 'openpredict_baseline').keys())
-    # else:
-    #     model_features = list(retrieve_features('All', from_model_id).keys())
-    # model_features.append(added_feature_uri)
-
-    # run_id = add_run_metadata(scores, model_features,
-    #                           hyper_params, run_id=run_id)
-
-    # print('New embedding based similarity was added to the similarity tensor and dataframes with new features are store in data/features/' + run_id + '_features.pickle')
-
-    # save(
-    #     model=clf,
-    #     path=f"models/{run_id}",
-    #     sample_data=sample_data,
-    #     features=(drug_df, disease_df),
-    #     hyper_params=hyper_params,
-    #     scores=scores,
-    # )
-
-    # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
-
-    # df_sim_m= df_sim.stack().reset_index(level=[0,1])
-    # df_sim_m.to_csv(os.path.join("openpredict/data/features/", emb_name+'.csv')), header=header)
     return run_id, scores
 
 

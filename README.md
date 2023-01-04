@@ -4,7 +4,7 @@
 
 [![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-**OpenPredict** is a Python library to help serve predictions of biomedical associations, as Translator Reasoner API (aka. TRAPI).
+**OpenPredict** is a python package to help serve predictions of biomedical associations, as Translator Reasoner API (aka. TRAPI).
 
 The [Translator Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI) (TRAPI) defines a standard HTTP API for communicating biomedical questions and answers leveraging the [Biolink model](https://github.com/biolink/biolink-model/).
 
@@ -12,7 +12,7 @@ The package provides:
 
 * a decorator `@trapi_predict` to which the developer can pass all informations required to integrate the prediction function to a Translator Reasoner API
 * a `TRAPI` class to deploy a Translator Reasoner API serving a list of prediction functions decorated with `@trapi_predict`
-* Helpers to store your models in a FAIR manner
+* Helpers to store your models in a FAIR manner, using tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/)
 
 Predictions are usually generated from machine learning models (e.g. predict disease treated by drug), but it can adapt to generic python function, as long as the input params and return object follow the expected structure.
 

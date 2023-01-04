@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 requires-python = ">=3.8,<3.11"
 name = "openpredict"
-description = "An API to compute and serve predictions of biomedical concepts associations via OpenAPI for the NCATS Translator project"
+description = "A package to help serve predictions of biomedical concepts associations as Translator Reasoner API."
 readme = "README.md"
 license = { file = "LICENSE.txt" }
 authors = [
@@ -35,7 +35,7 @@ dependencies = [
     # "mlem",
     "mlem==0.3.2",
     # "fairworkflows",
-    "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
+    # "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
     # "yatiml >=0.10.0",
 ]
 
@@ -103,7 +103,7 @@ packages = ["src/openpredict"]
 features = [
     "test",
     "dev",
-    "train",
+    # "train",
 ]
 post-install-commands = [
     "pre-commit install",
@@ -111,17 +111,19 @@ post-install-commands = [
 ]
 
 [tool.hatch.envs.default.scripts]
-train = "python src/openpredict_model/train.py train-model"
-format = [
+fmt = [
+    # "ruff src tests --fix",
     "isort src tests",
     "autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place src tests --exclude=__init__.py",
     "pre-commit run --all-files || true",
 ]
 check = [
+    # "ruff src tests",
     "isort --check-only --diff .",
     "flake8 .",
 ]
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
+# train = "python src/openpredict_model/train.py train-model"
 
 
 [tool.hatch.metadata]
@@ -156,6 +158,50 @@ ignore = [
     "E301", # expected 1 blank lines found 0
     "W503", # line break before binary operator
 ]
+
+
+[tool.ruff]
+target-version = "py37"
+line-length = 120
+select = [
+    "A",
+    "B",  # flake8-bugbear
+    "C",  # flake8-comprehensions
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    # "FBT", # flake8-boolean-trap
+    # "I",  # isort
+    "ICN",
+    "N",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "Q",
+    "RUF",
+    "S",
+    "SIM",
+    "T",
+    "TID",
+    "UP",
+    "W",  # pycodestyle warnings
+    "YTT",
+]
+
+ignore = [
+    "Q000", # no single quotes
+    "N806", "N802", "N803", # lowercase variables
+    "E501", # line too long
+    "B008", # do not perform function calls in argument defaults
+    "B006", # do not use mutable data structures for argument defaults
+    "C901", # too complex
+    "S101", # Use of `assert` detected
+    "T201", "T203", # remove print and pprint
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
 
 
 [project.urls]
