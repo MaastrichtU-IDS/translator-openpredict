@@ -123,6 +123,7 @@ check = [
 ]
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
@@ -137,7 +138,7 @@ line_length = 120
 
 
 [tool.coverage.run]
-source = ["project"]
+source = ["src/openpredict"]
 branch = true
 [tool.coverage.report]
 omit = ["tests/*"]

@@ -80,7 +80,7 @@ jobs:
 
     - name: Test with pytest with coverage
       run: |
-        pytest -s --cov src --cov-report xml:coverage.xml tests/integration/*
+        pytest -s --cov src/openpredict --cov-report xml:coverage.xml tests/integration/*
 
 
     - name: Upload coverage to SonarCloud

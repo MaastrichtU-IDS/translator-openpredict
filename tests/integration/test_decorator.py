@@ -4,7 +4,7 @@ from openpredict import PredictOptions, PredictOutput, trapi_predict
 @trapi_predict(path='/predict',
     name="Get predicted targets for a given entity",
     description="Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.",
-    relations=[
+    edges=[
         {
             'subject': 'biolink:Drug',
             'predicate': 'biolink:treats',
@@ -15,7 +15,19 @@ from openpredict import PredictOptions, PredictOutput, trapi_predict
             'predicate': 'biolink:treated_by',
             'object': 'biolink:Drug',
         },
-    ]
+    ],
+    nodes={
+        "biolink:Disease": {
+            "id_prefixes": [
+                "OMIM"
+            ]
+        },
+        "biolink:Drug": {
+            "id_prefixes": [
+                "DRUGBANK"
+            ]
+        }
+    }
 )
 def get_predictions(
         input_id: str, options: PredictOptions

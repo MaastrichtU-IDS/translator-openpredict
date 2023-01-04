@@ -1,12 +1,22 @@
-[![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
+# 🔮🐍 Translator OpenPredict
 
-[![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/publish-package.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/publish-package.yml)
+[![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![Publish package](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/publish-package.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/publish-package.yml)
 
-**OpenPredict** is a Python library to help train model, and serve predicted biomedical associations (e.g. disease treated by drug) that can be integrated in a Translator Reasoner API (aka. TRAPI).
+[![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-It provides decorators and functions to help building reusable and FAIR predictive models that can be easily integrated to a TRAPI-compliant endpoint.
+**OpenPredict** is a Python library to help serve predictions of biomedical associations, as Translator Reasoner API (aka. TRAPI).
 
-Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**
+The [Translator Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI) (TRAPI) defines a standard HTTP API for communicating biomedical questions and answers leveraging the [Biolink model](https://github.com/biolink/biolink-model/).
+
+The package provides:
+
+* a decorator `@trapi_predict` to which the developer can pass all informations required to integrate the prediction function to a Translator Reasoner API
+* a `TRAPI` class to deploy a Translator Reasoner API serving a list of prediction functions decorated with `@trapi_predict`
+* Helpers to store your models in a FAIR manner
+
+Predictions are usually generated from machine learning models (e.g. predict disease treated by drug), but it can adapt to generic python function, as long as the input params and return object follow the expected structure.
+
+Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science.
 
 ## 📦️ Use the package
 
@@ -28,7 +38,7 @@ from openpredict import trapi_predict, PredictOptions, PredictOutput
 @trapi_predict(path='/predict',
     name="Get predicted targets for a given entity",
     description="Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.",
-    relations=[
+    edges=[
         {
             'subject': 'biolink:Drug',
             'predicate': 'biolink:treats',
@@ -39,7 +49,19 @@ from openpredict import trapi_predict, PredictOptions, PredictOutput
             'predicate': 'biolink:treated_by',
             'object': 'biolink:Drug',
         },
-    ]
+    ],
+	nodes={
+        "biolink:Disease": {
+            "id_prefixes": [
+                "OMIM"
+            ]
+        },
+        "biolink:Drug": {
+            "id_prefixes": [
+                "DRUGBANK"
+            ]
+        }
+    }
 )
 def get_predictions(
         input_id: str, options: PredictOptions
@@ -59,7 +81,7 @@ def get_predictions(
     return predictions
 ```
 
-You can use [our cookiecutter template](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish, and integrate them in the Translator ecosystem
+> 🍪 You can use [**our cookiecutter template**](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish, and integrate them in the Translator ecosystem
 
 ## 🌐 The OpenPredict Translator API
 
