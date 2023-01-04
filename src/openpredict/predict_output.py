@@ -38,3 +38,6 @@ class TrainingOutput(BaseModel):
     f1: float
     average_precision: float
     # elapsed_time: datetime
+
+    class Config:
+        arbitrary_types_allowed = True

@@ -4,7 +4,6 @@ import requests
 
 from openpredict.config import settings
 from openpredict.utils import get_entities_labels
-from trapi.loaded_models import models_list
 
 # TODO: add evidence path to TRAPI
 
@@ -64,7 +63,7 @@ def resolve_id(id_to_resolve, resolved_ids_object):
     return id_to_resolve
 
 
-def resolve_trapi_query(reasoner_query):
+def resolve_trapi_query(reasoner_query, models_list):
     """Main function for TRAPI
     Convert an array of predictions objects to ReasonerAPI format
     Run the get_predict to get the QueryGraph edges and nodes
