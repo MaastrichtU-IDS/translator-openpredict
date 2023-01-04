@@ -69,6 +69,7 @@ def get_drug_disease_features(from_model_id: str):
 
 # @is_fairstep(label='Train test splitting')
 def train_test_splitting(n_fold, pairs, classes):
+    time_start = datetime.now()
     # Train-Test Splitting
     n_seed = 101
     if n_fold == 1:
