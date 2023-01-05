@@ -1,5 +1,5 @@
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from fastapi import Body, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,7 +9,6 @@ from reasoner_pydantic import Query
 
 from openpredict.config import settings
 from openpredict.predict_output import PredictOptions
-from openpredict.rdf_utils import get_loaded_graph
 from openpredict.trapi_parser import resolve_trapi_query
 
 default_servers_list = [
@@ -44,7 +43,6 @@ default_servers_list = [
 # }
 
 
-
 class TRAPI(FastAPI):
     """Translator Reasoner API - wrapper for FastAPI."""
 
@@ -60,7 +58,7 @@ class TRAPI(FastAPI):
     def __init__(
         self,
         *args: Any,
-        models_list: List[Any],
+        predict_endpoints: List[Callable],
         servers: Optional[List[Dict[str, str]]] = default_servers_list,
         info: Optional[Dict[str, Any]] = None,
         title='Translator Reasoner API',
@@ -80,7 +78,7 @@ class TRAPI(FastAPI):
             **kwargs,
         )
         self.servers = servers
-        self.models_graph = get_loaded_graph(models_list)
+        self.predict_endpoints = predict_endpoints
         self.info = info
 
         self.add_middleware(
@@ -182,7 +180,10 @@ class TRAPI(FastAPI):
                 return {"message": {'knowledge_graph': {'nodes': {}, 'edges': {}}, 'query_graph': query_graph, 'results': []}}
                 # return ({"status": 501, "title": "Not Implemented", "detail": "Multi-edges queries not yet implemented", "type": "about:blank" }, 501)
 
-            reasonerapi_response = resolve_trapi_query(request_body.dict(exclude_none=True), models_list)
+            reasonerapi_response = resolve_trapi_query(
+                request_body.dict(exclude_none=True),
+                predict_endpoints
+            )
 
             return JSONResponse(reasonerapi_response) or ('Not found', 404)
 
@@ -202,12 +203,11 @@ class TRAPI(FastAPI):
                 'edges': [],
                 'nodes': {}
             }
-            for loaded_model in models_list:
-                for predict_func in loaded_model['endpoints']:
-                    if predict_func._trapi_predict['edges'] not in metakg['edges']:
-                        metakg['edges'] += predict_func._trapi_predict['edges']
-                    # Merge nodes dict
-                    metakg['nodes'] = {**metakg['nodes'], **predict_func._trapi_predict['nodes']}
+            for predict_func in predict_endpoints:
+                if predict_func._trapi_predict['edges'] not in metakg['edges']:
+                    metakg['edges'] += predict_func._trapi_predict['edges']
+                # Merge nodes dict
+                metakg['nodes'] = {**metakg['nodes'], **predict_func._trapi_predict['nodes']}
 
             return JSONResponse(metakg)
 
@@ -258,18 +258,17 @@ class TRAPI(FastAPI):
             return prediction_endpoint
 
 
-        for loaded_model in models_list:
-            for predict_func in loaded_model['endpoints']:
-                self.add_api_route(
-                    path=predict_func._trapi_predict['path'],
-                    methods=["GET"],
-                    # endpoint=copy_func(prediction_endpoint, model['path'].replace('/', '')),
-                    endpoint=endpoint_factory(predict_func),
-                    name=predict_func._trapi_predict['name'],
-                    openapi_extra={"description": predict_func._trapi_predict['description']},
-                    response_model=dict,
-                    tags=["models"],
-                )
+        for predict_func in predict_endpoints:
+            self.add_api_route(
+                path=predict_func._trapi_predict['path'],
+                methods=["GET"],
+                # endpoint=copy_func(prediction_endpoint, model['path'].replace('/', '')),
+                endpoint=endpoint_factory(predict_func),
+                name=predict_func._trapi_predict['name'],
+                openapi_extra={"description": predict_func._trapi_predict['description']},
+                response_model=dict,
+                tags=["models"],
+            )
 
 
 

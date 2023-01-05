@@ -34,6 +34,7 @@ dependencies = [
     "SPARQLWrapper >=2.0.0,<3.0.0",
     # "mlem",
     "mlem==0.3.2",
+    "reasoner-pydantic ==3.0.1",
     # "fairworkflows",
     # "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
     # "yatiml >=0.10.0",
@@ -61,8 +62,6 @@ train = [
     "python-multipart >=0.0.5",
     # "httpx >=0.21.1",
     "fastapi >=0.68.1",
-    # "reasoner-pydantic >=2.2.3",
-    "reasoner-pydantic ==3.0.1",
 ]
 test = [
     "pytest >=7.1.3,<8.0.0",

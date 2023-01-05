@@ -1,3 +1,4 @@
+import glob
 import os
 import uuid
 from datetime import datetime
@@ -50,11 +51,16 @@ if not SPARQL_ENDPOINT_PASSWORD:
 SPARQL_ENDPOINT_URL=None
 
 
-def get_loaded_graph(models_list):
+def get_models_graph(models_dir: str="models"):
+    """Helper function to get a graph with the RDF from all models given in a list"""
     g = Graph()
-    for loaded_model in models_list:
-        g.parse(f"{loaded_model['model']}.ttl")
-        # g.parse(f"{os.getcwd()}/{loaded_model['model']}.ttl")
+
+    for file in glob.glob(f"{models_dir}/*.ttl"):
+        g.parse(file)
+
+    # for loaded_model in models_list:
+    #     g.parse(f"{loaded_model['model']}.ttl")
+    #     # g.parse(f"{os.getcwd()}/{loaded_model['model']}.ttl")
     return g
 
 

@@ -3,6 +3,7 @@ import os
 from enum import Enum
 
 from fastapi import File, UploadFile
+from rdflib import Graph
 
 from drkg_model.api import api as drkg_model_api
 from openpredict.config import settings
@@ -29,12 +30,14 @@ if settings.DEV_MODE:
     log_level = logging.INFO
 logging.basicConfig(level=log_level)
 
-models_list = [
-    {
-        "model": "models/openpredict_baseline",
-        "endpoints": [get_predictions, get_similarities]
-    },
+predict_endpoints = [
+    get_predictions,
+    get_similarities,
 ]
+
+models_g = Graph()
+models_g.parse("models/openpredict_baseline.ttl")
+
 
 openapi_info = {
     "contact": {
@@ -76,9 +79,8 @@ openapi_info = {
 
 
 
-
 app = TRAPI(
-    models_list=models_list,
+    predict_endpoints=predict_endpoints,
     info=openapi_info,
     title='OpenPredict API',
     version='1.0.0',
@@ -108,7 +110,7 @@ def get_features(embedding_type: EmbeddingTypes ='Drugs') -> dict:
     """
     if type(embedding_type) is EmbeddingTypes:
         embedding_type = embedding_type.value
-    return retrieve_features(app.models_graph, embedding_type)
+    return retrieve_features(models_g, embedding_type)
 
 
 
@@ -122,7 +124,7 @@ def get_models() -> dict:
 
     :return: JSON with models and features
     """
-    return retrieve_models(app.models_graph)
+    return retrieve_models(models_g)
 
 
 

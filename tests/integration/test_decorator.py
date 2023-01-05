@@ -48,7 +48,6 @@ def get_predictions(
 
 
 def test_trapi_predict_decorator():
-    (func, metadata) = get_predictions
-    res = func('drugbank:DB00002', PredictOptions())
-    assert len(metadata['relations']) == 2
+    res = get_predictions('drugbank:DB00002', PredictOptions())
+    assert len(get_predictions._trapi_predict['edges']) == 2
     assert len(res['hits']) == 1
