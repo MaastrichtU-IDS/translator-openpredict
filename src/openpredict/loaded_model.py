@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 # from fairworkflows import is_fairstep
 from mlem import api as mlem
@@ -12,8 +12,11 @@ from openpredict.utils import log
 
 @dataclass
 class LoadedModel():
+    path: str
     model: Any
     metadata: Graph
+    hyper_params: Optional[Any]
+    scores: Optional[Any]
     # features: Any = None
 
 
@@ -29,7 +32,7 @@ def save(
     # sample_data: Any,
     # scores: Optional[Dict] = None,
     # hyper_params: Optional[Dict] = None,
-) -> str:
+) -> LoadedModel:
     model_name = path.rsplit('/', 1)[-1]
     # print(os.path.isabs(path))
     # if not os.path.isabs(path):
@@ -47,7 +50,14 @@ def save(
     # os.chmod(f"{path}.mlem", 0o644)
 
     # TODO: generate and store RDF metadata
-    return path
+    # return path
+    return LoadedModel(
+        path=path,
+        model=model,
+        metadata=g,
+        hyper_params=hyper_params,
+        scores=scores,
+    )
 
 
 
@@ -58,4 +68,6 @@ def load(path: str) -> LoadedModel:
     g = Graph()
     g.parse(f"{path}.ttl", format='ttl')
 
-    return LoadedModel(model=model, metadata=g)
+    # TODO: extract scores and hyper_params from RDF
+
+    return LoadedModel(path=path, model=model, metadata=g)

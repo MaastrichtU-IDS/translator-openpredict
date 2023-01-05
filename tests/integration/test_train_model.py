@@ -6,7 +6,8 @@ from openpredict_model.train import geometricMean, train_model
 
 def test_train_model():
     """Test to train from baseline model to get drug-disease similarities (drugbank-omim)"""
-    clf, scores, hyper_params, features_df = train_model()
+    loaded_model = train_model()
+    scores = loaded_model.scores
 
     assert 0.80 < scores['precision'] < 0.95
     assert 0.60 < scores['recall'] < 0.85

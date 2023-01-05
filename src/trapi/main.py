@@ -155,13 +155,13 @@ def post_embedding(
     # Ignore the API key check if no env variable defined (for development)
     if os.getenv('OPENPREDICT_APIKEY') == apikey or os.getenv('OPENPREDICT_APIKEY') is None:
         embedding_file = uploaded_file.file
-        run_id, scores = add_embedding(
+        run_id, loaded_model = add_embedding(
             embedding_file, emb_name, types, model_id)
         print('Embeddings uploaded')
         # train_model(False)
         return {
             'status': 200,
-            'message': 'Embeddings added for run ' + run_id + ', trained model has scores ' + str(scores)
+            'message': 'Embeddings added for run ' + run_id + ', trained model has scores ' + str(loaded_model.scores)
         }
     else:
         return {'Forbidden': 403}

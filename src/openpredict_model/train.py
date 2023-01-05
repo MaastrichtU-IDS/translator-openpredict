@@ -665,14 +665,14 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
 
     # print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
 
-    model_path = save(
+    loaded_model = save(
         model=clf,
         path="models/openpredict_baseline",
         sample_data=sample_data,
         hyper_params=hyper_params,
         scores=scores,
     )
-    return model_path
+    return loaded_model
 
 
 
@@ -768,9 +768,9 @@ def add_embedding(
 
     # added_feature_uri = add_feature_metadata(emb_name, description, types)
     # train the model
-    clf, scores, hyper_params, features_df = train_model(run_id)
+    loaded_model = train_model(run_id)
 
-    return run_id, scores
+    return run_id, loaded_model
 
 
 
