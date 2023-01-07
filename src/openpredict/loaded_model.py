@@ -15,8 +15,8 @@ class LoadedModel():
     path: str
     model: Any
     metadata: Graph
-    hyper_params: Optional[Any]
-    scores: Optional[Any]
+    hyper_params: Optional[Any] = None
+    scores: Optional[Any] = None
     # features: Any = None
 
 

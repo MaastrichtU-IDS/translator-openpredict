@@ -129,7 +129,7 @@ docker-compose up api
 
 ### Test the OpenPredict API
 
-You can run the tests locally with docker:
+Run the tests locally with docker:
 
 ```bash
 docker-compose run tests
