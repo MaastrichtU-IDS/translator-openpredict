@@ -30,6 +30,7 @@ dynamic = ["version"]
 dependencies = [
     "requests >=2.23.0",
     "pydantic >=1.9",
+    "fastapi >=0.68.1",
     "rdflib >=6.1.1",
     "SPARQLWrapper >=2.0.0,<3.0.0",
     # "mlem",
@@ -61,7 +62,6 @@ train = [
     "pyRDF2vec==0.0.5",
     "python-multipart >=0.0.5",
     # "httpx >=0.21.1",
-    "fastapi >=0.68.1",
 ]
 test = [
     "pytest >=7.1.3,<8.0.0",
