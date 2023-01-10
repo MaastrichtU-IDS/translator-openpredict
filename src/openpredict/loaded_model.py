@@ -22,11 +22,11 @@ class LoadedModel():
 
 # @is_fairstep(label='Save a model')
 def save(
-    model,
-    path,
-    sample_data,
-    scores = None,
-    hyper_params = None,
+    model: Any,
+    path: str,
+    sample_data: Any,
+    scores: Optional[Any] = None,
+    hyper_params: Optional[Any] = None,
     # model: Any,
     # path: str,
     # sample_data: Any,

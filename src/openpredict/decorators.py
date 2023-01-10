@@ -22,8 +22,11 @@ def trapi_predict(
         name = path
     def decorator(func):
         @functools.wraps(func)
-        def wrapper(input_id: str, options: PredictOptions):
-            options = PredictOptions.parse_obj(options)
+        def wrapper(input_id: str, options: Optional[PredictOptions] = None):
+            if options:
+                options = PredictOptions.parse_obj(options)
+            else:
+                options = PredictOptions()
             # Add any additional logic or behavior here
             # print(f'Decorator parameter: {edges}')
             return func(input_id, options)
