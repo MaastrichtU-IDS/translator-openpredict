@@ -83,7 +83,7 @@ servers_list = [
     },
 ]
 
-# Try to order the servers list based on the env variable used for nginx proxy in docker
+# Order the servers list based on the env variable used for nginx proxy in docker
 if settings.VIRTUAL_HOST:
     servers = []
     # Add the current server as 1st server in the list
@@ -96,7 +96,7 @@ if settings.VIRTUAL_HOST:
         if settings.VIRTUAL_HOST not in server['url']:
             servers.append(server)
 else:
-    servers = servers_list
+    servers = []
 
 
 app = TRAPI(

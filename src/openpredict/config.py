@@ -5,12 +5,12 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
 
+    VIRTUAL_HOST: str = None
     PROD_URL: str = 'https://openpredict.transltr.io'
     TEST_URL: str = 'https://openpredict.test.transltr.io'
     STAGING_URL: str = 'https://openpredict.ci.transltr.io'
     DEV_URL: str = 'https://openpredict.semanticscience.org'
 
-    VIRTUAL_HOST: str = None
     DEV_MODE: bool = False
     LOG_LEVEL: str = 'ERROR'
 
