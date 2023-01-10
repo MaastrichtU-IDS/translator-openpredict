@@ -7,40 +7,9 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse, RedirectResponse
 from reasoner_pydantic import Query
 
-from openpredict.config import settings
 from openpredict.predict_output import PredictOptions
 from openpredict.trapi_parser import resolve_trapi_query
-
-default_servers_list = [
-    {
-        "url": settings.PROD_URL,
-        "description": 'TRAPI ITRB Production Server',
-        "x-maturity": 'production'
-    },
-    {
-        "url": settings.TEST_URL,
-        "description": 'TRAPI ITRB Test Server',
-        "x-maturity": 'testing'
-    },
-    {
-        "url": settings.STAGING_URL,
-        "description": 'TRAPI ITRB CI Server',
-        "x-maturity": 'staging'
-    },
-    {
-        "url": settings.DEV_URL,
-        "description": 'TRAPI ITRB Development Server',
-        "x-maturity": 'development',
-        # "x-location": 'IDS'
-    },
-]
-
-# default_contact = {
-#     "name": "Vincent Emonet",
-#     "email": "vincent.emonet@maastrichtuniversity.nl",
-#     # "x-id": "vemonet",
-#     "x-role": "responsible developer",
-# }
+from openpredict.utils import log
 
 
 class TRAPI(FastAPI):
@@ -59,7 +28,7 @@ class TRAPI(FastAPI):
         self,
         *args: Any,
         predict_endpoints: List[Callable],
-        servers: Optional[List[Dict[str, str]]] = default_servers_list,
+        servers: Optional[List[Dict[str, str]]] = None,
         info: Optional[Dict[str, Any]] = None,
         title='Translator Reasoner API',
         version='1.0.0',
@@ -130,33 +99,33 @@ class TRAPI(FastAPI):
         @self.post("/query", name="TRAPI query",
             description="""The default example TRAPI query will give you a list of predicted potential drug treatments for a given disease
 
-        You can also try this query to retrieve similar entities to a given drug:
+You can also try this query to retrieve similar entities to a given drug:
 
-        ```json
-        {
-            "message": {
-                "query_graph": {
-                    "edges": {
-                        "e01": {
-                            "object": "n1",
-                            "predicates": [ "biolink:similar_to" ],
-                            "subject": "n0"
-                        }
-                    },
-                    "nodes": {
-                        "n0": {
-                            "categories": [ "biolink:Drug" ],
-                            "ids": [ "DRUGBANK:DB00394" ]
-                        },
-                        "n1": {
-                            "categories": [ "biolink:Drug" ]
-                        }
-                    }
+```json
+{
+    "message": {
+        "query_graph": {
+            "edges": {
+                "e01": {
+                    "object": "n1",
+                    "predicates": [ "biolink:similar_to" ],
+                    "subject": "n0"
                 }
             },
-            "query_options": { "n_results": 5 }
+            "nodes": {
+                "n0": {
+                    "categories": [ "biolink:Drug" ],
+                    "ids": [ "DRUGBANK:DB00394" ]
+                },
+                "n1": {
+                    "categories": [ "biolink:Drug" ]
+                }
+            }
         }
-        ```
+    },
+    "query_options": { "n_results": 5 }
+}
+```
         """,
             response_model=Query,
             tags=["reasoner"],
@@ -182,7 +151,7 @@ class TRAPI(FastAPI):
 
             reasonerapi_response = resolve_trapi_query(
                 request_body.dict(exclude_none=True),
-                predict_endpoints
+                self.predict_endpoints
             )
 
             return JSONResponse(reasonerapi_response) or ('Not found', 404)
@@ -203,7 +172,10 @@ class TRAPI(FastAPI):
                 'edges': [],
                 'nodes': {}
             }
-            for predict_func in predict_endpoints:
+            log.info("IN TRAPI METAKG")
+            log.info(self.predict_endpoints)
+            print("IN TRAPI METAKG", predict_endpoints, flush=True)
+            for predict_func in self.predict_endpoints:
                 if predict_func._trapi_predict['edges'] not in metakg['edges']:
                     metakg['edges'] += predict_func._trapi_predict['edges']
                 # Merge nodes dict
@@ -257,8 +229,7 @@ class TRAPI(FastAPI):
 
             return prediction_endpoint
 
-
-        for predict_func in predict_endpoints:
+        for predict_func in self.predict_endpoints:
             self.add_api_route(
                 path=predict_func._trapi_predict['path'],
                 methods=["GET"],
@@ -291,27 +262,7 @@ class TRAPI(FastAPI):
             tags=tags,
         )
 
-        # Try to order the servers list based on the env variable used for nginx proxy in docker
-        if not settings.DEV_MODE:
-          if settings.VIRTUAL_HOST:
-            servers_list = []
-            # Add the current server as 1st server in the list
-            for server in self.servers:
-              if settings.VIRTUAL_HOST in server['url']:
-                servers_list.append(server)
-                break
-
-            # Add other servers
-            for server in self.servers:
-              if settings.VIRTUAL_HOST not in server['url']:
-                servers_list.append(server)
-          else:
-            servers_list = self.servers
-
-          openapi_schema["servers"] = servers_list
-
-        # if self.info:
+        openapi_schema["servers"] = self.servers
         openapi_schema["info"] = {**openapi_schema["info"], **self.info}
-
         self.openapi_schema = openapi_schema
         return self.openapi_schema
