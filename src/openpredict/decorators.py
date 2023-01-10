@@ -12,7 +12,7 @@ def trapi_predict(
     nodes: Dict[str, MetaNode],
     name: Optional[str] =None,
     description: Optional[str] = "",
-    default_input: Optional[str] = "DRUGBANK:DB00394",
+    default_input: Optional[str] = "drugbank:DB00394",
     default_model: Optional[str] = "openpredict_baseline",
 ):
     """ A decorator to indicate a function is a function to generate prediction that can be integrated to TRAPI.
@@ -27,8 +27,6 @@ def trapi_predict(
                 options = PredictOptions.parse_obj(options)
             else:
                 options = PredictOptions()
-            # Add any additional logic or behavior here
-            # print(f'Decorator parameter: {edges}')
             return func(input_id, options)
 
         wrapper._trapi_predict = {
