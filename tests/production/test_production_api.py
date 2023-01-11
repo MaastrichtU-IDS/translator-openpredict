@@ -13,7 +13,7 @@ def test_get_predict():
     # url = PROD_API_URL + '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict_baseline&n_results=42'
     get_predictions = requests.get(PROD_API_URL + '/predict',
                         params={
-                            'drug_id': 'DRUGBANK:DB00394',
+                            'input_id': 'DRUGBANK:DB00394',
                             'n_results': '42',
                             'model_id': 'openpredict_baseline'
                         }).json()
