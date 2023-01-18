@@ -79,14 +79,20 @@ dev = [
     # "gunicorn >=20.0.4",
     "dvc==2.38.1",
     # "dagshub",
-    "isort >=5.0.6,<6.0.0",
-    "flake8 >=3.8.3,<6.0.0",
-    "Flake8-pyproject>=1.1.0.post0",
-    "flaky",
+    "ruff >=0.0.219",
     "types-requests",
     # "jupyter",
     # "notebook",
 ]
+
+
+[project.urls]
+Homepage = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+Documentation = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+History = "https://github.com/MaastrichtU-IDS/translator-openpredict/releases"
+Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
+Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/openpredict"]
@@ -113,15 +119,11 @@ post-install-commands = [
 
 [tool.hatch.envs.default.scripts]
 fmt = [
-    # "ruff src tests --fix",
-    "isort src tests",
-    "autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place src tests --exclude=__init__.py",
-    "pre-commit run --all-files || true",
+    "ruff src tests --fix",
+    # "pre-commit run --all-files || true",
 ]
 check = [
-    # "ruff src tests",
-    "isort --check-only --diff .",
-    "flake8 .",
+    "ruff src tests",
 ]
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
@@ -136,10 +138,6 @@ path = "src/openpredict/__init__.py"
 
 # OTHER TOOLS
 
-[tool.isort]
-line_length = 120
-
-
 [tool.coverage.run]
 source = ["src/openpredict"]
 branch = true
@@ -147,21 +145,8 @@ branch = true
 omit = ["tests/*"]
 
 
-[tool.flake8]
-max-complexity = 17
-max-line-length = 120
-per-file-ignores = [
-    "__init__.py:F401",
-]
-ignore = [
-    "E501", # line too long
-    "E303", # too many blank lines
-    "E301", # expected 1 blank lines found 0
-    "W503", # line break before binary operator
-]
-
-
 [tool.ruff]
+src = ["src", "tests"]
 target-version = "py37"
 line-length = 120
 select = [
@@ -171,7 +156,7 @@ select = [
     "E",  # pycodestyle errors
     "F",  # pyflakes
     # "FBT", # flake8-boolean-trap
-    # "I",  # isort
+    "I",  # isort
     "ICN",
     "N",
     "PLC",
@@ -201,13 +186,4 @@ ignore = [
 ]
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
-
-
-
-[project.urls]
-Homepage = "https://github.com/MaastrichtU-IDS/translator-openpredict"
-Documentation = "https://github.com/MaastrichtU-IDS/translator-openpredict"
-History = "https://github.com/MaastrichtU-IDS/translator-openpredict/releases"
-Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
-Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
+"__init__.py" = [ "I", "F401" ]
