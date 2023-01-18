@@ -155,6 +155,8 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
         # TODO: exit if no ID provided? Or check already done before?
 
         for predict_func in endpoints_list:
+            # TODO: run the functions in parallel with future.concurrent
+
             for prediction_relation in predict_func._trapi_predict['edges']:
                 predicate_parents = get_biolink_parents(prediction_relation['predicate'])
                 subject_parents = get_biolink_parents(prediction_relation['subject'])

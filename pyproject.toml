@@ -74,12 +74,12 @@ test = [
 dev = [
     "typer==0.7.0",
     "pre-commit >=2.17.0,<3.0.0",
-    "autoflake >=1.4.0,<2.0.0",
     # "uvicorn >=0.15.0",
     # "gunicorn >=20.0.4",
     "dvc==2.38.1",
     # "dagshub",
     "ruff >=0.0.219",
+    "pip-tools",
     "types-requests",
     # "jupyter",
     # "notebook",
@@ -125,6 +125,7 @@ fmt = [
 check = [
     "ruff src tests",
 ]
+compile = "pip-compile --extra dev --extra test -o requirements.txt pyproject.toml"
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
 
@@ -147,7 +148,7 @@ omit = ["tests/*"]
 
 [tool.ruff]
 src = ["src", "tests"]
-target-version = "py37"
+target-version = "py38"
 line-length = 120
 select = [
     "A",
@@ -161,7 +162,7 @@ select = [
     "N",
     "PLC",
     "PLE",
-    "PLR",
+    # "PLR", # Magic value used in comparison, consider replacing the str with a constant variable
     "PLW",
     "Q",
     "RUF",
@@ -183,6 +184,7 @@ ignore = [
     "C901", # too complex
     "S101", # Use of `assert` detected
     "T201", "T203", # remove print and pprint
+    "A003", # Class attribute `type` is shadowing a python builtin
 ]
 
 [tool.ruff.per-file-ignores]
