@@ -125,7 +125,7 @@ fmt = [
 check = [
     "ruff src tests",
 ]
-compile = "pip-compile --extra dev --extra test -o requirements.txt pyproject.toml"
+compile = "pip-compile --extra dev --extra test --extra train -o requirements.txt pyproject.toml"
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
 
