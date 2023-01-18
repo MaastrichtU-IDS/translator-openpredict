@@ -76,7 +76,10 @@ def test_post_trapi():
             assert (
                 len(validator_resp["errors"]) == 0
             )
-            if trapi_filename.endswith('limit3.json'):
+
+            if trapi_filename.endswith('0.json'):
+                assert len(edges) == 0
+            elif trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):
                 assert len(edges) == 1

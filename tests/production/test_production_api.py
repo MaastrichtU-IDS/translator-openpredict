@@ -11,12 +11,14 @@ PROD_API_URL = 'https://openpredict.semanticscience.org'
 def test_get_predict():
     """Test predict API GET operation"""
     # url = PROD_API_URL + '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict_baseline&n_results=42'
-    get_predictions = requests.get(PROD_API_URL + '/predict',
-                        params={
-                            'input_id': 'DRUGBANK:DB00394',
-                            'n_results': '42',
-                            'model_id': 'openpredict_baseline'
-                        }).json()
+    get_predictions = requests.get(
+        PROD_API_URL + '/predict',
+        params={
+            'input_id': 'DRUGBANK:DB00394',
+            'n_results': '42',
+            'model_id': 'openpredict_baseline'
+        }
+    ).json()
     assert 'hits' in get_predictions
     assert len(get_predictions['hits']) == 42
     assert get_predictions['count'] == 42
@@ -43,7 +45,9 @@ def test_post_trapi():
             assert (
                 len(validator_resp["errors"]) == 0
             )
-            if trapi_filename.endswith('limit3.json'):
+            if trapi_filename.endswith('0.json'):
+                assert len(edges) == 0
+            elif trapi_filename.endswith('limit3.json'):
                 assert len(edges) == 3
             elif trapi_filename.endswith('limit1.json'):
                 assert len(edges) == 1
