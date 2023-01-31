@@ -1,0 +1,95 @@
+name: Run development tests for TRAPI
+# Run test at each push to master or develop, if changes to package files
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: [ '**', '!master']
+    paths:
+    - 'pyproject.toml'
+    - 'src/**'
+    - 'tests/**'
+    - '.github/workflows/test-dev.yml'
+
+jobs:
+
+  CodeQL-Analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # required for all workflows
+      # only required for workflows in private repositories:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python
+
+      # Autobuild attempts to build any compiled languages (C/C++, C#, Go, or Java).
+      # If this step fails, then you should remove it and run the build manually
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+
+  tests-coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11' # The JDK version to make available on the path.
+
+    - uses: vemonet/setup-spark@v1
+      with:
+        spark-version: '3.0.2'
+
+    - uses: iterative/setup-dvc@v1
+
+    - name: Setup SonarCloud
+      uses: warchant/setup-sonar-scanner@v3
+
+    - name: Pull data with dvc
+      run: |
+        dvc pull
+
+    - name: Install dependencies
+      run: |
+        pip install -e ".[train,test,dev]"
+
+    - name: Test with pytest with coverage
+      run: |
+        pytest -s --cov src/openpredict --cov-report xml:coverage.xml tests/integration/*
+
+
+    - name: Upload coverage to SonarCloud
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=maastrichtu-ids  -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.projectKey=MaastrichtU-IDS_translator-openpredict -Dsonar.python.coverage.reportPaths=coverage.xml
+
+    # - name: SonarCloud Scan
+    #   uses: SonarSource/sonarcloud-github-action@master
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
