@@ -1,0 +1,52 @@
+schemaVersion: 2.0.0
+metadata:
+  name: python
+  version: 1.0.0
+  displayName: Python
+  description: Python Stack with Python 3.7
+  icon: https://www.python.org/static/community_logos/python-logo-generic.svg
+  tags: ["Python", "pip"]
+  projectType: "python"
+  language: "python"
+
+# This file allows to deploy OpenPredict in development on OpenShift via VSCode
+# Install the OpenShift VSCode extension and add openpredict as a component
+# Then push this component
+
+starterProjects:
+  - name: python-example
+    git:
+      remotes:
+        origin: https://github.com/odo-devfiles/python-ex
+components:
+  - name: py-web
+    container:
+      image: quay.io/eclipse/che-python-3.7:nightly
+      mountSources: true
+      endpoints:
+        - name: web
+          targetPort: 8808
+commands:
+  - id: pip-install-requirements
+    exec:
+      commandLine: pip install --user -e .
+      group:
+        kind: build
+        isDefault: true
+      component: py-web
+  - id: run-app
+    exec:
+      commandLine: "python -m uvicorn src.trapi.main:app --reload"
+      workingDir: ${PROJECTS_ROOT}
+      component: py-web
+      group:
+        kind: run
+        isDefault: true
+    # Address already in use
+  - id: debugpy
+    exec:
+      commandLine: "pip install --user debugpy && python -m debugpy --listen 0.0.0.0:${DEBUG_PORT} app.py"
+      workingDir: ${PROJECTS_ROOT}
+      component: py-web
+      group:
+        kind: debug

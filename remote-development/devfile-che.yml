@@ -1,0 +1,80 @@
+apiVersion: 1.0.0
+metadata:
+  generateName: openpredict-
+projects:
+  -
+    name: openpredict
+    source:
+      type: git
+      location: 'https://github.com/MaastrichtU-IDS/translator-openpredict'
+components:
+  -
+    type: chePlugin
+    id: ms-python/python/latest
+  -
+    type: dockerimage
+    alias: python
+    image: quay.io/eclipse/che-python-3.8:next
+    memoryLimit: 16Gi
+    endpoints:
+      - name: 'openpredict'
+        port: 8808
+    mountSources: true
+    volumes:
+      - name: venv
+        containerPath: /home/user/.venv
+commands:
+  -
+    name: install dependencies
+    actions:
+      -
+        type: exec
+        component: python
+        command: 'pip install -e . && pip install ptvsd'
+        workdir: '${CHE_PROJECTS_ROOT}/openpredict'
+  # -
+  #   name: migrate
+  #   actions:
+  #     -
+  #       type: exec
+  #       component: python
+  #       command: '. ${HOME}/.venv/bin/activate && python manage.py migrate'
+  #       workdir: '${CHE_PROJECTS_ROOT}/openpredict'
+  -
+    name: run api
+    actions:
+      -
+        type: exec
+        component: python
+        command: 'uvicorn src.trapi.main:app --reload'
+        workdir: '${CHE_PROJECTS_ROOT}/openpredict'
+  -
+    name: run server in debug mode
+    actions:
+      -
+        type: exec
+        component: python
+        command: 'export DEBUG_MODE=True && uvicorn src.trapi.main:app --reload'
+        workdir: '${CHE_PROJECTS_ROOT}/openpredict'
+  -
+    name: debug
+    actions:
+    - type: vscode-launch
+      referenceContent: >
+        {
+        "version": "0.2.0",
+        "configurations": [
+          {
+            "name": "Python: Remote Attach",
+            "type": "python",
+            "request": "attach",
+            "port": 8808,
+            "host": "0.0.0.0",
+            "pathMappings": [
+              {
+                  "localRoot": "${workspaceFolder}",
+                  "remoteRoot": "${workspaceFolder}"
+              }
+            ]
+          }]
+        }
