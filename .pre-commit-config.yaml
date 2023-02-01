@@ -4,8 +4,8 @@ repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
     hooks:
-    -   id: check-added-large-files
-        name: 🐘 Check for added large files
+    # -   id: check-added-large-files
+    #     name: 🐘 Check for added large files
     -   id: check-toml
         name: ✔️  Check TOML
     -   id: check-yaml

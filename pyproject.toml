@@ -84,6 +84,13 @@ dev = [
     # "jupyter",
     # "notebook",
 ]
+doc = [
+    "mkdocs >=1.4.2",
+    "mkdocs-material >=8.2.7",
+    "mkdocstrings[python] >=0.19.1",
+    "mdx-include >=1.4.1",
+    "mkdocs-markdownextradata-plugin >=0.2.5",
+]
 
 
 [project.urls]
@@ -110,6 +117,7 @@ packages = ["src/openpredict"]
 features = [
     "test",
     "dev",
+    "doc",
     # "train",
 ]
 post-install-commands = [
@@ -118,6 +126,7 @@ post-install-commands = [
 ]
 
 [tool.hatch.envs.default.scripts]
+docs = "mkdocs serve -a localhost:8001 {args}"
 fmt = [
     "ruff src tests --fix",
     # "pre-commit run --all-files || true",

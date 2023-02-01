@@ -4,21 +4,19 @@
 
 [![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict)
 
-**OpenPredict** is a python package to help serve predictions of biomedical associations, as Translator Reasoner API (aka. TRAPI).
+**OpenPredict** is a python package that helps data scientists to build, and **publish prediction models** in a [FAIR](https://www.go-fair.org/fair-principles/) and reproducible manner. It provides helpers for various steps of the process:
 
-The [Translator Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI) (TRAPI) defines a standard HTTP API for communicating biomedical questions and answers leveraging the [Biolink model](https://github.com/biolink/biolink-model/).
-
-The package provides:
-
-* a decorator `@trapi_predict` to which the developer can pass all informations required to integrate the prediction function to a Translator Reasoner API
-* a `TRAPI` class to deploy a Translator Reasoner API serving a list of prediction functions decorated with `@trapi_predict`
-* Helpers to store your models in a FAIR manner, using tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/)
+* A template to help user quickly bootstrap a new prediction project with the recommended structure ([MaastrichtU-IDS/cookiecutter-openpredict-api](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/))
+* Helper function to easily save a generated model, its metadata, and the data used to generate it. It uses tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/) to store large model outside of the git repository.
+* Deploy API endpoints for retrieving predictions, which comply with the NCATS Biomedical Data Translator standards ([Translator Reasoner API](https://github.com/NCATSTranslator/ReasonerAPI) and [BioLink model](https://github.com/biolink/biolink-model)), using a decorator `@trapi_predict` to simply annotate the function that produces predicted associations for a given input entity
 
 Predictions are usually generated from machine learning models (e.g. predict disease treated by drug), but it can adapt to generic python function, as long as the input params and return object follow the expected structure.
 
-Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science.
+> Additionally to the library, this repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science.
 
-## 📦️ Use the package
+Checkout the documentation website at **[maastrichtu-ids.github.io/translator-openpredict](https://maastrichtu-ids.github.io/translator-openpredict)** for more details.
+
+## 📦️ Create and publish a prediction model
 
 ### Install
 
@@ -26,7 +24,42 @@ Additionally to the library, this repository contains the code for the **OpenPre
 pip install openpredict
 ```
 
-### Use
+### Start a new prediction project
+
+A template to help user quickly bootstrap a new prediction project with the recommended structure ([MaastrichtU-IDS/cookiecutter-openpredict-api](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/))
+
+🍪 You can use [**our cookiecutter template**](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish, and integrate them in the Translator ecosystem
+
+```bash
+pip install cookiecutter
+cookiecutter https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api
+```
+
+### Save a generated model
+
+Helper function to easily save a generated model, its metadata, and the data used to generate it. It uses tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/) to store large model outside of the git repository.
+
+```python
+from openpredict import save
+
+hyper_params = {
+    'penalty': 'l2',
+    'dual': False,
+    'tol': 0.0001,
+    'C': 1.0,
+    'random_state': 100
+}
+
+saved_model = save(
+    model=clf,
+    path="models/my_model",
+    sample_data=sample_data,
+    hyper_params=hyper_params,
+    scores=scores,
+)
+```
+
+### Define the prediction endpoint
 
 The `openpredict` package provides a decorator `@trapi_predict` to annotate your functions that generate predictions. The code for this package is in `src/openpredict/`.
 
@@ -81,7 +114,9 @@ def get_predictions(
     return predictions
 ```
 
-> 🍪 You can use [**our cookiecutter template**](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish, and integrate them in the Translator ecosystem
+### Deploy the Translator Reasoner API
+
+A `TRAPI` class to deploy a Translator Reasoner API serving a list of prediction functions decorated with `@trapi_predict`
 
 ## 🌐 The OpenPredict Translator API
 
