@@ -71,8 +71,8 @@ def convert_baseline_features_ids():
         diseases_set.update(df['Disease1'].tolist())
         diseases_set.update(df['Disease2'].tolist())
 
-    diseases_set = ['OMIM:{}'.format(disease) for disease in diseases_set]
-    drugs_set = ['DRUGBANK:{}'.format(drug) for drug in drugs_set]
+    diseases_set = [f'OMIM:{disease}' for disease in diseases_set]
+    drugs_set = [f'DRUGBANK:{drug}' for drug in drugs_set]
 
     diseases_mappings = normalize_id_to_translator(diseases_set)
     drugs_mappings = normalize_id_to_translator(drugs_set)

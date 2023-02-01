@@ -57,7 +57,7 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
 
 
 def resolve_id(id_to_resolve, resolved_ids_object):
-    if id_to_resolve in resolved_ids_object.keys():
+    if id_to_resolve in resolved_ids_object:
         return resolved_ids_object[id_to_resolve]
     return id_to_resolve
 
@@ -78,7 +78,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
     n_results = None
     min_score = None
     max_score = None
-    if 'query_options' in reasoner_query.keys():
+    if 'query_options' in reasoner_query:
         if 'n_results' in reasoner_query["query_options"]:
             n_results = int(reasoner_query["query_options"]["n_results"])
         if 'min_score' in reasoner_query["query_options"]:
@@ -104,7 +104,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
             'qg_source_id': qg_edge['subject'],
             'qg_target_id': qg_edge['object']
         }
-        if 'predicates' in qg_edge.keys():
+        if 'predicates' in qg_edge:
             query_plan[edge_id]['predicates'] = qg_edge['predicates']
         else:
             # Quick fix: in case no relation is provided
@@ -119,10 +119,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
 
             if node_id == qg_edge['subject']:
                 query_plan[edge_id]['subject_qg_id'] = node_id
-                if 'categories' in node:
-                    query_plan[edge_id]['subject_types'] = node['categories']
-                else:
-                    query_plan[edge_id]['subject_types'] = ['biolink:NamedThing']
+                query_plan[edge_id]['subject_types'] = node.get('categories', ['biolink:NamedThing'])
                 if 'ids' in node:
                     query_plan[edge_id]['subject_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['ids'], resolved_ids_object)
                     query_plan[edge_id]["ids_to_predict"] = query_plan[edge_id]['subject_kg_id']
@@ -132,10 +129,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
 
             if node_id == qg_edge['object']:
                 query_plan[edge_id]['object_qg_id'] = node_id
-                if 'categories' in node:
-                    query_plan[edge_id]['object_types'] = node['categories']
-                else:
-                    query_plan[edge_id]['object_types'] = ['biolink:NamedThing']
+                query_plan[edge_id]['object_types'] = node.get('categories', ['biolink:NamedThing'])
                 if 'ids' in node:
                     query_plan[edge_id]['object_kg_id'], resolved_ids_object = resolve_ids_with_nodenormalization_api(node['ids'], resolved_ids_object)
                     if "ids_to_predict" not in query_plan[edge_id]:
@@ -150,7 +144,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
     kg_edge_count = 0
 
     # Now iterates the query plan to execute each query
-    for edge_qg_id in query_plan.keys():
+    for edge_qg_id in query_plan:
 
         # TODO: exit if no ID provided? Or check already done before?
 
@@ -222,12 +216,12 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                 node_dict[target_node_id] = {
                                     'type': association['type']
                                 }
-                                if 'label' in association.keys():
+                                if 'label' in association:
                                     node_dict[target_node_id]['label'] = association['label']
                                 else:
                                     # TODO: improve to avoid to call the resolver everytime
                                     labels_dict = get_entities_labels([target_node_id])
-                                    if target_node_id in labels_dict.keys() and labels_dict[target_node_id]:
+                                    if target_node_id in labels_dict and labels_dict[target_node_id]:
                                         node_dict[target_node_id]['label'] = labels_dict[target_node_id]['id']['label']
 
                                 # edge_association_type = 'biolink:ChemicalToDiseaseOrPhenotypicFeatureAssociation'

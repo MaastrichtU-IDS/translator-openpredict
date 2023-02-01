@@ -20,7 +20,7 @@ df_op = df_op.rename(columns={'omimid': 'disease_id', 'drugid': 'drug_id'})
 df_op.disease_id = df_op.disease_id.astype(str)
 
 indications_dict = set()
-for i, row in df_op.iterrows():
+for _i, row in df_op.iterrows():
     #row['DB_ID'], row['DO_ID']
     pair = (str(row['drug_id']), str(row['disease_id']))
     indications_dict.add(pair)
@@ -98,7 +98,7 @@ def generate_explanation(drug, disease, drug_fp_vectors, disease_hp_vectors,feat
     path_weight_dict = sorted(path_weight.items(), key=lambda x: x[1], )
     # create a final graph by merging the top-K paths
     G = nx.Graph()
-    for p, s in path_weight_dict[:100]:
+    for p, _s in path_weight_dict[:100]:
         path = ast.literal_eval(p)
         for i in range(len(path)-1):
             s_node_name = path[i]
@@ -119,12 +119,12 @@ def generate_explanation(drug, disease, drug_fp_vectors, disease_hp_vectors,feat
 
 def generate_json(graph) :
     graph_json ={}
-    graph_json['nodes'] = list()
+    graph_json['nodes'] = []
 
     for node in graph.nodes():
         graph_json['nodes'].append(graph[node])
 
-    graph_json['edges']=list()
+    graph_json['edges']=[]
     for edge in graph.edges():
         graph_json['edges'].append(graph[edge[0]][edge[1]])
 
@@ -133,7 +133,7 @@ def generate_json(graph) :
 
 
 def do_evidence_path(drug_id: str, disease_id: str, threshold_drugs : float,threshold_disease : float, features_drug, features_disease):
-    ''' generates explanations based on the user input and returns a json'''
+    """ generates explanations based on the user input and returns a json"""
     evidence_path = generate_explanation(drug=drug_id, disease=disease_id, drug_fp_vectors = drug_fp_vectors, disease_hp_vectors= disease_hp_vectors,
                                          features_drug = features_drug, features_disease = features_disease,threshold_drugs = threshold_drugs,threshold_disease = threshold_disease )
     return generate_json(evidence_path)

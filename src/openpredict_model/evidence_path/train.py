@@ -20,15 +20,15 @@ disease_hp_vectors = KeyedVectors.load_word2vec_format(
 # to generate embeddings, call generate_feature_embedding_data() in method do_evidence_path()
 #
 def calculateEntitySimilarities(tokenized_vector, topn = 100) :
-    ''' calculates similarity scores of all drug-drug and disease-disease
+    """ calculates similarity scores of all drug-drug and disease-disease
         pairs that exist in the knowledge base
-        return : a list containing all the similarity scores '''
+        return : a list containing all the similarity scores """
 
     entities = list(tokenized_vector.vocab)
     similarity_scores = []
     for entity in entities :
         similarEntities = tokenized_vector.most_similar(entity, topn=100)
-        for ent, sim in similarEntities :
+        for _ent, sim in similarEntities :
             similarity_scores.append(1-sim)
 
     return similarity_scores
@@ -36,9 +36,9 @@ def calculateEntitySimilarities(tokenized_vector, topn = 100) :
 
 
 def getQuantiles( drug_vectors, disease_vectors, quantile = 0.1) :
-    ''' calulcates the nth quantile of the calculated similarity scores
+    """ calulcates the nth quantile of the calculated similarity scores
         return : the min-threshold for the drugs and diseases as a tuple
-    '''
+    """
     drug_similarities = calculateEntitySimilarities(drug_vectors,505)
 
     drug_sim_df = pd.DataFrame(drug_similarities)
@@ -55,7 +55,7 @@ def percentiles_of_different_features():
     features_drug = ["TC", 'PPI_SIM', 'SE_SIM', 'GO_SIM', 'TARGETSEQ_SIM']
     features_diseases = ["HPO_SIM", 'PHENO_SIM']
 
-    feature_percentiles = dict()
+    feature_percentiles = {}
     for feature in features_drug :
         drug_emb = KeyedVectors.load_word2vec_format(
         'data/embedding/feature_specific_embeddings_KG/feature_FeatureTypesDrugs.' + str(feature) + '.txt', binary=False)
@@ -97,7 +97,7 @@ def path_weight_product(g1,drug,disease) :
 
 
 def filter_out_features_diseases(features_of_interest):
-    '''Creates the dataframe based on disease features to be converted to a embedding later '''
+    """Creates the dataframe based on disease features to be converted to a embedding later """
     (drug_ft_emb, disease_ft_emb) = load_features_embeddings('openpredict_baseline')
     resulting_embeddings = disease_ft_emb.loc[:,features_of_interest]
     #if(len(features_of_interest) > 1):
@@ -119,7 +119,7 @@ def generate_feature_embedding_data():
 
 
 def filter_out_features_drugs(features_of_interest) :
-    '''Creates the dataframe based on drug features to be converted to a embedding later '''
+    """Creates the dataframe based on drug features to be converted to a embedding later """
     (drug_ft_emb, disease_ft_emb) = load_features_embeddings('openpredict_baseline')
     resulting_embeddings = drug_ft_emb.loc[:,features_of_interest]
     # if(len(features_of_interest) > 1) :
@@ -131,10 +131,10 @@ def filter_out_features_drugs(features_of_interest) :
 
 
 def save_embedding_as_txt(embedding_df, fileName) :
-    '''
+    """
     takes the dataframe filtered based on the features and returns a txt which represents
     its embedding
-    '''
+    """
     embedding_df.index = list(map(int, embedding_df.index))
     embedding_df = embedding_df.reset_index()
     embedding_df_np = embedding_df.to_numpy()

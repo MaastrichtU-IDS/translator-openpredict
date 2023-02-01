@@ -150,7 +150,7 @@ def get_explanation(
     except Exception as e:
         print('Error processing ID ' + concept_id)
         print(e)
-        print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+        print(f'Error on line {sys.exc_info()[-1].tb_lineno}', type(e).__name__, e)
 
         return ('Not found: entry in OpenPredict for ID ' + concept_id, 404)
 

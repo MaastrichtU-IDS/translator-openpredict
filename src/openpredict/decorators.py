@@ -23,10 +23,7 @@ def trapi_predict(
     def decorator(func):
         @functools.wraps(func)
         def wrapper(input_id: str, options: Optional[PredictOptions] = None):
-            if options:
-                options = PredictOptions.parse_obj(options)
-            else:
-                options = PredictOptions()
+            options = PredictOptions.parse_obj(options) if options else PredictOptions()
             return func(input_id, options)
 
         wrapper._trapi_predict = {

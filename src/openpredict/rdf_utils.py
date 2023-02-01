@@ -3,8 +3,8 @@ import os
 import uuid
 from datetime import datetime
 
-from rdflib import RDF, Graph, Literal, Namespace, URIRef
-from rdflib.namespace import DC, RDFS, XSD
+from rdflib import Graph, Literal, Namespace, URIRef
+from rdflib.namespace import DC, XSD
 from SPARQLWrapper import JSON, SPARQLWrapper
 
 from openpredict.config import settings
@@ -89,7 +89,7 @@ def query_sparql_endpoint(query, g, parameters=[]):
         results = []
         for row in qres:
             result = {}
-            for i, p in enumerate(parameters):
+            for _i, p in enumerate(parameters):
                 result[p] = {}
                 result[p]['value'] = str(row[p])
             results.append(result)
@@ -207,7 +207,7 @@ def get_run_metadata(scores, model_features, hyper_params, run_id=None):
 
     # Add scores as EvaluationMeasures
     g.add((evaluation_uri, RDF.type, MLS['ModelEvaluation']))
-    for key in scores.keys():
+    for key in scores:
         key_uri = URIRef(run_prop_prefix + key)
         g.add((evaluation_uri, MLS['specifiedBy'], key_uri))
         g.add((key_uri, RDF.type, MLS['EvaluationMeasure']))
