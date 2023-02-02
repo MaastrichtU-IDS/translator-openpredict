@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 import pyspark
 import typer
-
 # from fairworkflows import FairWorkflow, is_fairstep, is_fairworkflow
 # from noodles import unpack
 from sklearn import linear_model, metrics
@@ -504,7 +503,10 @@ def multimetric_score(estimator, X_test, y_test, scorers):
     """
     scores = {}
     for name, scorer in scorers.items():
-        score = scorer(estimator, X_test) if y_test is None else scorer(estimator, X_test, y_test)
+        if y_test is None:
+            score = scorer(estimator, X_test)
+        else:
+            score = scorer(estimator, X_test, y_test)
 
         if hasattr(score, 'item'):
             try:

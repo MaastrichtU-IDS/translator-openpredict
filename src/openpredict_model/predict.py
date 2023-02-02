@@ -230,7 +230,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
         disease = input_id
 
     #g= Graph()
-    if n_results is None:
+    if n_results == None:
         n_results = len(emb_vectors.vocab)
 
     similar_entites = []

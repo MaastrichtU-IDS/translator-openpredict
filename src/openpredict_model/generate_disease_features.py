@@ -19,8 +19,8 @@ def download():
     if not os.path.exists(settings.OPENPREDICT_DATA_DIR / "lib" / "sml-toolkit-0.9.jar" ):
         print("sml-toolkit-0.9.jar not present, downloading it")
         try:
-            os.system('mkdir -p data/lib')
-            os.system("wget -q --show-progress https://repo1.maven.org/maven2/com/github/sharispe/slib-tools-sml-toolkit/0.9/slib-tools-sml-toolkit-0.9.jar -O data/lib/sml-toolkit-0.9.jar")
+            os.system(f'mkdir -p data/lib')
+            os.system(f"wget -q --show-progress https://repo1.maven.org/maven2/com/github/sharispe/slib-tools-sml-toolkit/0.9/slib-tools-sml-toolkit-0.9.jar -O data/lib/sml-toolkit-0.9.jar")
         except Exception as e:
             print(f"Error while downloading kgpredict: {e}")
 

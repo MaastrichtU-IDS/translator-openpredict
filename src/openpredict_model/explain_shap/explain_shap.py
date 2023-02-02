@@ -3,7 +3,7 @@
 
 
 import pandas as pd
-import shap
+import shap as shap
 import sklearn
 
 from openpredict.utils import get_entities_labels, get_openpredict_dir

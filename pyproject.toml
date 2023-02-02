@@ -127,8 +127,13 @@ post-install-commands = [
 
 [tool.hatch.envs.default.scripts]
 docs = "mkdocs serve -a localhost:8001 {args}"
-fmt = "ruff src tests --fix"
-check = "ruff src tests"
+fmt = [
+    "ruff src tests --fix",
+    # "pre-commit run --all-files || true",
+]
+check = [
+    "ruff src tests",
+]
 compile = "pip-compile --extra dev --extra test --extra train -o requirements.txt pyproject.toml"
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"

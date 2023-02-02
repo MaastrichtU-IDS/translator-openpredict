@@ -12,9 +12,9 @@ def download():
     if not os.path.exists(get_openpredict_dir("kgpredict/embed")):
         print("kgpredict data not present, downloading it")
         try:
-            os.system('mkdir -p ./data/kgpredict')
-            os.system("wget -q --show-progress purl.org/kgpredict -O kgpredict.tar.gz")
-            os.system('tar -xzvf kgpredict.tar.gz  -C ./data/kgpredict/')
-            os.system("rm kgpredict.tar.gz")
+            os.system(f'mkdir -p ./data/kgpredict')
+            os.system(f"wget -q --show-progress purl.org/kgpredict -O kgpredict.tar.gz")
+            os.system(f'tar -xzvf kgpredict.tar.gz  -C ./data/kgpredict/')
+            os.system(f"rm kgpredict.tar.gz")
         except Exception as e:
             print(f"Error while downloading kgpredict: {e}")

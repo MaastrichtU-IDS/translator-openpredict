@@ -32,7 +32,7 @@ def init_openpredict_dir():
     """Create OpenPredict folder and initiate files if necessary."""
     if not os.path.exists(get_openpredict_dir('input/drugbank-drug-goa.csv')):
         raise ValueError("❌ The data required to run the prediction models could not be found in the `data` folder"
-            "i️ Use `pip install dvc` and `dvc pull` to pull the data easily")
+            "ℹ️ Use `pip install dvc` and `dvc pull` to pull the data easily")
 
 
 def split_list(iterable, n, fillvalue=None):
