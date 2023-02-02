@@ -6,8 +6,20 @@
 
 Predictions are usually generated from machine learning models (e.g. predict disease treated by drug), but it can adapt to generic python function, as long as the input params and return object follow the expected structure.
 
-The package can be installed with `pip`:
+## Installation
+
+To start a new project to develop and publish models for predictions we recommend to use the cookiecutter template that bootstrap, see the page [create a model](getting-started/create-model) for more details.
+
+Otherwise the `openpredict` package can be installed with `pip`:
 
 ```bash
 pip install openpredict
 ```
+
+## Acknowledgments​
+
+This service has been built from the [fair-workflows/openpredict](https://github.com/fair-workflows/openpredict) project. And Predictions of the OpenPredict API made using the [PREDICT method](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/).
+
+This service is funded by the [NIH NCATS Translator project](https://ncats.nih.gov/translator/about).
+
+![Funded the the NIH NCATS Translator project](https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg)
