@@ -10,11 +10,13 @@ pip install cookiecutter
 cookiecutter https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api
 ```
 
-Once your project has been generated, follow the instructions in the generated `README.md` to run your project in development.
+ℹ️ Once your project has been generated, follow the instructions in the generated `README.md` to run your project in development, and store data with `dvc`.
 
 ## 💾 Save a generated model
 
 A helper function is provided to easily save a generated model, its metadata, and the data used to generate it. It uses tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/) to store large model outside of the git repository.
+
+Here is an example:
 
 ```python
 from openpredict import save
@@ -36,11 +38,15 @@ saved_model = save(
 )
 ```
 
+If you generated a project from the template you will find it in the `train.py` script.
+
 ## 🔮 Define the prediction endpoint
 
 The `openpredict` package provides a decorator `@trapi_predict` to annotate your functions that generate predictions. The code for this package is in `src/openpredict/`.
 
 Predictions generated from functions decorated with `@trapi_predict` can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI)
+
+Here is an example:
 
 ```python
 from openpredict import trapi_predict, PredictOptions, PredictOutput
@@ -90,3 +96,5 @@ def get_predictions(
     }
     return predictions
 ```
+
+If you generated a project from the template you will find it in the `predict.py` script.
