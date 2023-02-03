@@ -16,10 +16,10 @@
       
       
       
-        <link rel="next" href="getting-started/create-model/">
+        <link rel="next" href="getting-started/create-project/">
       
       <link rel="icon" href="assets/icon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.9">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.10">
     
     
       
@@ -77,6 +77,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#installation" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -317,6 +322,8 @@
         
           
         
+          
+        
       
       
         
@@ -345,8 +352,22 @@
   
   
     <li class="md-nav__item">
+      <a href="getting-started/create-project/" class="md-nav__link">
+        Creating a project
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="getting-started/create-model/" class="md-nav__link">
-        Create prediction model
+        Creating a prediction model
       </a>
     </li>
   
@@ -360,7 +381,7 @@
   
     <li class="md-nav__item">
       <a href="getting-started/deploy-api/" class="md-nav__link">
-        Deploy the API
+        Deploying the API
       </a>
     </li>
   
@@ -431,7 +452,7 @@
   
     <li class="md-nav__item">
       <a href="openpredict-api/use/" class="md-nav__link">
-        Use the API
+        Using the API
       </a>
     </li>
   
@@ -445,7 +466,7 @@
   
     <li class="md-nav__item">
       <a href="openpredict-api/deploy/" class="md-nav__link">
-        Deploy locally
+        Deploying locally
       </a>
     </li>
   
@@ -491,6 +512,28 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledgments" class="md-nav__link">
+    Acknowledgments​
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -508,6 +551,8 @@
 
 
 
+  <h1>Getting started</h1>
+
 <p><strong>OpenPredict</strong> is a python package that helps data scientists to build, and <strong>publish prediction models</strong> in a <a href="https://www.go-fair.org/fair-principles/">FAIR</a> and reproducible manner. It provides helpers for various steps of the process:</p>
 <ul>
 <li>A template to help user quickly bootstrap a new prediction project with the recommended structure (<a href="https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/">MaastrichtU-IDS/cookiecutter-openpredict-api</a>)</li>
@@ -515,9 +560,15 @@
 <li>Deploy API endpoints for retrieving predictions, which comply with the NCATS Biomedical Data Translator standards (<a href="https://github.com/NCATSTranslator/ReasonerAPI">Translator Reasoner API</a> and <a href="https://github.com/biolink/biolink-model">BioLink model</a>), using a decorator <code>@trapi_predict</code> to simply annotate the function that produces predicted associations for a given input entity</li>
 </ul>
 <p>Predictions are usually generated from machine learning models (e.g. predict disease treated by drug), but it can adapt to generic python function, as long as the input params and return object follow the expected structure.</p>
-<p>The package can be installed with <code>pip</code>:</p>
+<h2 id="installation">Installation</h2>
+<p>To start a new project to develop and publish models for predictions we recommend to use the cookiecutter template that bootstrap, see the page <a href="getting-started/create-model">create a model</a> for more details.</p>
+<p>Otherwise the <code>openpredict</code> package can be installed with <code>pip</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>openpredict
 </code></pre></div>
+<h2 id="acknowledgments">Acknowledgments​</h2>
+<p>This service has been built from the <a href="https://github.com/fair-workflows/openpredict">fair-workflows/openpredict</a> project. And Predictions of the OpenPredict API made using the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3159979/">PREDICT method</a>.</p>
+<p>This service is funded by the <a href="https://ncats.nih.gov/translator/about">NIH NCATS Translator project</a>.</p>
+<p><img alt="Funded the the NIH NCATS Translator project" src="https://ncats.nih.gov/files/TranslatorGraphic2020_1100x420.jpg" /></p>
 
 
 
@@ -589,7 +640,7 @@
     <script id="__config" type="application/json">{"base": ".", "features": ["content.code.annotate", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.a00a7c5e.min.js"></script>
+      <script src="assets/javascripts/bundle.6df46069.min.js"></script>
       
         <script src="assets/fontawesome.min.js"></script>
       

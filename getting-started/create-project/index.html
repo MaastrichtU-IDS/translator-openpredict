@@ -12,20 +12,20 @@
         <meta name="author" content="Vincent Emonet">
       
       
-        <link rel="canonical" href="https://maastrichtu-ids.github.io/translator-openpredict/getting-started/create-model/">
+        <link rel="canonical" href="https://maastrichtu-ids.github.io/translator-openpredict/getting-started/create-project/">
       
       
-        <link rel="prev" href="../create-project/">
+        <link rel="prev" href="../..">
       
       
-        <link rel="next" href="../deploy-api/">
+        <link rel="next" href="../create-model/">
       
       <link rel="icon" href="../../assets/icon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.10">
     
     
       
-        <title>Creating a prediction model - OpenPredict</title>
+        <title>Creating a project - OpenPredict</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#save-a-generated-model" class="md-skip">
+        <a href="#start-a-new-prediction-project" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Creating a prediction model
+              Creating a project
             
           </span>
         </div>
@@ -352,20 +352,6 @@
               
   
   
-  
-    <li class="md-nav__item">
-      <a href="../create-project/" class="md-nav__link">
-        Creating a project
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
     
   
   
@@ -376,12 +362,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Creating a prediction model
+          Creating a project
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Creating a prediction model
+        Creating a project
       </a>
       
         
@@ -398,15 +384,83 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#save-a-generated-model" class="md-nav__link">
-    💾 Save a generated model
+  <a href="#start-a-new-prediction-project" class="md-nav__link">
+    🍪 Start a new prediction project
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#define-the-prediction-endpoint" class="md-nav__link">
-    🔮 Define the prediction endpoint
+  <a href="#enter-the-development-environment" class="md-nav__link">
+    🚪 Enter the development environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-data-version-control" class="md-nav__link">
+    🔎 Setup data version control
+  </a>
+  
+    <nav class="md-nav" aria-label="🔎 Setup data version control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#push-data" class="md-nav__link">
+    Push data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull-data" class="md-nav__link">
+    Pull data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-in-development" class="md-nav__link">
+    🪄 Run in development
+  </a>
+  
+    <nav class="md-nav" aria-label="🪄 Run in development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-api-and-train" class="md-nav__link">
+    Deploy API and train
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    Test
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-dependencies" class="md-nav__link">
+    Add dependencies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-with-docker" class="md-nav__link">
+    🐳 Run with docker
   </a>
   
 </li>
@@ -415,6 +469,20 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../create-model/" class="md-nav__link">
+        Creating a prediction model
+      </a>
     </li>
   
 
@@ -565,15 +633,83 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#save-a-generated-model" class="md-nav__link">
-    💾 Save a generated model
+  <a href="#start-a-new-prediction-project" class="md-nav__link">
+    🍪 Start a new prediction project
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#define-the-prediction-endpoint" class="md-nav__link">
-    🔮 Define the prediction endpoint
+  <a href="#enter-the-development-environment" class="md-nav__link">
+    🚪 Enter the development environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-data-version-control" class="md-nav__link">
+    🔎 Setup data version control
+  </a>
+  
+    <nav class="md-nav" aria-label="🔎 Setup data version control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#push-data" class="md-nav__link">
+    Push data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pull-data" class="md-nav__link">
+    Pull data
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-in-development" class="md-nav__link">
+    🪄 Run in development
+  </a>
+  
+    <nav class="md-nav" aria-label="🪄 Run in development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-api-and-train" class="md-nav__link">
+    Deploy API and train
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    Test
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-dependencies" class="md-nav__link">
+    Add dependencies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-with-docker" class="md-nav__link">
+    🐳 Run with docker
   </a>
   
 </li>
@@ -597,84 +733,94 @@
 
 
 
-  <h1>Creating a prediction model</h1>
+  <h1>Creating a project</h1>
 
-<h2 id="save-a-generated-model">💾 Save a generated model</h2>
-<p>Once you have setup your project it is time to start defining your model training. We recommend to do this in a specific file, e.g. <code>train.py</code></p>
-<p>A helper function is provided to easily save a generated model, its metadata, and the data used to generate it. It uses tools such as <a href="https://dvc.org/"><code>dvc</code></a> and <a href="https://mlem.ai/"><code>mlem</code></a> to store large model outside of the git repository. Here is an example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">openpredict</span> <span class="kn">import</span> <span class="n">save</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">hyper_params</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s1">&#39;penalty&#39;</span><span class="p">:</span> <span class="s1">&#39;l2&#39;</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s1">&#39;dual&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s1">&#39;tol&#39;</span><span class="p">:</span> <span class="mf">0.0001</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">100</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">saved_model</span> <span class="o">=</span> <span class="n">save</span><span class="p">(</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">model</span><span class="o">=</span><span class="n">clf</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;models/my_model&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">sample_data</span><span class="o">=</span><span class="n">sample_data</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">hyper_params</span><span class="o">=</span><span class="n">hyper_params</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">scores</span><span class="o">=</span><span class="n">scores</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p">)</span>
+<h2 id="start-a-new-prediction-project">🍪 Start a new prediction project</h2>
+<p>We recommend to bootstrap your project using <a href="https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api">our template</a>, it will generate all required files to get started with an example training and prediction workflow.</p>
+<p>Run these commands to install <code>cookiecutter</code> and generate your project from the template:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>cookiecutter
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cookiecutter<span class="w"> </span>https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api
 </code></pre></div>
-<p>If you generated a project from the template you will find it in the <code>train.py</code> script.</p>
-<p>⚠️ Once you have trained your model don&rsquo;t forget to add it, usually in the <code>models/</code> folder, and push it with <code>dvc</code> (along with all the data required to train the model in the <code>data/</code> folder)</p>
-<h2 id="define-the-prediction-endpoint">🔮 Define the prediction endpoint</h2>
-<p>Once your model has been trained you can create a function taking an input ID and generating predictions for it. We recommend to do it in a specific file, e.g. <code>predict.py</code></p>
-<p>The <code>openpredict</code> package provides a decorator <code>@trapi_predict</code> to annotate your functions that generate predictions. Predictions generated from functions decorated with <code>@trapi_predict</code> can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI).</p>
-<p>The annotated predict functions are expected to take 2 input arguments: the input ID (string) and options for the prediction (dictionary). And it should return a dictionary with a list of predicted associated entities hits (see below for a practical example)</p>
-<p>Here is an example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">openpredict</span> <span class="kn">import</span> <span class="n">trapi_predict</span><span class="p">,</span> <span class="n">PredictOptions</span><span class="p">,</span> <span class="n">PredictOutput</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nd">@trapi_predict</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/predict&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Get predicted targets for a given entity&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="p">{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>            <span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;biolink:Drug&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            <span class="s1">&#39;predicate&#39;</span><span class="p">:</span> <span class="s1">&#39;biolink:treats&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>            <span class="s1">&#39;object&#39;</span><span class="p">:</span> <span class="s1">&#39;biolink:Disease&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="p">},</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="p">{</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            <span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;biolink:Disease&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="s1">&#39;predicate&#39;</span><span class="p">:</span> <span class="s1">&#39;biolink:treated_by&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="s1">&#39;object&#39;</span><span class="p">:</span> <span class="s1">&#39;biolink:Drug&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="p">},</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="p">],</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">nodes</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="s2">&quot;biolink:Disease&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>            <span class="s2">&quot;id_prefixes&quot;</span><span class="p">:</span> <span class="p">[</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>                <span class="s2">&quot;OMIM&quot;</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>            <span class="p">]</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="p">},</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="s2">&quot;biolink:Drug&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="s2">&quot;id_prefixes&quot;</span><span class="p">:</span> <span class="p">[</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>                <span class="s2">&quot;DRUGBANK&quot;</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>            <span class="p">]</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="p">}</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    <span class="p">}</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="p">)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="k">def</span> <span class="nf">get_predictions</span><span class="p">(</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        <span class="n">input_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">PredictOptions</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PredictOutput</span><span class="p">:</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    <span class="c1"># Add the code the load the model and get predictions here</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        <span class="s2">&quot;hits&quot;</span><span class="p">:</span> <span class="p">[</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>            <span class="p">{</span>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;DB00001&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;biolink:Drug&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>                <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mf">0.12345</span><span class="p">,</span>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>                <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Leipirudin&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>            <span class="p">}</span>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        <span class="p">],</span>
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>        <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    <span class="p">}</span>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    <span class="k">return</span> <span class="n">predictions</span>
+<p>ℹ️ Once your project has been generated, checkout the generated <code>README.md</code> for the instructions on how to run your project in development.</p>
+<h2 id="enter-the-development-environment">🚪 Enter the development environment</h2>
+<p>Use <code>hatch shell</code> to enter a virtual environment for development with all required dependencies installed. Once in the environment you will be able to use commands such as <code>dvc</code></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hatch<span class="w"> </span>shell
 </code></pre></div>
-<p>If you generated a project from the template you will find it in the <code>predict.py</code> script.</p>
+<h2 id="setup-data-version-control">🔎 Setup data version control</h2>
+<p><code>openpredict</code> uses <a href="https://dvc.org"><code>dvc</code></a> for data version control, it helps you to easily store datasets used by your machine learning workflows that are too big for git, and keep track of changes in a way similar to git. And similarly to git, with dvc you will need to choose a platform to publish your data, such as <a href="https://dagshub.com/docs/integration_guide/dvc/">DagsHub</a> or <a href="https://dvc.org/doc/dvclive/api-reference/ml-frameworks/huggingface">HuggingFace</a>.</p>
+<p>Here we document the process using <a href="https://dagshub.com/docs/integration_guide/dvc/">DagsHub</a> to publish data related to a ML experiment, but you could choose to use a different platform for your project if you wish.</p>
+<p>⚠️ Open source projects on DagsHub using the free plan have a 10G storage limit.</p>
+<ol>
+<li>
+<p>Go to <a href="https://dagshub.com/user/login">dagshub.com</a>, and login with GitHub or Google</p>
+</li>
+<li>
+<p>Create a new project in DagsHub by connecting it to the GitHub repository with the code for the experiment (this repository)</p>
+</li>
+<li>
+<p>Set your DagsHub credentials in your local terminal (add these commands to your <code>~/.bashrc</code> or <code>~/.zshrc</code> to enable it automatically on boot):</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DAGSHUB_USER</span><span class="o">=</span><span class="s2">&quot;your-org-or-username&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DAGSHUB_TOKEN</span><span class="o">=</span><span class="s2">&quot;TOKEN&quot;</span>
+</code></pre></div>
+<ol>
+<li>Link your local repository to the created DagsHub project:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dvc<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>https://dagshub.com/<span class="nv">$DAGSHUB_USER</span>/openpredict-model.dvc
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dvc<span class="w"> </span>remote<span class="w"> </span>default<span class="w"> </span>origin
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>dvc<span class="w"> </span>remote<span class="w"> </span>modify<span class="w"> </span>origin<span class="w"> </span>--local<span class="w"> </span>auth<span class="w"> </span>basic
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>dvc<span class="w"> </span>remote<span class="w"> </span>modify<span class="w"> </span>origin<span class="w"> </span>--local<span class="w"> </span>user<span class="w"> </span><span class="nv">$DAGSHUB_USER</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dvc<span class="w"> </span>remote<span class="w"> </span>modify<span class="w"> </span>origin<span class="w"> </span>--local<span class="w"> </span>password<span class="w"> </span><span class="nv">$DAGSHUB_TOKEN</span>
+</code></pre></div>
+<h3 id="push-data">Push data</h3>
+<p>⚠️ Put all data files required to train the model, and the files generated by the training to the <code>data/</code> folder and publish this data to the remote repository</p>
+<p>You can check the status <code>dvc</code> in the current repository with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dvc<span class="w"> </span>status
+</code></pre></div>
+<p>First add the changes made to the <code>data/</code> folder:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dvc<span class="w"> </span>add<span class="w"> </span>data
+</code></pre></div>
+<p>Then push the added data:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>dvc<span class="w"> </span>push
+</code></pre></div>
+<p>Alternatively you can use this shortcut to add changes and push in one command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>push-data
+</code></pre></div>
+<h3 id="pull-data">Pull data</h3>
+<p>To retrieve all data from the remote repository:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>dvc<span class="w"> </span>pull
+</code></pre></div>
+<h2 id="run-in-development">🪄 Run in development</h2>
+<p>You are free to setup your development workflow as you wish, consider those instructions as recommendations which work out-of-the-box with the code generated by the template.</p>
+<p>Note that scripts executed with <code>hatch run</code> are defined in the <code>pyproject.toml</code> file, feel free to check it out and change them as needed.</p>
+<h3 id="deploy-api-and-train">Deploy API and train</h3>
+<p>Deploy  your prediction function as a Translator Reasoner API on http://localhost:8808</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hatch<span class="w"> </span>-v<span class="w"> </span>run<span class="w"> </span>api
+</code></pre></div>
+<p>Run the script to train the model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>hatch<span class="w"> </span>run<span class="w"> </span>train
+</code></pre></div>
+<h3 id="test">Test</h3>
+<p>Run the tests defined in the <code>tests/</code> folder locally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>hatch<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-s
+</code></pre></div>
+<h3 id="add-dependencies">Add dependencies</h3>
+<p>Add dependencies directly in the <code>pyproject.toml</code>. Try to keep the main dependencies minimal: just what is needed to run the predictions functions. And add all dependencies required for training in the <code>train</code> optional dependencies.</p>
+<p>Hatch will automatically update the virtual environment the next time you use it to run a script.</p>
+<p>If you are facing issue with the dependencies (e.g. not updated properly), you can reset the environment with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>hatch<span class="w"> </span>env<span class="w"> </span>prune
+</code></pre></div>
+<h2 id="run-with-docker">🐳 Run with docker</h2>
+<p>You can also run the training script in docker, see the <code>docker-compose.yml</code> if you need to change the command to execute the script:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker-compose<span class="w"> </span>run<span class="w"> </span>training
+</code></pre></div>
+<p>Or start the TRAPI API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>api
+</code></pre></div>
+<p>Or start a JupyterLab/VSCode workspace on http://localhost:8888:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>workspace
+</code></pre></div>
 
 
 
