@@ -10,7 +10,8 @@ copyright: Copyright &copy; 2023 Vincent Emonet
 nav:
   - Getting started:
     - Getting started: index.md
-    - Create prediction model: getting-started/create-model.md
+    - Create a project: getting-started/create-project.md
+    - Create a prediction model: getting-started/create-model.md
     - Deploy the API: getting-started/deploy-api.md
     # - Development: getting-started/development.md
 
