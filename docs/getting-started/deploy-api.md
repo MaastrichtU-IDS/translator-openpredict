@@ -1,3 +1,5 @@
+## Define the API
+
 You will need to instantiate a `TRAPI` class to deploy a Translator Reasoner API serving a list of prediction functions that have been decorated with `@trapi_predict`. For example:
 
 ```python
@@ -75,4 +77,16 @@ app = TRAPI(
 )
 ```
 
-The API can then be deployed with `uvicorn` or `gunicorn` (refere to the generated project README if you used the template)
+## Deploy the API
+
+If you used the template to generate your project you can deploy the API with the `api` script defined in the `pyproject.toml` (refere to your generated project README for more details):
+
+```bash
+hatch run api
+```
+
+Otherwise you can use `uvicorn` or `gunicorn`:
+
+```bash
+uvicorn trapi.main:app --port 8808 --reload
+```

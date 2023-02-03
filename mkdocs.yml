@@ -10,15 +10,15 @@ copyright: Copyright &copy; 2023 Vincent Emonet
 nav:
   - Getting started:
     - Getting started: index.md
-    - Create a project: getting-started/create-project.md
-    - Create a prediction model: getting-started/create-model.md
-    - Deploy the API: getting-started/deploy-api.md
+    - Creating a project: getting-started/create-project.md
+    - Creating a prediction model: getting-started/create-model.md
+    - Deploying the API: getting-started/deploy-api.md
     # - Development: getting-started/development.md
 
   - OpenPredict API:
     - Introduction: openpredict-api/introduction.md
-    - Use the API: openpredict-api/use.md
-    - Deploy locally: openpredict-api/deploy.md
+    - Using the API: openpredict-api/use.md
+    - Deploying locally: openpredict-api/deploy.md
 
   # - Code Reference:
   #   - TRAPI: reference/trapi.md
