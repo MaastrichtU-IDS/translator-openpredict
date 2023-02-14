@@ -815,7 +815,7 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 sqlalchemy==1.4.45
     # via linkml
-starlette==0.14.2
+starlette==0.25.0
     # via fastapi
 stringcase==1.2.0
     # via
