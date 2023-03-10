@@ -22,20 +22,6 @@
                     "subject": "chemical",
                     "predicates": [
                         "biolink:affects"
-                    ],
-                    "qualifier_constraints": [
-                        {
-                            "qualifier_set": [
-                                {
-                                    "qualifier_type_id": "biolink:object_aspect_qualifier",
-                                    "qualifier_value": "activity_or_abundance"
-                                },
-                                {
-                                    "qualifier_type_id": "biolink:object_direction_qualifier",
-                                    "qualifier_value": "decreased"
-                                }
-                            ]
-                        }
                     ]
                 }
             }
