@@ -63,6 +63,8 @@ def test_post_trapi():
             validator.check_compliance_of_trapi_response(trapi_results)
             validator_resp = validator.get_messages()
             print(validator_resp["warnings"])
+            print("REASONER VALIDATOR ERRORS")
+            print(validator_resp["errors"])
             assert (
                 len(validator_resp["errors"]) == 0
             )
