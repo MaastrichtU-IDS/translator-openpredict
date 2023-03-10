@@ -2,12 +2,14 @@ from reasoner_validator import TRAPIResponseValidator
 
 from openpredict.config import settings
 
+# NOTE: we might need to remove TRAPI validator from integration checks because
+# the latest versions requires py3.9 and OpenPredict model only works on 3.8
 validator = TRAPIResponseValidator(
     trapi_version=settings.TRAPI_VERSION,
 
     # If omit or set the Biolink Model version parameter to None,
     # then the current Biolink Model Toolkit default release applies
-    biolink_version=settings.BIOLINK_VERSION,
+    # biolink_version=settings.BIOLINK_VERSION,
 
     # 'sources' are set to trigger checking of expected edge knowledge source provenance
     sources={

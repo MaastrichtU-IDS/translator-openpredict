@@ -1,11 +1,34 @@
 import os
 
 import requests
+from reasoner_validator import TRAPIResponseValidator
 
-from tests.conftest import validator
+from openpredict.config import settings
+
 
 PROD_API_URL = 'https://openpredict.semanticscience.org'
 # PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
+
+
+# NOTE: Validate only prod because validate requires py3.9+ and OpenPredict requires 3.8
+validator = TRAPIResponseValidator(
+    trapi_version=settings.TRAPI_VERSION,
+
+    # If omit or set the Biolink Model version parameter to None,
+    # then the current Biolink Model Toolkit default release applies
+    biolink_version=settings.BIOLINK_VERSION,
+
+    # 'sources' are set to trigger checking of expected edge knowledge source provenance
+    sources={
+            # "ara_source": "infores:molepro",
+            # "kp_source": "infores:knowledge-collaboratory",
+            # "kp_source_type": "primary"
+    },
+    # Optional flag: if omitted or set to 'None', we let the system decide the
+    # default validation strictness by validation context unless we override it here
+    strict_validation=None
+)
+
 
 
 def test_get_predict():
