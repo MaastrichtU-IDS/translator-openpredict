@@ -70,7 +70,7 @@ def test_post_trapi():
             edges = response.json()['message']['knowledge_graph']['edges'].items()
             # print(response)
             print(trapi_filename)
-            validator.check_compliance_of_trapi_response(message=response.json()["message"])
+            validator.check_compliance_of_trapi_response(response.json())
             validator_resp = validator.get_messages()
             print(validator_resp["warnings"])
             assert (
@@ -116,7 +116,7 @@ def test_trapi_empty_response():
         # content_type='application/json'
     )
 
-    validator.check_compliance_of_trapi_response(message=response.json()["message"])
+    validator.check_compliance_of_trapi_response(response.json())
     validator_resp = validator.get_messages()
     print(validator_resp["warnings"])
     assert (

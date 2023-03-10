@@ -5,10 +5,8 @@ from reasoner_validator import TRAPIResponseValidator
 
 from openpredict.config import settings
 
-
 PROD_API_URL = 'https://openpredict.semanticscience.org'
 # PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
-
 
 # NOTE: Validate only prod because validate requires py3.9+ and OpenPredict requires 3.8
 validator = TRAPIResponseValidator(
@@ -62,7 +60,7 @@ def test_post_trapi():
             edges = trapi_results['message']['knowledge_graph']['edges'].items()
 
             print(trapi_filename)
-            validator.check_compliance_of_trapi_response(message=trapi_results["message"])
+            validator.check_compliance_of_trapi_response(trapi_results)
             validator_resp = validator.get_messages()
             print(validator_resp["warnings"])
             assert (
