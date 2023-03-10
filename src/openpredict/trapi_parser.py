@@ -15,13 +15,15 @@ def get_biolink_parents(concept):
     concept_snakecase = re.sub(r'(?<!^)(?=[A-Z])', '_', concept_snakecase).lower()
     query_url = f'https://bl-lookup-sri.renci.org/bl/{concept_snakecase}/ancestors'
     try:
-        resolve_curies = requests.get(query_url,
-                            params={'version': f'v{settings.BIOLINK_VERSION}'})
+        resolve_curies = requests.get(query_url)
+        # TODO: can't specify a BioLink version because asking for v3.1.0 does not exist, so we use latest
+        # resolve_curies = requests.get(query_url,
+        #                     params={'version': f'v{settings.BIOLINK_VERSION}'})
         resp = resolve_curies.json()
         resp.append(concept)
         return resp
-    except Exception:
-        print(f'Error querying {query_url}, using the original IDs')
+    except Exception as e:
+        print(f'Error querying {query_url}, using the original IDs: {e}')
         return [concept]
 
 
