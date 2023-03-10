@@ -38,7 +38,8 @@ def test_get_predict():
             'input_id': 'DRUGBANK:DB00394',
             'n_results': '42',
             'model_id': 'openpredict_baseline'
-        }
+        },
+        timeout=300
     ).json()
     assert 'hits' in get_predictions
     assert len(get_predictions['hits']) == 42
@@ -56,7 +57,8 @@ def test_post_trapi():
         with open(os.path.join('tests', 'queries', trapi_filename)) as f:
             trapi_query = f.read()
             trapi_results = requests.post(PROD_API_URL + '/query',
-                        data=trapi_query, headers=headers).json()
+                        data=trapi_query, headers=headers, timeout=300).json()
+            # 5min timeout
             edges = trapi_results['message']['knowledge_graph']['edges'].items()
 
             print(trapi_filename)
