@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     DEV_MODE: bool = False
     LOG_LEVEL: str = 'ERROR'
 
-    BIOLINK_VERSION: str = '2.3.0'
+    BIOLINK_VERSION: str = '3.1.0'
     TRAPI_VERSION: str = "1.3.0"
 
     OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'data')

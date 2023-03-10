@@ -259,7 +259,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                             # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
                                         },
                                         {
-                                            'attribute_type_id': 'biolink:aggregator_knowledge_source',
+                                            'attribute_type_id': 'biolink:primary_knowledge_source',
                                             'value': 'infores:openpredict',
                                             'value_type_id': 'biolink:InformationResource',
                                             'attribute_source': 'infores:openpredict',

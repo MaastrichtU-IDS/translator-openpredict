@@ -7,7 +7,7 @@ validator = TRAPIResponseValidator(
 
     # If omit or set the Biolink Model version parameter to None,
     # then the current Biolink Model Toolkit default release applies
-    # biolink_version=settings.BIOLINK_VERSION,
+    biolink_version=settings.BIOLINK_VERSION,
 
     # 'sources' are set to trigger checking of expected edge knowledge source provenance
     sources={
