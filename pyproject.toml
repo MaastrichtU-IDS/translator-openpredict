@@ -68,8 +68,10 @@ train = [
 test = [
     "pytest >=7.1.3,<8.0.0",
     "pytest-cov >=2.12.0,<4.0.0",
-    "reasoner-validator >=3.3.1",
     "httpx",
+]
+test-prod = [
+    "reasoner-validator >=3.4.0",
 ]
 dev = [
     "typer==0.7.0",
@@ -116,6 +118,7 @@ packages = ["src/openpredict"]
 # start-on-creation = false
 features = [
     "test",
+    "test-prod",
     "dev",
     "doc",
     # "train",
