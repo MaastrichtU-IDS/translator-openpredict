@@ -80,15 +80,17 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
     n_results = None
     min_score = None
     max_score = None
+    query_options = {}
     if 'query_options' in reasoner_query.keys():
-        if 'n_results' in reasoner_query["query_options"]:
-            n_results = int(reasoner_query["query_options"]["n_results"])
-        if 'min_score' in reasoner_query["query_options"]:
-            min_score = float(reasoner_query["query_options"]["min_score"])
-        if 'max_score' in reasoner_query["query_options"]:
-            max_score = float(reasoner_query["query_options"]["max_score"])
-        if 'model_id' in reasoner_query["query_options"]:
-            model_id = str(reasoner_query["query_options"]["model_id"])
+        query_options = reasoner_query["query_options"]
+        if 'n_results' in query_options:
+            n_results = int(query_options["n_results"])
+        if 'min_score' in query_options:
+            min_score = float(query_options["min_score"])
+        if 'max_score' in query_options:
+            max_score = float(query_options["max_score"])
+        if 'model_id' in query_options:
+            model_id = str(query_options["model_id"])
 
     query_plan = {}
     resolved_ids_object = {}
@@ -330,7 +332,26 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
             node_to_add['name'] = properties['label']
         knowledge_graph['nodes'][node_id] = node_to_add
 
-    return {"message": {'knowledge_graph': knowledge_graph, 'query_graph': query_graph, 'results': query_results}}
+    return {
+        "message": {
+            'knowledge_graph': knowledge_graph,
+            'query_graph': query_graph,
+            'results': query_results
+        },
+        "query_options": query_options,
+        "reasoner_id": "infores:openpredict",
+        "schema_version": settings.TRAPI_VERSION,
+        "biolink_version": settings.BIOLINK_VERSION,
+        "status": "Success",
+        # "logs": [
+        #     {
+        #         "code": None,
+        #         "level": "INFO",
+        #         "message": "No descendants found from Ontology KP for QNode 'n00'.",
+        #         "timestamp": "2023-04-05T07:24:26.646711"
+        #     },
+        # ]
+    }
 
 
 example_trapi = {
