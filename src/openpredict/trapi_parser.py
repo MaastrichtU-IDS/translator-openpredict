@@ -296,7 +296,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                     'analyses': [{
                                         "resource_id": "infores:openpredict",
                                         "edge_bindings": {
-                                            [edge_qg_id]: [
+                                            edge_qg_id: [
                                                 {
                                                     "id": edge_kg_id
                                                 }
