@@ -249,6 +249,16 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                     # 'relation': relation,
 
                                     # More details on attributes: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/docs/reference.md#attribute-
+                                    "sources": [
+                                        {
+                                            "resource_id": "infores:openpredict",
+                                            "resource_role": "biolink:primary_knowledge_source"
+                                        },
+                                        {
+                                            "resource_id": "infores:cohd",
+                                            "resource_role": "biolink:supporting_data_source"
+                                        },
+                                    ],
                                     'attributes': [
                                         {
                                             "description": "model_id",
@@ -261,20 +271,6 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                             "attribute_type_id": "EDAM:data_1772",
                                             "value": association_score
                                             # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
-                                        },
-                                        {
-                                            'attribute_type_id': 'biolink:primary_knowledge_source',
-                                            'value': 'infores:openpredict',
-                                            'value_type_id': 'biolink:InformationResource',
-                                            'attribute_source': 'infores:openpredict',
-                                            # 'value_url': 'https://openpredict.semanticscience.org/query'
-                                        },
-                                        {
-                                            'attribute_type_id': 'biolink:supporting_data_source',
-                                            'value': 'infores:cohd',
-                                            'value_type_id': 'biolink:InformationResource',
-                                            'attribute_source': 'infores:openpredict',
-                                            # 'value_url': 'https://openpredict.semanticscience.org'
                                         },
                                     ]
                                 }
