@@ -291,12 +291,25 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                 knowledge_graph['edges'][edge_kg_id] = edge_dict
 
                                 # Add the bindings to the results object
-                                result = {'edge_bindings': {}, 'node_bindings': {}}
-                                result['edge_bindings'][edge_qg_id] = [
-                                    {
-                                        "id": edge_kg_id
-                                    }
-                                ]
+                                result = {
+                                    'node_bindings': {},
+                                    'analyses': [{
+                                        "resource_id": "infores:openpredict",
+                                        "edge_bindings": {
+                                            [edge_qg_id]: [
+                                                {
+                                                    "id": edge_kg_id
+                                                }
+                                            ]
+                                        }
+                                    }],
+                                    # 'edge_bindings': {},
+                                }
+                                # result['edge_bindings'][edge_qg_id] = [
+                                #     {
+                                #         "id": edge_kg_id
+                                #     }
+                                # ]
                                 result['node_bindings'][query_plan[edge_qg_id][f'{rel_to_predict}_qg_id']] = [
                                     {
                                         "id": source_node_id
