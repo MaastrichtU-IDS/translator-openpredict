@@ -5,8 +5,6 @@ from reasoner_validator import TRAPIResponseValidator
 
 from openpredict.config import settings
 
-PROD_API_URL = 'https://openpredict.semanticscience.org'
-# PROD_API_URL = 'https://openpredict.137.120.31.148.sslip.io'
 
 # NOTE: Validate only prod because validate requires py3.9+ and OpenPredict requires 3.8
 validator = TRAPIResponseValidator(
@@ -46,11 +44,11 @@ def check_trapi_compliance(response):
 
 
 
-def test_get_predict():
+def test_get_predict(pytestconfig):
     """Test predict API GET operation"""
-    # url = PROD_API_URL + '/predict?drug_id=DRUGBANK:DB00394&model_id=openpredict_baseline&n_results=42'
+    print(f'🧪 Testing API: {pytestconfig.getoption("server")}')
     get_predictions = requests.get(
-        PROD_API_URL + '/predict',
+        pytestconfig.getoption("server") + '/predict',
         params={
             'input_id': 'DRUGBANK:DB00394',
             'n_results': '42',
@@ -65,7 +63,7 @@ def test_get_predict():
 
 
 # TODO: add tests using a TRAPI validation API if possible?
-def test_post_trapi():
+def test_post_trapi(pytestconfig):
     """Test Translator ReasonerAPI query POST operation to get predictions"""
     headers = {'Content-type': 'application/json'}
 
@@ -73,7 +71,7 @@ def test_post_trapi():
 
         with open(os.path.join('tests', 'queries', trapi_filename)) as f:
             trapi_query = f.read()
-            response = requests.post(PROD_API_URL + '/query',
+            response = requests.post(pytestconfig.getoption("server") + '/query',
                         data=trapi_query, headers=headers, timeout=300)
             # 5min timeout
             edges = response.json()['message']['knowledge_graph']['edges'].items()

@@ -21,3 +21,6 @@
 #     # default validation strictness by validation context unless we override it here
 #     strict_validation=None
 # )
+
+def pytest_addoption(parser):
+    parser.addoption("--server", action="store", default='https://openpredict.semanticscience.org')
