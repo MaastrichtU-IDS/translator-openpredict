@@ -252,11 +252,11 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                     "sources": [
                                         {
                                             "resource_id": "infores:openpredict",
-                                            "resource_role": "biolink:primary_knowledge_source"
+                                            "resource_role": "primary_knowledge_source"
                                         },
                                         {
                                             "resource_id": "infores:cohd",
-                                            "resource_role": "biolink:supporting_data_source"
+                                            "resource_role": "supporting_data_source"
                                         },
                                     ],
                                     'attributes': [
