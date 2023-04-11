@@ -36,8 +36,8 @@ dependencies = [
     "rdflib >=6.1.1",
     "SPARQLWrapper >=2.0.0,<3.0.0",
     # "mlem",
-    "mlem==0.3.2",
-    "reasoner-pydantic ==3.0.1",
+    "mlem >=0.4.0",
+    "reasoner-pydantic >=3.0.1",
     # "fairworkflows",
     # "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
     # "yatiml >=0.10.0",
@@ -71,14 +71,14 @@ test = [
     "httpx",
 ]
 test-prod = [
-    "reasoner-validator >=3.4.0",
+    "reasoner-validator >=3.1.4",
 ]
 dev = [
-    "typer==0.7.0",
-    "pre-commit >=2.17.0,<3.0.0",
+    "typer >=0.7.0",
+    "pre-commit >=3.2.0",
     # "uvicorn >=0.15.0",
     # "gunicorn >=20.0.4",
-    "dvc==2.38.1",
+    "dvc >=2.38.1",
     # "dagshub",
     "ruff >=0.0.219",
     "pip-tools",
@@ -132,8 +132,9 @@ post-install-commands = [
 docs = "mkdocs serve -a localhost:8001 {args}"
 fmt = "ruff src tests --fix"
 check = "ruff src tests"
-test-prod = "pytest tests/production"
+test-prod = "pytest tests/production {args}"
 compile = "pip-compile --extra dev --extra test --extra train -o requirements.txt pyproject.toml"
+compile-test = "pip-compile --extra dev --extra test --extra test-prod -o requirements-tests.txt pyproject.toml"
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
 

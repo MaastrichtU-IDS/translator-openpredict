@@ -28,6 +28,23 @@ validator = TRAPIResponseValidator(
 )
 
 
+def check_trapi_compliance(response):
+    validator.check_compliance_of_trapi_response(response.json()["message"])
+    # validator.check_compliance_of_trapi_response(response.json())
+    validator_resp = validator.get_messages()
+    print("⚠️ REASONER VALIDATOR WARNINGS:")
+    print(validator_resp["warnings"])
+    if len(validator_resp["errors"]) == 0:
+        print("✅ NO REASONER VALIDATOR ERRORS")
+    else:
+        print("🧨 REASONER VALIDATOR ERRORS")
+        print(validator_resp["errors"])
+    assert (
+        len(validator_resp["errors"]) == 0
+    )
+
+
+
 
 def test_get_predict():
     """Test predict API GET operation"""
@@ -56,20 +73,12 @@ def test_post_trapi():
 
         with open(os.path.join('tests', 'queries', trapi_filename)) as f:
             trapi_query = f.read()
-            trapi_results = requests.post(PROD_API_URL + '/query',
-                        data=trapi_query, headers=headers, timeout=300).json()
+            response = requests.post(PROD_API_URL + '/query',
+                        data=trapi_query, headers=headers, timeout=300)
             # 5min timeout
-            edges = trapi_results['message']['knowledge_graph']['edges'].items()
+            edges = response.json()['message']['knowledge_graph']['edges'].items()
 
-            print(trapi_filename)
-            validator.check_compliance_of_trapi_response(trapi_results)
-            validator_resp = validator.get_messages()
-            print(validator_resp["warnings"])
-            print("REASONER VALIDATOR ERRORS")
-            print(validator_resp["errors"])
-            assert (
-                len(validator_resp["errors"]) == 0
-            )
+            check_trapi_compliance(response)
             if trapi_filename.endswith('0.json'):
                 assert len(edges) == 0
             elif trapi_filename.endswith('limit3.json'):
