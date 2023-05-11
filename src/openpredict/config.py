@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = 'ERROR'
 
     BIOLINK_VERSION: str = '3.1.0'
-    TRAPI_VERSION: str = "1.4.0-beta3"
+    TRAPI_VERSION: str = "1.4.0"
     # trapi_version='1.4.0-beta'
 
     OPENPREDICT_DATA_DIR: str = os.path.join(os.getcwd(), 'data')
