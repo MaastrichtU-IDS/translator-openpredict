@@ -50,11 +50,13 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
             for resolved_id, alt_ids in resp.items():
                 for alt_id in alt_ids['equivalent_identifiers']:
                     if is_accepted_id(str(alt_id['identifier'])):
-                        resolved_ids_list.append(str(alt_id['identifier']))
-                        resolved_ids_object[str(alt_id['identifier'])] = resolved_id
+                        # NOTE: fix issue when NodeNorm returns OMIM.PS: instead of OMIM:
+                        main_id = str(alt_id['identifier']).replace('OMIM.PS:', 'OMIM:')
+                        resolved_ids_list.append(main_id)
+                        resolved_ids_object[main_id] = resolved_id
         except Exception:
             print('Error querying the NodeNormalization API, using the original IDs')
-
+    # print(f"Resolved: {resolve_ids_list} to {resolved_ids_object}")
     return resolved_ids_list, resolved_ids_object
 
 
@@ -177,6 +179,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                         if id_to_predict in labels_dict:
                             label_to_predict = labels_dict[id_to_predict]['id']['label']
                         try:
+                            print(f"🔮⏳️ Getting predictions for: {id_to_predict}")
                             # Run function to get predictions
                             prediction_results = predict_func(
                                 id_to_predict,
