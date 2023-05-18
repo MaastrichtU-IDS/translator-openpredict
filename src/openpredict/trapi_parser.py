@@ -50,8 +50,10 @@ def resolve_ids_with_nodenormalization_api(resolve_ids_list, resolved_ids_object
             for resolved_id, alt_ids in resp.items():
                 for alt_id in alt_ids['equivalent_identifiers']:
                     if is_accepted_id(str(alt_id['identifier'])):
+                        main_id = str(alt_id['identifier'])
                         # NOTE: fix issue when NodeNorm returns OMIM.PS: instead of OMIM:
-                        main_id = str(alt_id['identifier']).replace('OMIM.PS:', 'OMIM:')
+                        if main_id.lower().startswith('omim'):
+                            main_id = 'OMIM:' + main_id.split(':', 1)[1]
                         resolved_ids_list.append(main_id)
                         resolved_ids_object[main_id] = resolved_id
         except Exception:
