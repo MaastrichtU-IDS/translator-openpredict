@@ -27,8 +27,8 @@ validator = TRAPIResponseValidator(
 
 
 def check_trapi_compliance(response):
-    validator.check_compliance_of_trapi_response(response.json()["message"])
-    # validator.check_compliance_of_trapi_response(response.json())
+    # validator.check_compliance_of_trapi_response(response.json()["message"])
+    validator.check_compliance_of_trapi_response(response.json())
     validator_resp = validator.get_messages()
     print("⚠️ REASONER VALIDATOR WARNINGS:")
     print(validator_resp["warnings"])
