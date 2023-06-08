@@ -2,47 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/getting-started/create-model/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/getting-started/create-project/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/getting-started/deploy-api/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/getting-started/development/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/openpredict-api/deploy/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/openpredict-api/introduction/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/openpredict-api/use/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://maastrichtu-ids.github.io/translator-openpredict/reference/trapi/</loc>
-         <lastmod>2023-06-06</lastmod>
+         <lastmod>2023-06-08</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
