@@ -277,6 +277,17 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                             "value": association_score
                                             # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
                                         },
+                                        # https://github.com/NCATSTranslator/ReasonerAPI/blob/1.4/ImplementationGuidance/Specifications/knowledge_level_agent_type_specification.md
+                                        {
+                                            "attribute_type_id": "biolink:agent_type",
+                                            "value": "computational_model",
+                                            "attribute_source": "infores:openpredict"
+                                        },
+                                        {
+                                            "attribute_type_id": "biolink:knowledge_level",
+                                            "value": "prediction",
+                                            "attribute_source": "infores:openpredict"
+                                        }
                                     ]
                                 }
 
