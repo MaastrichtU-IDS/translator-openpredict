@@ -270,13 +270,13 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                             "attribute_type_id": "EDAM:data_1048",
                                             "value": model_id_label
                                         },
-                                        {
-                                            # TODO: use has_confidence_level?
-                                            "description": "score",
-                                            "attribute_type_id": "EDAM:data_1772",
-                                            "value": association_score
-                                            # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
-                                        },
+                                        # {
+                                        #     # TODO: use has_confidence_level?
+                                        #     "description": "score",
+                                        #     "attribute_type_id": "EDAM:data_1772",
+                                        #     "value": association_score
+                                        #     # https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fdata_1772&viewMode=All&siblings=false
+                                        # },
                                         # https://github.com/NCATSTranslator/ReasonerAPI/blob/1.4/ImplementationGuidance/Specifications/knowledge_level_agent_type_specification.md
                                         {
                                             "attribute_type_id": "biolink:agent_type",
@@ -319,6 +319,8 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                             ]
                                         }
                                     }],
+                                    'score': association_score,
+                                    "scoring_method": "Confidence between 0 and 1"
                                     # 'edge_bindings': {},
                                 }
                                 # result['edge_bindings'][edge_qg_id] = [
