@@ -320,7 +320,7 @@ def resolve_trapi_query(reasoner_query, endpoints_list):
                                         }
                                     }],
                                     'score': association_score,
-                                    "scoring_method": "Confidence between 0 and 1"
+                                    "scoring_method": "Model confidence between 0 and 1"
                                     # 'edge_bindings': {},
                                 }
                                 # result['edge_bindings'][edge_qg_id] = [
