@@ -610,7 +610,7 @@ pyshexc==0.9.1
     # via
     #   linkml
     #   pyshex
-pyspark==3.1.1
+pyspark==3.2.2
     # via openpredict (pyproject.toml)
 pytest==7.2.0
     # via
