@@ -133,8 +133,7 @@ post-install-commands = [
 
 [tool.hatch.envs.default.scripts]
 docs = "mkdocs serve -a localhost:8001 {args}"
-fmt = "ruff src tests --fix"
-check = "ruff src tests"
+fmt = "pre-commit run --all --all-files"
 test-prod = "pytest tests/production {args}"
 test-ci = "pytest tests/production --server https://openpredict.ci.transltr.io {args}"
 test-itrb-prod = "pytest tests/production --server https://openpredict.transltr.io {args}"

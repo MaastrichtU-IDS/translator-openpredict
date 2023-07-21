@@ -75,7 +75,7 @@ See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
 To automatically format the code with isort, autoflake, etc, run:
 
 ```bash
-hatch run format
+hatch run fmt
 ```
 
 ### 📤️ Push changes to the data
