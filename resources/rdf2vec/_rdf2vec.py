@@ -5,32 +5,33 @@ import time
 import findspark
 from gensim.models.word2vec import Word2Vec
 from pyspark import SparkConf, SparkContext
-from rdf2vec.walkers import RandomWalker
 from sklearn.utils.validation import check_is_fitted
+
+from rdf2vec.walkers import RandomWalker
 
 
 def walk_sequence(walker, graph, root):
     walks = walker.extract(graph, [root])
-    print (walks)
-    if len(walks) > 0 :
-        print (len(walks))
-        #walks= [list(map(str, x)) for x in walks]
+    print(walks)
+    if len(walks) > 0:
+        print(len(walks))
+        # walks= [list(map(str, x)) for x in walks]
         walk_strs = []
-        for walk_nr, walk in enumerate(walks):
-            s = ''
+        for _walk_nr, walk in enumerate(walks):
+            s = ""
             for i in range(len(walk)):
                 if i % 2:
-                    s += '{}'.format(walk[i])
+                    s += f"{walk[i]}"
                 else:
-                    s += '{}'.format(walk[i])
+                    s += f"{walk[i]}"
 
                 if i < len(walk) - 1:
-                    s += '->'
+                    s += "->"
 
             walk_strs.append(s)
-        return '\n'.join(walk_strs)
+        return "\n".join(walk_strs)
     else:
-        return ''
+        return ""
 
 
 class MySentences:
@@ -39,16 +40,19 @@ class MySentences:
         self.filename = filename
 
     def __iter__(self):
-        print ('Processing ',self.filename)
+        print("Processing ", self.filename)
         for subfname in os.listdir(self.dirname):
-            if not self.filename in subfname: continue
+            if self.filename not in subfname:
+                continue
             fpath = os.path.join(self.dirname, subfname)
             for fname in os.listdir(fpath):
-                if not 'part' in fname: continue
-                if '.crc' in fname: continue
+                if "part" not in fname:
+                    continue
+                if ".crc" in fname:
+                    continue
                 try:
                     for line in open(os.path.join(fpath, fname)):
-                        line = line.rstrip('\n')
+                        line = line.rstrip("\n")
                         words = line.split("->")
                         yield words
                 except Exception:
@@ -56,7 +60,7 @@ class MySentences:
                     print(fname)
 
 
-class RDF2VecTransformer():
+class RDF2VecTransformer:
     """Project random walks or subtrees in graphs into embeddings, suited
     for classification.
 
@@ -105,9 +109,18 @@ class RDF2VecTransformer():
         `self.model.wv.get_vector(str(instance))`.
 
     """
-    def __init__(self, vector_size=500, walkers=RandomWalker(2, float('inf')),
-                 n_jobs=1, window=5, sg=1, max_iter=10, negative=25,
-                 min_count=1):
+
+    def __init__(
+        self,
+        vector_size=500,
+        walkers=RandomWalker(2, float("inf")),
+        n_jobs=1,
+        window=5,
+        sg=1,
+        max_iter=10,
+        negative=25,
+        min_count=1,
+    ):
         self.vector_size = vector_size
         self.walkers = walkers
         self.n_jobs = n_jobs
@@ -122,13 +135,11 @@ class RDF2VecTransformer():
         config = SparkConf()
         config.setMaster("local[10]")
         config.set("spark.executor.memory", "70g")
-        config.set('spark.driver.memory', '90g')
-        config.set("spark.memory.offHeap.enabled",True)
-        config.set("spark.memory.offHeap.size","50g")
+        config.set("spark.driver.memory", "90g")
+        config.set("spark.memory.offHeap.enabled", True)
+        config.set("spark.memory.offHeap.size", "50g")
         self.sc = SparkContext(conf=config)
-        print (self.sc)
-
-
+        print(self.sc)
 
     def fit(self, graph, instances):
         """Fit the embedding network based on provided instances.
@@ -149,41 +160,47 @@ class RDF2VecTransformer():
         """
         self.walks_ = []
         b_triples = self.sc.broadcast(graph)
-        #for walker in self.walkers:
+        # for walker in self.walkers:
         #    self.walks_ += list(walker.extract(graph, instances))
-        #print('Extracted {} walks for {} instances!'.format(len(self.walks_), len(instances)))
+        # print('Extracted {} walks for {} instances!'.format(len(self.walks_), len(instances)))
 
-
-        folder = './walks/'
-        #folder = walk_folder
+        folder = "./walks/"
+        # folder = walk_folder
         if os.path.isdir(folder):
             shutil.rmtree(folder)
         os.mkdir(folder)
         for walker in self.walkers:
-            #self.walks_ += list(walker.extract(graph, instances))
-            filename = os.path.join(folder,'randwalks_n%d_depth%d_pagerank_uniform.txt'%(walker.walks_per_graph, walker.depth))
-            print (filename)
-            start_time =time.time()
-            rdd = self.sc.parallelize(instances).map(lambda n: walk_sequence(walker, b_triples.value, n) )
+            # self.walks_ += list(walker.extract(graph, instances))
+            filename = os.path.join(
+                folder, "randwalks_n%d_depth%d_pagerank_uniform.txt" % (walker.walks_per_graph, walker.depth)
+            )
+            print(filename)
+            start_time = time.time()
+            rdd = self.sc.parallelize(instances).map(lambda n: walk_sequence(walker, b_triples.value, n))
             rdd.saveAsTextFile(filename)
             elapsed_time = time.time() - start_time
-            print ('Time elapsed to generate features:',time.strftime("%H:%M:%S",       time.gmtime(elapsed_time)))
-        print('Extracted {} walks for {} instances!'.format(len(self.walks_),
-                                                            len(instances)))
+            print("Time elapsed to generate features:", time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
+        print(f"Extracted {len(self.walks_)} walks for {len(instances)} instances!")
 
-        #sentences = [list(map(str, x)) for x in self.walks_]
+        # sentences = [list(map(str, x)) for x in self.walks_]
 
-        pattern = 'uniform'
+        pattern = "uniform"
 
-        #vector_output =  './vectors/'
-        #trainModel(entities, id2entity, walk_folder, model_folder, vector_file, pattern, maxDepth)
+        # vector_output =  './vectors/'
+        # trainModel(entities, id2entity, walk_folder, model_folder, vector_file, pattern, maxDepth)
 
         sentences = MySentences(folder, filename=pattern)
-        self.model_ = Word2Vec(sentences, size=self.vector_size,
-                              window=self.window, workers=self.n_jobs,
-                              sg=self.sg, iter=self.max_iter,
-                              negative=self.negative,
-                              min_count=self.min_count, seed=42)
+        self.model_ = Word2Vec(
+            sentences,
+            size=self.vector_size,
+            window=self.window,
+            workers=self.n_jobs,
+            sg=self.sg,
+            iter=self.max_iter,
+            negative=self.negative,
+            min_count=self.min_count,
+            seed=42,
+        )
 
     def transform(self, graph, instances):
         """Construct a feature vector for the provided instances.
@@ -205,7 +222,7 @@ class RDF2VecTransformer():
         embeddings: array-like
             The embeddings of the provided instances.
         """
-        check_is_fitted(self, ['model_'])
+        check_is_fitted(self, ["model_"])
 
         feature_vectors = []
         for instance in instances:

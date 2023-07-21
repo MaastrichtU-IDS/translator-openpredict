@@ -79,27 +79,3 @@ jobs:
     - name: Test with pytest with coverage
       run: |
         pytest -s --cov src/openpredict --cov-report xml:coverage.xml tests/integration/*
-
-
-  build-docs:
-    needs: [ tests ]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          pip install ".[doc]"
-
-      - name: Deploy mkdocs on GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git pull
-          mkdocs gh-deploy

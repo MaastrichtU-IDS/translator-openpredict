@@ -134,8 +134,8 @@ The `/predicates` operation will return the entities and relations provided by t
 
 We provide [Jupyter Notebooks](https://jupyter.org/) with examples to use the OpenPredict API:
 
-1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-examples.ipynb)
-2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/docs/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
+1. [Query the OpenPredict API](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/resources/openpredict-examples.ipynb)
+2. [Generate embeddings with pyRDF2Vec](https://github.com/MaastrichtU-IDS/translator-openpredict/blob/master/resources/openpredict-pyrdf2vec-embeddings.ipynb), and import them in the OpenPredict API
 
 #### Add embedding :station:
 
@@ -171,7 +171,7 @@ The API will return the list of predicted target for the given entity, the label
 
 Diagram of the data model used for OpenPredict, based on the ML Schema ontology (`mls`):
 
-![OpenPredict datamodel](https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/docs/OpenPREDICT_datamodel.jpg)
+![OpenPredict datamodel](https://raw.githubusercontent.com/MaastrichtU-IDS/translator-openpredict/master/resources/OpenPREDICT_datamodel.jpg)
 
 ---
 

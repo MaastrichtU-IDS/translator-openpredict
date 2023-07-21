@@ -17,8 +17,7 @@ class NGramWalker(RandomWalker):
             if i == 0 or i % 2 == 1 or i < self.n:
                 n_gram_walk.append(hop.name)
             else:
-                n_gram = tuple(walk[j].name for j in range(max(0, i - (self.n - 1)),
-                                                           i + 1))
+                n_gram = tuple(walk[j].name for j in range(max(0, i - (self.n - 1)), i + 1))
                 if n_gram not in self.n_gram_map:
                     self.n_gram_map[n_gram] = str(len(self.n_gram_map))
                 n_gram_walk.append(self.n_gram_map[n_gram])
@@ -40,6 +39,6 @@ class NGramWalker(RandomWalker):
                     for idx in itertools.combinations(range(1, len(walk)), wildcard):
                         new_walk = list(walk).copy()
                         for ix in idx:
-                            new_walk[ix] = Vertex('*')
+                            new_walk[ix] = Vertex("*")
                         canonical_walks.add(tuple(self._take_n_grams(new_walk)))
         return canonical_walks

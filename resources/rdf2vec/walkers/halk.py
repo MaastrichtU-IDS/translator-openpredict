@@ -6,15 +6,14 @@ from rdf2vec.walkers import RandomWalker
 
 
 class HalkWalker(RandomWalker):
-    def __init__(self, depth, walks_per_graph,
-                 freq_thresholds=[0.001]):
+    def __init__(self, depth, walks_per_graph, freq_thresholds=[0.001]):
         super().__init__(depth, walks_per_graph)
         self.freq_thresholds = freq_thresholds
         # self.lb_freq_threshold = lb_freq_threshold
 
     def extract(self, graph, instances):
         canonical_walks = set()
-        all_walks=[]
+        all_walks = []
         for instance in instances:
             walks = self.extract_random_walks(graph, Vertex(str(instance)))
             all_walks.extend(walks)
@@ -29,7 +28,7 @@ class HalkWalker(RandomWalker):
             for hop in freq:
                 # if len(freq[hop])/len(all_walks) > self.ub_freq_threshold:
                 #     uniformative_hops.add(hop)
-                if len(freq[hop])/len(all_walks) < freq_threshold:
+                if len(freq[hop]) / len(all_walks) < freq_threshold:
                     uniformative_hops.add(hop)
 
             for walk in all_walks:

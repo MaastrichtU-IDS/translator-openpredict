@@ -1,4 +1,4 @@
-#import community
+# import community
 import itertools
 import math
 from collections import defaultdict
@@ -6,13 +6,17 @@ from hashlib import md5
 
 import networkx as nx
 import numpy as np
+
 from rdf2vec.graph import Vertex
 from rdf2vec.walkers import Walker
 
 
 def check_random_state(seed):
     return np.random
-#community.community_louvain.check_random_state = check_random_state
+
+
+# community.community_louvain.check_random_state = check_random_state
+
 
 def sample_from_iterable(x):
     perms = itertools.permutations(x)
@@ -21,7 +25,10 @@ def sample_from_iterable(x):
     for _ in range(rand_ix):
         _ = next(perms)
     return next(perms)
-np.random.permutation = lambda x: next(itertools.permutations(x))#sample_from_iterable
+
+
+np.random.permutation = lambda x: next(itertools.permutations(x))  # sample_from_iterable
+
 
 class CommunityWalker(Walker):
     def __init__(self, depth, walks_per_graph, hop_prob=0.1, resolution=1):
@@ -49,12 +56,11 @@ class CommunityWalker(Walker):
                         nx_graph.add_edge(v_name, obj_name)
 
         # This will create a dictionary that maps the URI on a community
-        partition = community.best_partition(nx_graph,
-                                             resolution=self.resolution)
+        partition = community.best_partition(nx_graph, resolution=self.resolution)
         self.labels_per_community = defaultdict(list)
 
         self.communities = {}
-        vertices = nx.get_node_attributes(nx_graph, 'vertex')
+        vertices = nx.get_node_attributes(nx_graph, "vertex")
         for node in partition:
             if node in vertices:
                 self.communities[vertices[node]] = partition[node]
@@ -68,7 +74,7 @@ class CommunityWalker(Walker):
 
         walks = {(root,)}
 
-        for i in range(self.depth):
+        for _i in range(self.depth):
             # In each iteration, iterate over the walks, grab the
             # last hop, get all its neighbors and extend the walks
             walks_copy = walks.copy()
@@ -80,18 +86,16 @@ class CommunityWalker(Walker):
                     walks.remove(walk)
 
                 for neighbor in neighbors:
-                    walks.add(walk + (neighbor, ))
+                    walks.add((*walk, neighbor))
                     if neighbor in self.communities and np.random.random() < self.hop_prob:
                         community_nodes = self.labels_per_community[self.communities[neighbor]]
                         rand_jump = np.random.choice(community_nodes)
-                        walks.add(walk + (rand_jump, ))
-
+                        walks.add((*walk, rand_jump))
 
             # TODO: Should we prune in every iteration?
             if self.walks_per_graph is not None:
-                n_walks = min(len(walks),  self.walks_per_graph)
-                walks_ix = np.random.choice(range(len(walks)), replace=False,
-                                            size=n_walks)
+                n_walks = min(len(walks), self.walks_per_graph)
+                walks_ix = np.random.choice(range(len(walks)), replace=False, size=n_walks)
                 if len(walks_ix) > 0:
                     walks_list = list(walks)
                     walks = {walks_list[ix] for ix in walks_ix}

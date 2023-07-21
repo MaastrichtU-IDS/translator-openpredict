@@ -17,13 +17,12 @@ class WildcardWalker(RandomWalker):
                 canonical_walks.add(tuple(x.name for x in walk))
 
                 for wildcard in self.wildcards:
-                    combinations = itertools.combinations(range(1, len(walk)),
-                                                          wildcard)
+                    combinations = itertools.combinations(range(1, len(walk)), wildcard)
                     for idx in combinations:
                         new_walk = []
                         for ix, hop in enumerate(walk):
                             if ix in idx:
-                                new_walk.append(Vertex('*'))
+                                new_walk.append(Vertex("*"))
                             else:
                                 new_walk.append(hop.name)
                         canonical_walks.add(tuple(new_walk))

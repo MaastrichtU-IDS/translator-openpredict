@@ -193,26 +193,6 @@ Push to the [MaastrichtU-IDS GitHub Container Registry](https://github.com/orgs/
 docker push ghcr.io/maastrichtu-ids/openpredict-api:latest
 ```
 
-### 📖 Generate pydoc for the code
-
-Documentation in [docs/README-pydoc.md](https://github.com/MaastrichtU-IDS/translator-openpredict/tree/master/docs/README-pydoc.md) is generated from the Python source code doc strings using [pydoc-markdown](https://pydoc-markdown.readthedocs.io/en/latest/).
-
-```bash
-pip3 install pydoc-markdown
-```
-
-Generate markdown documentation page for the `openpredict` package in `docs/`
-
-```bash
-pydoc-markdown --render-toc -p openpredict > docs/README-pydoc.md
-```
-
-Modify the generated page title automatically:
-
-```bash
-find docs/README-pydoc.md -type f -exec sed -i "s/# Table of Contents/# OpenPredict Package documentation 🔮🐍/g" {} +
-```
-
 ### Update the TRAPI version
 
 Get the latest TRAPI YAML: https://github.com/NCATSTranslator/ReasonerAPI/blob/master/TranslatorReasonerAPI.yaml

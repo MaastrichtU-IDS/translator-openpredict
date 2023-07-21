@@ -1,6 +1,7 @@
 from hashlib import md5
 
 import numpy as np
+
 from rdf2vec.graph import Vertex
 from rdf2vec.walkers import Walker
 
@@ -14,7 +15,7 @@ class RandomWalker(Walker):
         # Initialize one walk of length 1 (the root)
         walks = {(root,)}
 
-        for i in range(self.depth):
+        for _i in range(self.depth):
             # In each iteration, iterate over the walks, grab the
             # last hop, get all its neighbors and extend the walks
             walks_copy = walks.copy()
@@ -26,13 +27,12 @@ class RandomWalker(Walker):
                     walks.remove(walk)
 
                 for neighbor in neighbors:
-                    walks.add(walk + (neighbor, ))
+                    walks.add((*walk, neighbor))
 
             # TODO: Should we prune in every iteration?
             if self.walks_per_graph is not None:
-                n_walks = min(len(walks),  self.walks_per_graph)
-                walks_ix = np.random.choice(range(len(walks)), replace=False,
-                                            size=n_walks)
+                n_walks = min(len(walks), self.walks_per_graph)
+                walks_ix = np.random.choice(range(len(walks)), replace=False, size=n_walks)
                 if len(walks_ix) > 0:
                     walks_list = list(walks)
                     walks = {walks_list[ix] for ix in walks_ix}

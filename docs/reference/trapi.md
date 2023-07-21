@@ -1,3 +1,0 @@
-# TRAPI
-
-::: openpredict.TRAPI

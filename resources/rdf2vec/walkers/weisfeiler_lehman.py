@@ -12,12 +12,11 @@ class WeisfeilerLehmanWalker(RandomWalker):
 
     def _create_label(self, graph, vertex, n):
         """Take labels of neighbors, sort them lexicographically and join."""
-        neighbor_names = [self._label_map[x][n - 1]
-                          for x in graph.get_inv_neighbors(vertex)]
-        suffix = '-'.join(sorted(set(map(str, neighbor_names))))
+        neighbor_names = [self._label_map[x][n - 1] for x in graph.get_inv_neighbors(vertex)]
+        suffix = "-".join(sorted(set(map(str, neighbor_names))))
 
         # TODO: Experiment with not adding the prefix
-        return self._label_map[vertex][n - 1] + '-' + suffix
+        return self._label_map[vertex][n - 1] + "-" + suffix
         # return suffix
 
     def _weisfeiler_lehman(self, graph):
@@ -29,7 +28,7 @@ class WeisfeilerLehmanWalker(RandomWalker):
             self._label_map[v][0] = v.name
             self._inv_label_map[v.name][0] = v
 
-        for n in range(1, self.wl_iterations+1):
+        for n in range(1, self.wl_iterations + 1):
             for vertex in graph._vertices:
                 # Create multi-set label
                 s_n = self._create_label(graph, vertex, n)
@@ -39,7 +38,6 @@ class WeisfeilerLehmanWalker(RandomWalker):
         for vertex in graph._vertices:
             for key, val in self._label_map[vertex].items():
                 self._inv_label_map[vertex][val] = key
-
 
     def extract(self, graph, instances):
         self._weisfeiler_lehman(graph)
