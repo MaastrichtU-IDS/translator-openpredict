@@ -40,7 +40,7 @@ cookiecutter https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api
 Helper function to easily save a generated model, its metadata, and the data used to generate it. It uses tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/) to store large model outside of the git repository.
 
 ```python
-from openpredict import save
+from trapi_predict_kit import save
 
 hyper_params = {
     'penalty': 'l2',
@@ -66,7 +66,7 @@ The `openpredict` package provides a decorator `@trapi_predict` to annotate your
 Predictions generated from functions decorated with `@trapi_predict` can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI)
 
 ```python
-from openpredict import trapi_predict, PredictOptions, PredictOutput
+from trapi_predict_kit import trapi_predict, PredictOptions, PredictOutput
 
 @trapi_predict(path='/predict',
     name="Get predicted targets for a given entity",

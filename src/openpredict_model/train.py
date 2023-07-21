@@ -13,10 +13,10 @@ from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
-from openpredict import save
-from openpredict.config import settings
-from openpredict.rdf_utils import get_run_id
-from openpredict.utils import log
+from trapi_predict_kit import save
+from trapi_predict_kit.config import settings
+from trapi_predict_kit.rdf_utils import get_run_id
+from trapi_predict_kit.utils import log
 
 cli = typer.Typer(help="Training for OpenPredict model")
 

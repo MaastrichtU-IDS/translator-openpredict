@@ -4,11 +4,11 @@ import re
 import numpy as np
 import pandas as pd
 
-from openpredict import load
-from openpredict.config import settings
-from openpredict.decorators import trapi_predict
-from openpredict.predict_output import PredictOptions, PredictOutput
-from openpredict.utils import get_entities_labels, get_entity_types, log
+from trapi_predict_kit import load
+from trapi_predict_kit.config import settings
+from trapi_predict_kit.decorators import trapi_predict
+from trapi_predict_kit.predict_output import PredictOptions, PredictOutput
+from trapi_predict_kit.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
 from openpredict_model.utils import load_features_embeddings, similarity_embeddings
 

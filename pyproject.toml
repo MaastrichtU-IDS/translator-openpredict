@@ -31,6 +31,8 @@ dynamic = ["version"]
 
 dependencies = [
     "requests >=2.23.0",
+    "trapi-predict-kit @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
+
     "pydantic >=1.9",
     "fastapi >=0.68.1",
     "rdflib >=6.1.1",
@@ -47,21 +49,21 @@ dependencies = [
 train = [
     "numpy ==1.16.1", # requires python 3.8
     "pandas ==1.1.1",
-    "torch==1.13.1",
+    "torch ==1.13.1",
     "networkx",
     "gensim ==3.8.3",
     "scipy ==1.5.4",
-    # scipy==0.19.1
+    # scipy ==0.19.1
     ## Cannot update to numpy1.16.5 because it requires werkzeug>=2.0
-    # numpy==1.16.5
-    # werkzeug>=2.0
-    "cython==0.29.32",
+    # numpy ==1.16.5
+    # werkzeug >=2.0
+    "cython ==0.29.32",
     "pyspark ==3.1.1",
     # "findspark",
     "scikit-learn ==0.23.1",
-    "shap==0.41.0",
-    "matplotlib==3.4.3",
-    "pyRDF2vec==0.0.5",
+    "shap ==0.41.0",
+    "matplotlib ==3.4.3",
+    "pyRDF2vec ==0.0.5",
     "python-multipart >=0.0.5",
     # "httpx >=0.21.1",
     "kgx",
@@ -104,8 +106,8 @@ Tracker = "https://github.com/MaastrichtU-IDS/translator-openpredict/issues"
 Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
 
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/openpredict"]
+# [tool.hatch.build.targets.wheel]
+# packages = ["src/openpredict"]
 
 # [project.scripts]
 # openpredict = "openpredict.__main__:main"
@@ -141,21 +143,23 @@ compile-test = "pip-compile --extra dev --extra test --extra test-prod -o requir
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
 
+[tool.hatch.build]
+sources = ["src"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.version]
-path = "src/openpredict/__init__.py"
+path = "src/trapi/__init__.py"
 
 
 # OTHER TOOLS
 
-[tool.coverage.run]
-source = ["src/openpredict"]
-branch = true
-[tool.coverage.report]
-omit = ["tests/*"]
+# [tool.coverage.run]
+# source = ["src/openpredict"]
+# branch = true
+# [tool.coverage.report]
+# omit = ["tests/*"]
 
 
 [tool.ruff]

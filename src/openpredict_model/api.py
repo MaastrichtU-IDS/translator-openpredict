@@ -6,8 +6,8 @@ from typing import Optional
 
 from fastapi import APIRouter, File, Query, UploadFile
 from rdflib import Graph
+from trapi_predict_kit.rdf_utils import retrieve_features, retrieve_models
 
-from openpredict.rdf_utils import retrieve_features, retrieve_models
 from openpredict_model.evidence_path.predict import do_evidence_path
 from openpredict_model.explain_shap.explain_shap import get_explanations
 from openpredict_model.train import add_embedding

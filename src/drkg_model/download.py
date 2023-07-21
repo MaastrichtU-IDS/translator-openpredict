@@ -3,7 +3,7 @@
 
 import os
 
-from openpredict.utils import get_openpredict_dir
+from trapi_predict_kit.utils import get_openpredict_dir
 
 
 # Downloading 500M kgpredict external dependency to avoid to have to commit it to dvc

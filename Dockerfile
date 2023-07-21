@@ -8,17 +8,9 @@ LABEL org.opencontainers.image.source="https://github.com/MaastrichtU-IDS/transl
 USER root
 WORKDIR /app
 
-
 RUN apt-get update && \
-    apt-get install -y build-essential wget curl vim openjdk-11-jdk && \
+    apt-get install -y build-essential wget curl vim openjdk-17-jdk && \
     pip install --upgrade pip
-
-# Install Poetry
-# ENV POETRY_VERSION=1.2.0
-# RUN curl -sSL https://install.python-poetry.org | python - --version $POETRY_VERSION
-# ENV PATH=/root/.local/bin:$PATH
-# RUN poetry config virtualenvs.create false
-
 
 
 # Install Spark for standalone context in /opt
@@ -37,8 +29,6 @@ RUN echo "log4j.rootCategory=ERROR, console" > $SPARK_HOME/conf/log4j.properties
 # Define some environment variables for pyspark and gunicorn config
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
-ENV MODULE_NAME=trapi.main
-ENV VARIABLE_NAME=app
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
 
@@ -48,6 +38,9 @@ RUN pip install -r requirements.txt
 
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
+
+ENV MODULE_NAME=trapi.main
+ENV VARIABLE_NAME=app
 
 RUN pip install -e ".[train,test,dev]"
 

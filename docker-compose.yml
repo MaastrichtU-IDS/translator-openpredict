@@ -15,6 +15,7 @@ services:
       LOG_LEVEL: 'INFO'
     entrypoint: uvicorn trapi.main:app --host 0.0.0.0 --port 8808 --reload
 
+
   # Container used for testing and running scripts
   tests:
     build: .
@@ -30,16 +31,17 @@ services:
     # entrypoint:  pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
     # entrypoint:  pytest tests/package/test_decorator.py -s
 
+
   # Container to deploy a JupyterLab/VSCode workspace for development
-  workspace:
-    image: ghcr.io/maastrichtu-ids/jupyterlab
-    ports:
-      - 8888:8888
-    volumes:
-      - ./:/home/jovyan/work
-    user: root
-    environment:
-      - GRANT_SUDO=yes
-      - LOG_LEVEL=INFO
-      ## With password:
-      # - JUPYTER_TOKEN=password
+  # workspace:
+  #   image: ghcr.io/maastrichtu-ids/jupyterlab
+  #   ports:
+  #     - 8888:8888
+  #   volumes:
+  #     - ./:/home/jovyan/work
+  #   user: root
+  #   environment:
+  #     - GRANT_SUDO=yes
+  #     - LOG_LEVEL=INFO
+  #     ## With password:
+  #     # - JUPYTER_TOKEN=password

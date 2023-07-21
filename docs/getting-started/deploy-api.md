@@ -6,7 +6,7 @@ You will need to instantiate a `TRAPI` class to deploy a Translator Reasoner API
 import logging
 
 from openpredict.config import settings
-from openpredict import TRAPI
+from trapi_predict_kit import TRAPI
 from my_model.predict import get_predictions
 
 

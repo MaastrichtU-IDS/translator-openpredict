@@ -3,7 +3,7 @@ import os
 
 from fastapi.testclient import TestClient
 
-from openpredict.utils import init_openpredict_dir
+from trapi_predict_kit.utils import init_openpredict_dir
 from trapi.main import app
 
 # from tests.conftest import validator

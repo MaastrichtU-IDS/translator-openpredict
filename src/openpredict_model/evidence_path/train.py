@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from gensim.models import KeyedVectors
 
-from openpredict.config import settings
+from trapi_predict_kit.config import settings
 from openpredict_model.utils import load_features_embeddings
 
 ## Evidence path for OpenPredict model by Elif

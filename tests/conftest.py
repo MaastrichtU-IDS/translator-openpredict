@@ -1,6 +1,6 @@
 # from reasoner_validator import TRAPIResponseValidator
 
-# from openpredict.config import settings
+# from trapi_predict_kit.config import settings
 
 # NOTE: we might need to remove TRAPI validator from integration checks because
 # the latest versions requires py3.9 and OpenPredict model only works on 3.8

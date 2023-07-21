@@ -4,8 +4,8 @@ import pickle
 import pandas as pd
 from gensim.models import KeyedVectors
 
-from openpredict.config import settings
-from openpredict.utils import log, normalize_id_to_translator
+from trapi_predict_kit.config import settings
+from trapi_predict_kit.utils import log, normalize_id_to_translator
 
 default_model_id = "openpredict_baseline"
 features_embeddings = pickle.load(open(f"data/features/{default_model_id}_features.pickle", "rb"))

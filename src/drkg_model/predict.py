@@ -9,7 +9,7 @@ import torch as th
 import torch.nn.functional as fn
 
 from drkg_model.download import download
-from openpredict.utils import get_entities_labels, get_openpredict_dir
+from trapi_predict_kit.utils import get_entities_labels, get_openpredict_dir
 
 # Predict drug repurposing based on the DRKG (drug repurposing KG) by Arif Yilmaz
 # TODO: cannot be integrated to TRAPI because it returns negative scores

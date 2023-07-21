@@ -5,7 +5,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from openpredict.config import settings
+from trapi_predict_kit.config import settings
 
 # Standalone script to generate diseases features
 

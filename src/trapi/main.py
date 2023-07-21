@@ -1,9 +1,10 @@
 import logging
 
+from trapi_predict_kit.config import settings
+from trapi_predict_kit.trapi import TRAPI
+from trapi_predict_kit.utils import init_openpredict_dir
+
 from drkg_model.api import api as drkg_model_api
-from openpredict.config import settings
-from openpredict.trapi import TRAPI
-from openpredict.utils import init_openpredict_dir
 from openpredict_model.api import api as openpredict_api
 from openpredict_model.predict import get_predictions, get_similarities
 
@@ -15,11 +16,6 @@ log_level = logging.ERROR
 if settings.DEV_MODE:
     log_level = logging.INFO
 logging.basicConfig(level=log_level)
-
-predict_endpoints = [
-    get_predictions,
-    get_similarities,
-]
 
 openapi_info = {
     "contact": {
@@ -101,9 +97,14 @@ else:
 
 
 app = TRAPI(
-    predict_endpoints=predict_endpoints,
+    predict_endpoints=[
+        get_predictions,
+        get_similarities,
+    ],
     info=openapi_info,
     servers=servers,
+    # itrb_url_prefix="openpredict"
+    # dev_server_url="https://openpredict.semanticscience.org"
     title='OpenPredict API',
     version='1.0.0',
     openapi_version='3.0.1',

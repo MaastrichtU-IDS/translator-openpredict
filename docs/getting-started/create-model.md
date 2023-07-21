@@ -5,7 +5,7 @@ Once you have setup your project it is time to start defining your model trainin
 A helper function is provided to easily save a generated model, its metadata, and the data used to generate it. It uses tools such as [`dvc`](https://dvc.org/) and [`mlem`](https://mlem.ai/) to store large model outside of the git repository. Here is an example:
 
 ```python
-from openpredict import save
+from trapi_predict_kit import save
 
 hyper_params = {
     'penalty': 'l2',
@@ -39,7 +39,7 @@ The annotated predict functions are expected to take 2 input arguments: the inpu
  Here is an example:
 
 ```python
-from openpredict import trapi_predict, PredictOptions, PredictOutput
+from trapi_predict_kit import trapi_predict, PredictOptions, PredictOutput
 
 @trapi_predict(path='/predict',
     name="Get predicted targets for a given entity",
