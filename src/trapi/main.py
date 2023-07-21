@@ -56,55 +56,14 @@ openapi_info = {
     }
 }
 
-servers_list = [
-    {
-        "url": settings.PROD_URL,
-        "description": 'TRAPI ITRB Production Server',
-        "x-maturity": 'production'
-    },
-    {
-        "url": settings.TEST_URL,
-        "description": 'TRAPI ITRB Test Server',
-        "x-maturity": 'testing'
-    },
-    {
-        "url": settings.STAGING_URL,
-        "description": 'TRAPI ITRB CI Server',
-        "x-maturity": 'staging'
-    },
-    {
-        "url": settings.DEV_URL,
-        "description": 'TRAPI ITRB Development Server',
-        "x-maturity": 'development',
-        # "x-location": 'IDS'
-    },
-]
-
-# Order the servers list based on the env variable used for nginx proxy in docker
-if settings.VIRTUAL_HOST:
-    servers = []
-    # Add the current server as 1st server in the list
-    for server in servers_list:
-        if settings.VIRTUAL_HOST in server['url']:
-            servers.append(server)
-            break
-    # Add other servers
-    for server in servers_list:
-        if settings.VIRTUAL_HOST not in server['url']:
-            servers.append(server)
-else:
-    servers = []
-
-
 app = TRAPI(
     predict_endpoints=[
         get_predictions,
         get_similarities,
     ],
     info=openapi_info,
-    servers=servers,
-    # itrb_url_prefix="openpredict"
-    # dev_server_url="https://openpredict.semanticscience.org"
+    itrb_url_prefix="openpredict",
+    dev_server_url="https://openpredict.semanticscience.org",
     title='OpenPredict API',
     version='1.0.0',
     openapi_version='3.0.1',
