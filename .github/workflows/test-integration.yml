@@ -74,7 +74,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -e ".[train,test,dev]"
+        pip install -e ".[train,test]"
 
     - name: Test with pytest with coverage
       run: |

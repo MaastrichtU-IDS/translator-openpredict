@@ -32,6 +32,7 @@ dynamic = ["version"]
 dependencies = [
     "requests >=2.23.0",
     "trapi-predict-kit @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
+    # "trapi-predict-kit @ {root:uri}/../trapi-predict-kit",
 
     "pydantic >=1.9",
     "fastapi >=0.68.1",
@@ -72,22 +73,14 @@ test = [
     "pytest >=7.1.3,<8.0.0",
     "pytest-cov >=2.12.0,<4.0.0",
     "httpx",
+    "typer >=0.7.0",
+    "pre-commit >=3.2.0",
+    "dvc >=2.38.1",
+    "pip-tools",
+    "types-requests",
 ]
 test-prod = [
     "reasoner-validator >=3.1.4",
-]
-dev = [
-    "typer >=0.7.0",
-    "pre-commit >=3.2.0",
-    # "uvicorn >=0.15.0",
-    # "gunicorn >=20.0.4",
-    "dvc >=2.38.1",
-    # "dagshub",
-    "ruff >=0.0.219",
-    "pip-tools",
-    "types-requests",
-    # "jupyter",
-    # "notebook",
 ]
 doc = [
     "mkdocs >=1.4.2",
@@ -122,7 +115,6 @@ Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
 features = [
     "test",
     # "test-prod",
-    "dev",
     "doc",
     "train",
 ]

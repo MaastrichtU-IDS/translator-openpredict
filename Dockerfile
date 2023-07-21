@@ -42,7 +42,7 @@ COPY . .
 ENV MODULE_NAME=trapi.main
 ENV VARIABLE_NAME=app
 
-RUN pip install -e ".[train,test,dev]"
+RUN pip install -e ".[train,test]"
 
 RUN dvc pull -f
 
