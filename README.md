@@ -1,6 +1,9 @@
 # 🔮🐍 Translator OpenPredict
 
-[![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml)
+[![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict)
+
+<!-- [![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml)
+-->
 
 This repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science.
 
@@ -35,9 +38,7 @@ Requirements: Python 3.8+ and `pip` installed
 Start the API in development mode with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
 
 ```bash
-docker-compose up api
-# Or with the helper script:
-./scripts/api.sh
+docker compose up api
 ```
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
@@ -47,9 +48,7 @@ docker-compose up api
 Run the tests locally with docker:
 
 ```bash
-docker-compose run tests
-# Or with the helper script:
-./scripts/test.sh
+docker compose run tests
 ```
 
 > See the [`TESTING.md`](/TESTING.md) file for more details on testing the API.
@@ -57,15 +56,15 @@ docker-compose run tests
 You can change the entrypoint of the test container to run other commands, such as training a model:
 
 ```bash
-docker-compose run --entrypoint "python src/openpredict_model/train.py train-model" tests
+docker compose run --entrypoint "python src/openpredict_model/train.py train-model" tests
 # Or with the helper script:
-./scripts/run.sh python src/openpredict_model/train.py train-model
+./resources/run.sh python src/openpredict_model/train.py train-model
 ```
 
 ### Use the OpenPredict API
 
 
-The user provides a drug or a disease identifier as a CURIE (e.g. DRUGBANK:DB00394, or OMIM:246300), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented).
+The user provides a drug or a disease identifier as a CURIE (e.g. `DRUGBANK:DB00394`, or `OMIM:246300`), and choose a prediction model (only the `Predict OMIM-DrugBank` classifier is currently implemented).
 
 The API will return predicted targets for the given drug or disease:
 

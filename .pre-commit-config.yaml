@@ -17,7 +17,7 @@ repos:
     -   id: trailing-whitespace
         name: ✂️  Trim trailing whitespaces
 # -   repo: https://github.com/charliermarsh/ruff-pre-commit
-#     rev: v0.0.219
+#     rev: v0.0.277
 #     hooks:
 #     -   id: ruff
 #         name: ⚡️ Formatting code with Ruff

@@ -1,4 +1,4 @@
-[![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=coverage)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MaastrichtU-IDS_translator-openpredict&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=MaastrichtU-IDS_translator-openpredict) [![CII Best  Practices](https://bestpractices.coreinfrastructure.org/projects/4382/badge)](https://bestpractices.coreinfrastructure.org/projects/4382)
+[![Python versions](https://img.shields.io/pypi/pyversions/openpredict)](https://pypi.org/project/openpredict) [![Version](https://img.shields.io/pypi/v/openpredict)](https://pypi.org/project/openpredict) [![CII Best  Practices](https://bestpractices.coreinfrastructure.org/projects/4382/badge)](https://bestpractices.coreinfrastructure.org/projects/4382)
 
 Testing plan for the OpenPredict API published at https://openpredict.semanticscience.org
 
@@ -70,9 +70,3 @@ docker-compose run tests --entrypoint pytest tests/integration/test_openpredict_
 [![Publish Docker image](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/publish-docker.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/publish-docker.yml)
 
 At each new release we run the GitHub Action workflow `.github/workflows/publish-docker.yml` to test the deployment of the OpenPredict API in a Docker container, and we publish a new image for each new version of the OpenPredict API.
-
-## Additional tests
-
-[![CodeQL analysis](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/codeql-analysis.yml)
-
-We run an additional workflow which to check for vulnerabilities using the [CodeQL analysis engine](https://securitylab.github.com/tools/codeql).
