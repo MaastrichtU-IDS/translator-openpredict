@@ -8,6 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/MaastrichtU-IDS/transl
 USER root
 WORKDIR /app
 
+# Java 11 required for Spark to work
 RUN echo 'deb http://ftp.fr.debian.org/debian bullseye main' >> /etc/apt/sources.list.d/bullseye.list && \
     apt-get update && \
     apt-get install -y build-essential wget curl vim openjdk-11-jdk && \

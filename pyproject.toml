@@ -134,6 +134,10 @@ compile-test = "pip-compile --extra dev --extra test --extra test-prod -o requir
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
 
+
+
+# TOOLS
+
 [tool.hatch.build]
 sources = ["src"]
 
@@ -144,13 +148,19 @@ allow-direct-references = true
 path = "src/trapi/__init__.py"
 
 
-# OTHER TOOLS
-
 # [tool.coverage.run]
 # source = ["src/openpredict"]
 # branch = true
 # [tool.coverage.report]
 # omit = ["tests/*"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "-vvv",
+    "--cov=src",
+    "--color=yes",
+    "--cov-report=term-missing",
+]
 
 
 [tool.ruff]
