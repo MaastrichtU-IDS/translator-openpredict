@@ -3,14 +3,7 @@ import os
 
 from fastapi.testclient import TestClient
 
-from trapi_predict_kit.utils import init_openpredict_dir
 from trapi.main import app
-
-# from tests.conftest import validator
-
-# Create and start Flask from openapi.yml before running tests
-init_openpredict_dir()
-# init_triplestore()
 
 client = TestClient(app)
 

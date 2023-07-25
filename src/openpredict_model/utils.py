@@ -1,18 +1,31 @@
+import glob
 import os
 import pickle
+import uuid
 
 import pandas as pd
 from gensim.models import KeyedVectors
-
-from trapi_predict_kit.config import settings
+from rdflib import Graph
+from SPARQLWrapper import JSON, SPARQLWrapper
 from trapi_predict_kit.utils import log, normalize_id_to_translator
+
+
+def get_openpredict_dir(subfolder: str = "") -> str:
+    """Return the full path to the provided files in the OpenPredict data folder
+    Where models and features for runs are stored
+    """
+    data_dir = os.getenv("OPENPREDICT_DATA_DIR", os.path.join(os.getcwd(), "data"))
+    if not data_dir.endswith("/"):
+        data_dir += "/"
+    return data_dir + subfolder
+
 
 default_model_id = "openpredict_baseline"
 features_embeddings = pickle.load(open(f"data/features/{default_model_id}_features.pickle", "rb"))
-# features_embeddings = pickle.load(open(os.path.join(settings.OPENPREDICT_DATA_DIR, "features", f"{default_model_id}_features.pickle"), "rb"))
+# features_embeddings = pickle.load(open(os.path.join(get_openpredict_dir(), "features", f"{default_model_id}_features.pickle"), "rb"))
 
 # Preload similarity embeddings
-embedding_folder = os.path.join(settings.OPENPREDICT_DATA_DIR, 'embedding')
+embedding_folder = os.path.join(get_openpredict_dir(), 'embedding')
 similarity_embeddings = {}
 for model_id in os.listdir(embedding_folder):
     if model_id.endswith('txt'):
@@ -40,7 +53,7 @@ def load_similarity_embeddings():
 MISSING_IDS = set()
 def convert_baseline_features_ids():
     """Convert IDs to use Translator preferred IDs when building the baseline model from scratch"""
-    baseline_features_folder = os.path.join(settings.OPENPREDICT_DATA_DIR, "baseline_features")
+    baseline_features_folder = os.path.join(get_openpredict_dir(), "baseline_features")
     drugfeatfiles = ['drugs-fingerprint-sim.csv','drugs-se-sim.csv',
                     'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv','drugs-target-seq-sim.csv']
     diseasefeatfiles =['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv' ]
@@ -52,7 +65,7 @@ def convert_baseline_features_ids():
     ]
 
     # Prepare drug-disease dictionary
-    drugDiseaseKnown = pd.read_csv(os.path.join(settings.OPENPREDICT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'),delimiter=',')
+    drugDiseaseKnown = pd.read_csv(os.path.join(get_openpredict_dir(), 'resources', 'openpredict-omim-drug.csv'),delimiter=',')
     drugDiseaseKnown.rename(columns={'drugid':'Drug','omimid':'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)
 
@@ -114,3 +127,249 @@ def map_id_to_translator(mapping_obj, source_id):
     except:
         MISSING_IDS.add(source_id)
         return source_id
+
+
+
+# Get SPARQL endpoint credentials from environment variables
+SPARQL_ENDPOINT_PASSWORD = os.getenv("SPARQL_PASSWORD")
+SPARQL_ENDPOINT_USERNAME = os.getenv("SPARQL_USERNAME")
+SPARQL_ENDPOINT_URL = os.getenv("SPARQL_ENDPOINT_URL")
+SPARQL_ENDPOINT_UPDATE_URL = os.getenv("SPARQL_ENDPOINT_UPDATE_URL")
+
+# Default credentials for dev (if no environment variables provided)
+if not SPARQL_ENDPOINT_USERNAME:
+    # SPARQL_ENDPOINT_USERNAME='import_user'
+    SPARQL_ENDPOINT_USERNAME = "dba"
+if not SPARQL_ENDPOINT_PASSWORD:
+    SPARQL_ENDPOINT_PASSWORD = "dba"
+# if not SPARQL_ENDPOINT_URL:
+#    SPARQL_ENDPOINT_URL='http://localhost:8890/sparql'
+# SPARQL_ENDPOINT_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev'
+# if not SPARQL_ENDPOINT_UPDATE_URL:
+#    SPARQL_ENDPOINT_UPDATE_URL = 'http://localhost:8890/sparql'
+# SPARQL_ENDPOINT_UPDATE_URL='https://graphdb.dumontierlab.com/repositories/translator-openpredict-dev/statements'
+
+# Uncomment this line to test OpenPredict in dev mode using a RDF file instead of a SPARQL endpoint
+SPARQL_ENDPOINT_URL = None
+
+
+def get_models_graph(models_dir: str = "models"):
+    """Helper function to get a graph with the RDF from all models given in a list"""
+    g = Graph()
+
+    for file in glob.glob(f"{models_dir}/*.ttl"):
+        g.parse(file)
+
+    # for loaded_model in models_list:
+    #     g.parse(f"{loaded_model['model']}.ttl")
+    #     # g.parse(f"{os.getcwd()}/{loaded_model['model']}.ttl")
+    return g
+
+
+def query_sparql_endpoint(query, g, parameters=[]):
+    """Run select SPARQL query against SPARQL endpoint
+
+    :param query: SPARQL query as a string
+    :return: Object containing the result bindings
+    """
+    if SPARQL_ENDPOINT_URL:
+        sparql = SPARQLWrapper(SPARQL_ENDPOINT_URL)
+        sparql.setReturnFormat(JSON)
+        sparql.setQuery(query)
+        results = sparql.query().convert()
+        # print('SPARQLWrapper Results:')
+        # print(results["results"]["bindings"])
+        return results["results"]["bindings"]
+    else:
+        # Trying to SPARQL query a RDF file directly, to avoid using triplestores in dev (not working)
+        # Docs: https://rdflib.readthedocs.io/en/stable/intro_to_sparql.html
+        # Examples: https://github.com/RDFLib/rdflib/tree/master/examples
+        # Use SPARQLStore? https://github.com/RDFLib/rdflib/blob/master/examples/sparqlstore_example.py
+        # But this would require to rewrite all SPARQL query resolution to use rdflib response object
+        # Which miss the informations about which SPARQL variables (just returns rows of results without variable bind)
+        qres = g.query(query)
+        results = []
+        for row in qres:
+            result = {}
+            for _i, p in enumerate(parameters):
+                result[p] = {}
+                result[p]["value"] = str(row[p])
+            results.append(result)
+            # How can we iterate over the variable defined in the SPARQL query?
+            # It only returns the results, without the variables list
+            # Does not seems possible: https://dokk.org/documentation/rdflib/3.2.0/gettingstarted/#run-a-query
+            # print(row.run)
+            # or row["s"]
+            # or row[rdflib.Variable("s")]
+            # TODO: create an object similar to SPARQLWrapper
+            # result[variable]['value']
+        # print(results)
+        return results
+
+
+# def init_triplestore():
+#     """Only initialized the triplestore if no run for openpredict_baseline can be found.
+#     Init using the data/openpredict-metadata.ttl RDF file
+#     """
+#     # check_baseline_run_query = """SELECT DISTINCT ?runType
+#     # WHERE {
+#     #     <https://w3id.org/openpredict/run/openpredict_baseline> a ?runType
+#     # } LIMIT 10
+#     # """
+#     # results = query_sparql_endpoint(check_baseline_run_query, parameters=['runType'])
+#     # if (len(results) < 1):
+#     g = Graph()
+#     g.parse('openpredict/data/openpredict-metadata.ttl', format="ttl")
+#     insert_graph_in_sparql_endpoint(g)
+#     print('Triplestore initialized at ' + SPARQL_ENDPOINT_UPDATE_URL)
+
+
+def get_run_id(run_id=None):
+    if not run_id:
+        # Generate random UUID for the run ID
+        run_id = str(uuid.uuid1())
+    return run_id
+
+
+
+def retrieve_features(g, type="Both", run_id=None):
+    """Get features in the ML model
+
+    :param type: type of the feature (Both, Drug, Disease)
+    :return: JSON with features
+    """
+    if run_id:
+        sparql_feature_for_run = (
+            """PREFIX dct: <http://purl.org/dc/terms/>
+            PREFIX mls: <http://www.w3.org/ns/mls#>
+            PREFIX prov: <http://www.w3.org/ns/prov#>
+            PREFIX openpredict: <https://w3id.org/openpredict/>
+            PREFIX dc: <http://purl.org/dc/elements/1.1/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            SELECT DISTINCT ?feature ?featureId
+            WHERE {
+                ?run a mls:Run ;
+                    dc:identifier \""""
+            + run_id
+            + """\" ;
+                    mls:hasInput ?feature .
+                ?feature dc:identifier ?featureId .
+            }"""
+        )
+        # <https://w3id.org/openpredict/embedding_type> ?embeddingType ;
+        #         dc:description ?featureDescription .
+        results = query_sparql_endpoint(sparql_feature_for_run, g, parameters=["feature", "featureId"])
+        # print(results)
+
+        features_json = {}
+        for result in results:
+            features_json[result["feature"]["value"]] = {
+                "id": result["featureId"]["value"],
+            }
+
+    else:
+        # type_filter = ''
+        # if (type != "Both"):
+        #     type_filter = 'FILTER(?embeddingType = "' + type + '")'
+
+        query = """SELECT DISTINCT ?id ?feature
+            WHERE {{
+                ?feature a <http://www.w3.org/ns/mls#Feature> ;
+                    <http://purl.org/dc/elements/1.1/identifier> ?id .
+            }}
+            """
+        # {type_filter} .format(type_filter=type_filter)
+        results = query_sparql_endpoint(query, g, parameters=["id", "feature"])
+        # print(results)
+
+        features_json = {}
+        for result in results:
+            features_json[result["feature"]["value"]] = {
+                "id": result["id"]["value"],
+            }
+    return features_json
+
+
+def retrieve_models(g):
+    """Get models with their scores and features
+
+    :return: JSON with models and features
+    """
+    sparql_get_scores = """PREFIX dct: <http://purl.org/dc/terms/>
+        PREFIX mls: <http://www.w3.org/ns/mls#>
+        PREFIX prov: <http://www.w3.org/ns/prov#>
+        PREFIX openpredict: <https://w3id.org/openpredict/>
+        PREFIX dc: <http://purl.org/dc/elements/1.1/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        SELECT DISTINCT ?run ?runId ?generatedAtTime ?featureId ?accuracy ?average_precision ?f1 ?precision ?recall ?roc_auc
+        WHERE {
+            ?run a mls:Run ;
+                dc:identifier ?runId ;
+                prov:generatedAtTime ?generatedAtTime ;
+                mls:hasInput ?features ;
+                mls:hasOutput ?evaluation .
+            ?evaluation a mls:ModelEvaluation  .
+            ?features dc:identifier ?featureId .
+
+            ?evaluation mls:specifiedBy [a mls:EvaluationMeasure ;
+                        rdfs:label "accuracy" ;
+                        mls:hasValue ?accuracy ] .
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
+                    rdfs:label "precision" ;
+                    mls:hasValue ?precision ] .
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
+                    rdfs:label "f1" ;
+                    mls:hasValue ?f1 ] .
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
+                    rdfs:label "recall" ;
+                    mls:hasValue ?recall ] .
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
+                    rdfs:label "roc_auc" ;
+                    mls:hasValue ?roc_auc ] .
+            ?evaluation mls:specifiedBy [ a mls:EvaluationMeasure ;
+                    rdfs:label "average_precision" ;
+                    mls:hasValue ?average_precision ] .
+        }
+        """
+
+    results = query_sparql_endpoint(
+        sparql_get_scores,
+        g,
+        parameters=[
+            "run",
+            "runId",
+            "generatedAtTime",
+            "featureId",
+            "accuracy",
+            "average_precision",
+            "f1",
+            "precision",
+            "recall",
+            "roc_auc",
+        ],
+    )
+    models_json = {}
+    for result in results:
+        if result["run"]["value"] in models_json:
+            models_json[result["run"]["value"]]["features"].append(result["featureId"]["value"])
+        else:
+            models_json[result["run"]["value"]] = {
+                "id": result["runId"]["value"],
+                "generatedAtTime": result["generatedAtTime"]["value"],
+                "features": [result["featureId"]["value"]],
+                "accuracy": result["accuracy"]["value"],
+                "average_precision": result["average_precision"]["value"],
+                "f1": result["f1"]["value"],
+                "precision": result["precision"]["value"],
+                "recall": result["recall"]["value"],
+                "roc_auc": result["roc_auc"]["value"],
+            }
+
+        # We could create an object with feature description instead of passing just the ID
+        # features_json[result['id']['value']] = {
+        #     "description": result['description']['value'],
+        #     "type": result['embeddingType']['value']
+        # }
+    return models_json

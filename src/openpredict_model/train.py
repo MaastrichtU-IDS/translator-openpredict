@@ -15,8 +15,9 @@ from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
 from trapi_predict_kit import save
 from trapi_predict_kit.config import settings
-from trapi_predict_kit.rdf_utils import get_run_id
 from trapi_predict_kit.utils import log
+
+from openpredict_model.utils import get_run_id, get_openpredict_dir
 
 cli = typer.Typer(help="Training for OpenPredict model")
 
@@ -25,7 +26,7 @@ cli = typer.Typer(help="Training for OpenPredict model")
 # @is_fairstep(label='Prepare known drug-disease associations dictionary')
 def get_known_associations():
     drugDiseaseKnown = pd.read_csv(
-        os.path.join(settings.OPENPREDICT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'),
+        os.path.join(get_openpredict_dir(), 'resources', 'openpredict-omim-drug.csv'),
         delimiter=','
     )
     drugDiseaseKnown.rename(
@@ -46,9 +47,9 @@ def get_drug_disease_features(from_model_id: str):
         drugfeatfiles = ['drugs-fingerprint-sim.csv', 'drugs-se-sim.csv',
                          'drugs-ppi-sim.csv', 'drugs-target-go-sim.csv', 'drugs-target-seq-sim.csv']
         diseasefeatfiles = ['diseases-hpo-sim.csv',  'diseases-pheno-sim.csv']
-        drugfeatfiles = [os.path.join(settings.OPENPREDICT_DATA_DIR,
+        drugfeatfiles = [os.path.join(get_openpredict_dir(),
             baseline_features_folder, fn) for fn in drugfeatfiles]
-        diseasefeatfiles = [os.path.join(settings.OPENPREDICT_DATA_DIR,
+        diseasefeatfiles = [os.path.join(get_openpredict_dir(),
             baseline_features_folder, fn) for fn in diseasefeatfiles]
         # baseline_features_folder = "data/baseline_features/"
         # TODO: Translator IDs version (MONDO & CHEBI)
@@ -56,10 +57,10 @@ def get_drug_disease_features(from_model_id: str):
             drugfeatfiles, diseasefeatfiles)
     else:
         print(type(from_model_id))
-        print(f"📥 Loading the features tensor from {settings.OPENPREDICT_DATA_DIR}/features/{str(from_model_id)}_features.pickle")
+        print(f"📥 Loading the features tensor from {get_openpredict_dir()}/features/{str(from_model_id)}_features.pickle")
 
         (drug_df, disease_df) = pickle.load(open(
-            f"{settings.OPENPREDICT_DATA_DIR}/features/{str(from_model_id)}_features.pickle",
+            f"{get_openpredict_dir()}/features/{str(from_model_id)}_features.pickle",
             "rb"
         ))
     print("Drug Features ", drug_df.columns.levels[0])
@@ -656,7 +657,7 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     #     pickle.dump(
     #         (drug_df, disease_df),
     #         open(
-    #             f"{settings.OPENPREDICT_DATA_DIR}/features/{from_model_id}_features.pickle",
+    #             f"{get_openpredict_dir()}/features/{from_model_id}_features.pickle",
     #             "wb"
     #         )
     #     )
@@ -708,9 +709,9 @@ def add_embedding(
     # TODO: now also save the feature dataframe for each run to be able to add embedding to any run?
     # Or can we just use the models/run_id.pickle file instead of having 2 files for 1 run?
     print('📥 Loading features file: ' +
-          f"{settings.OPENPREDICT_DATA_DIR}/features/{from_model_id}_features.pickle")
+          f"{get_openpredict_dir()}/features/{from_model_id}_features.pickle")
     (drug_df, disease_df) = pickle.load(open(
-        f"{settings.OPENPREDICT_DATA_DIR}/features/{from_model_id}_features.pickle",
+        f"{get_openpredict_dir()}/features/{from_model_id}_features.pickle",
         "rb"
     ))
 
@@ -761,7 +762,7 @@ def add_embedding(
     pickle.dump(
         (drug_df, disease_df),
         open(
-            f"{settings.OPENPREDICT_DATA_DIR}/features/{run_id}_features.pickle",
+            f"{get_openpredict_dir()}/features/{run_id}_features.pickle",
             "wb"
         )
     )

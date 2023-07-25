@@ -5,9 +5,10 @@
 import pandas as pd
 import shap as shap
 import sklearn
+from trapi_predict_kit.utils import get_entities_labels
 
-from trapi_predict_kit.utils import get_entities_labels, get_openpredict_dir
 from openpredict_model.predict import query_omim_drugbank_classifier
+from openpredict_model.utils import get_openpredict_dir
 
 # XPREDICT framework may be used to add explanation features to drug repositioning applications
 

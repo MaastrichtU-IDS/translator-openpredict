@@ -4,17 +4,17 @@ import networkx as nx
 import pandas as pd
 from gensim.models import KeyedVectors
 
-from trapi_predict_kit.config import settings
 from openpredict_model.evidence_path.train import getQuantiles, path_weight_product
+from openpredict_model.utils import get_openpredict_dir
 
 ## Evidence path for OpenPredict model by Elif
 
-df_op = pd.read_csv(f"{settings.OPENPREDICT_DATA_DIR}/resources/openpredict-omim-drug.csv")
+df_op = pd.read_csv(f"{get_openpredict_dir()}/resources/openpredict-omim-drug.csv")
 
 drug_fp_vectors = KeyedVectors.load_word2vec_format(
-    f'{settings.OPENPREDICT_DATA_DIR}/embedding/drugs_fp_embed.txt', binary=False)
+    f'{get_openpredict_dir()}/embedding/drugs_fp_embed.txt', binary=False)
 disease_hp_vectors = KeyedVectors.load_word2vec_format(
-    f'{settings.OPENPREDICT_DATA_DIR}/embedding/disease_hp_embed.txt', binary=False)
+    f'{get_openpredict_dir()}/embedding/disease_hp_embed.txt', binary=False)
 
 df_op = df_op.rename(columns={'omimid': 'disease_id', 'drugid': 'drug_id'})
 df_op.disease_id = df_op.disease_id.astype(str)
@@ -32,7 +32,7 @@ def generate_paths_for_apair(drug, disease, drug_emb_vectors, disease_emb_vector
     (threshold_drug,threshold_disease) =getQuantiles(drug_emb_vectors, disease_emb_vectors, threshold_drugs)
 
     if(features_drug is not None) :
-         filtered_embedding_drugs = KeyedVectors.load_word2vec_format(f'{settings.OPENPREDICT_DATA_DIR}/evidence-path-model/feature_{str(features_drug)}.txt', binary=False)
+         filtered_embedding_drugs = KeyedVectors.load_word2vec_format(f'{get_openpredict_dir()}/evidence-path-model/feature_{str(features_drug)}.txt', binary=False)
          similarDrugs = filtered_embedding_drugs.most_similar(drug, topn=100)
          (threshold_drug,threshold_disease) =getQuantiles(filtered_embedding_drugs, disease_emb_vectors, threshold_drugs)
     else :
@@ -54,9 +54,9 @@ def generate_paths_for_apair(drug, disease, drug_emb_vectors, disease_emb_vector
     (threshold_drug,threshold_disease) =getQuantiles(drug_emb_vectors, disease_emb_vectors, threshold_diseases)
 
 
-    # TODO: USE settings.OPENPREDICT_DATA_DIR instead of lucky relative path
+    # TODO: USE get_openpredict_dir() instead of lucky relative path
     if(features_disease is not None) :
-        filtered_embedding_diseases = KeyedVectors.load_word2vec_format(f'{settings.OPENPREDICT_DATA_DIR}/evidence-path-model/feature_{str(features_disease)}.txt', binary=False)
+        filtered_embedding_diseases = KeyedVectors.load_word2vec_format(f'{get_openpredict_dir()}/evidence-path-model/feature_{str(features_disease)}.txt', binary=False)
         # filtered_embedding_diseases = KeyedVectors.load_word2vec_format(f'openpredict/data/embedding/feature_specific_embeddings_KG/feature_{str(features_disease)}.txt', binary=False)
         similarDiseases = filtered_embedding_diseases.most_similar(disease, topn=100)
         (threshold_drug,threshold_disease) =getQuantiles(drug_fp_vectors, filtered_embedding_diseases, threshold_diseases)

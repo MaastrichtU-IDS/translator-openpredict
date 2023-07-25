@@ -1,16 +1,21 @@
 import logging
+import os
 
 from trapi_predict_kit.config import settings
 from trapi_predict_kit.trapi import TRAPI
-from trapi_predict_kit.utils import init_openpredict_dir
 
 from drkg_model.api import api as drkg_model_api
 from openpredict_model.api import api as openpredict_api
 from openpredict_model.predict import get_predictions, get_similarities
+from openpredict_model.utils import get_openpredict_dir
 
 # Other TRAPI project using FastAPI: https://github.com/NCATS-Tangerine/icees-api/blob/master/icees_api/trapi.py
 
-init_openpredict_dir()
+if not os.path.exists(get_openpredict_dir("input/drugbank-drug-goa.csv")):
+    raise ValueError(
+        "❌ The data required to run the prediction models could not be found in the `data` folder"
+        "i️ Use `pip install dvc` and `dvc pull` to pull the data easily"
+    )
 
 log_level = logging.ERROR
 if settings.DEV_MODE:

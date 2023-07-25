@@ -5,12 +5,11 @@ import numpy as np
 import pandas as pd
 
 from trapi_predict_kit import load
-from trapi_predict_kit.config import settings
 from trapi_predict_kit.decorators import trapi_predict
 from trapi_predict_kit.predict_output import PredictOptions, PredictOutput
 from trapi_predict_kit.utils import get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
-from openpredict_model.utils import load_features_embeddings, similarity_embeddings
+from openpredict_model.utils import load_features_embeddings, similarity_embeddings, get_openpredict_dir
 
 trapi_nodes = {
     "biolink:Disease": {
@@ -151,7 +150,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
 
     # TODO: should we update this file too when we create new runs?
     drugDiseaseKnown = pd.read_csv(
-        os.path.join(settings.OPENPREDICT_DATA_DIR, 'resources', 'openpredict-omim-drug.csv'), delimiter=',')
+        os.path.join(get_openpredict_dir(), 'resources', 'openpredict-omim-drug.csv'), delimiter=',')
     drugDiseaseKnown.rename(
         columns={'drugid': 'Drug', 'omimid': 'Disease'}, inplace=True)
     drugDiseaseKnown.Disease = drugDiseaseKnown.Disease.astype(str)

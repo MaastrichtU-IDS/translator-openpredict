@@ -5,7 +5,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from trapi_predict_kit.config import settings
+from openpredict_model.utils import get_openpredict_dir
 
 # Standalone script to generate diseases features
 
@@ -16,7 +16,7 @@ def fasta2seq(lines):
 
 def download():
     """Download a jar file required for the processing in data/lib/"""
-    if not os.path.exists(settings.OPENPREDICT_DATA_DIR / "lib" / "sml-toolkit-0.9.jar" ):
+    if not os.path.exists(get_openpredict_dir() / "lib" / "sml-toolkit-0.9.jar" ):
         print("sml-toolkit-0.9.jar not present, downloading it")
         try:
             os.system(f'mkdir -p data/lib')

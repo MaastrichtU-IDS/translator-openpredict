@@ -3,16 +3,15 @@ import numpy as np
 import pandas as pd
 from gensim.models import KeyedVectors
 
-from trapi_predict_kit.config import settings
-from openpredict_model.utils import load_features_embeddings
+from openpredict_model.utils import load_features_embeddings, get_openpredict_dir
 
 ## Evidence path for OpenPredict model by Elif
 
 
 drug_fp_vectors = KeyedVectors.load_word2vec_format(
-    f'{settings.OPENPREDICT_DATA_DIR}/embedding/drugs_fp_embed.txt', binary=False)
+    f'{get_openpredict_dir()}/embedding/drugs_fp_embed.txt', binary=False)
 disease_hp_vectors = KeyedVectors.load_word2vec_format(
-    f'{settings.OPENPREDICT_DATA_DIR}/embedding/disease_hp_embed.txt', binary=False)
+    f'{get_openpredict_dir()}/embedding/disease_hp_embed.txt', binary=False)
 
 
 ###############################################
