@@ -41,7 +41,7 @@ RUN pip install -r requirements.txt
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
-ENV MODULE_NAME=trapi.main
+ENV MODULE_NAME=src.trapi.main
 ENV VARIABLE_NAME=app
 
 RUN pip install -e ".[train,test]"
