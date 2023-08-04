@@ -1,8 +1,7 @@
 import logging
 import os
 
-from trapi_predict_kit.config import settings
-from trapi_predict_kit.trapi import TRAPI
+from trapi_predict_kit import settings, TRAPI
 
 from drkg_model.api import api as drkg_model_api
 from openpredict_model.api import api as openpredict_api

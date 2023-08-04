@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import torch as th
 import torch.nn.functional as fn
-from trapi_predict_kit.utils import get_entities_labels
+from trapi_predict_kit import get_entities_labels
 
 from drkg_model.download import download
 from openpredict_model.utils import get_openpredict_dir

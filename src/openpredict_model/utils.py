@@ -7,7 +7,7 @@ import pandas as pd
 from gensim.models import KeyedVectors
 from rdflib import Graph
 from SPARQLWrapper import JSON, SPARQLWrapper
-from trapi_predict_kit.utils import log, normalize_id_to_translator
+from trapi_predict_kit import log, normalize_id_to_translator
 
 
 def get_openpredict_dir(subfolder: str = "") -> str:

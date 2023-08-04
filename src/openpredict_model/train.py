@@ -13,9 +13,7 @@ from sklearn import linear_model, metrics
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
-from trapi_predict_kit import save
-from trapi_predict_kit.config import settings
-from trapi_predict_kit.utils import log
+from trapi_predict_kit import save, log
 
 from openpredict_model.utils import get_run_id, get_openpredict_dir
 

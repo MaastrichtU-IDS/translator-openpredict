@@ -3,7 +3,7 @@ import os
 import requests
 from reasoner_validator import TRAPIResponseValidator
 
-from trapi_predict_kit.config import settings
+from trapi_predict_kit import settings
 
 
 # NOTE: Validate only prod because validate requires py3.9+ and OpenPredict requires 3.8
