@@ -17,8 +17,7 @@ if not os.path.exists(get_openpredict_dir("input/drugbank-drug-goa.csv")):
     )
 
 log_level = logging.ERROR
-if settings.DEV_MODE:
-    log_level = logging.INFO
+# log_level = logging.INFO
 logging.basicConfig(level=log_level)
 
 openapi_info = {
