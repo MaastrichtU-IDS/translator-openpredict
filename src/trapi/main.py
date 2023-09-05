@@ -49,8 +49,8 @@ openapi_info = {
         # TODO: cf. https://github.com/NCATSTranslator/ReasonerAPI/pull/339
         # "test_data_location": "",
         "operations": [
-            "inferred",
-            # "lookup",
+            "lookup",
+            # "inferred",
         ],
         "externalDocs": {
             "description": "The values for version are restricted according to the regex in this external JSON schema. See schema and examples at url",

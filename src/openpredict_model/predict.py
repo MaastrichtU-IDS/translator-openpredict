@@ -230,13 +230,13 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
         n_results = len(emb_vectors.vocab)
 
     similar_entites = []
-    if  drug is not None and drug in emb_vectors:
+    if drug is not None and drug in emb_vectors:
         similarDrugs = emb_vectors.most_similar(drug,topn=n_results)
         for en,sim in similarDrugs:
             #g.add((DRUGB[dr],BIOLINK['treats'],OMIM[ds]))
             #g.add((DRUGB[dr], BIOLINK['similar_to'],DRUGB[drug]))
             similar_entites.append((drug,en,sim))
-    if  disease is not None and disease in emb_vectors:
+    if disease is not None and disease in emb_vectors:
         similarDiseases = emb_vectors.most_similar(disease,topn=n_results)
         for en,sim in similarDiseases:
             similar_entites.append((disease, en, sim))
