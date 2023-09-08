@@ -1,10 +1,8 @@
 import os
 
 import requests
-from reasoner_validator import TRAPIResponseValidator
-
+from reasoner_validator.validator import TRAPIResponseValidator
 from trapi_predict_kit import settings
-
 
 # NOTE: Validate only prod because validate requires py3.9+ and OpenPredict requires 3.8
 validator = TRAPIResponseValidator(
@@ -15,11 +13,11 @@ validator = TRAPIResponseValidator(
     biolink_version=settings.BIOLINK_VERSION,
 
     # 'sources' are set to trigger checking of expected edge knowledge source provenance
-    sources={
-            # "ara_source": "infores:molepro",
-            # "kp_source": "infores:knowledge-collaboratory",
-            # "kp_source_type": "primary"
-    },
+    # sources={
+    #     "ara_source": "infores:molepro",
+    #     "kp_source": "infores:knowledge-collaboratory",
+    #     "kp_source_type": "primary"
+    # },
     # Optional flag: if omitted or set to 'None', we let the system decide the
     # default validation strictness by validation context unless we override it here
     strict_validation=None

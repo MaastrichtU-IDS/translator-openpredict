@@ -66,12 +66,11 @@ train = [
     "matplotlib ==3.4.3",
     "pyRDF2vec ==0.0.5",
     "python-multipart >=0.0.5",
-    # "httpx >=0.21.1",
     "kgx",
 ]
 test = [
-    "pytest >=7.1.3,<8.0.0",
-    "pytest-cov >=2.12.0,<4.0.0",
+    "pytest",
+    "pytest-cov",
     "httpx",
     "typer >=0.7.0",
     "pre-commit >=3.2.0",
@@ -80,7 +79,7 @@ test = [
     "types-requests",
 ]
 test-prod = [
-    "reasoner-validator >=3.1.4",
+    "reasoner-validator >=3.9.0",
 ]
 doc = [
     "mkdocs >=1.4.2",
@@ -106,23 +105,25 @@ Source = "https://github.com/MaastrichtU-IDS/translator-openpredict"
 # openpredict = "openpredict.__main__:main"
 
 
-# HATCH CONFIG: ENVIRONMENTS AND SCRIPTS
+# HATCH CONFIG: ENVS AND SCRIPTS
 [tool.hatch.envs.default]
-# type = "container"
-# image = "ghcr.io/maastrichtu-ids/openpredict-api:0.1.0"
-# command = ["/bin/sleep", "infinity"]
-# start-on-creation = false
 features = [
     "test",
-    # "test-prod",
+    "test-prod",
     "doc",
-    "train",
+    # "train",
 ]
 post-install-commands = [
     "pre-commit install",
     "dvc pull"
 ]
+# type = "container"
+# image = "ghcr.io/maastrichtu-ids/openpredict-api:0.1.0"
+# command = ["/bin/sleep", "infinity"]
+# start-on-creation = false
 
+
+# NOTE: we can't run training and integration out of docker (require python 3.8)
 [tool.hatch.envs.default.scripts]
 docs = "mkdocs serve -a localhost:8001 {args}"
 fmt = "pre-commit run --all --all-files"
