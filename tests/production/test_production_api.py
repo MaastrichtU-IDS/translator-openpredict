@@ -40,7 +40,16 @@ def check_trapi_compliance(response):
     )
 
 
-
+def test_openapi_description(pytestconfig):
+    # https://smart-api.info/api/validate?url=https://openpredict.semanticscience.org/openapi.json
+    openapi_desc = requests.get(
+        "https://smart-api.info/api/validate",
+        params={
+            'url': pytestconfig.getoption("server") + '/openapi.json',
+        },
+        timeout=300
+    ).json()
+    assert openapi_desc["success"]
 
 def test_get_predict(pytestconfig):
     """Test predict API GET operation"""
