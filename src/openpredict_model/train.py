@@ -462,6 +462,7 @@ def calculateCombinedSimilarity(pairs_train, pairs_test, classes_train, classes_
         test_df = sparkBuildFeatures(spark_context, pairs_test, classes_test,
                                      knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
         log.info("Finishing Spark jobs 🏁")
+        spark_context.stop()
     else:
         log.info("Spark cluster not found, using pandas 🐼")
         train_df = createFeatureDF(
@@ -569,6 +570,7 @@ def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
         feature_df = sparkBuildFeatures(
             spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
         log.info("Finishing Spark jobs 🏁")
+        spark_context.stop()
     else:
         log.info("Spark cluster not found, using pandas 🐼")
         feature_df = createFeatureDF(
