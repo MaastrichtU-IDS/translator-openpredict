@@ -159,37 +159,37 @@ def get_spark_context():
 
     :return: Spark context
     """
-    spark_master_url = os.getenv('SPARK_MASTER_URL')
     sc = None
+    # spark_master_url = os.getenv('SPARK_MASTER_URL')
 
-    if os.getenv('SPARK_HOME'):
-        # Do not try to run Spark if SPARK_HOME env variable not set
-        # import findspark
-        # findspark.init(os.getenv('SPARK_HOME'))
-        # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
+    # if os.getenv('SPARK_HOME'):
+    #     # Do not try to run Spark if SPARK_HOME env variable not set
+    #     # import findspark
+    #     # findspark.init(os.getenv('SPARK_HOME'))
+    #     # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
 
-        if spark_master_url and sc is None:
-            log.info(
-                'SPARK_MASTER_URL provided, connecting to the Spark cluster ✨')
-            # e.g. spark://my-spark-spark-master:7077
-            sc = pyspark.SparkContext(appName="Pi", master=spark_master_url)
-            log.info(sc)
-        else:
-            # Most of the time use local Spark available in docker container
-            try:
-                log.info(
-                    'SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
-                sc = pyspark.SparkContext.getOrCreate()
-                # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
-                log.info(sc)
-            except Exception as e:
-                log.warning(e)
-                log.info(
-                    "⚠️ Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
+    #     if spark_master_url and sc is None:
+    #         log.info(
+    #             'SPARK_MASTER_URL provided, connecting to the Spark cluster ✨')
+    #         # e.g. spark://my-spark-spark-master:7077
+    #         sc = pyspark.SparkContext(appName="Pi", master=spark_master_url)
+    #         log.info(sc)
+    #     else:
+    #         # Most of the time use local Spark available in docker container
+    #         try:
+    #             log.info(
+    #                 'SPARK_MASTER_URL not provided, trying to start Spark locally ✨')
+    #             sc = pyspark.SparkContext.getOrCreate()
+    #             # sc = pyspark.SparkContext(appName="Pi", master='local[*]')
+    #             log.info(sc)
+    #         except Exception as e:
+    #             log.warning(e)
+    #             log.info(
+    #                 "⚠️ Could not start a Spark cluster locally. Using pandas to handle dataframes 🐼")
 
-    else:
-        log.info(
-            'SPARK_HOME environment variable not found, using pandas to handle dataframes 🐼')
+    # else:
+    #     log.info(
+    #         'SPARK_HOME environment variable not found, using pandas to handle dataframes 🐼')
     return sc
     # Old way:
     #     import findspark
