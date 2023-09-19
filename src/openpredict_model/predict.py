@@ -160,6 +160,11 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     drugwithfeatures = set(drug_df.columns.levels[1].tolist())
     diseaseswithfeatures = set(disease_df.columns.levels[1].tolist())
 
+    # TODO: test with OMIM:618077
+    if input_id not in drugwithfeatures.union(diseaseswithfeatures):
+        log.warning(f"No features for {input_curie}")
+        return []
+
     # TODO: save json?
     commonDrugs = drugwithfeatures.intersection(drugDiseaseKnown.Drug.unique())
     commonDiseases = diseaseswithfeatures.intersection(
