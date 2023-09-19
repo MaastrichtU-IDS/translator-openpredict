@@ -6,7 +6,7 @@ import pandas as pd
 
 from trapi_predict_kit import load, PredictOptions, PredictOutput, trapi_predict, get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
-from openpredict_model.utils import load_features_embeddings, similarity_embeddings, get_openpredict_dir
+from openpredict_model.utils import load_features_embeddings, load_similarity_embeddings, get_openpredict_dir
 
 trapi_nodes = {
     "biolink:Disease": {
@@ -309,7 +309,7 @@ def get_similarities(input_id: str, options: PredictOptions):
         #         options.model_id = 'disease_hp_embed.txt'
 
 
-    emb_vectors = similarity_embeddings[options.model_id]
+    emb_vectors = load_similarity_embeddings(options.model_id)
 
     predictions_array = get_similar_for_entity(input_id, emb_vectors, options.n_results)
 
