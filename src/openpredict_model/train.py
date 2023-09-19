@@ -160,6 +160,7 @@ def get_spark_context():
     :return: Spark context
     """
     sc = None
+    # NOTE: we are not using Spark anymore because it is leaking a lot of memory when used in production this way
     # spark_master_url = os.getenv('SPARK_MASTER_URL')
 
     # if os.getenv('SPARK_HOME'):
