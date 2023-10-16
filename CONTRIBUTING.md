@@ -110,48 +110,7 @@ If you make changes to the data in the `data` folder you will need to add and pu
 
 ## 📝 Integrate new prediction models
 
-The `openpredict` library provides a decorator `@trapi_predict` to annotate your functions that generate predictions.
-
-Predictions generated from functions decorated with `@trapi_predict` can easily be imported in the Translator OpenPredict API, exposed as an API endpoint to get predictions from the web, and queried through the Translator Reasoner API (TRAPI)
-
-```python
-from trapi_predict_kit import trapi_predict, PredictOptions, PredictOutput
-
-@trapi_predict(path='/predict',
-    name="Get predicted targets for a given entity",
-    description="Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.",
-    relations=[
-        {
-            'subject': 'biolink:Drug',
-            'predicate': 'biolink:treats',
-            'object': 'biolink:Disease',
-        },
-        {
-            'subject': 'biolink:Disease',
-            'predicate': 'biolink:treated_by',
-            'object': 'biolink:Drug',
-        },
-    ]
-)
-def get_predictions(
-        input_id: str, options: PredictOptions
-    ) -> PredictOutput:
-    # Add the code the load the model and get predictions here
-    predictions = {
-        "hits": [
-            {
-                "id": "DB00001",
-                "type": "biolink:Drug",
-                "score": 0.12345,
-                "label": "Leipirudin",
-            }
-        ],
-        "count": 1,
-    }
-    return predictions
-```
-
-You can use [our cookiecutter template](https://github.com/MaastrichtU-IDS/cookiecutter-openpredict-api/) to quickly bootstrap a repository with everything ready to start developing your prediction models, to then easily publish and integrate them in the Translator ecosystem
+Checkout the [documentation of the `trapi-predict-kit` library](https://maastrichtu-ids.github.io/trapi-predict-kit/getting-started/expose-model) to add new predictions models.
 
 ## 📬 Pull Request process
 

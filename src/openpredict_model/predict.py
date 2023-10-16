@@ -1,12 +1,13 @@
 import os
 import re
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
 
-from trapi_predict_kit import load, PredictOptions, PredictOutput, trapi_predict, get_entities_labels, get_entity_types, log
+from trapi_predict_kit import load, PredictInput, PredictOutput, trapi_predict, get_entities_labels, get_entity_types, log
 from openpredict_model.train import createFeaturesSparkOrDF
-from openpredict_model.utils import load_features_embeddings, load_similarity_embeddings, get_openpredict_dir
+from openpredict_model.utils import load_features_embeddings, load_similarity_embeddings, get_openpredict_dir, resolve_ids_with_nodenormalization_api, resolve_id
 
 trapi_nodes = {
     "biolink:Disease": {
@@ -22,15 +23,16 @@ trapi_nodes = {
 }
 
 
-@trapi_predict(path='/predict',
-    name="Get predicted targets for a given entity",
-    description="""Return the predicted targets for a given entity: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
-Only a drug_id or a disease_id can be provided, the disease_id will be ignored if drug_id is provided
+@trapi_predict(
+    path='/predict',
+    name="Get predicted targets for given entities",
+    description="""Return the predicted targets for given entities: drug (DrugBank ID) or disease (OMIM ID), with confidence scores.
+Provide the list of drugs as `subjects`, and/or the list of diseases as `objects`
 This operation is annotated with x-bte-kgs-operations, and follow the BioThings API recommendations.
 
 You can try:
 
-| disease_id: `OMIM:246300` | drug_id: `DRUGBANK:DB00394` |
+| objects: `OMIM:246300` | subjects: `DRUGBANK:DB00394` |
 | ------- | ---- |
 | to check the drug predictions for a disease   | to check the disease predictions for a drug |
 """,
@@ -38,15 +40,8 @@ You can try:
         {
             'subject': 'biolink:Drug',
             'predicate': 'biolink:treats',
+            'inverse': 'biolink:treated_by',
             'object': 'biolink:Disease',
-            'relations': [
-                'RO:0002434'
-            ],
-        },
-        {
-            'subject': 'biolink:Disease',
-            'predicate': 'biolink:treated_by',
-            'object': 'biolink:Drug',
             'relations': [
                 'RO:0002434'
             ],
@@ -54,9 +49,7 @@ You can try:
     ],
     nodes=trapi_nodes
 )
-def get_predictions(
-        input_id: str, options: PredictOptions
-    ) -> PredictOutput:
+def get_predictions(request: PredictInput) -> PredictOutput:
     """Run classifiers to get predictions
 
     :param input_id: Id of the entity to get prediction from
@@ -65,51 +58,71 @@ def get_predictions(
     :param n_results: number of predictions to return
     :return: predictions in array of JSON object
     """
-    if options.model_id is None:
-        options.model_id = 'openpredict_baseline'
+    if request.options.model_id is None:
+        request.options.model_id = 'openpredict_baseline'
 
-    # classifier: Predict OMIM-DrugBank
-    # TODO: improve when we will have more classifier
-    predictions_array = query_omim_drugbank_classifier(input_id, options.model_id)
+    subjects = request.subjects
+    if not subjects:
+        subjects = request.objects
 
-    if options.min_score:
-        predictions_array = [
-            p for p in predictions_array if p['score'] >= options.min_score]
-    if options.max_score:
-        predictions_array = [
-            p for p in predictions_array if p['score'] <= options.max_score]
-    if options.n_results:
-        # Predictions are already sorted from higher score to lower
-        predictions_array = predictions_array[:options.n_results]
+    trapi_to_supported, supported_to_trapi = resolve_ids_with_nodenormalization_api(
+        request.subjects + request.objects
+    )
+    log.info(trapi_to_supported)
+    log.info(supported_to_trapi)
 
-    # Build lists of unique node IDs to retrieve label
-    predicted_ids = set()
-    for prediction in predictions_array:
-        for key, value in prediction.items():
-            if key != 'score':
-                predicted_ids.add(value)
-    labels_dict = get_entities_labels(predicted_ids)
-
-    # TODO: format using a model similar to BioThings:
-    # cf. at the end of this file
-
-    # Add label for each ID, and reformat the dict using source/target
     labelled_predictions = []
-    # Second array with source and target info for the reasoner query resolution
-    for prediction in predictions_array:
-        labelled_prediction = {}
-        for key, value in prediction.items():
-            if key == 'score':
-                labelled_prediction['score'] = value
-            elif value != input_id:
-                labelled_prediction['id'] = value
-                labelled_prediction['type'] = key
-                try:
-                    if value in labels_dict and labels_dict[value]:
-                        labelled_prediction['label'] = labels_dict[value]['id']['label']
-                except:
-                    print('No label found for ' + value)
-        labelled_predictions.append(labelled_prediction)
+    for subject in subjects:
+        supported_subject = trapi_to_supported.get(subject, subject)
+        log.info(supported_subject)
+
+        # classifier: Predict OMIM-DrugBank
+        # TODO: improve when we will have more classifier
+        predictions_array = query_omim_drugbank_classifier(supported_subject, request.options.model_id)
+        log.info(predictions_array)
+
+        if request.options.min_score:
+            predictions_array = [
+                p for p in predictions_array if p['score'] >= request.options.min_score]
+        if request.options.max_score:
+            predictions_array = [
+                p for p in predictions_array if p['score'] <= request.options.max_score]
+        if request.options.n_results:
+            # Predictions are already sorted from higher score to lower
+            predictions_array = predictions_array[:request.options.n_results]
+
+        # Build lists of unique node IDs to retrieve label
+        predicted_ids = set()
+        for prediction in predictions_array:
+            for key, value in prediction.items():
+                if key != 'score':
+                    predicted_ids.add(value)
+        labels_dict = get_entities_labels(predicted_ids)
+
+        # TODO: format using a model similar to BioThings:
+        # cf. at the end of this file
+
+        # Add label for each ID, and reformat the dict using source/target
+        # Second array with source and target info for the reasoner query resolution
+        for prediction in predictions_array:
+            trapi_subject = supported_to_trapi.get(prediction["drug"], prediction["drug"])
+            trapi_object = supported_to_trapi.get(prediction["disease"], prediction["disease"])
+            # log.info(prediction)
+            if request.subjects and trapi_subject not in request.subjects:
+                continue
+            if request.objects and trapi_object not in request.objects:
+                continue  # Don't add the prediction if not in the list of requested objects
+            labelled_prediction = {
+                "subject": trapi_subject,
+                "object": trapi_object,
+                "score": prediction["score"],
+            }
+            if "drug" in prediction and prediction["drug"] in labels_dict and labels_dict[prediction["drug"]]:
+                labelled_prediction['subject_label'] = labels_dict[prediction["drug"]]['id']['label']
+            if "disease" in prediction and prediction["disease"] in labels_dict and labels_dict[prediction["disease"]]:
+                labelled_prediction['object_label'] = labels_dict[prediction["disease"]]['id']['label']
+            labelled_predictions.append(labelled_prediction)
+    log.info(labelled_predictions)
     return {'hits': labelled_predictions, 'count': len(labelled_predictions)}
 
 
@@ -218,7 +231,7 @@ def query_omim_drugbank_classifier(input_curie, model_id):
     return prediction_results
 
 
-def get_similar_for_entity(input_curie, emb_vectors, n_results):
+def get_similar_for_entity(input_curie: str, emb_vectors, n_results: int = None):
     parsed_curie = re.search('(.*?):(.*)', input_curie)
     input_namespace = parsed_curie.group(1)
     input_id = parsed_curie.group(2)
@@ -231,7 +244,7 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
         disease = input_id
 
     #g= Graph()
-    if n_results == None:
+    if not n_results:
         n_results = len(emb_vectors.vocab)
 
     similar_entites = []
@@ -264,7 +277,8 @@ def get_similar_for_entity(input_curie, emb_vectors, n_results):
 
 
 
-@trapi_predict(path='/similarity',
+@trapi_predict(
+    path='/similarity',
     name="Get similar entities",
     default_input="DRUGBANK:DB00394",
     default_model=None,
@@ -291,63 +305,71 @@ You can try:
 | to check the drugs similar to a given drug | to check the diseases similar to a given disease   |
 """,
 )
-def get_similarities(input_id: str, options: PredictOptions):
+def get_similarities(request: PredictInput):
     """Run classifiers to get predictions
 
     :param input_id: Id of the entity to get prediction from
     :param options
     :return: predictions in array of JSON object
     """
-    if not options.model_id:
-        options.model_id = 'drugs_fp_embed.txt'
-        input_types = get_entity_types(input_id)
-        if 'biolink:Disease' in input_types:
-            options.model_id = 'disease_hp_embed.txt'
-        # if len(input_types) == 0:
-        #     # If no type found we try to check from the ID namespace
-        #     if input_id.lower().startswith('omim:'):
-        #         options.model_id = 'disease_hp_embed.txt'
-
-
-    emb_vectors = load_similarity_embeddings(options.model_id)
-
-    predictions_array = get_similar_for_entity(input_id, emb_vectors, options.n_results)
-
-    if options.min_score:
-        predictions_array = [
-            p for p in predictions_array if p['score'] >= options.min_score]
-    if options.max_score:
-        predictions_array = [
-            p for p in predictions_array if p['score'] <= options.max_score]
-    if options.n_results:
-        # Predictions are already sorted from higher score to lower
-        predictions_array = predictions_array[:options.n_results]
-
-    # Build lists of unique node IDs to retrieve label
-    predicted_ids = set()
-    for prediction in predictions_array:
-        for key, value in prediction.items():
-            if key != 'score':
-                predicted_ids.add(value)
-    labels_dict = get_entities_labels(predicted_ids)
-
     labelled_predictions = []
-    for prediction in predictions_array:
-        labelled_prediction = {}
-        for key, value in prediction.items():
-            if key == 'score':
-                labelled_prediction['score'] = value
-            elif value != input_id:
-                labelled_prediction['id'] = value
-                labelled_prediction['type'] = key
-                try:
-                    if value in labels_dict and labels_dict[value]:
-                        labelled_prediction['label'] = labels_dict[value]['id']['label']
-                except:
-                    print('No label found for ' + value)
-                # if value in labels_dict and labels_dict[value] and labels_dict[value]['id'] and labels_dict[value]['id']['label']:
-                #     labelled_prediction['label'] = labels_dict[value]['id']['label']
+    trapi_to_supported, supported_to_trapi = resolve_ids_with_nodenormalization_api(
+        request.subjects + request.objects
+    )
 
-        labelled_predictions.append(labelled_prediction)
+    for subject in request.subjects:
+        if not request.options.model_id:
+            request.options.model_id = 'drugs_fp_embed.txt'
+            input_types = get_entity_types(subject)
+            if 'biolink:Disease' in input_types:
+                request.options.model_id = 'disease_hp_embed.txt'
+            # if len(input_types) == 0:
+            #     # If no type found we try to check from the ID namespace
+            #     if input_id.lower().startswith('omim:'):
+            #         options.model_id = 'disease_hp_embed.txt'
+        emb_vectors = load_similarity_embeddings(request.options.model_id)
+
+        supported_subject = trapi_to_supported.get(subject, subject)
+        predictions_array = get_similar_for_entity(supported_subject, emb_vectors, request.options.n_results)
+
+        if request.options.min_score:
+            predictions_array = [
+                p for p in predictions_array if p['score'] >= request.options.min_score]
+        if request.options.max_score:
+            predictions_array = [
+                p for p in predictions_array if p['score'] <= request.options.max_score]
+        if request.options.n_results:
+            # Predictions are already sorted from higher score to lower
+            predictions_array = predictions_array[:request.options.n_results]
+
+        # Build lists of unique node IDs to retrieve label
+        predicted_ids = set()
+        for prediction in predictions_array:
+            for key, value in prediction.items():
+                if key != 'score':
+                    predicted_ids.add(value)
+        labels_dict = get_entities_labels(predicted_ids)
+
+        for prediction in predictions_array:
+            trapi_subject = supported_to_trapi.get(prediction["entity"], prediction["entity"])
+            object_id = prediction["disease"] if "disease" in prediction else prediction["drug"]
+            trapi_object = supported_to_trapi.get(object_id, object_id)
+
+            labelled_prediction = {"subject": subject}
+            labelled_prediction = {
+                "subject": trapi_subject,
+                "object": trapi_object,
+                "score": prediction["score"],
+            }
+            if "drug" in prediction and prediction["drug"] in labels_dict and labels_dict[prediction["drug"]]:
+                labelled_prediction['subject_label'] = labels_dict[prediction["drug"]]['id']['label']
+            if "disease" in prediction and prediction["disease"] in labels_dict and labels_dict[prediction["disease"]]:
+                labelled_prediction['object_label'] = labels_dict[prediction["disease"]]['id']['label']
+
+            if request.subjects and labelled_prediction["subject"] not in request.subjects:
+                continue
+            if request.objects and labelled_predictions["object"] not in request.objects:
+                continue  # Don't add the prediction if not in the list of requested objects
+            labelled_predictions.append(labelled_prediction)
 
     return {'hits': labelled_predictions, 'count': len(labelled_predictions)}

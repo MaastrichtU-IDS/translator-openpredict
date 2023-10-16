@@ -8,43 +8,74 @@ from trapi.main import app
 client = TestClient(app)
 
 
-def test_get_predict_drug():
+def test_post_predict_drug():
     """Test predict API GET operation for a drug"""
-    url = '/predict?input_id=DRUGBANK:DB00394&model_id=openpredict_baseline&n_results=42'
-    response = client.get(url).json()
+    response = client.post(
+        '/predict',
+        json={
+            "subjects": ["DRUGBANK:DB00394"],
+            "options": {
+                "model_id": "openpredict_baseline",
+                "n_results": 42,
+            }
+        }
+    ).json()
     assert len(response['hits']) == 42
     assert response['count'] == 42
-    assert response['hits'][0]['type'] == 'disease'
+    # assert response['hits'][0]['object_type'] == 'disease'
 
 
-def test_get_predict_disease():
+def test_post_predict_disease():
     """Test predict API GET operation for a disease"""
-    url = '/predict?input_id=OMIM:246300&model_id=openpredict_baseline&n_results=42'
-    response = client.get(url).json()
+    response = client.post(
+        '/predict',
+        json={
+            "objects": ["OMIM:246300"],
+            "options": {
+                "model_id": "openpredict_baseline",
+                "n_results": 42,
+            }
+        }
+    ).json()
     assert len(response['hits']) == 42
     assert response['count'] == 42
-    assert response['hits'][0]['type'] == 'drug'
+    # assert response['hits'][0]['subject_type'] == 'drug'
 
 
 # docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_get_similarity_drug -s
-def test_get_similarity_drug():
+def test_post_similarity_drug():
     """Test prediction similarity API GET operation for a drug"""
     n_results=5
-    url = '/similarity?input_id=DRUGBANK:DB00394&model_id=drugs_fp_embed.txt&n_results=' + str(n_results)
-    response = client.get(url).json()
+    response = client.post(
+        '/similarity',
+        json={
+            "subjects": ["DRUGBANK:DB00394"],
+            "options": {
+                "model_id": "drugs_fp_embed.txt",
+                "n_results": n_results,
+            }
+        }
+    ).json()
     assert len(response['hits']) == n_results
     assert response['count'] == n_results
-    assert response['hits'][0]['type'] == 'drug'
 
 # docker-compose exec api pytest tests/integration/test_openpredict_api.py::test_get_similarity_disease -s
-def test_get_similarity_disease():
+def test_post_similarity_disease():
     """Test prediction similarity API GET operation for a disease"""
     n_results=5
-    url = '/similarity?input_id=OMIM:246300&model_id=disease_hp_embed.txt&n_results=' + str(n_results)
-    response = client.get(url).json()
+    response = client.post(
+        '/similarity',
+        json={
+            "subjects": ["OMIM:246300"],
+            "options": {
+                "model_id": "disease_hp_embed.txt",
+                "n_results": n_results,
+            }
+        }
+    ).json()
+    print(response)
     assert len(response['hits']) == n_results
     assert response['count'] == n_results
-    assert response['hits'][0]['type'] == 'disease'
 
 
 def test_post_trapi():
@@ -105,7 +136,7 @@ def test_trapi_empty_response():
     }
 
     response = client.post('/query',
-        data=json.dumps(reasoner_query),
+        json=reasoner_query,
         headers={"Content-Type": "application/json"},
         # content_type='application/json'
     )

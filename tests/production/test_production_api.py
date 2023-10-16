@@ -26,7 +26,7 @@ validator = TRAPIResponseValidator(
 
 def check_trapi_compliance(response):
     # validator.check_compliance_of_trapi_response(response.json()["message"])
-    validator.check_compliance_of_trapi_response(response.json())
+    validator.check_compliance_of_trapi_response(response)
     validator_resp = validator.get_messages()
     print("⚠️ REASONER VALIDATOR WARNINGS:")
     print(validator_resp["warnings"])
@@ -54,13 +54,14 @@ def test_openapi_description(pytestconfig):
 def test_get_predict(pytestconfig):
     """Test predict API GET operation"""
     print(f'🧪 Testing API: {pytestconfig.getoption("server")}')
-    get_predictions = requests.get(
+    get_predictions = requests.post(
         pytestconfig.getoption("server") + '/predict',
-        params={
-            'input_id': 'DRUGBANK:DB00394',
-            'n_results': '42',
-            'model_id': 'openpredict_baseline'
-        },
+        json={
+            "subjects": ["DRUGBANK:DB00394"],
+            "options": {
+                "model_id": "openpredict_baseline",
+                "n_results": 42,
+        }},
         timeout=300
     ).json()
     assert 'hits' in get_predictions
@@ -78,10 +79,13 @@ def test_post_trapi(pytestconfig):
 
         with open(os.path.join('tests', 'queries', trapi_filename)) as f:
             trapi_query = f.read()
-            response = requests.post(pytestconfig.getoption("server") + '/query',
-                        data=trapi_query, headers=headers, timeout=300)
-            # 5min timeout
-            edges = response.json()['message']['knowledge_graph']['edges'].items()
+            response = requests.post(
+                pytestconfig.getoption("server") + '/query',
+                data=trapi_query,
+                headers=headers,
+                timeout=300, # 5min timeout
+            ).json()
+            edges = response['message']['knowledge_graph']['edges'].items()
 
             check_trapi_compliance(response)
             if trapi_filename.endswith('0.json'):

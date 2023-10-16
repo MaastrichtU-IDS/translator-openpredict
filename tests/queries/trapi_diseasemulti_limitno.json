@@ -14,7 +14,7 @@
                 },
                 "n1": {
                     "categories": ["biolink:Disease"],
-                    "ids": ["MONDO:0007190", "OMIM:246300"]
+                    "ids": ["MONDO:0007190"]
                 }
             }
         }

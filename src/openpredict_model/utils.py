@@ -4,10 +4,58 @@ import pickle
 import uuid
 
 import pandas as pd
+import requests
 from gensim.models import KeyedVectors
 from rdflib import Graph
 from SPARQLWrapper import JSON, SPARQLWrapper
-from trapi_predict_kit import log, normalize_id_to_translator
+from trapi_predict_kit import log, normalize_id_to_translator, settings
+
+
+def is_accepted_id(id_to_check):
+    return id_to_check.lower().startswith("omim") or id_to_check.lower().startswith("drugbank")
+
+
+def resolve_ids_with_nodenormalization_api(resolve_ids_list):
+    trapi_to_supported = {}
+    supported_to_trapi = {}
+    ids_to_normalize = []
+    for id_to_resolve in resolve_ids_list:
+        if is_accepted_id(id_to_resolve):
+            supported_to_trapi[id_to_resolve] = id_to_resolve
+            trapi_to_supported[id_to_resolve] = id_to_resolve
+        else:
+            ids_to_normalize.append(id_to_resolve)
+
+    # Query Translator NodeNormalization API to convert IDs to OMIM/DrugBank IDs
+    if len(ids_to_normalize) > 0:
+        try:
+            resolve_curies = requests.get(
+                "https://nodenormalization-sri.renci.org/get_normalized_nodes",
+                params={"curie": ids_to_normalize},
+                timeout=settings.TIMEOUT,
+            )
+            # Get corresponding OMIM IDs for MONDO IDs if match
+            resp = resolve_curies.json()
+            for resolved_id, alt_ids in resp.items():
+                for alt_id in alt_ids["equivalent_identifiers"]:
+                    if is_accepted_id(str(alt_id["identifier"])):
+                        main_id = str(alt_id["identifier"])
+                        # NOTE: fix issue when NodeNorm returns OMIM.PS: instead of OMIM:
+                        if main_id.lower().startswith("omim"):
+                            main_id = "OMIM:" + main_id.split(":", 1)[1]
+                        trapi_to_supported[resolved_id] = main_id
+                        supported_to_trapi[main_id] = resolved_id
+        except Exception:
+            log.warn("Error querying the NodeNormalization API, using the original IDs")
+    # log.info(f"Resolved: {resolve_ids_list} to {resolved_ids_object}")
+    return trapi_to_supported, supported_to_trapi
+
+
+def resolve_id(id_to_resolve, resolved_ids_object):
+    if id_to_resolve in resolved_ids_object:
+        return resolved_ids_object[id_to_resolve]
+    return id_to_resolve
+
 
 
 def get_openpredict_dir(subfolder: str = "") -> str:

@@ -1,4 +1,5 @@
 /data
+trapi-predict-kit/
 
 /models/*
 !/models/*.mlem

@@ -641,7 +641,7 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     # print("\n🍱 n_proportion: " + str(n_proportion))
     pairs, classes = balance_data(pairs, classes, n_proportion)
 
-    scores = train_test_splitting(n_fold, pairs, classes, drug_df, disease_df)
+    scores_df = train_test_splitting(n_fold, pairs, classes, drug_df, disease_df)
 
     # print("\n Train the final model using all dataset")
     # final_training = datetime.now()
@@ -666,7 +666,7 @@ def train_model(from_model_id: str = 'openpredict_baseline'):
     #     # See skikit docs: https://scikit-learn.org/stable/modules/model_persistence.html
 
     # print('Complete runtime 🕛  ' + str(datetime.now() - time_start))
-
+    scores = scores_df.to_dict()
     loaded_model = save(
         model=clf,
         path="models/openpredict_baseline",

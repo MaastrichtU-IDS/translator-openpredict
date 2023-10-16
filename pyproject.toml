@@ -32,7 +32,7 @@ dynamic = ["version"]
 dependencies = [
     "requests >=2.23.0",
     "trapi-predict-kit @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
-    # "trapi-predict-kit @ {root:uri}/../trapi-predict-kit",
+    # "trapi-predict-kit @ {root:uri}/trapi-predict-kit",
 
     "pydantic >=1.9",
     "fastapi >=0.68.1",

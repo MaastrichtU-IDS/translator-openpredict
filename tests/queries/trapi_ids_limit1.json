@@ -11,7 +11,7 @@
           "nodes": {
               "n0": {
                   "categories": ["biolink:Drug"],
-                  "ids": [ "drugbank:DB00480" ]
+                  "ids": [ "DRUGBANK:DB00480" ]
               },
               "n1": {
                   "ids": ["OMIM:246300"],

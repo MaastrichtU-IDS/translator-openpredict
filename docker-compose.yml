@@ -24,8 +24,8 @@ services:
     environment:
       PYTHONUNBUFFERED: '1'
       LOG_LEVEL: 'INFO'
-    # entrypoint: pytest --cov=src tests/integration
-    entrypoint:  pytest tests/integration/test_openpredict_api.py
+    entrypoint: pytest --cov=src tests/integration
+    # entrypoint:  pytest tests/integration/test_train_model.py -s
     # entrypoint:  pytest tests/integration/test_openpredict_api.py::test_post_trapi -s
     # entrypoint:  pytest tests/package/test_decorator.py -s
 
