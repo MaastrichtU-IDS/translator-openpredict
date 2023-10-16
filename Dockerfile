@@ -45,7 +45,7 @@ ENV MODULE_NAME=trapi.main
 ENV VARIABLE_NAME=app
 
 RUN pip install -e ".[train,test]"
-RUN pip install -e ./trapi-predict-kit
+# RUN pip install -e ./trapi-predict-kit
 
 RUN dvc pull -f
 
