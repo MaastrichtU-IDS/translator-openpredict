@@ -56,10 +56,8 @@ EXPOSE 8808
 # Build entrypoint script to pull latest dvc changes before startup
 RUN echo "#!/bin/bash" > /entrypoint.sh && \
     echo "dvc pull" >> /entrypoint.sh && \
-    # echo "pip install -e ." >> /entrypoint.sh && \
     echo "/start.sh" >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
 
-# CMD [ "/entrypoint.sh" ]
-CMD [ "uvicorn", "trapi.main:app", "--debug", "--reload"]
+CMD [ "/entrypoint.sh" ]
