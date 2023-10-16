@@ -127,9 +127,9 @@ post-install-commands = [
 [tool.hatch.envs.default.scripts]
 docs = "mkdocs serve -a localhost:8001 {args}"
 fmt = "pre-commit run --all --all-files"
-test-prod = "pytest tests/production {args}"
+test-dev = "pytest tests/production {args}"
 test-ci = "pytest tests/production --server https://openpredict.ci.transltr.io {args}"
-test-itrb-prod = "pytest tests/production --server https://openpredict.transltr.io {args}"
+test-prod = "pytest tests/production --server https://openpredict.transltr.io {args}"
 compile = "pip-compile --extra dev --extra test --extra train -o requirements.txt pyproject.toml"
 compile-test = "pip-compile --extra dev --extra test --extra test-prod -o requirements-tests.txt pyproject.toml"
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"

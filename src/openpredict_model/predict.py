@@ -68,18 +68,14 @@ def get_predictions(request: PredictInput) -> PredictOutput:
     trapi_to_supported, supported_to_trapi = resolve_ids_with_nodenormalization_api(
         request.subjects + request.objects
     )
-    log.info(trapi_to_supported)
-    log.info(supported_to_trapi)
 
     labelled_predictions = []
     for subject in subjects:
         supported_subject = trapi_to_supported.get(subject, subject)
-        log.info(supported_subject)
 
         # classifier: Predict OMIM-DrugBank
         # TODO: improve when we will have more classifier
         predictions_array = query_omim_drugbank_classifier(supported_subject, request.options.model_id)
-        log.info(predictions_array)
 
         if request.options.min_score:
             predictions_array = [
