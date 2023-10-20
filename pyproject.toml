@@ -41,7 +41,7 @@ dependencies = [
     "SPARQLWrapper >=2.0.0,<3.0.0",
     # "mlem",
     "mlem >=0.4.0",
-    "reasoner-pydantic >=3.0.1",
+    "reasoner-pydantic >=4.1.4",
     # "fairworkflows",
     # "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
     # "yatiml >=0.10.0",
@@ -80,6 +80,7 @@ test = [
     "types-requests",
 ]
 test-prod = [
+    # Cannot be installed on python 3.8
     "reasoner-validator >=3.9.0",
 ]
 doc = [
@@ -131,8 +132,8 @@ fmt = "pre-commit run --all --all-files"
 test-dev = "pytest tests/production {args}"
 test-ci = "pytest tests/production --server https://openpredict.ci.transltr.io {args}"
 test-prod = "pytest tests/production --server https://openpredict.transltr.io {args}"
-compile = "pip-compile --extra dev --extra test --extra train -o requirements.txt pyproject.toml"
-compile-test = "pip-compile --extra dev --extra test --extra test-prod -o requirements-tests.txt pyproject.toml"
+requirements = "pip-compile --extra dev --extra test --extra train -o requirements.txt pyproject.toml"
+requirements-test = "pip-compile --extra dev --extra test --extra test-prod -o requirements-tests.txt pyproject.toml"
 fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # train = "python src/openpredict_model/train.py train-model"
 

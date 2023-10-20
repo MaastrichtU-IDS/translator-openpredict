@@ -76,6 +76,36 @@ app = TRAPI(
 \n\nMore documentation available at [github.com/MaastrichtU-IDS/translator-openpredict](https://github.com/MaastrichtU-IDS/translator-openpredict)
 \n\n[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml)
 \n\nService supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about)""",
+    trapi_description="""The default example TRAPI query will give you a list of predicted potential drug treatments for a given disease
+
+You can also try this query to retrieve similar entities for a given drug:
+
+```json
+{
+    "message": {
+        "query_graph": {
+            "edges": {
+                "e01": {
+                    "object": "n1",
+                    "predicates": [ "biolink:similar_to" ],
+                    "subject": "n0"
+                }
+            },
+            "nodes": {
+                "n0": {
+                    "categories": [ "biolink:Drug" ],
+                    "ids": [ "DRUGBANK:DB00394" ]
+                },
+                "n1": {
+                    "categories": [ "biolink:Drug" ]
+                }
+            }
+        }
+    },
+    "query_options": { "n_results": 5 }
+}
+```
+        """,
 )
 
 app.include_router(openpredict_api)
