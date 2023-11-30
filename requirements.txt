@@ -796,7 +796,7 @@ tqdm==4.64.1
     #   dvc-objects
     #   pyrdf2vec
     #   shap
-trapi-predict-kit==0.2.1
+trapi-predict-kit==0.2.2
     # via openpredict (pyproject.toml)
 typer==0.7.0
     # via

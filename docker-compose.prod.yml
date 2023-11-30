@@ -16,3 +16,12 @@ services:
       VIRTUAL_PORT: 8808
 
       # OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    # ports:
+    #   - "16686:16686"
+    #   - "4318:4318"
+    #   - "6831:6831"
+    environment:
+      - LOG_LEVEL=debug

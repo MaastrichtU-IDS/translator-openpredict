@@ -31,7 +31,7 @@ dynamic = ["version"]
 
 dependencies = [
     "requests >=2.23.0",
-    "trapi-predict-kit >=0.2.0",
+    "trapi-predict-kit >=0.2.2",
     # "trapi-predict-kit @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
     # "trapi-predict-kit @ {root:uri}/trapi-predict-kit",
 
@@ -42,6 +42,11 @@ dependencies = [
     # "mlem",
     "mlem >=0.4.0",
     "reasoner-pydantic >=4.1.4",
+
+    "opentelemetry-sdk",
+    "opentelemetry-exporter-otlp-proto-http",
+    "opentelemetry-instrumentation-fastapi",
+    "opentelemetry-instrumentation-httpx",
     # "fairworkflows",
     # "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
     # "yatiml >=0.10.0",
