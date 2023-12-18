@@ -147,7 +147,7 @@ fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 # TOOLS
 
 [tool.hatch.build]
-sources = ["src"]
+packages = ["src/trapi", "src/openpredict_model", "src/drkg_model"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
