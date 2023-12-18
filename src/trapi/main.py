@@ -127,12 +127,12 @@ def configure_otel(app):
         from opentelemetry.sdk.trace.export import BatchSpanProcessor
         from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
+        service_name = os.environ.get('OTEL_SERVICE_NAME', 'OPENPREDICT')
         # httpx connections need to be open a little longer by the otel decorators
         # but some libs display warnings of resource being unclosed.
         # these supresses such warnings.
         logging.captureWarnings(capture=True)
         warnings.filterwarnings("ignore",category=ResourceWarning)
-        service_name = os.environ.get('OTEL_SERVICE_NAME', 'OPENPREDICT')
         trace.set_tracer_provider(
             TracerProvider(
                 resource=Resource.create({telemetery_service_name_key: service_name})
