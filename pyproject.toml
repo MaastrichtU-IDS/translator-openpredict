@@ -145,8 +145,7 @@ fix-permission = "sudo chown -R $(id -u):$(id -g) models data"
 
 
 # TOOLS
-
-[tool.hatch.build]
+[tool.hatch.build.targets.wheel]
 packages = ["src/trapi", "src/openpredict_model", "src/drkg_model"]
 
 [tool.hatch.metadata]

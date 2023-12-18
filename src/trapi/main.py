@@ -116,7 +116,7 @@ def configure_otel(app):
     # open telemetry https://github.com/ranking-agent/aragorn/blob/main/src/otel_config.py#L4
     # https://ncatstranslator.github.io/TranslatorTechnicalDocumentation/deployment-guide/monitoring/
     # https://github.com/TranslatorSRI/Jaeger-demo
-    if os.environ.get('OTEL_SERVICE_NAME'):
+    if not os.environ.get('NO_JAEGER'):
         logging.info("starting up jaeger telemetry")
         import warnings
         from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
