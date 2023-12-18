@@ -112,11 +112,11 @@ app.include_router(openpredict_api)
 app.include_router(drkg_model_api)
 
 
-def configure_otel(service_name, app):
+def configure_otel(app):
     # open telemetry https://github.com/ranking-agent/aragorn/blob/main/src/otel_config.py#L4
     # https://ncatstranslator.github.io/TranslatorTechnicalDocumentation/deployment-guide/monitoring/
     # https://github.com/TranslatorSRI/Jaeger-demo
-    if os.environ.get('JAEGER_ENABLED') == "True":
+    if os.environ.get('OTEL_SERVICE_NAME'):
         logging.info("starting up jaeger telemetry")
         import warnings
         from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -132,6 +132,7 @@ def configure_otel(service_name, app):
         # these supresses such warnings.
         logging.captureWarnings(capture=True)
         warnings.filterwarnings("ignore",category=ResourceWarning)
+        service_name = os.environ.get('OTEL_SERVICE_NAME', 'OPENPREDICT')
         trace.set_tracer_provider(
             TracerProvider(
                 resource=Resource.create({telemetery_service_name_key: service_name})
@@ -151,5 +152,4 @@ def configure_otel(service_name, app):
         HTTPXClientInstrumentor().instrument()
 
 # Configure open telemetry if enabled
-service_name = os.environ.get('OTEL_SERVICE_NAME', 'OPENPREDICT')
-configure_otel(service_name, app)
+configure_otel(app)

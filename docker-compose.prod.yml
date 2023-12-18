@@ -15,10 +15,9 @@ services:
       LETSENCRYPT_HOST: openpredict.semanticscience.org
       VIRTUAL_PORT: 8808
 
-      JAEGER_ENABLED: true
+      OTEL_SERVICE_NAME: OPENPREDICT
       JAEGER_HOST: jaeger-otel-agent.sri
       JAEGER_PORT: 6831
-      OTEL_SERVICE_NAME: OPENPREDICT
 
       # OPENPREDICT_APIKEY: ${OPENPREDICT_APIKEY}
 
