@@ -15,7 +15,7 @@ RUN echo 'deb http://ftp.fr.debian.org/debian bullseye main' >> /etc/apt/sources
     pip install --upgrade pip
 
 
-# Install Spark for standalone context in /opt
+# TODO: remove? Install Spark for standalone context in /opt
 ENV APACHE_SPARK_VERSION=3.2.0
 ENV HADOOP_VERSION=3.2
 ENV SPARK_HOME=/opt/spark
@@ -31,6 +31,9 @@ RUN echo "log4j.rootCategory=ERROR, console" > $SPARK_HOME/conf/log4j.properties
 # Define some environment variables for pyspark and gunicorn config
 ENV PYSPARK_PYTHON=/usr/local/bin/python3
 ENV PYSPARK_DRIVER_PYTHON=/usr/local/bin/python3
+
+
+
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
 
