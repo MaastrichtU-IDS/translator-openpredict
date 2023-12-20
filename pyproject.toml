@@ -45,8 +45,10 @@ dependencies = [
 
     "opentelemetry-sdk",
     "opentelemetry-exporter-otlp-proto-http",
+    "opentelemetry-exporter-jaeger",
     "opentelemetry-instrumentation-fastapi",
     "opentelemetry-instrumentation-httpx",
+    "opentelemetry-instrumentation-requests",
     # "fairworkflows",
     # "fairworkflows@git+https://github.com/vemonet/fairworkflows.git",
     # "yatiml >=0.10.0",
