@@ -59,13 +59,14 @@ openapi_info = {
     }
 }
 
+itrb_url_prefix = "openpredict"
 app = TRAPI(
     predict_endpoints=[
         get_predictions,
         get_similarities,
     ],
     info=openapi_info,
-    itrb_url_prefix="openpredict",
+    itrb_url_prefix=itrb_url_prefix,
     dev_server_url="https://openpredict.semanticscience.org",
     title='OpenPredict API',
     version='1.0.0',
@@ -126,9 +127,9 @@ if not os.environ.get('NO_JAEGER'):
     from opentelemetry.sdk.trace import TracerProvider
     from opentelemetry.sdk.trace.export import BatchSpanProcessor
     from opentelemetry.instrumentation.requests import RequestsInstrumentor
-    # from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
+    from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 
-    service_name = os.environ.get('OTEL_SERVICE_NAME', 'OPENPREDICT')
+    service_name = os.environ.get('OTEL_SERVICE_NAME', itrb_url_prefix)
     # httpx connections need to be open a little longer by the otel decorators
     # but some libs display warnings of resource being unclosed.
     # these supresses such warnings.
@@ -151,4 +152,4 @@ if not os.environ.get('NO_JAEGER'):
     tracer = trace.get_tracer(__name__)
     FastAPIInstrumentor.instrument_app(app, tracer_provider=trace, excluded_urls="docs,openapi.json")
     RequestsInstrumentor().instrument()
-    # HTTPXClientInstrumentor().instrument()
+    HTTPXClientInstrumentor().instrument()
