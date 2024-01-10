@@ -67,6 +67,7 @@ app = TRAPI(
     ],
     info=openapi_info,
     itrb_url_prefix=itrb_url_prefix,
+    opentelemetry=True,
     dev_server_url="https://openpredict.semanticscience.org",
     title='OpenPredict API',
     version='1.0.0',
@@ -111,45 +112,3 @@ You can also try this query to retrieve similar entities for a given drug:
 
 app.include_router(openpredict_api)
 app.include_router(drkg_model_api)
-
-
-# Configure Open Telemetry
-# https://github.com/ranking-agent/aragorn/blob/main/src/otel_config.py#L4
-# https://ncatstranslator.github.io/TranslatorTechnicalDocumentation/deployment-guide/monitoring/
-# https://github.com/TranslatorSRI/Jaeger-demo
-if not os.environ.get('NO_JAEGER'):
-    logging.info("starting up jaeger telemetry")
-    import warnings
-    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-    from opentelemetry import trace
-    from opentelemetry.exporter.jaeger.thrift import JaegerExporter
-    from opentelemetry.sdk.resources import SERVICE_NAME as telemetery_service_name_key, Resource
-    from opentelemetry.sdk.trace import TracerProvider
-    from opentelemetry.sdk.trace.export import BatchSpanProcessor
-    from opentelemetry.instrumentation.requests import RequestsInstrumentor
-    from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
-
-    service_name = os.environ.get('OTEL_SERVICE_NAME', itrb_url_prefix)
-    # httpx connections need to be open a little longer by the otel decorators
-    # but some libs display warnings of resource being unclosed.
-    # these supresses such warnings.
-    logging.captureWarnings(capture=True)
-    warnings.filterwarnings("ignore",category=ResourceWarning)
-    trace.set_tracer_provider(
-        TracerProvider(
-            resource=Resource.create({telemetery_service_name_key: service_name})
-        )
-    )
-    jaeger_host = os.environ.get('JAEGER_HOST', 'jaeger-otel-agent.sri')
-    jaeger_port = int(os.environ.get('JAEGER_PORT', '6831'))
-    jaeger_exporter = JaegerExporter(
-        agent_host_name=jaeger_host,
-        agent_port=jaeger_port,
-    )
-    trace.get_tracer_provider().add_span_processor(
-        BatchSpanProcessor(jaeger_exporter)
-    )
-    tracer = trace.get_tracer(__name__)
-    FastAPIInstrumentor.instrument_app(app, tracer_provider=trace, excluded_urls="docs,openapi.json")
-    RequestsInstrumentor().instrument()
-    HTTPXClientInstrumentor().instrument()
