@@ -1,0 +1,25 @@
+{
+  "message": {
+      "query_graph": {
+          "edges": {
+              "e01": {
+                  "subject": "n1",
+                  "object": "n0",
+                  "predicates": ["biolink:treated_by"]
+              }
+          },
+          "nodes": {
+              "n0": {
+                  "categories": ["biolink:Drug"]
+              },
+              "n1": {
+                  "ids": ["OMIM:246300"],
+                  "categories": ["biolink:Disease"]
+              }
+          }
+      }
+  },
+  "query_options": {
+      "n_results": 3
+  }
+}

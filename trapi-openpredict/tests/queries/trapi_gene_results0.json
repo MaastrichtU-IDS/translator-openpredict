@@ -1,0 +1,30 @@
+{
+    "message": {
+        "query_graph": {
+            "nodes": {
+                "gene": {
+                    "categories": [
+                        "biolink:Gene"
+                    ]
+                },
+                "chemical": {
+                    "categories": [
+                        "biolink:ChemicalEntity"
+                    ],
+                    "ids": [
+                        "PUBCHEM.COMPOUND:4091"
+                    ]
+                }
+            },
+            "edges": {
+                "t_edge": {
+                    "object": "gene",
+                    "subject": "chemical",
+                    "predicates": [
+                        "biolink:affects"
+                    ]
+                }
+            }
+        }
+    }
+}

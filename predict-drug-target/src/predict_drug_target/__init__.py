@@ -1,0 +1,1 @@
+from .predict import get_drug_target_predictions

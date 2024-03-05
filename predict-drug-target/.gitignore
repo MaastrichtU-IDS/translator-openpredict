@@ -1,0 +1,15 @@
+data/vectors
+data/smiles_transformer/
+data/download/opentargets/
+data/processed/
+models/
+data/
+
+MolecularTransformerEmbeddings/
+nohup.out
+tmp/
+.venv
+__pycache__/
+.pytest_cache
+.ipynb_checkpoints/
+*.log

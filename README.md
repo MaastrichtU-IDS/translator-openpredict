@@ -5,7 +5,16 @@
 <!-- [![Test the production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-prod.yml) [![Run integration tests for TRAPI](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/test-integration.yml)
 -->
 
-This repository contains the code for the **OpenPredict Translator API** available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science.
+This repository contains different python projects in different folder:
+
+* `predict-drug-disease`: code to train and deploy the OpenPredict drug-treats-disease inference model, based on data from Bio2RDF, DrugBank, OMIM ([2020](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7924452/)).
+* `predict-drug-target`: code to train the drug-interacts_with-target inference model
+* `trapi-predict-kit`: code for the eponymous pip package to easily deploy TRAPI endpoints for inference models.
+* `trapi-openpredict`: code for the TRAPI endpoint for OpenPredict, serving the `predict-drug-disease` and `predict-drug-target` models
+
+
+
+the **OpenPredict Translator API** IS available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science:
 
 * various folders for **different prediction models** served by the OpenPredict API are available under `src/`:
   * the OpenPredict drug-disease prediction model in `src/openpredict_model/`

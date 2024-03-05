@@ -1,0 +1,25 @@
+{
+    "message": {
+        "query_graph": {
+            "edges": {
+                "e00": {
+                    "subject": "n00",
+                    "object": "n01",
+                    "predicates": ["biolink:related_to"]
+                }
+            },
+            "nodes": {
+                "n00": {
+                    "categories": ["biolink:ChemicalEntity"]
+                },
+                "n01": {
+                    "categories": ["biolink:Disease"],
+                    "ids": ["OMIM:246300", "MONDO:0007190"]
+                }
+            }
+        }
+    },
+    "query_options": {
+        "n_results": 50
+    }
+}

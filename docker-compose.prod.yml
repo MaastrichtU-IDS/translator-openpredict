@@ -14,7 +14,7 @@ services:
       VIRTUAL_HOST: openpredict.semanticscience.org
       LETSENCRYPT_HOST: openpredict.semanticscience.org
       VIRTUAL_PORT: 8808
-      NO_JAEGER: "true"
+      OPENTELEMETRY_ENABLED: "false"
 
       # JAEGER_HOST: jaeger-otel-agent.sri
       # JAEGER_PORT: 6831

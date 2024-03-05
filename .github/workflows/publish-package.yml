@@ -1,38 +1,38 @@
 name: Publish package
-# Publish to PyPI when new release on GitHub, if tests pass
 on:
   workflow_dispatch:
-  # release:
-  #   types: [created]
+  release:
+    types: [published]
 
 jobs:
 
   tests:
-    uses: MaastrichtU-IDS/translator-openpredict/.github/workflows/test-integration.yml@master
+    uses: MaastrichtU-IDS/translator-openpredict/.github/workflows/test-package.yml@master
     secrets: inherit
 
-
   publish:
-    needs: [ tests ]
+    needs: tests
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8'
+        python-version: '3.x'
 
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
         pip install build
 
-    - name: Build distribution
-      run: |
-        python -m build
+    - name: Build package
+      working-directory: trapi-predict-kit
+      run: python -m build
 
-    - name: Publish
+    - name: Publish package
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
+        user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
+        packages-dir: trapi-predict-kit/dist/

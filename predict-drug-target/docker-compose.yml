@@ -1,0 +1,36 @@
+version: "3"
+services:
+
+  predict-drug-target-api:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./:/app
+      - /mnt/um-share-drive/deep-purpose:/app/data/shared
+    environment:
+      - VIRTUAL_HOST=predict-drug-target.137.120.31.160.nip.io
+      - LETSENCRYPT_HOST=predict-drug-target.137.120.31.160.nip.io
+      # GPU: predict-drug-target.137.120.31.160.nip.io
+      # CPU node3: predict-drug-target.137.120.31.148.nip.io
+      - VIRTUAL_PORT=8000
+      - OPENTELEMETRY_ENABLED=false
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 3
+              capabilities: [gpu]
+    shm_size: '4g'
+    # ports:
+    #   - 8000:8000
+    command: uvicorn --host 0.0.0.0 src.api:app
+    # --reload
+    networks:
+      - nginx
+
+# Required to deploy containers publicly
+networks:
+  nginx:
+    name: nginx
+    external: true
