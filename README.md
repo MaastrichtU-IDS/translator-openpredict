@@ -52,6 +52,12 @@ docker compose up api
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
 
+To deploy a development workspace on a remote server with GPUs, clone the repo and deploy with docker compose:
+
+```bash
+docker compose -f docker-compose.dev.yml up --force-recreate
+```
+
 ### Test the OpenPredict API
 
 Run the tests locally with docker:
