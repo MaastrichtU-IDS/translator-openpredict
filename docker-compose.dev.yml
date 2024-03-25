@@ -32,7 +32,7 @@ services:
     # ports:
     #   - 8000:8000
     # command: uvicorn --host 0.0.0.0 src.api:app
-    entrypoint: uvicorn src.trapi_openpredict.main:app --host 0.0.0.0 --port 8000 --reload
+    entrypoint: dvc pull && uvicorn src.trapi_openpredict.main:app --host 0.0.0.0 --port 8000 --reload
     working_dir: /app/trapi-openpredict
     # --reload
     networks:
