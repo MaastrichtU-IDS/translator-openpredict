@@ -7,7 +7,7 @@ requires-python = ">=3.7"
 name = "openpredict"
 description = "A package to help serve predictions of biomedical concepts associations as Translator Reasoner API."
 readme = "README.md"
-license = { file = "LICENSE.txt" }
+license = { file = "../LICENSE.txt" }
 authors = [
     { name = "Remzi Çelebi", email = "r.celebi@maastrichtuniversity.nl" },
     { name = "Vincent Emonet", email = "vincent.emonet@gmail.com" },
@@ -31,8 +31,8 @@ dynamic = ["version"]
 
 dependencies = [
     "requests >=2.23.0",
-    # "trapi-predict-kit[opentelemetry] >=0.2.3",
-    "trapi-predict-kit[opentelemetry] @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
+    "trapi-predict-kit[opentelemetry]",
+    # "trapi-predict-kit[opentelemetry] @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
     # "trapi-predict-kit[opentelemetry] @ {root:uri}/../trapi-predict-kit",
 
     "pydantic >=1.9",

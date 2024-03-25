@@ -41,9 +41,10 @@ dependencies = [
     "SPARQLWrapper",
     # "SPARQLWrapper >=2.0.0,<3.0.0",
 
-    # "trapi-predict-kit[web,opentelemetry] >=0.2.3",
-    "trapi-predict-kit[web,opentelemetry] @ {root:uri}/../trapi-predict-kit",
-    "predict-drug-target @ {root:uri}/../predict-drug-target",
+    "trapi-predict-kit[web,opentelemetry]",
+    # "trapi-predict-kit[web,opentelemetry] @ {root:uri}/../trapi-predict-kit",
+    # "predict-drug-target @ {root:uri}/../predict-drug-target",
+    "predict-drug-target", # From workspace
 ]
 
 [project.optional-dependencies]
@@ -89,6 +90,9 @@ test-prod = "pytest tests/production --server https://openpredict.transltr.io {a
 fix-permission = "sudo chown -R $(id -u):$(id -g) ../models ../data"
 compile = "pip-compile -o requirements.txt pyproject.toml"
 
+[tool.rye.scripts]
+dev = "uvicorn src.trapi_openpredict.main:app --reload --log-level debug"
+# devserver-explicit = { cmd = "flask run --app ./hello.py --debug" }
 
 # TOOLS
 [tool.hatch.build.targets.wheel]

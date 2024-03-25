@@ -15,6 +15,7 @@ RUN apt-get update && \
     apt-get install -y build-essential wget curl vim && \
     pip install --upgrade pip
 
+# RUN curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
 
 ENV PORT=8808
 ENV GUNICORN_CMD_ARGS="--preload"
@@ -30,7 +31,11 @@ ENV MODULE_NAME=src.oprenpredict_trapi.main
 ENV VARIABLE_NAME=app
 
 WORKDIR /app/trapi-openpredict
-RUN pip install -e . ../predict-drug-target ../trapi-predict-kit
+
+RUN pip install -e /app/predict-drug-target /app/trapi-predict-kit
+RUN pip install -e .
+
+# RUN pip install -e . /app/predict-drug-target /app/trapi-predict-kit
 # RUN pip install -e /app/trapi-predict-kit
 
 RUN dvc pull -f
