@@ -69,6 +69,7 @@ class TRAPI(FastAPI):
             openapi_version=openapi_version,
             description=description,
             root_path_in_servers=False,
+            debug=True,
             **kwargs,
         )
         if itrb_url_prefix and opentelemetry:
