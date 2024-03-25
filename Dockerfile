@@ -1,4 +1,5 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.10
+ARG BASE_IMAGE=tiangolo/uvicorn-gunicorn-fastapi:python3.10
+FROM ${BASE_IMAGE}
 # Gunicorn image 3.4G: https://github.com/tiangolo/uvicorn-gunicorn-docker/tree/master/docker-images
 
 

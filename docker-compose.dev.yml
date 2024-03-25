@@ -1,8 +1,15 @@
 version: "3"
+
+# Container to develop on remote server with GPUs
 services:
 
-  predict-drug-target-api:
-    build: .
+  openpredict-dev:
+    # image: ghcr.io/vemonet/gpu-workspace:main
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE=ghcr.io/vemonet/gpu-workspace:main
     restart: unless-stopped
     volumes:
       - ./:/app
@@ -24,7 +31,9 @@ services:
     shm_size: '4g'
     # ports:
     #   - 8000:8000
-    command: uvicorn --host 0.0.0.0 src.api:app
+    # command: uvicorn --host 0.0.0.0 src.api:app
+    entrypoint: uvicorn src.trapi_openpredict.main:app --host 0.0.0.0 --port 8000 --reload
+    working_dir: /app/trapi-openpredict
     # --reload
     networks:
       - nginx
