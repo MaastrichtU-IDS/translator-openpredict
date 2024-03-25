@@ -30,7 +30,7 @@ ENV MODULE_NAME=src.oprenpredict_trapi.main
 ENV VARIABLE_NAME=app
 
 WORKDIR /app/trapi-openpredict
-RUN pip install -e .
+RUN pip install -e . ../predict-drug-target ../trapi-predict-kit
 # RUN pip install -e /app/trapi-predict-kit
 
 RUN dvc pull -f
