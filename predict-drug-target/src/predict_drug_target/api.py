@@ -11,6 +11,7 @@ from predict_drug_target.vectordb import init_vectordb
 log_level = logging.INFO
 logging.basicConfig(level=log_level)
 
+# TODO: remove, not used, predict imported in trapi-openpredict
 
 trapi_example = {
     "message": {

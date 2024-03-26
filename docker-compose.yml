@@ -5,8 +5,8 @@ services:
     build: .
     ports:
       - 8808:8808
-    # volumes:
-    #   - ./:/app
+    volumes:
+      - ./:/app
     environment:
       # Show print() in logs:
       PYTHONUNBUFFERED: '1'

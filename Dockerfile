@@ -9,16 +9,19 @@ LABEL org.opencontainers.image.source="https://github.com/MaastrichtU-IDS/transl
 USER root
 WORKDIR /app
 
-ENV OPENTELEMETRY_ENABLED=false
-
 RUN apt-get update && \
     apt-get install -y build-essential wget curl vim && \
     pip install --upgrade pip
 
 # RUN curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
 
-ENV PORT=8808
-ENV GUNICORN_CMD_ARGS="--preload"
+ENV PORT=8808 \
+    GUNICORN_CMD_ARGS="--preload" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    ACCESS_LOG="-" \
+    ERROR_LOG="-" \
+    OPENTELEMETRY_ENABLED=false
 
 # # Use requirements.txt to install some dependencies only when needed
 # COPY trapi-openpredict/requirements.txt requirements.txt
@@ -27,8 +30,8 @@ ENV GUNICORN_CMD_ARGS="--preload"
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
-ENV MODULE_NAME=src.oprenpredict_trapi.main
-ENV VARIABLE_NAME=app
+ENV MODULE_NAME=src.oprenpredict_trapi.main \
+    VARIABLE_NAME=app
 
 WORKDIR /app/trapi-openpredict
 

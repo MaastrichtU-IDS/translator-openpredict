@@ -16,7 +16,7 @@ from predict_drug_target.vectordb import init_vectordb
 VECTORDB = init_vectordb(recreate=False)
 
 
-def load_model(path: str = "models/drug_target.pkl"):
+def load_model(path: str = "../models/drug_target.pkl"):
     with open(path, "rb") as f:
         return pickle.load(f)
 
