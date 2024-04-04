@@ -30,7 +30,7 @@ ENV PORT=8808 \
 ## Copy the source code (in the same folder as the Dockerfile)
 COPY . .
 
-ENV MODULE_NAME=src.oprenpredict_trapi.main \
+ENV MODULE_NAME=src.trapi_oprenpredict.main \
     VARIABLE_NAME=app
 
 WORKDIR /app/trapi-openpredict
