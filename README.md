@@ -12,8 +12,6 @@ This repository contains different python projects in different folder:
 * `trapi-predict-kit`: code for the eponymous pip package to easily deploy TRAPI endpoints for inference models.
 * `trapi-openpredict`: code for the TRAPI endpoint for OpenPredict, serving the `predict-drug-disease` and `predict-drug-target` models
 
-
-
 the **OpenPredict Translator API** IS available at **[openpredict.semanticscience.org](https://openpredict.semanticscience.org)**, which serves a few prediction models developed at the Institute of Data Science:
 
 * various folders for **different prediction models** served by the OpenPredict API are available under `src/`:

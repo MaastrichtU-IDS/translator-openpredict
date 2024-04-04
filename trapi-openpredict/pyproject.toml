@@ -41,10 +41,11 @@ dependencies = [
     "SPARQLWrapper",
     # "SPARQLWrapper >=2.0.0,<3.0.0",
 
-    "trapi-predict-kit[web,opentelemetry]",
+    # "trapi-predict-kit[web,opentelemetry]",
+    "trapi-predict-kit[web,opentelemetry] @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
     # "trapi-predict-kit[web,opentelemetry] @ {root:uri}/../trapi-predict-kit",
-    # "predict-drug-target @ {root:uri}/../predict-drug-target",
-    "predict-drug-target", # From workspace
+    "predict-drug-target @ git+https://github.com/MaastrichtU-IDS/predict-drug-target.git",
+    # "predict-drug-target", # Load from workspace
 ]
 
 [project.optional-dependencies]
