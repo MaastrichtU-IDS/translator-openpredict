@@ -6,8 +6,7 @@ import numpy as np
 import pandas as pd
 
 from trapi_predict_kit import load, PredictInput, PredictOutput, trapi_predict, get_entities_labels, get_entity_types, log
-from openpredict_model.train import createFeaturesSparkOrDF
-from openpredict_model.utils import load_features_embeddings, load_similarity_embeddings, get_openpredict_dir, resolve_ids_with_nodenormalization_api, resolve_id
+from openpredict_model.utils import load_features_embeddings, load_similarity_embeddings, get_openpredict_dir, resolve_ids_with_nodenormalization_api, createFeaturesSparkOrDF
 
 trapi_nodes = {
     "biolink:Disease": {

@@ -15,7 +15,7 @@ from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 
 from trapi_predict_kit import save, log
 
-from openpredict_model.utils import get_run_id, get_openpredict_dir
+from openpredict_model.utils import get_run_id, get_openpredict_dir, createFeatureDF, geometricMean, createFeaturesSparkOrDF
 
 cli = typer.Typer(help="Training for OpenPredict model")
 
@@ -340,26 +340,6 @@ def balance_data(pairs, classes, n_proportion):
     return pairs, classes
 
 
-# @is_fairstep(label='Compute the geometric means of a drug-disease association using previously generated dataframes', is_script_task=True)
-def geometricMean(drug, disease, knownDrugDisease, drugDF, diseaseDF):
-    """Compute the geometric means of a drug-disease association using previously generated dataframes
-
-    :param drug: Drug
-    :param disease: Disease
-    :param knownDrugDisease: Known drug-disease associations
-    :param drugDF: Drug dataframe
-    :param diseaseDF: Disease dataframe
-    """
-    a = drugDF.loc[knownDrugDisease[:, 0]][drug].values
-    b = diseaseDF.loc[knownDrugDisease[:, 1]][disease].values
-    c = np.sqrt(np.multiply(a, b))
-    ix2 = (knownDrugDisease == [drug, disease])
-    c[ix2[:, 1] & ix2[:, 0]] = 0.0
-    if len(c) == 0:
-        return 0.0
-    return float(max(c))
-
-
 # @is_fairstep(label='Create the features dataframes for Spark', is_script_task=True)
 def createFeatureArray(drug, disease, knownDrugDisease, drugDFs, diseaseDFs):
     """Create the features dataframes for Spark.
@@ -411,32 +391,6 @@ def sparkBuildFeatures(sc, pairs, classes, knownDrugDis,  drug_df, disease_df):
     df['Drug'] = a
     df['Disease'] = b
     df['Class'] = c
-    return df
-
-
-# @is_fairstep(label='Create the features dataframes', is_script_task=True)
-def createFeatureDF(pairs, classes, knownDrugDisease, drugDFs, diseaseDFs):
-    """Create the features dataframes.
-
-    :param pairs: Generated pairs
-    :param classes: Classes corresponding to the pairs
-    :param knownDrugDisease: Known drug-disease associations
-    :param drugDFs: Drug dataframes
-    :param diseaseDFs: Disease dataframes
-    :return: The features dataframe
-    """
-    len(drugDFs)*len(diseaseDFs)
-    # featureMatri x= np.empty((len(classes),totalNumFeatures), float)
-    df = pd.DataFrame(list(zip(pairs[:, 0], pairs[:, 1], classes)), columns=[
-                      'Drug', 'Disease', 'Class'])
-    for _i, drug_col in enumerate(drugDFs.columns.levels[0]):
-        for _j, disease_col in enumerate(diseaseDFs.columns.levels[0]):
-            drugDF = drugDFs[drug_col]
-            diseaseDF = diseaseDFs[disease_col]
-            feature_series = df.apply(lambda row: geometricMean(
-                row.Drug, row.Disease, knownDrugDisease, drugDF, diseaseDF), axis=1)
-            # print (feature_series)
-            df["Feature_"+str(drug_col)+'_'+str(disease_col)] = feature_series
     return df
 
 
@@ -553,30 +507,6 @@ def evaluate(test_df, clf):
     return scores
 
 
-# @is_fairstep(label='Create features dataframes', is_script_task=True)
-def createFeaturesSparkOrDF(pairs, classes, drug_df, disease_df):
-    """Create features dataframes. Use Spark if available for speed, otherwise use pandas
-    :param pairs: pairs
-    :param classes: classes
-    :param drug_df: drug
-    :param disease_df: disease dataframe
-    :return: Feature dataframe
-    """
-    spark_context = get_spark_context()
-    if spark_context:
-        log.info('Running Spark ✨')
-        drug_df_bc = spark_context.broadcast(drug_df)
-        disease_df_bc = spark_context.broadcast(disease_df)
-        knownDrugDis_bc = spark_context.broadcast(pairs[classes == 1])
-        feature_df = sparkBuildFeatures(
-            spark_context, pairs, classes, knownDrugDis_bc.value,  drug_df_bc.value, disease_df_bc.value)
-        log.info("Finishing Spark jobs 🏁")
-        spark_context.stop()
-    else:
-        log.info("Spark cluster not found, using pandas 🐼")
-        feature_df = createFeatureDF(
-            pairs, classes, pairs[classes == 1], drug_df, disease_df)
-    return feature_df
 
 
 

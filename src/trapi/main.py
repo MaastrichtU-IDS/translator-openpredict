@@ -1,9 +1,10 @@
 import logging
 import os
 
+from predict_drug_target import get_drug_target_predictions
 from trapi_predict_kit import settings, TRAPI
 
-from drkg_model.api import api as drkg_model_api
+# from drkg_model.api import api as drkg_model_api
 from openpredict_model.api import api as openpredict_api
 from openpredict_model.predict import get_predictions, get_similarities
 from openpredict_model.utils import get_openpredict_dir
@@ -22,9 +23,8 @@ logging.basicConfig(level=log_level)
 
 openapi_info = {
     "contact": {
-        "name": "Vincent Emonet",
-        "email": "vincent.emonet@maastrichtuniversity.nl",
-        # "x-id": "vemonet",
+        "name": "Michel Dumontier",
+        "email": "michel.dumontier@maastrichtuniversity.nl",
         "x-role": "responsible developer",
     },
     "license": {
@@ -64,6 +64,7 @@ app = TRAPI(
     predict_endpoints=[
         get_predictions,
         get_similarities,
+        get_drug_target_predictions,
     ],
     info=openapi_info,
     itrb_url_prefix=itrb_url_prefix,
@@ -79,6 +80,7 @@ app = TRAPI(
 \n\n[![Test production API](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml/badge.svg)](https://github.com/MaastrichtU-IDS/translator-openpredict/actions/workflows/run-tests-prod.yml)
 \n\nService supported by the [NCATS Translator project](https://ncats.nih.gov/translator/about)""",
     trapi_description="""The default example TRAPI query will give you a list of predicted potential drug treatments for a given disease
+
 
 You can also try this query to retrieve similar entities for a given drug:
 
@@ -107,8 +109,30 @@ You can also try this query to retrieve similar entities for a given drug:
     "query_options": { "n_results": 5 }
 }
 ```
+
+Or this TRAPI query to get drug-target predictions:
+
+```json
+{
+    "message": {
+        "query_graph": {
+            "edges": {"e01": {"object": "n1", "predicates": ["biolink:interacts_with"], "subject": "n0"}},
+            "nodes": {
+                "n0": {
+                    "categories": ["biolink:Drug"],
+                    "ids": ["PUBCHEM.COMPOUND:5329102", "PUBCHEM.COMPOUND:4039", "CHEMBL.COMPOUND:CHEMBL1431"]},
+                "n1": {
+                    "categories": ["biolink:Protein"],
+                    "ids": ["UniProtKB:O75251"]
+                }
+            }
+        }
+    },
+    "query_options": {"max_score": 1, "min_score": 0.1, "n_results": 10}
+}
+```
         """,
 )
 
 app.include_router(openpredict_api)
-app.include_router(drkg_model_api)
+# app.include_router(drkg_model_api)
