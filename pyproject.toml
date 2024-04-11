@@ -34,7 +34,7 @@ dependencies = [
     "pandas",
     "scikit-learn",
     "gensim", # For word2vec
-    "scipy==1.10.1", # https://stackoverflow.com/questions/78279136/importerror-cannot-import-name-triu-from-scipy-linalg-gensim
+    "scipy ==1.10.1", # https://stackoverflow.com/questions/78279136/importerror-cannot-import-name-triu-from-scipy-linalg-gensim
 
     "requests >=2.23.0",
     "rdflib >=6.1.1",
@@ -130,6 +130,7 @@ post-install-commands = [
 
 # NOTE: we can't run training and integration out of docker (require python 3.8)
 [tool.hatch.envs.default.scripts]
+dev = "uvicorn src.trapi.main:app --reload --log-level debug"
 docs = "mkdocs serve -a localhost:8001 {args}"
 fmt = "pre-commit run --all --all-files"
 test-dev = "pytest tests/production {args}"
