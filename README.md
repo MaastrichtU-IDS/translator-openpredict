@@ -20,10 +20,10 @@ The data used by the models in this repository is versionned using `dvc` in the 
 
 Requirements: Python 3.8+ and `pip` installed
 
-1. Clone the repository:
+1. Clone the repository with submodule:
 
    ```bash
-   git clone https://github.com/MaastrichtU-IDS/translator-openpredict.git
+   git clone --recursive https://github.com/MaastrichtU-IDS/translator-openpredict.git
    cd translator-openpredict
    ```
 

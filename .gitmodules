@@ -1,0 +1,3 @@
+[submodule "predict-drug-target"]
+	path = predict-drug-target
+	url = https://github.com/MaastrichtU-IDS/predict-drug-target.git

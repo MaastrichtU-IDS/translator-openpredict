@@ -35,18 +35,18 @@ dependencies = [
     "scikit-learn",
     "gensim", # For word2vec
     "scipy ==1.10.1", # https://stackoverflow.com/questions/78279136/importerror-cannot-import-name-triu-from-scipy-linalg-gensim
-
     "requests >=2.23.0",
     "rdflib >=6.1.1",
     "SPARQLWrapper >=2.0.0,<3.0.0",
     "reasoner-pydantic >=4.1.4",
+
     # "trapi-predict-kit[web,opentelemetry] >=0.2.3",
     "trapi-predict-kit[web,opentelemetry] @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
     # "trapi-predict-kit @ {root:uri}/trapi-predict-kit",
-    "predict-drug-target @ git+https://github.com/MaastrichtU-IDS/predict-drug-target.git",
-    # "predict-drug-target", # Load from workspace
 
-    # "pydantic >=1.9",
+    # "predict-drug-target @ git+https://github.com/MaastrichtU-IDS/predict-drug-target.git", # Uncomment for prod
+    "predict-drug-target", # Uncomment if you want to run locally in dev
+    # "predict-drug-target @ {root:uri}/predict-drug-target",
 ]
 
 [project.optional-dependencies]

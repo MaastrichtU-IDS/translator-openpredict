@@ -28,6 +28,16 @@ To work with translator-openpredict locally:
    hatch env create
    ```
 
+> [!WARNING]
+>
+> For the project to take into account the code changes in dependencies you will need to activate the virtual environment yourself and install all packages that will changes in edit mode:
+>
+> ```bash
+> pip install -e ./predict-drug-target .
+> ```
+>
+>
+
 ### 🚀 Start the API
 
 Start the API in development with docker, the API will automatically reload when you make changes in the code:
