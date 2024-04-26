@@ -76,9 +76,11 @@ def get_predictions(request: PredictInput) -> PredictOutput:
         # TODO: improve when we will have more classifier
         predictions_array = query_omim_drugbank_classifier(supported_subject, request.options.model_id)
 
+        min_score = 0.5
         if request.options.min_score:
-            predictions_array = [
-                p for p in predictions_array if p['score'] >= request.options.min_score]
+            min_score = request.options.min_score
+        predictions_array = [
+            p for p in predictions_array if p['score'] >= min_score]
         if request.options.max_score:
             predictions_array = [
                 p for p in predictions_array if p['score'] <= request.options.max_score]
