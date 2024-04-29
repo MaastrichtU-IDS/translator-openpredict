@@ -44,8 +44,8 @@ dependencies = [
     "trapi-predict-kit[web,opentelemetry] @ git+https://github.com/MaastrichtU-IDS/trapi-predict-kit.git",
     # "trapi-predict-kit @ {root:uri}/trapi-predict-kit",
 
-    # "predict-drug-target @ git+https://github.com/MaastrichtU-IDS/predict-drug-target.git", # Uncomment for prod
-    "predict-drug-target", # Uncomment if you want to run locally in dev
+    "predict-drug-target @ git+https://github.com/MaastrichtU-IDS/predict-drug-target.git", # Uncomment for prod
+    # "predict-drug-target", # Uncomment if you want to run locally in dev
     # "predict-drug-target @ {root:uri}/predict-drug-target",
 ]
 
