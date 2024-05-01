@@ -36,7 +36,6 @@ ENV MODULE_NAME=trapi.main \
 # WORKDIR /app/trapi-openpredict
 
 # RUN pip install -e /app/predict-drug-target /app/trapi-predict-kit
-RUN pip install -e /app/predict-drug-target
 RUN pip install -e .
 
 # RUN pip install -e . /app/predict-drug-target /app/trapi-predict-kit
