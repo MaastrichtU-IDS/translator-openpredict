@@ -242,7 +242,9 @@ def get_similar_for_entity(input_curie: str, emb_vectors, n_results: int = None)
 
     #g= Graph()
     if not n_results:
-        n_results = len(emb_vectors.vocab)
+        n_results = 10
+        # emb_vectors.vocab is no longer supported
+        # n_results = len(emb_vectors.vocab)
 
     similar_entites = []
     if drug is not None and drug in emb_vectors:
@@ -255,8 +257,6 @@ def get_similar_for_entity(input_curie: str, emb_vectors, n_results: int = None)
         similarDiseases = emb_vectors.most_similar(disease,topn=n_results)
         for en,sim in similarDiseases:
             similar_entites.append((disease, en, sim))
-
-
 
     if drug is not None:
         similarity_df = pd.DataFrame(similar_entites, columns=['entity', 'drug', 'score'])
@@ -324,11 +324,15 @@ def get_similarities(request: PredictInput):
             #     # If no type found we try to check from the ID namespace
             #     if input_id.lower().startswith('omim:'):
             #         options.model_id = 'disease_hp_embed.txt'
-        emb_vectors = load_similarity_embeddings(request.options.model_id)
-
+        emb_vectors = load_similarity_embeddings(request.options.model_id)       
         supported_subject = trapi_to_supported.get(subject, subject)
-        predictions_array = get_similar_for_entity(supported_subject, emb_vectors, request.options.n_results)
-
+        try:
+            predictions_array = get_similar_for_entity(supported_subject, emb_vectors, request.options.n_results)
+            log.info(f"Found {len(predictions_array)} similar entities")
+        except Exception as e:
+            log.error(f"Error getting similar entities for {supported_subject}")
+            log.error(e)
+        
         if request.options.min_score:
             predictions_array = [
                 p for p in predictions_array if p['score'] >= request.options.min_score]
