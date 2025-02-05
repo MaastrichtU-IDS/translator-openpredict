@@ -14,7 +14,7 @@ This repository contains the code for the **OpenPredict Translator API** availab
 * the code for the OpenPredict API endpoints in  `src/trapi/` defines:
   *  a TRAPI endpoint returning predictions for the loaded models
 
-The data used by the models in this repository is versionned using `dvc` in the `data/` folder, and stored **on DagsHub at https://dagshub.com/vemonet/translator-openpredict**
+The data used by the models in this repository is downloaded into the `data/` folder, and stored **on HuggingFace at https://huggingface.co/datasets/um-ids/translator-openpredict**
 
 ### Deploy the OpenPredict API locally
 
@@ -27,11 +27,11 @@ Requirements: Python 3.8+ and `pip` installed
    cd translator-openpredict
    ```
 
-2. Pull the data required to run the models in the `data` folder with [`dvc`](https://dvc.org/):
+2. Pull the data required to run the models in the `data` folder with [`huggingface_cli`](https://huggingface.co/docs/huggingface_hub/main/en/guides/cli):
 
    ```bash
-   pip install dvc
-   dvc pull
+   huggingface-cli download um-ids/translator-openpredict \
+    --local-dir ./data/
    ```
 
 
