@@ -37,11 +37,12 @@ ENV MODULE_NAME=trapi.main \
 
 # RUN pip install -e /app/predict-drug-target /app/trapi-predict-kit
 RUN pip install -e .
+RUN pip install "huggingface_hub[cli]"
+RUN pip install "trapi-predict-kit>=0.2.2"
 
 # RUN pip install -e . /app/predict-drug-target /app/trapi-predict-kit
 # RUN pip install -e /app/trapi-predict-kit
 
-RUN dvc pull -f
 
 EXPOSE 8808
 
@@ -49,7 +50,7 @@ EXPOSE 8808
 
 # Build entrypoint script to pull latest dvc changes before startup
 RUN echo "#!/bin/bash" > /entrypoint.sh && \
-    echo "dvc pull" >> /entrypoint.sh && \
+    echo "huggingface-cli download um-ids/translator-openpredict --local-dir ./data --repo-type dataset" >> /entrypoint.sh && \
     echo "/start.sh" >> /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
