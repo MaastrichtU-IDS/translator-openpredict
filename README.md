@@ -39,8 +39,8 @@ docker compose up api
    ```bash
    huggingface-cli download um-ids/translator-openpredict \
     --local-dir ./data/
-    ``` 
-
+   ```
+The data can also be downloaded manually from the repo
 ]
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
