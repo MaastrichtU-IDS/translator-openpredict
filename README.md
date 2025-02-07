@@ -34,13 +34,14 @@ Requirements: Python 3.8+ and `pip` installed
 docker compose up api
 ```
 
-[Note regarding the data file: The docker container should download the data automatically from the huggingface repo into the ```data``` subfolder. If, for any reason, you need to download separately, you can do this from the commandline using [`huggingface_cli`](https://huggingface.co/docs/huggingface_hub/main/en/guides/cli):
+[Note regarding the data files: The docker container should download the data automatically from the huggingface repo into the ```data``` subfolder. If, for any reason, you need to download separately, you can do this from the commandline using [`huggingface_cli`](https://huggingface.co/docs/huggingface_hub/main/en/guides/cli):
 
    ```bash
    huggingface-cli download um-ids/translator-openpredict \
-    --local-dir ./data/
+    --local-dir ./data/ --repo-type dataset
    ```
-The data can also be downloaded manually from the repo
+The data can also be downloaded manually from the repo if needed.
+
 ]
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
