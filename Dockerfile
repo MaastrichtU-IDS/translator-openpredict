@@ -37,21 +37,22 @@ ENV MODULE_NAME=trapi.main \
 
 # RUN pip install -e /app/predict-drug-target /app/trapi-predict-kit
 RUN pip install -e .
+RUN pip install "huggingface_hub[cli]"
+RUN pip install "trapi-predict-kit>=0.2.2"
 
 # RUN pip install -e . /app/predict-drug-target /app/trapi-predict-kit
 # RUN pip install -e /app/trapi-predict-kit
 
-RUN dvc pull -f
 
 EXPOSE 8808
 
 # ENTRYPOINT [ "gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8808", "src.trapi_oprenpredict.main:app"]
 
 # Build entrypoint script to pull latest dvc changes before startup
-RUN echo "#!/bin/bash" > /entrypoint.sh && \
-    echo "dvc pull" >> /entrypoint.sh && \
-    echo "/start.sh" >> /entrypoint.sh && \
-    chmod +x /entrypoint.sh
 
+RUN echo "#!/bin/bash" > /entrypoint.sh && \
+    echo "huggingface-cli download um-ids/translator-openpredict --local-dir ./data --repo-type dataset" >> /entrypoint.sh && \
+    echo "uvicorn trapi.main:app --host 0.0.0.0 --port 8808 --reload" >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 CMD [ "/entrypoint.sh" ]

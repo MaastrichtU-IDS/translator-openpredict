@@ -14,7 +14,7 @@ This repository contains the code for the **OpenPredict Translator API** availab
 * the code for the OpenPredict API endpoints in  `src/trapi/` defines:
   *  a TRAPI endpoint returning predictions for the loaded models
 
-The data used by the models in this repository is versionned using `dvc` in the `data/` folder, and stored **on DagsHub at https://dagshub.com/vemonet/translator-openpredict**
+The data used by the models in this repository is downloaded into the `data/` folder, and stored **on HuggingFace at https://huggingface.co/datasets/um-ids/translator-openpredict**
 
 ### Deploy the OpenPredict API locally
 
@@ -27,19 +27,22 @@ Requirements: Python 3.8+ and `pip` installed
    cd translator-openpredict
    ```
 
-2. Pull the data required to run the models in the `data` folder with [`dvc`](https://dvc.org/):
 
-   ```bash
-   pip install dvc
-   dvc pull
-   ```
-
-
-Start the API in development mode with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
+2. Start the API in development mode with docker on http://localhost:8808, the API will automatically reload when you make changes in the code:
 
 ```bash
 docker compose up api
 ```
+
+[Note regarding the data files: The docker container should download the data automatically from the huggingface repo into the ```data``` subfolder. If, for any reason, you need to download separately, you can do this from the commandline using [`huggingface_cli`](https://huggingface.co/docs/huggingface_hub/main/en/guides/cli):
+
+   ```bash
+   huggingface-cli download um-ids/translator-openpredict \
+    --local-dir ./data/ --repo-type dataset
+   ```
+The data can also be downloaded manually from the repo if needed.
+
+]
 
 > Contributions are welcome! If you wish to help improve OpenPredict, see the [instructions to contribute :woman_technologist:](/CONTRIBUTING.md) for more details on the development workflow
 

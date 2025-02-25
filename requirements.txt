@@ -258,6 +258,8 @@ hbreader==0.9.1
     #   jsonasobj2
     #   linkml
     #   linkml-runtime
+huggingface_hub>=0.28
+    #added Feb 2025 for the change from dvc to huggingface
 httpcore==0.18.0
     # via httpx
 httpx==0.25.0
