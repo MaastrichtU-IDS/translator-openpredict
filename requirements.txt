@@ -233,7 +233,7 @@ funcy==1.17
     #   dvc-objects
     #   dvc-task
     #   scmrepo
-future==0.18.2
+future==0.18.3
     # via grandalf
 gensim==3.8.3
     # via
